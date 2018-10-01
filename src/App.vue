@@ -1,29 +1,192 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+  <v-app>
+    <div class="app--navbar-default">
+      <div class="uk-container">
+        <nav uk-navbar>
+          <div class="uk-navbar-left">
+            <router-link to="/">
+              <img class="app--navbar-logo" src="./assets/logo-kirimin.jpg"/>
+            </router-link>
+          </div>
+          <div class="uk-navbar-right">
+            <ul class="uk-navbar-nav">
+              <li>
+                <a href="">Cara Kerja</a>
+              </li>
+              <li>
+                <a href="">Fitur</a>
+              </li>
+              <li>
+                <a href="">FAQ</a>
+              </li>
+              <template v-if="$auth.hasToken()">
+                <li>
+                  <a href="#">
+                    <font-awesome-icon icon="user"/>
+                    <span class="uk-margin-small-left" >{{ $auth.getUser().fullName }}</span>
+                  </a>
+                  <div class="uk-navbar-dropdown">
+                    <ul class="uk-nav uk-navbar-dropdown-nav">
+                      <li>
+                        <router-link :to="{ name: 'member-account' }">Akun</router-link>
+                      </li>
+                      <li>
+                        <a href="#" @click.prevent="logout">Keluar</a>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+              </template>
+              <template v-else>
+                <li>
+                  <router-link :to="{ name: 'login' }">Masuk</router-link>
+                </li>
+                <li>
+                  <router-link :to="{ name: 'register' }">Daftar</router-link>
+                </li>
+              </template>
+            </ul>
+          </div>
+        </nav>
+      </div>
     </div>
-    <router-view/>
-  </div>
+    <div v-if="$auth.hasToken()" class="app--navbar-secondary">
+      <div class="uk-container">
+        <nav uk-navbar>
+          <div class="uk-navbar-center">
+            <ul class="uk-navbar-nav">
+              <li>
+                <router-link :to="{ name: 'member-address' }">
+                  <div class="uk-text-center">
+                    <font-awesome-icon icon="warehouse" size="2x"/>
+                    <div>Alamat</div>
+                  </div>
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="{ name: 'member-account' }">
+                  <div class="uk-text-center">
+                    <font-awesome-icon icon="user" size="2x"/>
+                    <div>Profil</div>
+                  </div>
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="{ name: 'member-kirimin' }">
+                  <div class="uk-text-center">
+                    <font-awesome-icon icon="file-alt" size="2x"/>
+                    <div>Kirimin</div>
+                  </div>
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="{ name: 'member-beliin' }">
+                  <div class="uk-text-center">
+                    <font-awesome-icon icon="file-alt" size="2x"/>
+                    <div>Beliin</div>
+                  </div>
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="{ name: 'member-order' }">
+                  <div class="uk-text-center">
+                    <font-awesome-icon icon="file-invoice" size="2x"/>
+                    <div>Pesanan</div>
+                  </div>
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="{ name: 'member-calculator' }">
+                  <div class="uk-text-center">
+                    <font-awesome-icon icon="calculator" size="2x"/>
+                    <div>Kalkulator</div>
+                  </div>
+                </router-link>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <main>
+      <div class="uk-container">
+        <router-view/>
+      </div>
+    </main>
+    <footer class="app--footer app--dark">
+      <div class="uk-container">
+        <div class="uk-grid-small" uk-grid>
+          <div class="uk-width-1-3">
+            <p class="uk-margin-small">Terima Pembayaran</p>
+            <ul class="app--footer-nav-horizontal">
+              <li>
+                <a href="#" target="_blank">
+                  <img data-toggle="tooltip" src="./assets/images/payment/visa.png" alt="visa">
+                </a>
+              </li>
+              <li>
+                <a href="#" target="_blank">
+                  <img data-toggle="tooltip" src="./assets/images/payment/mastercard.png" alt="discover">
+                </a>
+              </li>
+              <li>
+                <a href="#" target="_blank">
+                  <img data-toggle="tooltip" src="./assets/images/payment/paypal.png" alt="paypal">
+                </a>
+              </li>
+              <li>
+                <a href="#" target="_blank">
+                  <img data-toggle="tooltip" src="./assets/images/payment/american.png" alt="american express">
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="uk-width-1-3">
+            <p class="uk-margin-small">Dapatkan Informasi Terkini</p>
+          </div>
+          <div class="uk-width-1-3 uk-text-right">
+            <p class="uk-margin-small">Keep In Touch</p>
+          </div>
+        </div>
+        <div class="uk-margin-large-top uk-text-center">
+          <ul class="app--footer-nav-horizontal">
+            <li>
+              <a href="">Tentang Kami</a>
+            </li>
+            <li>
+              <a href="">Faq</a>
+            </li>
+            <li>
+              <a href="">Hubungi Kami</a>
+            </li>
+            <li>
+              <a href="">Syarat dan Ketentuan</a>
+            </li>
+            <li>
+              <a href="">Kebijakan Informasi</a>
+            </li>
+          </ul>
+        </div>
+        <div class="app--footer-copy-right">
+          <p class="app--footer-copy-right-text uk-margin-remove">
+            Copyright &copy; 2018 <a href="#">Kirimin</a>. All Rights Reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  </v-app>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
+<script>
+export default {
+  methods: {
+    showDialog (dialog) {
+      this.UIkit.modal(`#dialog-${dialog}`).show()
+    },
+    logout () {
+      this.$auth.destroyToken()
+      this.$router.push({ name: 'home' })
     }
   }
 }
-</style>
+</script>

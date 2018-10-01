@@ -1,0 +1,3 @@
+export const INITIALIZED = 'INITIALIZED'
+export const CHANGE_LOADING = 'CHANGE_LOADING'
+export const SET_ERROR = 'SET_ERROR'

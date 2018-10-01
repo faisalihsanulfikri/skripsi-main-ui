@@ -1,0 +1,139 @@
+$global-color: #333 !default;
+$global-font-family: "Poppins", sans-serif !default;
+
+$app--primary-color: #0D47A1 !default;
+$app--secondary-color: #0c2f55 !default;
+
+@import "uikit/src/scss/variables-theme.scss";
+@import "uikit/src/scss/mixins-theme.scss";
+@import "uikit/src/scss/uikit-theme.scss";
+
+body, #app, main {
+  min-height: 100vh;
+}
+
+body {
+  background-color: #ECEFF1;
+}
+
+button.uk-button {
+  font-weight: 500;
+}
+
+.app--dark {
+  a, p {
+    color: #FFF;
+  }
+}
+
+.app--navbar-default {
+  background-color: #FFF;
+
+  .app--navbar-logo {
+    height: 80px;
+  }
+}
+
+.app--feature-box {
+  text-align: center;
+
+  .app--feature-box-icon {
+    background-color: #ECEFF1;
+    width: 120px;
+    height: 120px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.9rem;
+    color: $app--primary-color;
+    border-radius: 50% !important;
+  }
+}
+
+.app--navbar-secondary {
+  background-color: $app--secondary-color;
+
+  .uk-navbar-nav {
+    li {
+      a {
+        color: #FFF;
+        text-transform: capitalize;
+      }
+    }
+  }
+}
+
+.app--price-box {
+  background: #FFF;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+
+  .app--price-box-header {
+    background-color: $app--primary-color;
+    text-align: center;
+    padding: 15px 10px;
+    
+    .app--price-box-title {
+      color: #FFF !important;
+      margin: 0;
+    }
+  }
+
+  .app--price-box-content {
+    padding: 20px;
+
+    .app--price-box-price {
+      background-color: $app--primary-color;
+      width: 150px;
+      height: 150px;
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      border-radius: 50%;
+      margin: 10px auto;
+
+      div {
+        text-align: center;
+
+        :nth-child(2) {
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    .app--price-box-item {
+      padding: 5px;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.app--footer {
+  background-color: $app--secondary-color;
+  padding: 20px 0;
+
+  .app--footer-nav-horizontal {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 0;
+
+    li {
+      display: inline;
+      margin: 0 10px;
+    }
+
+    li:first-child {
+      margin: 0 10px 0 0;
+    }
+
+    li:last-child {
+      margin: 0 0 0 10px;
+    }
+  }
+
+  .app--footer-copy-right {
+    text-align: center;
+  }
+}
