@@ -13,6 +13,14 @@ import mBeliin from './views/member/Beliin'
 import mOrder from './views/member/Order'
 import mCalculator from './views/member/Calculator'
 
+import Faq from './views/general/Faq'
+import Aboutus from './views/general/Aboutus'
+import Contactus from './views/general/Contactus'
+import Terms from './views/general/Terms'
+import Privacy from './views/general/Privacy'
+import Howitwork from './views/general/Howitwork'
+import Feature from './views/general/Feature'
+
 Vue.use(Router)
 
 export default new Router({
@@ -31,6 +39,41 @@ export default new Router({
       path: '/register',
       name: 'register',
       component: Register
+    },
+    {
+      path: '/faq',
+      name: 'faq',
+      component: Faq
+    },
+    {
+      path: '/aboutus',
+      name: 'aboutus',
+      component: Aboutus
+    },
+    {
+      path: '/contactus',
+      name: 'contactus',
+      component: Contactus
+    },
+    {
+      path: '/terms',
+      name: 'terms',
+      component: Terms
+    },
+    {
+      path: '/privacy',
+      name: 'privacy',
+      component: Privacy
+    },
+    {
+      path: '/howitwork',
+      name: 'howitwork',
+      component: Howitwork
+    },
+    {
+      path: '/feature',
+      name: 'feature',
+      component: Feature
     },
     {
       path: '/u',

@@ -11,13 +11,13 @@
           <div class="uk-navbar-right">
             <ul class="uk-navbar-nav">
               <li>
-                <a href="">Cara Kerja</a>
+                <router-link :to="{ name: 'howitwork' }">Cara Kerja</router-link>
               </li>
               <li>
-                <a href="">Fitur</a>
+                <router-link :to="{ name: 'feature' }">Fitur</router-link>
               </li>
               <li>
-                <a href="">FAQ</a>
+                <router-link :to="{ name: 'faq' }">FAQ</router-link>
               </li>
               <template v-if="$auth.hasToken()">
                 <li>
@@ -121,49 +121,34 @@
             <ul class="app--footer-nav-horizontal">
               <li>
                 <a href="#" target="_blank">
-                  <img data-toggle="tooltip" src="./assets/images/payment/visa.png" alt="visa">
-                </a>
-              </li>
-              <li>
-                <a href="#" target="_blank">
-                  <img data-toggle="tooltip" src="./assets/images/payment/mastercard.png" alt="discover">
-                </a>
-              </li>
-              <li>
-                <a href="#" target="_blank">
-                  <img data-toggle="tooltip" src="./assets/images/payment/paypal.png" alt="paypal">
-                </a>
-              </li>
-              <li>
-                <a href="#" target="_blank">
-                  <img data-toggle="tooltip" src="./assets/images/payment/american.png" alt="american express">
+                  <img data-toggle="tooltip" src="./assets/images/payment/bca.png" alt="bca">
                 </a>
               </li>
             </ul>
           </div>
           <div class="uk-width-1-3">
-            <p class="uk-margin-small">Dapatkan Informasi Terkini</p>
+            <p class="uk-margin-small">&nbsp;</p>
           </div>
           <div class="uk-width-1-3 uk-text-right">
-            <p class="uk-margin-small">Keep In Touch</p>
+            <p class="uk-margin-small">&nbsp;</p>
           </div>
         </div>
         <div class="uk-margin-large-top uk-text-center">
           <ul class="app--footer-nav-horizontal">
             <li>
-              <a href="">Tentang Kami</a>
+              <router-link :to="{ name: 'aboutus' }">Tentang Kami</router-link>
             </li>
             <li>
-              <a href="">Faq</a>
+              <router-link :to="{ name: 'faq' }">FAQ</router-link>
             </li>
             <li>
-              <a href="">Hubungi Kami</a>
+              <router-link :to="{ name: 'contactus' }">Hubungi Kami</router-link>
             </li>
             <li>
-              <a href="">Syarat dan Ketentuan</a>
+              <router-link :to="{ name: 'terms' }">Syarat dan Ketentuan</router-link>
             </li>
             <li>
-              <a href="">Kebijakan Informasi</a>
+              <router-link :to="{ name: 'privacy' }">Kebijakan Privasi</router-link>
             </li>
           </ul>
         </div>
