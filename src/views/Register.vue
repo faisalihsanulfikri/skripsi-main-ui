@@ -75,7 +75,7 @@
                         </td>
                     </tr>
                 </thead>
-              </table>              
+              </table>
               </div>
               <div class="uk-margin">
                 <button class="uk-button uk-button-primary uk-width-1-1" type="button" @click="register">Daftar</button>

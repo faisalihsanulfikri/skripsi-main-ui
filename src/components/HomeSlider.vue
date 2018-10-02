@@ -2,19 +2,19 @@
   <div class="app--slider__home swiper-container">
     <div class="swiper-wrapper">
       <div class="swiper-slide">
-        <img src="../assets/images/slider/banner-01.jpg">
+        <img class="uk-responsive-width" src="../assets/images/slider/banner-01.jpg">
       </div>
       <div class="swiper-slide">
-        <img src="../assets/images/slider/banner-02.jpg">
+        <img class="uk-responsive-width" src="../assets/images/slider/banner-02.jpg">
       </div>
       <div class="swiper-slide">
-        <img src="../assets/images/slider/banner-03.jpg">
+        <img class="uk-responsive-width" src="../assets/images/slider/banner-03.jpg">
       </div>
       <div class="swiper-slide">
-        <img src="../assets/images/slider/banner-04.jpg">
+        <img class="uk-responsive-width" src="../assets/images/slider/banner-04.jpg">
       </div>
       <div class="swiper-slide">
-        <img src="../assets/images/slider/banner-05.jpg">
+        <img class="uk-responsive-width" src="../assets/images/slider/banner-05.jpg">
       </div>
     </div>
   </div>

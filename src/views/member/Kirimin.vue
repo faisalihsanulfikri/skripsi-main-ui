@@ -257,18 +257,18 @@ export default {
       this.errorMessage = ''
 
       this.$authHttp.post('/v1/orders', {
-        'origin' : 151,
-        'dest' : this.input.address,
-        'weight' : this.input.weight,
-        'length' : this.input.length,
-        'width' : this.input.width,
-        'height' : this.input.height,
-        'country' : this.input.country,
-        'vunits' : this.config.volumeUnits,
-        'wunits' : this.input.weightUnits,
-        'harga' : this.input.itemPrice,
-        'qty' : this.input.itemQuantity,
-        'goodsName' : this.input.itemName
+        'origin': 151,
+        'dest': this.input.address,
+        'weight': this.input.weight,
+        'length': this.input.length,
+        'width': this.input.width,
+        'height': this.input.height,
+        'country': this.input.country,
+        'vunits': this.config.volumeUnits,
+        'wunits': this.input.weightUnits,
+        'harga': this.input.itemPrice,
+        'qty': this.input.itemQuantity,
+        'goodsName': this.input.itemName
       }).then(response => {
         this.clearInput()
 
@@ -281,15 +281,15 @@ export default {
       })
     },
     clearInput () {
-        this.input.catgory = ''
-        this.input.itemName = ''
-        this.input.itemPrice = ''
-        this.input.itemQuantity = ''
-        this.input.weight = ''
-        this.input.length = ''
-        this.input.width = ''
-        this.input.height = ''
-        this.input.address = ''
+      this.input.catgory = ''
+      this.input.itemName = ''
+      this.input.itemPrice = ''
+      this.input.itemQuantity = ''
+      this.input.weight = ''
+      this.input.length = ''
+      this.input.width = ''
+      this.input.height = ''
+      this.input.address = ''
     }
   },
   created () {

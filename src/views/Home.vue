@@ -1,14 +1,9 @@
 <template>
   <div class="uk-margin-top uk-margin-bottom">
     <div class="uk-card uk-card-default uk-card-body">
-      <div uk-grid>
-        <div>
-          <div class="uk-width-expand">
-            <home-slider/>
-          </div>
-        </div>
+      <div class="uk-margin">
+        <home-slider />
       </div>
-      <br/>
       <div uk-grid class="uk-grid-collapse uk-child-width-expand@s uk-text-center">
           <div >
               <iframe src="https://www.youtube.com/embed/nVKWB5IppKw" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
