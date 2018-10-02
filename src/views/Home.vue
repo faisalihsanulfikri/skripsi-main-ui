@@ -2,19 +2,25 @@
   <div class="uk-margin-top uk-margin-bottom">
     <div class="uk-card uk-card-default uk-card-body">
       <div uk-grid>
-        <div class="uk-width-auto">
-          <div class="uk-margin-small">
-            <iframe src="https://www.youtube.com/embed/NrmMk1Myrxc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <div>
+          <div class="uk-width-expand">
+            <home-slider/>
           </div>
-          <div class="uk-margin-small">
-            <iframe src="https://www.youtube.com/embed/eXYHNWLKg-g" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-          </div>
-        </div>
-        <div class="uk-width-expand">
-          <home-slider/>
         </div>
       </div>
-      <div class="uk-margin-large-top">
+      <br/>
+      <div uk-grid class="uk-grid-collapse uk-child-width-expand@s uk-text-center">
+          <div >
+              <iframe src="https://www.youtube.com/embed/nVKWB5IppKw" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          </div>
+          <div>
+              <iframe src="https://www.youtube.com/embed/eXYHNWLKg-g" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          </div>
+          <div>
+              <iframe src="https://www.youtube.com/embed/eXYHNWLKg-g" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          </div>
+      </div>
+      <div uk-grid>
         <div class="uk-text-center">
           <h2 class="uk-margin-large">Kami hadir untuk Anda</h2>
           <feature-box :items="features" />

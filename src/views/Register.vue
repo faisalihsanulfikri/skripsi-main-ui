@@ -1,4 +1,4 @@
-<template>
+1x<template>
   <div class="uk-margin-top uk-margin-bottom">
     <div class="uk-card uk-card-default">
       <div class="uk-card-header uk-text-center">
@@ -30,7 +30,7 @@
                 <label class="uk-form-label">Nomor HP</label>
                 <input v-model="input.mobile" class="uk-input" type="text" placeholder="Mobile"/>
               </div>
-              <div class="uk-margin">
+              <div class="uk-margin uk-hidden">
                 <label class="uk-form-label">Jenis Kelamin</label>
                 <div>
                   <label>
@@ -43,7 +43,7 @@
                   </label>
                 </div>
               </div>
-              <div class="uk-margin">
+              <div class="uk-margin uk-hidden">
                 <label class="uk-form-label">Tanggal Lahir</label>
                 <v-dialog
                   v-model="dialog.birthdate"
@@ -57,6 +57,27 @@
                 </v-dialog>
               </div>
               <div class="uk-margin">
+              <label class="uk-form-label">Pilih Layanan</label>
+              <table class="uk-table">
+                <thead>
+                    <tr>
+                        <th>Fitur</th>
+                        <th>Standard</th>
+                        <th>Premium</th>
+                    </tr>
+                    <tr class="uk-form-controls uk-form-controls-text">
+                        <td>Pilihan</td>
+                        <td>
+                        <input class="uk-radio" type="radio" name="radio1">
+                        </td>
+                        <td>
+                        <input class="uk-radio" type="radio" name="radio1">
+                        </td>
+                    </tr>
+                </thead>
+              </table>              
+              </div>
+              <div class="uk-margin">
                 <button class="uk-button uk-button-primary uk-width-1-1" type="button" @click="register">Daftar</button>
               </div>
               <div class="uk-margin">
@@ -64,7 +85,74 @@
               </div>
             </div>
           </div>
-          <div class="uk-width-1-2"></div>
+          <div class="uk-width-1-2">
+            <div>
+              <div class="uk-margin">
+                <button href="#toggle-animation" class="uk-button uk-button-default" type="button" uk-toggle="target: #toggle-animation; animation: uk-animation-fade">Perbandingan Layanan</button>
+                <div id="toggle-animation" class="uk-card uk-card-default uk-card-body uk-margin-small">
+                <table class="uk-table">
+                  <tbody>
+                    <tr>
+                        <td>Your own U.S. AND SOME OTHERS COUNTRIES</td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                    </tr>
+                    <tr>
+                        <td>Save up to 70 percent on shipping</td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                    </tr>
+                    <tr>
+                        <td>Multiple shipping options for each country</td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                    </tr>
+                    <tr>
+                        <td>Purchase Special Services when shipping packages</td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                    </tr>
+                    <tr>
+                        <td>Access to assisted purchase</td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                    </tr>
+                    <tr>
+                        <td>Combine your packages for more savings</td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                    </tr>
+                    <tr>
+                        <td>Multi-package shipments</td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                    </tr>
+                    <tr>
+                        <td>Free storage for up to 30 days</td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                    </tr>
+                    <tr>
+                        <td>SPECIAL PRICE FOR QTY ABOVE 10 KG UP</td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                    </tr>
+                    <tr>
+                        <td>FOR KIRIMIN CAN BE COD</td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                    </tr>
+                    <tr>
+                        <td>Biaya Bulanan</td>
+                        <td>Gratis</td>
+                        <td>IDR 100K</td>
+                    </tr>
+                  </tbody>
+                </table>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

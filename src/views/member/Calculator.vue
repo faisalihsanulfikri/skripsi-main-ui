@@ -30,7 +30,8 @@
               </select>
             </div>
             <div class="uk-margin">
-              <label class="uk-form-label">Kota</label>
+              <label class="uk-form-label">Kabupaten / Kota / Desa
+</label>
               <select v-model="input.cityId" class="uk-select">
                 <option
                   v-for="item in options.city"
@@ -41,6 +42,18 @@
               </select>
             </div>
             <div class="uk-margin">
+              <label class="uk-form-label">Kecamatan
+</label>
+              <select v-model="input.cityId" class="uk-select">
+                <option
+                  v-for="item in options.city"
+                  :key="item.value"
+                  :value="item.value">
+                    {{ item.label }}
+                  </option>
+              </select>
+            </div>
+            <div class="uk-margin uk-hidden">
               <label class="uk-form-label">Kurir</label>
               <select v-model="input.courier" class="uk-select">
                 <option
@@ -76,8 +89,11 @@
                   <input v-model="input.price" class="uk-input" type="number">
                 </div>
                 <div class="uk-width-1-2">
-                  <label class="uk-form-label">Jumlah Barang</label>
-                  <input v-model="input.qty" class="uk-input" type="number">
+                  <label class="uk-form-label">Pakai NPWP ?</label>
+                  <select class="uk-select">
+                      <option>Ya</option>
+                      <option>Tidak</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -86,65 +102,71 @@
             </div>
           </div>
           <div class="uk-width-1-2">
-            <div class="uk-overflow-auto">
-              <table class="uk-table uk-table-small uk-table-divider uk-text-small">
-                <tbody v-for="(item, key) in result.items" :key="key">
-                  <tr>
-                    <td>Harga Barang</td>
-                    <td class="uk-text-right">
-                      {{ item.harga | currency('Rp. ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Biaya Internasional</td>
-                    <td class="uk-text-right">
-                      {{ item.biayaInt | currency('Rp. ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Biaya Domestik</td>
-                    <td class="uk-text-right">
-                      {{ item.biayaDom | currency('Rp. ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Bea Masuk (7.5%)</td>
-                    <td class="uk-text-right">
-                      {{ item.beamasuk | currency('Rp. ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>PPN (10%)</td>
-                    <td class="uk-text-right">
-                      {{ item.ppn | currency('Rp. ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>PPH (20%)</td>
-                    <td class="uk-text-right">
-                      {{ item.pph | currency('Rp. ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Total</td>
-                    <td class="uk-text-right">
-                      {{ item.total | currency('Rp. ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>NPWP</td>
-                    <td class="uk-text-right">
-                      {{ item.npwp | currency('Rp. ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Total Bayar</td>
-                    <td class="uk-text-right">
-                      {{ item.totalBayar | currency('Rp. ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+
+            <div class="uk-card uk-card-default uk-card-small">
+            <div class="uk-card-header">
+              <h4 class="uk-card-title">Perkiraan Biaya Pengiriman</h4>
+            </div>
+              <div class="uk-overflow-auto">
+                <table class="uk-table uk-table-small uk-text-small">
+                  <tbody v-for="(item, key) in result.items" :key="key">
+                    <tr>
+                      <td>Harga Barang</td>
+                      <td class="uk-text-right">
+                        {{ item.harga | currency('Rp. ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Biaya Internasional</td>
+                      <td class="uk-text-right">
+                        {{ item.biayaInt | currency('Rp. ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Biaya Domestik</td>
+                      <td class="uk-text-right">
+                        {{ item.biayaDom | currency('Rp. ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Bea Masuk (7.5%)</td>
+                      <td class="uk-text-right">
+                        {{ item.beamasuk | currency('Rp. ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>PPN (10%)</td>
+                      <td class="uk-text-right">
+                        {{ item.ppn | currency('Rp. ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>PPH (20%)</td>
+                      <td class="uk-text-right">
+                        {{ item.pph | currency('Rp. ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Total</td>
+                      <td class="uk-text-right">
+                        {{ item.total | currency('Rp. ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Potongan NPWP</td>
+                      <td class="uk-text-right uk-text-danger">
+                        {{ item.npwp | currency('Rp. ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Estimasi Biaya Pengiriman</td>
+                      <td class="uk-text-right">
+                        {{ item.totalBayar | currency('Rp. ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -188,7 +210,7 @@ export default {
       result: {
         items: [
           {
-            
+
           }
         ]
       }

@@ -10,15 +10,6 @@
           </div>
           <div class="uk-navbar-right">
             <ul class="uk-navbar-nav">
-              <li>
-                <router-link :to="{ name: 'howitwork' }">Cara Kerja</router-link>
-              </li>
-              <li>
-                <router-link :to="{ name: 'feature' }">Fitur</router-link>
-              </li>
-              <li>
-                <router-link :to="{ name: 'faq' }">FAQ</router-link>
-              </li>
               <template v-if="$auth.hasToken()">
                 <li>
                   <a href="#">
@@ -38,6 +29,38 @@
                 </li>
               </template>
               <template v-else>
+                <li>
+                  <router-link :to="{ name: 'general-kalkulator' }">Kalkulator</router-link>
+                </li>
+                <li>
+                  <a href="#">Cara Kerja</a>
+                  <div class="uk-navbar-dropdown">
+                      <ul class="uk-nav uk-navbar-dropdown-nav">
+                          <li>
+                            <router-link :to="{ name: 'howto-kirimin' }">Kirimin</router-link>
+                          </li>
+                          <li>
+                            <router-link :to="{ name: 'howto-beliin' }">Beliin</router-link>
+                          </li>
+                      </ul>
+                  </div>
+                </li>
+                <li>
+                  <a href="#">Fitur</a>
+                  <div class="uk-navbar-dropdown">
+                      <ul class="uk-nav uk-navbar-dropdown-nav">
+                          <li>
+                            <router-link :to="{ name: 'feature-kirimin' }">Kirimin</router-link>
+                          </li>
+                          <li>
+                            <router-link :to="{ name: 'feature-beliin' }">Beliin</router-link>
+                          </li>
+                      </ul>
+                  </div>
+                </li>
+                <li>
+                  <router-link :to="{ name: 'faq' }">FAQ</router-link>
+                </li>
                 <li>
                   <router-link :to="{ name: 'login' }">Masuk</router-link>
                 </li>

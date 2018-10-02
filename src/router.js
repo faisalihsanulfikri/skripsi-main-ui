@@ -18,8 +18,11 @@ import Aboutus from './views/general/Aboutus'
 import Contactus from './views/general/Contactus'
 import Terms from './views/general/Terms'
 import Privacy from './views/general/Privacy'
-import Howitwork from './views/general/Howitwork'
-import Feature from './views/general/Feature'
+import Kalkulator from './views/general/Kalkulator'
+import howtoBeliin from './views/general/HowtoBeliin'
+import howtoKirimin from './views/general/HowtoKirimin'
+import fiturBeliin from './views/general/FeatureBeliin'
+import fiturKirimin from './views/general/FeatureKirimin'
 
 Vue.use(Router)
 
@@ -66,14 +69,29 @@ export default new Router({
       component: Privacy
     },
     {
-      path: '/howitwork',
-      name: 'howitwork',
-      component: Howitwork
+      path: '/general-kalkulator',
+      name: 'general-kalkulator',
+      component: mCalculator
     },
     {
-      path: '/feature',
-      name: 'feature',
-      component: Feature
+      path: '/howto-kirimin',
+      name: 'howto-kirimin',
+      component: howtoKirimin
+    },
+    {
+      path: '/howto-beliin',
+      name: 'howto-beliin',
+      component: howtoBeliin
+    },
+    {
+      path: '/feature-kirimin',
+      name: 'feature-kirimin',
+      component: fiturKirimin
+    },
+    {
+      path: '/feature-beliin',
+      name: 'feature-beliin',
+      component: fiturBeliin
     },
     {
       path: '/u',
