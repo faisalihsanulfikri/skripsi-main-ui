@@ -30,8 +30,7 @@
               </select>
             </div>
             <div class="uk-margin">
-              <label class="uk-form-label">Kabupaten / Kota / Desa
-</label>
+              <label class="uk-form-label">Kabupaten / Kota / Desa</label>
               <select v-model="input.cityId" class="uk-select">
                 <option
                   v-for="item in options.city"
@@ -42,8 +41,7 @@
               </select>
             </div>
             <div class="uk-margin">
-              <label class="uk-form-label">Kecamatan
-</label>
+              <label class="uk-form-label">Kecamatan</label>
               <select v-model="input.cityId" class="uk-select">
                 <option
                   v-for="item in options.city"
@@ -66,19 +64,19 @@
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">Berat ({{ config.weightUnits }})</label>
-              <input v-model="input.weight" type="number" class="uk-input">
+              <input v-model="input.weight" type="number" min="1" class="uk-input">
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">Dimensi ({{ config.volumeUnits }})</label>
               <div class="uk-grid-small" uk-grid>
                 <div class="uk-width-1-3">
-                  <input v-model="input.length" type="number" class="uk-input" placeholder="Length">
+                  <input v-model="input.length" type="number" class="uk-input" min="1" placeholder="Length">
                 </div>
                 <div class="uk-width-1-3">
-                  <input v-model="input.width" type="number" class="uk-input" placeholder="Width">
+                  <input v-model="input.width" type="number" class="uk-input" min="1" placeholder="Width">
                 </div>
                 <div class="uk-width-1-3">
-                  <input v-model="input.height" type="number" class="uk-input" placeholder="Height">
+                  <input v-model="input.height" type="number" class="uk-input" min="1" placeholder="Height">
                 </div>
               </div>
             </div>
@@ -188,13 +186,13 @@ export default {
         country: '',
         provinceId: '',
         cityId: '',
-        courier: '',
+        courier: 'jne',
         weight: '',
         length: '',
         width: '',
         height: '',
         price: '',
-        qty: ''
+        qty: 1
       },
       options: {
         warehouse: [],

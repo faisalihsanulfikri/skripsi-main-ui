@@ -172,17 +172,17 @@ export default {
       })
     },
     clearInput () {
-        this.input.alias = ''
-        this.input.name = ''
-        this.input.phone = ''
-        this.input.province = ''
-        this.input.provinceId = ''
-        this.input.city = ''
-        this.input.cityId = ''
-        this.input.code = ''
-        this.input.district = ''
-        this.input.address1 = ''
-        this.input.address2 = ''
+      this.input.alias = ''
+      this.input.name = ''
+      this.input.phone = ''
+      this.input.province = ''
+      this.input.provinceId = ''
+      this.input.city = ''
+      this.input.cityId = ''
+      this.input.code = ''
+      this.input.district = ''
+      this.input.address1 = ''
+      this.input.address2 = ''
     }
   },
   created () {

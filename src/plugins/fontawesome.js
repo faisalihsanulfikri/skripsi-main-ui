@@ -13,8 +13,9 @@ import {
   faUser,
   faWallet,
   faWarehouse,
-  faTimes,
-faCheck } from '@fortawesome/free-solid-svg-icons'
+faCheck,
+faTimes } from '@fortawesome/free-solid-svg-icons'
+
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add([
