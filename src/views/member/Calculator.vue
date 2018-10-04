@@ -64,19 +64,19 @@
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">Berat ({{ config.weightUnits }})</label>
-              <input v-model="input.weight" type="number" min="1" class="uk-input">
+              <input v-model="input.weight" type="text" class="uk-input" @input="numericCheck('weight')">
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">Dimensi ({{ config.volumeUnits }})</label>
               <div class="uk-grid-small" uk-grid>
                 <div class="uk-width-1-3">
-                  <input v-model="input.length" type="number" class="uk-input" min="1" placeholder="Length">
+                  <input v-model="input.length" type="text" class="uk-input" min="1" placeholder="Panjang" @input="numericCheck('length')">
                 </div>
                 <div class="uk-width-1-3">
-                  <input v-model="input.width" type="number" class="uk-input" min="1" placeholder="Width">
+                  <input v-model="input.width" type="text" class="uk-input" min="1" placeholder="Lebar" @input="numericCheck('width')">
                 </div>
                 <div class="uk-width-1-3">
-                  <input v-model="input.height" type="number" class="uk-input" min="1" placeholder="Height">
+                  <input v-model="input.height" type="text" class="uk-input" min="1" placeholder="Tinggi" @input="numericCheck('height')">
                 </div>
               </div>
             </div>
@@ -84,7 +84,11 @@
               <div class="uk-grid-small" uk-grid>
                 <div class="uk-width-1-2">
                   <label class="uk-form-label">Harga Barang</label>
-                  <input v-model="input.price" class="uk-input" type="number">
+                  <input
+                    v-model="input.price"
+                    class="uk-input"
+                    type="text"
+                    @input="numericCheck('price')">
                 </div>
                 <div class="uk-width-1-2">
                   <label class="uk-form-label">Pakai NPWP ?</label>
@@ -215,6 +219,15 @@ export default {
     }
   },
   methods: {
+    numericCheck (key) {
+      let val = this.input[key].match(/\d/g)
+
+      if (val !== null) {
+        this.input[key] = val.join('')
+      } else {
+        this.input[key] = ''
+      }
+    },
     fetchWarehouses () {
       this.$authHttp.get('/v1/cfees')
         .then(reponse => {
