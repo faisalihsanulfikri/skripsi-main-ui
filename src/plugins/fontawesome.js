@@ -13,8 +13,8 @@ import {
   faUser,
   faWallet,
   faWarehouse,
-faCheck,
-faTimes } from '@fortawesome/free-solid-svg-icons'
+  faCheck,
+  faTimes } from '@fortawesome/free-solid-svg-icons'
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 

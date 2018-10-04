@@ -1,64 +1,44 @@
 <template>
   <div>
-    <div class="uk-grid-small uk-grid-match uk-flex-center" uk-grid>
-      <div v-for="warehouse in warehouses" :key="warehouse.id" class="uk-width-1-4">
-        <price-box
-          :title="warehouse.name"
-          :price="`$${warehouse.price}`"
-          meta-price="Per Kilogram"
-          :items="[warehouse.address]"/>
+    <div class="uk-card uk-card-default uk-card-small uk-card-body">
+      <div uk-grid>
+        <div class="uk-width-small@m">
+          <ul class="uk-tab-left" uk-switcher="#user-tab" uk-tab>
+            <li v-for="warehouse in warehouses" :key="warehouse.id" class="uk-width-1-4">
+              <a href="">{{ warehouse.name }}</a>
+            </li>
+          </ul>
+        </div>
+        <div class="uk-width-expand">
+          <ul id="user-tab" class="uk-switcher">
+            <li v-for="warehouse in warehouses" :key="warehouse.id" class="uk-width-expand">
+                <address-box
+                  :title="warehouse.name"
+                  :price="`$${warehouse.price}`"
+                  meta-price="Per Kilogram"
+                  :address="warehouse.address"
+                  customerId="IG123"
+                  customerFirstName="Irsan"
+                  customerLastName="Gunawan"
+                  :zipcode="warehouse.zipcode"/>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import PriceBox from '../../components/PriceBox'
+import AddressBox from '../../components/AddressBox'
 
 export default {
   components: {
-    PriceBox
+    AddressBox
   },
   data () {
     return {
-      warehouses: [],
-      addresses: [
-        {
-          name: 'US',
-          address: '167 Chambers St, New York, NY 10007, USA',
-          fee: '$12'
-        },
-        {
-          name: 'China',
-          address: '200 Wangfujing St, WangFuJing, Dongcheng Qu, Beijing Shi, China, 100006',
-          fee: '$7'
-        },
-        {
-          name: 'Singapore',
-          address: '1000 ECP, #01-05 Marine Cove, Singapore 449876',
-          fee: '$7'
-        },
-        {
-          name: 'Malaysia',
-          address: 'Plaza Mont Kiara, 1, Jalan Kiara, Mont Kiara, 50480 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur, Malaysia',
-          fee: '$7'
-        },
-        {
-          name: 'Thailand',
-          address: 'Big C Ratchadamri 97/11 ถนน ราชดำริห์ แขวงลุมพินี Khet Pathum Wan, Krung Thep Maha Nakhon 10330, Thailand',
-          fee: '$7'
-        },
-        {
-          name: 'Korea',
-          address: '93 Deokso-ro, Wabu-eup, Namyangju-si, Gyeonggi-do, South Korea',
-          fee: '$7'
-        },
-        {
-          name: 'Hongkong',
-          address: '612-618 Nathan Rd, Mong Kok, Hong Kong',
-          fee: '$7'
-        }
-      ]
+      warehouses: []
     }
   },
   methods: {
