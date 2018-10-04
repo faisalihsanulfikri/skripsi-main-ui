@@ -13,7 +13,9 @@ import {
   faUser,
   faWallet,
   faWarehouse,
-  faCheck } from '@fortawesome/free-solid-svg-icons'
+  faCheck,
+  faTimes } from '@fortawesome/free-solid-svg-icons'
+
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add([
@@ -29,7 +31,8 @@ library.add([
   faUser,
   faWallet,
   faWarehouse,
-  faCheck
+  faCheck,
+  faTimes
 ])
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)

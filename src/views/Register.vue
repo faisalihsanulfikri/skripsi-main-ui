@@ -119,27 +119,27 @@
                     </tr>
                     <tr>
                         <td>Combine your packages for more savings</td>
-                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                        <td><font-awesome-icon icon="times" size="1x"/></td>
                         <td><font-awesome-icon icon="check" size="1x"/></td>
                     </tr>
                     <tr>
                         <td>Multi-package shipments</td>
-                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                        <td><font-awesome-icon icon="times" size="1x"/></td>
                         <td><font-awesome-icon icon="check" size="1x"/></td>
                     </tr>
                     <tr>
                         <td>Free storage for up to 30 days</td>
-                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                        <td><font-awesome-icon icon="times" size="1x"/></td>
                         <td><font-awesome-icon icon="check" size="1x"/></td>
                     </tr>
                     <tr>
                         <td>SPECIAL PRICE FOR QTY ABOVE 10 KG UP</td>
-                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                        <td><font-awesome-icon icon="times" size="1x"/></td>
                         <td><font-awesome-icon icon="check" size="1x"/></td>
                     </tr>
                     <tr>
                         <td>FOR KIRIMIN CAN BE COD</td>
-                        <td><font-awesome-icon icon="check" size="1x"/></td>
+                        <td><font-awesome-icon icon="times" size="1x"/></td>
                         <td><font-awesome-icon icon="check" size="1x"/></td>
                     </tr>
                     <tr>
