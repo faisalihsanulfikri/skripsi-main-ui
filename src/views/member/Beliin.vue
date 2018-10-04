@@ -40,25 +40,20 @@
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">Berat ({{ config.weightUnits }})</label>
-              <input v-model="input.weight" type="number" class="uk-input">
+              <input v-model="input.weight" type="text" class="uk-input" @input="numericCheck('weight')">
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">Dimensi ({{ config.volumeUnits }})</label>
               <div class="uk-grid-small" uk-grid>
                 <div class="uk-width-1-3">
-                  <input v-model="input.length" type="number" class="uk-input" placeholder="Length">
+                  <input v-model="input.length" type="text" class="uk-input" min="1" placeholder="Panjang" @input="numericCheck('length')">
                 </div>
                 <div class="uk-width-1-3">
-                  <input v-model="input.width" type="number" class="uk-input" placeholder="Width">
+                  <input v-model="input.width" type="text" class="uk-input" min="1" placeholder="Lebar" @input="numericCheck('width')">
                 </div>
                 <div class="uk-width-1-3">
-                  <input v-model="input.height" type="number" class="uk-input" placeholder="Height">
+                  <input v-model="input.height" type="text" class="uk-input" min="1" placeholder="Tinggi" @input="numericCheck('height')">
                 </div>
-              </div>
-            </div>
-            <div class="uk-margin">
-              <div v-if="error" class="uk-alert-danger" uk-alert>
-                {{ errorMessage }}
               </div>
             </div>
           </div>
@@ -100,7 +95,12 @@
               </select>
             </div>
             <div class="uk-margin">
-              <button class="uk-button uk-button-primary uk-width-1-1">Hitung</button>
+              <button class="uk-button uk-button-primary uk-width-1-1" @click="check">Hitung</button>
+            </div>
+            <div class="uk-margin">
+              <div v-if="error" class="uk-alert-danger" uk-alert>
+                {{ errorMessage }}
+              </div>
             </div>
             <template v-if="result.items">
               <hr>
@@ -195,7 +195,8 @@ export default {
         length: '',
         width: '',
         height: '',
-        address: ''
+        address: '',
+        courier: 'jne'
       },
       options: {
         category: [],
@@ -214,6 +215,15 @@ export default {
     }
   },
   methods: {
+    numericCheck (key) {
+      let val = this.input[key].match(/\d/g)
+
+      if (val !== null) {
+        this.input[key] = val.join('')
+      } else {
+        this.input[key] = ''
+      }
+    },
     fetchCategories () {
       this.$authHttp.get('/v1/categories')
         .then(response => {
@@ -261,6 +271,43 @@ export default {
         .catch(() => {
           //
         })
+    },
+    check () {
+      this.error = false
+      this.errorMessage = ''
+
+      this.$authHttp.post('/v1/calculator/cost', {
+        origin: this.config.originCity,
+        wunits: this.config.weightUnits,
+        vunits: this.config.volumeUnits,
+        country: this.input.country,
+        dest: this.input.address,
+        courier: this.input.courier,
+        weight: this.input.weight,
+        length: this.input.length,
+        width: this.input.width,
+        height: this.input.height,
+        harga: this.input.itemPrice,
+        qty: this.input.itemQuantity
+      }).then(response => {
+        if (response.data.status === '05') {
+          if (response.data) {
+            this.error = true
+            this.errorMessage = response.data.message
+          }
+
+          return
+        }
+
+        if (response.data.data) {
+          this.result = response.data.data
+        }
+      }).catch(error => {
+        if (error.response) {
+          this.error = true
+          this.errorMessage = error.response.data.message
+        }
+      })
     },
     storeOrder () {
       this.error = false
