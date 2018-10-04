@@ -32,11 +32,11 @@
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">Harga Barang (IDR)</label>
-              <input v-model="input.itemPrice" class="uk-input" type="number">
+              <input v-model="input.itemPrice" class="uk-input" type="text" @input="numericCheck('itemPrice')">
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">Jumlah Barang</label>
-              <input v-model="input.itemQuantity" class="uk-input" type="number">
+              <input v-model="input.itemQuantity" class="uk-input" type="text" @input="numericCheck('itemQuantity')">
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">Berat ({{ config.weightUnits }})</label>
