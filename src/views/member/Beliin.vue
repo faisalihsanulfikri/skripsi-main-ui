@@ -87,8 +87,8 @@
               <label class="uk-form-label">Alamat Penerima</label>
               <select v-model="input.address" class="uk-select">
                 <option
-                  v-for="item in options.address"
-                  :key="item.value"
+                  v-for="(item, key) in options.address"
+                  :key="key"
                   :value="item.value">
                     {{ item.label }}
                   </option>
