@@ -72,7 +72,7 @@ button.uk-button {
     background-color: $app--primary-color;
     text-align: center;
     padding: 15px 10px;
-    
+
     .app--price-box-title {
       color: #FFF !important;
       margin: 0;
@@ -136,4 +136,8 @@ button.uk-button {
   .app--footer-copy-right {
     text-align: center;
   }
+}
+
+.my-class {
+  margin-top : 4px;
 }

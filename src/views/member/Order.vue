@@ -3,6 +3,7 @@
     <div class="uk-card uk-card-default">
       <div class="uk-card-header">
         <h3 class="uk-card-title">Pesanan</h3>
+        <button class="uk-button uk-button-primary uk-width-1-4" @click="showDialog(dialogPaymentCreate.id)">Konfirmasi Pembayaran</button>
       </div>
       <div class="uk-card-body">
         <div class="uk-overflow-auto">
@@ -26,14 +27,23 @@
           </table>
         </div>
       </div>
+      <dialog-payment-create :id="dialogPaymentCreate.id" @on-finish="onFinishCreatePayment"/>
     </div>
   </div>
 </template>
 
 <script>
+import DialogPaymentCreate from '../../components/DialogPaymentCreate'
+
 export default {
+  components: {
+    DialogPaymentCreate
+  },
   data () {
     return {
+      dialogPaymentCreate: {
+        id: 'dialog-payment-create'
+      },
       orders: []
     }
   },
@@ -46,6 +56,12 @@ export default {
         .catch(() => {
           //
         })
+    },
+    showDialog (id) {
+      this.UIkit.modal(`#${id}`).show()
+    },
+    onFinishCreatePayment (id) {
+      this.UIkit.modal(`#${id}`).hide()
     }
   },
   created () {

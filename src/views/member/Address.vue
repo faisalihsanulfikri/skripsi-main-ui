@@ -17,9 +17,9 @@
                   :price="`$${warehouse.price}`"
                   meta-price="Per Kilogram"
                   :address="warehouse.address"
-                  customerId="IG123"
-                  customerFirstName="Irsan"
-                  customerLastName="Gunawan"
+                  :customerId="user.customerCode"
+                  :customerFirstName="user.fullName"
+                  customerLastName=""
                   :zipcode="warehouse.zipcode"/>
             </li>
           </ul>
@@ -54,6 +54,8 @@ export default {
   },
   created () {
     this.fetchWareHouses()
+    this.user = this.$auth.getUser()
   }
+
 }
 </script>
