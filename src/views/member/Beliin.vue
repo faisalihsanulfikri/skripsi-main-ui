@@ -9,11 +9,11 @@
           <div class="uk-width-1-2">
             <div class="uk-margin">
               <label class="uk-form-label">Website</label>
-              <input v-model="input.website" class="uk-input">
+              <input v-model="input.website" class="uk-input" placeholder="Kirimin">
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">URL</label>
-              <input v-model="input.url" class="uk-input">
+              <input v-model="input.url" class="uk-input" placeholder="http://kirimin.co.id">
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">Jenis Barang</label>
