@@ -15,6 +15,9 @@
             <h4>{{ address.alias }}</h4>
             <p>{{ `${address.province}, ${address.kabupaten}, ${address.alamat1}, ${address.alamat2}` }}</p>
           </div>
+          <div class="uk-card-footer uk-text-right">
+            <a href="#" @click="edit">EDIT</a>
+          </div>
         </div>
       </div>
     </div>
@@ -62,9 +65,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .uk-card-default {
   background-color: #ECEFF1;
   box-shadow: none;
+
+  .uk-card-body {
+    min-height: calc(100% - 51px);
+  }
 }
 </style>
