@@ -138,22 +138,17 @@
                   </tr>
                 </tbody>
               </table>
-
           </div>
         </div>
         <div uk-grid>
           <div class="uk-width-1-1">
             <div class="uk-margin">
-<<<<<<< HEAD
-              <button class="uk-button uk-button-primary uk-width-1-4">Hitung</button>
-=======
               <button class="uk-button uk-button-primary uk-width-1-1" @click="check">Hitung</button>
             </div>
             <div class="uk-margin">
               <div v-if="error" class="uk-alert-danger" uk-alert>
                 {{ errorMessage }}
               </div>
->>>>>>> e5ad4f9c35730a1175abcfaf04d2123ec3501d95
             </div>
             <template v-if="result.items">
               <hr>
