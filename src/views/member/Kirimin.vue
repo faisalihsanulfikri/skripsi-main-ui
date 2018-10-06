@@ -101,43 +101,25 @@
           </div>
         </div>
         <div uk-grid>
-          <div class="uk-width-1-2">
-            <div class="uk-margin">
-              <div v-if="error" class="uk-alert-danger" uk-alert>
-                {{ errorMessage }}
+          <div class="uk-width-1-1">
+            <div class="uk-column-1-2 uk-align-right">
+              <div class="uk-margin">
+                <ul class="uk-switcher my-class">
+                    <li><button class="uk-button uk-button-primary uk-width-expand" disabled>Tambah</button></li>
+                    <li><button class="uk-button uk-button-primary uk-width-expand" @click="addItem">Tambah</button></li>
+                </ul>
               </div>
-            </div>
-          </div>
-          <div class="uk-width-1-2">
-            <div class="uk-margin">
-              <ul class="uk-switcher my-class uk-margin">
-                  <li><button class="uk-button uk-button-primary uk-width-1-4" disabled>Tambah</button></li>
-                  <li><button class="uk-button uk-button-primary uk-width-1-4">Tambah</button></li>
-              </ul>
             </div>
           </div>
         </div>
         <div uk-grid>
           <div class="uk-width-1-1">
-              <table class="uk-table uk-table-divider uk-width-expand">
-                <caption>List</caption>
-                <thead>
-                  <th>Jenis Barang</th>
-                  <th>Nama Barang</th>
-                  <th>Harga</th>
-                  <th>Berat</th>
-                  <th>Dimensi</th>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="uk-width-1-5">111</td>
-                    <td class="uk-width-1-5">111</td>
-                    <td class="uk-width-1-5">111</td>
-                    <td class="uk-width-1-5">111</td>
-                    <td class="uk-width-1-5">111</td>
-                  </tr>
-                </tbody>
-              </table>
+            <ul class="uk-switcher my-class uk-margin">
+                <li>&nbsp;</li>
+                <li>
+                  <kirimin-list :items="kiriminitems" />
+                </li>
+            </ul>
           </div>
         </div>
         <div uk-grid>
@@ -166,10 +148,12 @@
 
 <script>
 import CalculatorResult from '../../components/CalculatorResult'
+import KiriminList from '../../components/KiriminList'
 
 export default {
   components: {
-    CalculatorResult
+    CalculatorResult,
+    KiriminList
   },
   data () {
     return {
@@ -212,7 +196,8 @@ export default {
         ]
       },
       error: false,
-      errorMessage: ''
+      errorMessage: '',
+      kiriminitems: []
     }
   },
   methods: {
@@ -276,7 +261,26 @@ export default {
     check () {
       this.error = false
       this.errorMessage = ''
-
+      let itemsLength = 0
+      let itemsWidth = 0
+      let itemsHeight = 0
+      let itemsWeight = 0
+      let itemsPrice = 0
+      if (this.kiriminitems.length === 0) {
+        itemsLength = this.input.length
+        itemsWidth = this.input.width
+        itemsHeight = this.input.height
+        itemsWeight = this.input.weight
+        itemsPrice = this.input.itemPrice
+      } else {
+        this.kiriminitems.filter(function (item) {
+          itemsWeight += parseInt(item.beratBarang)
+          itemsPrice += parseInt(item.hargaBarang)
+        })
+        itemsLength = this.input.length
+        itemsWidth = this.input.width
+        itemsHeight = this.input.height
+      }
       this.$authHttp.post('/v1/calculator/cost', {
         origin: this.config.originCity,
         wunits: this.config.weightUnits,
@@ -284,11 +288,11 @@ export default {
         country: this.input.country,
         dest: this.input.address,
         courier: this.input.courier,
-        weight: this.input.weight,
-        length: this.input.length,
-        width: this.input.width,
-        height: this.input.height,
-        harga: this.input.itemPrice,
+        weight: itemsWeight,
+        length: itemsLength,
+        width: itemsWidth,
+        height: itemsHeight,
+        harga: itemsPrice,
         qty: this.input.itemQuantity
       }).then(response => {
         if (response.data.status === '05') {
@@ -325,7 +329,7 @@ export default {
         'vunits': this.config.volumeUnits,
         'wunits': this.input.weightUnits,
         'harga': this.input.itemPrice,
-        'qty': this.input.itemQuantity,
+        'qty': 1,
         'goodsName': this.input.itemName
       }).then(response => {
         this.clearInput()
@@ -339,7 +343,7 @@ export default {
       })
     },
     clearInput () {
-      this.input.catgory = ''
+      this.input.category = ''
       this.input.itemName = ''
       this.input.itemPrice = ''
       this.input.itemQuantity = ''
@@ -348,6 +352,16 @@ export default {
       this.input.width = ''
       this.input.height = ''
       this.input.address = ''
+    },
+    addItem () {
+      let item = {
+        jenisBarang: this.input.category,
+        namaBarang: this.input.itemName,
+        hargaBarang: this.input.itemPrice,
+        beratBarang: this.input.weight,
+        dimensiBarang: this.input.length + 'x' + this.input.width + 'x' + this.input.height
+      }
+      this.kiriminitems.push(item)
     }
   },
   created () {
