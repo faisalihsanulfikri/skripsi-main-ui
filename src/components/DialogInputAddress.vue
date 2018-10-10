@@ -41,7 +41,14 @@
         </div>
         <div class="uk-margin">
           <label class="uk-form-label">Kecamatan</label>
-          <input v-model="input.district" class="uk-input"/>
+          <select v-model="input.code" class="uk-select" @change="onDistrictChange">
+            <option
+              v-for="item in options.district"
+              :key="item.value"
+              :value="item.value">
+                {{ item.label }}
+              </option>
+          </select>
         </div>
         <div class="uk-margin">
           <label class="uk-form-label">Alamat 1</label>
@@ -91,16 +98,18 @@ export default {
         provinceId: '',
         city: '',
         cityId: '',
-        code: '',
         district: '',
+        code: '',
         address1: '',
         address2: ''
       },
       provinces: [],
       cities: [],
+      districts: [],
       options: {
         province: [],
-        city: []
+        city: [],
+        district: []
       },
       error: false,
       errorMessage: ''
@@ -120,9 +129,11 @@ export default {
         this.input.district = this.address.district
         this.input.address1 = this.address.alamat1
         this.input.address2 = this.address.alamat2
+
+        this.fetchCities()
+        this.fetchDistricts()
       }
 
-      this.fetchCities()
       this.fetchProvinces()
     },
     onDialogClose () {
@@ -133,56 +144,70 @@ export default {
       this.$emit('close')
     },
     fetchProvinces () {
-      this.$http.get('/v1/calculator/province')
-        .then(reponse => {
-          this.provinces = reponse.data.data
+      this.__fetchProvinces().then(res => {
+        this.provinces = res.data.data
 
-          this.options.province = reponse.data.data.map(item => {
-            let $item = {
-              value: parseInt(item.id),
-              label: item.name
-            }
+        this.options.province = res.data.data.map(item => {
+          let $item = {
+            value: parseInt(item.id),
+            label: item.name
+          }
 
-            return $item
-          })
+          return $item
         })
-        .catch(() => {
-          //
-        })
+      })
     },
     fetchCities () {
-      this.$http.get(`/v1/calculator/city/${this.input.provinceId}/province`)
-        .then(reponse => {
-          this.cities = reponse.data.data
+      this.__fetchCitiesByProvince(this.input.provinceId).then(res => {
+        this.cities = res.data.data
 
-          this.options.city = reponse.data.data.map(item => {
-            let $item = {
-              value: parseInt(item.id),
-              label: (item.type === 'Kabupaten') ? `Kab. ${item.city}` : item.city
-            }
+        this.options.city = res.data.data.map(item => {
+          let $item = {
+            value: parseInt(item.id),
+            label: (item.type === 'Kabupaten') ? `Kab. ${item.city}` : item.city
+          }
 
-            return $item
-          })
+          return $item
         })
-        .catch(() => {
-          //
+      })
+    },
+    fetchDistricts () {
+      this.__fetchDistrictsByCity(this.input.cityId).then(res => {
+        this.districts = res.data.data
+
+        this.options.district = res.data.data.map(item => {
+          let $item = {
+            value: item.code,
+            label: item.kecamatan
+          }
+
+          return $item
         })
+      })
     },
     onProvinceChanged () {
-      this.fetchCities()
-
       let provinces = this.provinces.filter(province => province.id === this.input.provinceId)
 
       if (provinces.length > 0) {
         this.input.province = provinces[0].name
       }
+
+      this.fetchCities()
     },
     onCityChanged () {
       let cities = this.cities.filter(city => city.id === this.input.cityId)
 
       if (cities.length > 0) {
         this.input.city = cities[0].city
-        this.input.code = cities[0].code
+      }
+
+      this.fetchDistricts()
+    },
+    onDistrictChange () {
+      let districts = this.districts.filter(district => district.code === this.input.code)
+
+      if (districts.length > 0) {
+        this.input.district = districts[0].kecamatan
       }
     },
     save () {

@@ -96,13 +96,9 @@ export default {
       this.dialogDelete.visible = false
     },
     fetchAddresses () {
-      this.$authHttp.get(`/v1/address`)
-        .then(reponse => {
-          this.addresses = reponse.data.data
-        })
-        .catch(() => {
-          //
-        })
+      this.__fetchUserAddresses().then(res => {
+        this.addresses = res.data.data
+      })
     },
     createAddress () {
       this.dialogInput.title = 'Tambah Alamat'
