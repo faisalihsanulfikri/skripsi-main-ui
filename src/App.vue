@@ -193,7 +193,10 @@ export default {
     },
     logout () {
       this.$auth.destroyToken()
-      this.$router.push({ name: 'home' })
+      this.$router.go({
+        name: 'home',
+        force: true
+      })
     }
   }
 }
