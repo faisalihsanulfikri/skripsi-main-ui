@@ -31,7 +31,7 @@
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">Kabupaten / Kota / Desa</label>
-              <select v-model="input.cityId" class="uk-select">
+              <select v-model="input.cityId" class="uk-select" @change="fetchDistricts">
                 <option
                   v-for="item in options.city"
                   :key="item.value"
@@ -42,9 +42,9 @@
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">Kecamatan</label>
-              <select v-model="input.cityId" class="uk-select">
+              <select v-model="input.code" class="uk-select">
                 <option
-                  v-for="item in options.city"
+                  v-for="item in options.district"
                   :key="item.value"
                   :value="item.value">
                     {{ item.label }}
@@ -142,6 +142,7 @@ export default {
         country: '',
         provinceId: '',
         cityId: '',
+        code: '',
         courier: 'jne',
         weight: '',
         length: '',
@@ -154,6 +155,7 @@ export default {
         warehouse: [],
         province: [],
         city: [],
+        district: [],
         courier: [
           {
             value: 'jne',
@@ -207,9 +209,9 @@ export default {
         })
     },
     fetchProvinces () {
-      this.$http.get('/v1/calculator/province')
-        .then(reponse => {
-          this.options.province = reponse.data.data.map(item => {
+      this.__fetchProvinces(({ success, response }) => {
+        if (success) {
+          this.options.province = response.data.data.map(item => {
             let $item = {
               value: parseInt(item.id),
               label: item.name
@@ -217,15 +219,13 @@ export default {
 
             return $item
           })
-        })
-        .catch(() => {
-          //
-        })
+        }
+      })
     },
     fetchCities () {
-      this.$http.get(`/v1/calculator/city/${this.input.provinceId}/province`)
-        .then(reponse => {
-          this.options.city = reponse.data.data.map(item => {
+      this.__fetchCitiesByProvince(this.input.provinceId, ({ success, response }) => {
+        if (success) {
+          this.options.city = response.data.data.map(item => {
             let $item = {
               value: parseInt(item.id),
               label: (item.type === 'Kabupaten') ? `Kab. ${item.city}` : item.city
@@ -233,10 +233,22 @@ export default {
 
             return $item
           })
-        })
-        .catch(() => {
-          //
-        })
+        }
+      })
+    },
+    fetchDistricts () {
+      this.__fetchDistrictsByCity(this.input.cityId, ({ success, response }) => {
+        if (success) {
+          this.options.district = response.data.data.map(item => {
+            let $item = {
+              value: item.code,
+              label: item.kecamatan
+            }
+
+            return $item
+          })
+        }
+      })
     },
     check () {
       this.error = false
