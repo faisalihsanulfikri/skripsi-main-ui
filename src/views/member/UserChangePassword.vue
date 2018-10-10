@@ -56,7 +56,12 @@ export default {
         .catch(err => {
           if (err.response) {
             this.error = 1
-            this.errorMessage = err.response.data.message
+
+            if (err.response.data.message) {
+              this.errorMessage = err.response.data.message
+            } else {
+              this.errorMessage = err.response.statusText
+            }
           }
         })
     }
