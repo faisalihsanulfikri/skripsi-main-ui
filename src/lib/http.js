@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 
+import $router from '../router'
 import $store from '../store/index'
 
 const api = 'http://45.76.163.191:3003'
@@ -55,8 +56,9 @@ Vue.authHttp = () => {
   }, error => {
     if (error.response) {
       if (error.response.status === 401) {
-        this.$auth.destroyToken()
-        this.$router.push({ name: 'login' })
+        Vue.auth.destroyToken()
+
+        $router.push({ name: 'login' })
       }
     }
 
