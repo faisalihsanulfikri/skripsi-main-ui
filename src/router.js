@@ -102,7 +102,7 @@ export default new Router({
           component: mAddress
         },
         {
-          path: 'acount',
+          path: 'account',
           name: 'member-account',
           component: mAccount
         },

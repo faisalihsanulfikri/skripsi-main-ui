@@ -10,6 +10,7 @@ import './lib/auth'
 import './plugins/fontawesome'
 import './plugins/vuetify'
 import './plugins/uikit'
+import './plugins/element-ui'
 
 Vue.use(Vue2Filters)
 

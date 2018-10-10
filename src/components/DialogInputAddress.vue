@@ -1,10 +1,9 @@
 <template>
-  <div :id="id" class="uk-flex-top" uk-modal>
-    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
-      <h3>Alamat Baru</h3>
-      <div v-if="error" class="uk-alert-danger" uk-alert>
-        {{ errorMessage }}
-      </div>
+  <el-dialog
+    :title="title"
+    :visible="visible"
+    @open="onDialogOpen"
+    @close="onDialogClose">
       <form>
         <div class="uk-margin">
           <label class="uk-form-label">Alias</label>
@@ -52,19 +51,34 @@
           <label class="uk-form-label">Alamat 2</label>
           <input v-model="input.address2" class="uk-input"/>
         </div>
-        <div class="uk-margin uk-text-right">
-          <button class="uk-button uk-button-primary" type="button" @click="save">Simpan</button>
-        </div>
+        <el-alert
+          v-if="error"
+          title="ERROR"
+          type="error"
+          :description="errorMessage"
+          show-icon>
+        </el-alert>
       </form>
-    </div>
-  </div>
+      <div slot="footer">
+        <button class="uk-button uk-button-primary" type="button" @click="save">Simpan</button>
+      </div>
+  </el-dialog>
 </template>
 
 <script>
 export default {
   props: {
-    id: {
-      required: true
+    title: {
+      default: 'New Address'
+    },
+    visible: {
+      default: false
+    },
+    edit: {
+      default: false
+    },
+    address: {
+      default: {}
     }
   },
   data () {
@@ -82,17 +96,42 @@ export default {
         address1: '',
         address2: ''
       },
+      provinces: [],
+      cities: [],
       options: {
         province: [],
         city: []
       },
-      provinces: [],
-      cities: [],
       error: false,
       errorMessage: ''
     }
   },
   methods: {
+    onDialogOpen () {
+      if (this.edit) {
+        this.input.alias = this.address.alias
+        this.input.name = this.address.name
+        this.input.phone = this.address.phone
+        this.input.province = this.address.province
+        this.input.provinceId = this.address.provinceId
+        this.input.city = this.address.kabupaten
+        this.input.cityId = this.address.kabupatenId
+        this.input.code = this.address.code
+        this.input.district = this.address.district
+        this.input.address1 = this.address.alamat1
+        this.input.address2 = this.address.alamat2
+      }
+
+      this.fetchCities()
+      this.fetchProvinces()
+    },
+    onDialogClose () {
+      this.error = false
+      this.errorMessage = ''
+
+      this.cleanInput()
+      this.$emit('close')
+    },
     fetchProvinces () {
       this.$http.get('/v1/calculator/province')
         .then(reponse => {
@@ -147,6 +186,13 @@ export default {
       }
     },
     save () {
+      if (!this.edit) {
+        this.store()
+      } else {
+        this.update()
+      }
+    },
+    store () {
       this.error = false
       this.errorMessage = ''
 
@@ -160,18 +206,51 @@ export default {
         kecamatan: this.input.district,
         alamat1: this.input.address1,
         alamat2: this.input.address2
-      }).then(response => {
-        this.clearInput()
+      }).then(res => {
+        this.$notify({
+          title: 'SUCCESS',
+          message: res.data.message,
+          type: 'success'
+        })
 
-        this.$emit('on-finish', this.id)
-      }).catch(error => {
-        if (error.response) {
+        this.onDialogClose()
+      }).catch(err => {
+        if (err.response) {
           this.error = true
-          this.errorMessage = error.response.data.message
+          this.errorMessage = err.response.data.message
         }
       })
     },
-    clearInput () {
+    update () {
+      this.error = false
+      this.errorMessage = ''
+
+      this.$authHttp.put(`/v1/address/${this.address.id}`, {
+        alias: this.input.alias,
+        province: this.input.province,
+        provinceId: this.input.provinceId,
+        kabupaten: this.input.city,
+        kabupatenId: this.input.cityId,
+        code: this.input.code,
+        kecamatan: this.input.district,
+        alamat1: this.input.address1,
+        alamat2: this.input.address2
+      }).then(res => {
+        this.$notify({
+          title: 'SUCCESS',
+          message: res.data.message,
+          type: 'success'
+        })
+
+        this.onDialogClose()
+      }).catch(err => {
+        if (err.response) {
+          this.error = true
+          this.errorMessage = err.response.data.message
+        }
+      })
+    },
+    cleanInput () {
       this.input.alias = ''
       this.input.name = ''
       this.input.phone = ''
@@ -184,9 +263,6 @@ export default {
       this.input.address1 = ''
       this.input.address2 = ''
     }
-  },
-  created () {
-    this.fetchProvinces()
   }
 }
 </script>

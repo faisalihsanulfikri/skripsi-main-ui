@@ -40,8 +40,13 @@
               <v-date-picker v-model="user.birthDate" @input="$refs.dialog.save(user.birthDate)"/>
             </v-dialog>
           </div>
+          <div v-if="error" class="uk-margin">
+            <div class="uk-alert-danger" uk-alert>
+              {{ errorMessage }}
+            </div>
+          </div>
           <div class="uk-margin uk-text-right">
-            <button class="uk-button uk-button-primary" type="button">SAVE</button>
+            <button class="uk-button uk-button-primary" type="button" @click="updateProfile">SAVE</button>
           </div>
         </form>
       </div>
@@ -57,7 +62,30 @@ export default {
       user: {},
       dialog: {
         birthdate: false
-      }
+      },
+      error: false,
+      errorMessage: ''
+    }
+  },
+  methods: {
+    updateProfile () {
+      this.error = false
+      this.errorMessage = ''
+
+      this.$authHttp.put('/v1/users', {
+        fullName: this.user.fullName,
+        mobile: this.user.mobile,
+        email: this.user.email,
+        bod: this.user.birthDate,
+        gender: this.user.gender
+      }).then(res => {
+
+      }).catch(err => {
+        if (err.response) {
+          this.error = true
+          this.errorMessage = err.response.data.message
+        }
+      })
     }
   },
   created () {
