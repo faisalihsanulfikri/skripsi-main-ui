@@ -51,7 +51,13 @@ export default {
 
       this.$authHttp.put('/v1/users/password', this.input)
         .then(res => {
+          this.$notify({
+            status: 'SUCCESS',
+            message: res.data.message,
+            type: 'success'
+          })
 
+          this.clearInput()
         })
         .catch(err => {
           if (err.response) {
