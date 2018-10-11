@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import * as Level from '../config/level'
+
 export default {
   data () {
     return {
@@ -53,6 +55,7 @@ export default {
     },
     login () {
       this.error = false
+      this.errorMessage = ''
 
       this.$http.post('/v1/login', this.input)
         .then(response => {
@@ -60,7 +63,9 @@ export default {
 
           this.clearInput()
 
-          this.$router.push({ name: 'member-account' })
+          this.$router.push({
+            name: Level.ROUTE_LEVEL[response.data.level]
+          })
         })
         .catch(error => {
           if (error.response) {

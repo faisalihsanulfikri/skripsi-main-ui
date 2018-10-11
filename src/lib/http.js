@@ -58,7 +58,7 @@ Vue.authHttp = () => {
       if (error.response.status === 401) {
         Vue.auth.destroyToken()
 
-        $router.push({ name: 'login' })
+        // $router.go({ path: '/login' })
       }
     }
 
