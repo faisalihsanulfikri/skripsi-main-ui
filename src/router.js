@@ -16,6 +16,15 @@ import mCalculator from './views/member/Calculator'
 import aMain from './views/admin/Main'
 import aDashboard from './views/admin/Dashboard'
 import aUser from './views/admin/user/Index'
+import aCategories from './views/admin/master/Categories'
+import aWarehouses from './views/admin/master/Warehouses'
+import aExchange from './views/admin/master/Exchange'
+import aArea from './views/admin/master/Area'
+import aOrders from './views/admin/Orders'
+import aInvoices from './views/admin/Invoices'
+
+import gMain from './views/agent/Main'
+import gDashboard from './views/agent/Dashboard'
 
 import Main from './views/general/Main'
 import Faq from './views/general/Faq'
@@ -149,9 +158,50 @@ export default new Router({
           name: 'admin-main'
         },
         {
+          path: 'orders',
+          component: aOrders,
+          name: 'admin-orders'
+        },
+        {
+          path: 'invoices',
+          component: aInvoices,
+          name: 'admin-invoices'
+        },
+        {
           path: 'users/:level',
           component: aUser,
           name: 'admin-user'
+        },
+        {
+          path: 'master/categories',
+          component: aCategories,
+          name: 'admin-categories'
+        },
+        {
+          path: 'master/warehouses',
+          component: aWarehouses,
+          name: 'admin-warehouses'
+        },
+        {
+          path: 'master/exchange',
+          component: aExchange,
+          name: 'admin-exchange'
+        },
+        {
+          path: 'master/area',
+          component: aArea,
+          name: 'admin-area'
+        }
+      ]
+    },
+    {
+      path: '/agent',
+      component: gMain,
+      children: [
+        {
+          path: '/',
+          component: gDashboard,
+          name: 'agent-main'
         }
       ]
     }
