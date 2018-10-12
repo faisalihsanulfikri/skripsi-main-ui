@@ -17,7 +17,7 @@
                   :price="`$${warehouse.price}`"
                   meta-price="Per Kilogram"
                   :address="warehouse.address"
-                  :customerId="user.customerCode"
+                  :customerId="user.custCode"
                   :customerFirstName="user.fullName"
                   customerLastName=""
                   :zipcode="warehouse.zipcode"/>
