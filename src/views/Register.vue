@@ -68,10 +68,10 @@
                     <tr class="uk-form-controls uk-form-controls-text">
                         <td>Pilihan</td>
                         <td>
-                        <input class="uk-radio" type="radio" name="radio1">
+                          <input v-model="input.level" class="uk-radio" type="radio" value="2">
                         </td>
                         <td>
-                        <input class="uk-radio" type="radio" name="radio1">
+                          <input v-model="input.level" class="uk-radio" type="radio" value="3">
                         </td>
                     </tr>
                 </thead>
@@ -174,7 +174,7 @@ export default {
         password: '',
         mobile: '',
         gender: 'm',
-        bod: '2000-01-01',
+        bod: '2018-01-01',
         level: 2
       },
       error: false,

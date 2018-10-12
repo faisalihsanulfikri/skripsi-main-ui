@@ -243,20 +243,20 @@ export default {
         })
     },
     fetchAddresses () {
-      this.$authHttp.get('/v1/address')
-        .then(response => {
-          this.options.address = response.data.data.map(item => {
-            let $item = {
-              value: item.kabupatenId,
-              label: `${item.alias} - ${item.alamat1}`
-            }
+      this.__fetchUserAddresses().then(res => {
+        this.options.address = res.data.data.map(item => {
+          let $item = {
+            value: item.kabupatenId,
+            label: `${item.alias} - ${item.alamat1}`
+          }
 
-            return $item
-          })
+          return $item
         })
-        .catch(() => {
-          //
-        })
+
+        let addresses = res.data.data.filter(item => item.primary)
+
+        this.input.address = addresses[0].kabupatenId
+      })
     },
     check () {
       this.error = false

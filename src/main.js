@@ -4,12 +4,15 @@ import App from './App.vue'
 import router from './router'
 import store from './store/index'
 
+import './mixins'
+
 import './lib/http'
 import './lib/auth'
 
 import './plugins/fontawesome'
 import './plugins/vuetify'
 import './plugins/uikit'
+import './plugins/element-ui'
 
 Vue.use(Vue2Filters)
 

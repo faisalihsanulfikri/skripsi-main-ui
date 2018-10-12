@@ -4,17 +4,20 @@ import {
   faAddressCard,
   faBullhorn,
   faCalculator,
+  faCheck,
   faDollarSign,
+  faEdit,
   faFileAlt,
   faFileInvoice,
   faQuestion,
   faSignInAlt,
+  faStar,
+  faTimes,
+  faTrashAlt,
   faTruck,
   faUser,
   faWallet,
-  faWarehouse,
-  faCheck,
-  faTimes } from '@fortawesome/free-solid-svg-icons'
+  faWarehouse } from '@fortawesome/free-solid-svg-icons'
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -22,17 +25,20 @@ library.add([
   faAddressCard,
   faBullhorn,
   faCalculator,
+  faCheck,
   faDollarSign,
+  faEdit,
   faFileAlt,
   faFileInvoice,
   faQuestion,
   faSignInAlt,
+  faStar,
+  faTimes,
+  faTrashAlt,
   faTruck,
   faUser,
   faWallet,
-  faWarehouse,
-  faCheck,
-  faTimes
+  faWarehouse
 ])
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
