@@ -7,7 +7,7 @@
         active-text-color="#FFF"
         :router="true">
         <el-menu-item index="/admin">DASHBOARD</el-menu-item>
-        <el-menu-item index="/admin/invoice">INVOICES</el-menu-item>
+        <el-menu-item index="/admin/invoices">INVOICES</el-menu-item>
         <el-menu-item index="/admin/orders">ORDERS</el-menu-item>
         <el-submenu index="/admin">
           <template slot="title">

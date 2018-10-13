@@ -22,7 +22,9 @@ import aCategoryCreate from './views/admin/category/Create'
 import aWarehouse from './views/admin/warehouse/Index'
 import aWarehouseCreate from './views/admin/warehouse/Create'
 import aExchange from './views/admin/master/Exchange'
-import aArea from './views/admin/master/Area'
+import aArea from './views/admin/area/Index'
+import aAreaCity from './views/admin/area/City'
+import aAreaDistrict from './views/admin/area/District'
 import aUser from './views/admin/user/Index'
 
 import gMain from './views/agent/Main'
@@ -208,6 +210,16 @@ export default new Router({
           path: 'master/area',
           component: aArea,
           name: 'admin-area'
+        },
+        {
+          path: 'master/area/provinces/:provinceId/cities',
+          component: aAreaCity,
+          name: 'admin-area-province-city'
+        },
+        {
+          path: 'master/area/provinces/:provinceId/cities/:cityId/district',
+          component: aAreaDistrict,
+          name: 'admin-area-province-city-district'
         },
         {
           path: 'users/:level',
