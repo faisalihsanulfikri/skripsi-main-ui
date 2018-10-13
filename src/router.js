@@ -26,6 +26,7 @@ import aArea from './views/admin/area/Index'
 import aAreaCity from './views/admin/area/City'
 import aAreaDistrict from './views/admin/area/District'
 import aUser from './views/admin/user/Index'
+import aInbound from './views/admin/Inbound'
 
 import gMain from './views/agent/Main'
 import gDashboard from './views/agent/Dashboard'
@@ -228,7 +229,12 @@ export default new Router({
           path: 'users/:level',
           component: aUser,
           name: 'admin-user'
-        }
+        },
+        {
+          path: 'inbound',
+          component: aInbound,
+          name: 'admin-inbound'
+        },
       ]
     },
     {
