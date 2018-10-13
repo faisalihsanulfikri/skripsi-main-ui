@@ -13,8 +13,8 @@
           <template slot="title">
             <span>MASTER DATA</span>
           </template>
-          <el-menu-item index="/admin">Categories</el-menu-item>
-          <el-menu-item index="/admin">Warehouses</el-menu-item>
+          <el-menu-item index="/admin/categories">Categories</el-menu-item>
+          <el-menu-item index="/admin/warehouses">Warehouses</el-menu-item>
           <el-menu-item index="/admin">Exchange Rates</el-menu-item>
           <el-menu-item index="/admin">Provinces</el-menu-item>
         </el-submenu>

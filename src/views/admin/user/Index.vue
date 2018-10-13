@@ -1,5 +1,19 @@
 <template>
   <div class="uk-card uk-card-default uk-card-small">
+    <div class="uk-card-header app--card-header">
+      <div uk-grid>
+        <div class="uk-width-auto">
+          <div class="app--card-header__icon">
+            <font-awesome-icon icon="user"></font-awesome-icon>
+          </div>
+        </div>
+        <div class="uk-width-expand">
+          <div class="app--card-header_title">
+            <h3>Users <small>[{{ $route.params.level }}]</small></h3>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="uk-card-body">
       <div class="uk-overflow-auto">
         <table class="uk-table uk-table-divider uk-table-small">

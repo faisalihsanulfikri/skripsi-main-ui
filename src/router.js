@@ -15,6 +15,10 @@ import mCalculator from './views/member/Calculator'
 
 import aMain from './views/admin/Main'
 import aDashboard from './views/admin/Dashboard'
+import aCategory from './views/admin/category/Index'
+import aCategoryCreate from './views/admin/category/Create'
+import aWarehouse from './views/admin/warehouse/Index'
+import aWarehouseCreate from './views/admin/warehouse/Create'
 import aUser from './views/admin/user/Index'
 
 import Main from './views/general/Main'
@@ -147,6 +151,36 @@ export default new Router({
           path: '/',
           component: aDashboard,
           name: 'admin-main'
+        },
+        {
+          path: 'categories',
+          component: aCategory,
+          name: 'admin-category'
+        },
+        {
+          path: 'categories/create',
+          component: aCategoryCreate,
+          name: 'admin-category-create'
+        },
+        {
+          path: 'categories/:id/edit',
+          component: aCategoryCreate,
+          name: 'admin-category-edit'
+        },
+        {
+          path: 'warehouses',
+          component: aWarehouse,
+          name: 'admin-warehouse'
+        },
+        {
+          path: 'warehouses/create',
+          component: aWarehouseCreate,
+          name: 'admin-warehouse-create'
+        },
+        {
+          path: 'warehouses/:id/edit',
+          component: aWarehouseCreate,
+          name: 'admin-warehouse-edit'
         },
         {
           path: 'users/:level',
