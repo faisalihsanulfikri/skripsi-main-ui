@@ -29,6 +29,8 @@ import aUser from './views/admin/user/Index'
 
 import gMain from './views/agent/Main'
 import gDashboard from './views/agent/Dashboard'
+import gAgentOrders from './views/agent/AgentOrders'
+import gAgentInbound from './views/agent/AgentInbound'
 
 import Main from './views/general/Main'
 import Faq from './views/general/Faq'
@@ -236,6 +238,16 @@ export default new Router({
           path: '/',
           component: gDashboard,
           name: 'agent-main'
+        },
+        {
+          path: 'orders',
+          component: gAgentOrders,
+          name: 'agent-orders'
+        },
+        {
+          path: 'inbound',
+          component: gAgentInbound,
+          name: 'agent-inbound'
         }
       ]
     }
