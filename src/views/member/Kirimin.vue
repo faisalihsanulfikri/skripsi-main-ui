@@ -136,24 +136,30 @@
               <hr>
               <calculator-result :result="result"/>
               <div class="uk-margin">
-                <button class="uk-button uk-button-primary uk-width-1-1" @click="storeOrder">Lanjut Pengiriman</button>
+                <button class="uk-button uk-button-primary uk-width-1-1" @click.prevent="showOrderConfirmation">Lanjut Pengiriman</button>
               </div>
             </template>
           </div>
         </div>
       </div>
     </div>
+    <dialog-order-confirmation
+      :visible.sync="dialogOrderConfirmation.visible"
+      @close="onOrderConfirmationClose"
+      @confirm="onOrderConfirmationProceed"/>
   </div>
 </template>
 
 <script>
 import CalculatorResult from '../../components/CalculatorResult'
 import KiriminList from '../../components/KiriminList'
+import DialogOrderConfirmation from '../../components/DialogOrderConfirmation'
 
 export default {
   components: {
     CalculatorResult,
-    KiriminList
+    KiriminList,
+    DialogOrderConfirmation
   },
   data () {
     return {
@@ -197,7 +203,10 @@ export default {
       },
       error: false,
       errorMessage: '',
-      kiriminitems: []
+      kiriminitems: [],
+      dialogOrderConfirmation: {
+        visible: false
+      }
     }
   },
   methods: {
@@ -362,7 +371,17 @@ export default {
         dimensiBarang: this.input.length + 'x' + this.input.width + 'x' + this.input.height
       }
       this.kiriminitems.push(item)
-    }
+    },
+    showOrderConfirmation () {
+      this.dialogOrderConfirmation.visible = true
+    },
+    onOrderConfirmationClose () {
+      this.dialogOrderConfirmation.visible = false
+    },
+    onOrderConfirmationProceed () {
+      this.dialogOrderConfirmation.visible = false
+      this.storeOrder()
+    },
   },
   created () {
     this.fetchCategories()

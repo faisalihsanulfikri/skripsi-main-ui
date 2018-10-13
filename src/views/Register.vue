@@ -63,7 +63,7 @@
                     <tr>
                         <th>Fitur</th>
                         <th>Standard</th>
-                        <th>Premium</th>
+                        <th>VIP</th>
                     </tr>
                     <tr class="uk-form-controls uk-form-controls-text">
                         <td>Pilihan</td>
@@ -92,6 +92,11 @@
                 <div id="toggle-animation" class="uk-card uk-card-default uk-card-body uk-margin-small">
                 <table class="uk-table">
                   <tbody>
+                    <thead>
+                      <th>&nbsp;</th>
+                      <th>Standard</th>
+                      <th>VIP</th>
+                    </thead>
                     <tr>
                         <td>Your own U.S. AND SOME OTHERS COUNTRIES</td>
                         <td><font-awesome-icon icon="check" size="1x"/></td>
@@ -187,8 +192,8 @@ export default {
       this.input.email = ''
       this.input.password = ''
       this.input.mobile = ''
-      this.input.gender = ''
-      this.input.bod = ''
+      this.input.gender = 'm'
+      this.input.bod = '2000-01-01'
     },
     register () {
       this.error = false

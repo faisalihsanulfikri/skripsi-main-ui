@@ -15,11 +15,18 @@ import mCalculator from './views/member/Calculator'
 
 import aMain from './views/admin/Main'
 import aDashboard from './views/admin/Dashboard'
+import aInvoice from './views/admin/Invoices'
+import aOrder from './views/admin/Orders'
 import aCategory from './views/admin/category/Index'
 import aCategoryCreate from './views/admin/category/Create'
 import aWarehouse from './views/admin/warehouse/Index'
 import aWarehouseCreate from './views/admin/warehouse/Create'
+import aExchange from './views/admin/master/Exchange'
+import aArea from './views/admin/master/Area'
 import aUser from './views/admin/user/Index'
+
+import gMain from './views/agent/Main'
+import gDashboard from './views/agent/Dashboard'
 
 import Main from './views/general/Main'
 import Faq from './views/general/Faq'
@@ -153,39 +160,70 @@ export default new Router({
           name: 'admin-main'
         },
         {
-          path: 'categories',
+          path: 'invoices',
+          component: aInvoice,
+          name: 'admin-invoice'
+        },
+        {
+          path: 'orders',
+          component: aOrder,
+          name: 'admin-order'
+        },
+        {
+          path: 'master/categories',
           component: aCategory,
           name: 'admin-category'
         },
         {
-          path: 'categories/create',
+          path: 'master/categories/create',
           component: aCategoryCreate,
           name: 'admin-category-create'
         },
         {
-          path: 'categories/:id/edit',
+          path: 'master/categories/:id/edit',
           component: aCategoryCreate,
           name: 'admin-category-edit'
         },
         {
-          path: 'warehouses',
+          path: 'master/warehouses',
           component: aWarehouse,
           name: 'admin-warehouse'
         },
         {
-          path: 'warehouses/create',
+          path: 'master/warehouses/create',
           component: aWarehouseCreate,
           name: 'admin-warehouse-create'
         },
         {
-          path: 'warehouses/:id/edit',
+          path: 'master/warehouses/:id/edit',
           component: aWarehouseCreate,
           name: 'admin-warehouse-edit'
+        },
+        {
+          path: 'master/exchange',
+          component: aExchange,
+          name: 'admin-exchange'
+        },
+        {
+          path: 'master/area',
+          component: aArea,
+          name: 'admin-area'
         },
         {
           path: 'users/:level',
           component: aUser,
           name: 'admin-user'
+        }
+      ]
+    },
+    {
+      path: '/agent',
+      component: gMain,
+      children: [
+        {
+          path: '/',
+          component: gDashboard,
+          name: 'agent-main'
         }
       ]
     }

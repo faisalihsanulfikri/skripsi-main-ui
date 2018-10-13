@@ -6,27 +6,10 @@
         text-color="#FFF"
         active-text-color="#FFF"
         :router="true">
-        <el-menu-item index="/admin">DASHBOARD</el-menu-item>
-        <el-menu-item index="/admin/invoice">INVOICES</el-menu-item>
-        <el-menu-item index="/admin/orders">ORDERS</el-menu-item>
-        <el-submenu index="/admin">
-          <template slot="title">
-            <span>MASTER DATA</span>
-          </template>
-          <el-menu-item index="/admin/master/categories">Categories</el-menu-item>
-          <el-menu-item index="/admin/master/warehouses">Warehouses</el-menu-item>
-          <el-menu-item index="/admin/master/exchange">Exchange Rates</el-menu-item>
-          <el-menu-item index="/admin/master/area">Area</el-menu-item>
-        </el-submenu>
-        <el-submenu index="/admin/users">
-          <template slot="title">
-            <span>USERS</span>
-          </template>
-          <el-menu-item index="/admin/users/regular">Regular</el-menu-item>
-          <el-menu-item index="/admin/users/premium">Premium</el-menu-item>
-          <el-menu-item index="/admin/users/agent">Agent</el-menu-item>
-          <el-menu-item index="/admin/users/admin">Admin</el-menu-item>
-        </el-submenu>
+        <el-menu-item index="/agent">DASHBOARD</el-menu-item>
+        <el-menu-item index="/agent/orders">ORDERS</el-menu-item>
+        <el-menu-item index="/agent/orders">REPORT</el-menu-item>
+
         <el-menu-item index="/admin">SETTINGS</el-menu-item>
       </el-menu>
     </el-aside>

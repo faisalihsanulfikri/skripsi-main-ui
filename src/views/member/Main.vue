@@ -102,14 +102,14 @@
                   </div>
                 </router-link>
               </li>
-              <li>
+              <!--<li>
                 <router-link :to="{ name: 'member-beliin' }">
                   <div class="uk-text-center">
                     <font-awesome-icon icon="file-alt" size="2x"/>
                     <div>Beliin</div>
                   </div>
                 </router-link>
-              </li>
+              </li>-->
               <li>
                 <router-link :to="{ name: 'member-order' }">
                   <div class="uk-text-center">
