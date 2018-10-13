@@ -79,10 +79,10 @@
 <div class="uk-margin">
   <div class="uk-column-1-4">
     <div class="uk-margin uk-text-right">
-      <button class="uk-button uk-button-primary uk-width-1-1" type="button" >Print AWB</button>
+      <button class="uk-button uk-button-primary uk-width-1-1" type="button" >Konfirmasi</button>
     </div>
     <div class="uk-margin uk-text-right">
-      <button class="uk-button uk-button-primary uk-width-1-1" type="button" >Terima</button>
+      <button class="uk-button uk-button-danger uk-width-1-1" type="button" @click="print">Print AWB</button>
     </div>
   </div>
 </div>
@@ -94,16 +94,28 @@
           </tbody>
         </table>
       </div>
+      <div id="testPrint" class="uk-hidden">
+        <h1>Test Print AWB</h1>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { Printd } from 'printd'
+
 export default {
   data () {
     return {
       orders: []
     }
+  },
+  mounted () {
+    this.d = new Printd()
+    // Print dialog events (v0.0.9+)
+    const { contentWindow } = this.d.getIFrame()
+    contentWindow.addEventListener('beforeprint', () => console.log('before print event!'))
+    contentWindow.addEventListener('afterprint', () => console.log('after print event!'))
   },
   methods: {
     fetchOrders () {
@@ -118,6 +130,9 @@ export default {
     },
     collapseToggle (index) {
       this.orders[index].collapse = !this.orders[index].collapse
+    },
+    print () {
+      this.d.print(document.getElementById('testPrint', this.cssText))
     }
   },
   created () {

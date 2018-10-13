@@ -4,7 +4,7 @@
       <div uk-grid>
         <div class="uk-width-auto">
           <div class="app--card-header__back">
-            <router-link :to="{ name: 'agent-order' }">
+            <router-link :to="{ name: 'agent-main' }">
               <font-awesome-icon icon="chevron-left"></font-awesome-icon>
             </router-link>
           </div>
