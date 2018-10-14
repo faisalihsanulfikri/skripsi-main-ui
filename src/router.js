@@ -26,9 +26,13 @@ import aArea from './views/admin/area/Index'
 import aAreaCity from './views/admin/area/City'
 import aAreaDistrict from './views/admin/area/District'
 import aUser from './views/admin/user/Index'
+import aInbound from './views/admin/Inbound'
 
 import gMain from './views/agent/Main'
 import gDashboard from './views/agent/Dashboard'
+import gAgentOrders from './views/agent/AgentOrders'
+import gAgentInbound from './views/agent/AgentInbound'
+import gAgentReport from './views/agent/AgentReport'
 
 import Main from './views/general/Main'
 import Faq from './views/general/Faq'
@@ -225,7 +229,12 @@ export default new Router({
           path: 'users/:level',
           component: aUser,
           name: 'admin-user'
-        }
+        },
+        {
+          path: 'inbound',
+          component: aInbound,
+          name: 'admin-inbound'
+        },
       ]
     },
     {
@@ -236,6 +245,21 @@ export default new Router({
           path: '/',
           component: gDashboard,
           name: 'agent-main'
+        },
+        {
+          path: 'orders',
+          component: gAgentOrders,
+          name: 'agent-orders'
+        },
+        {
+          path: 'inbound',
+          component: gAgentInbound,
+          name: 'agent-inbound'
+        },
+        {
+          path: 'report',
+          component: gAgentReport,
+          name: 'agent-report'
         }
       ]
     }

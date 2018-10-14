@@ -9,7 +9,7 @@
         </div>
         <div class="uk-width-expand">
           <div class="app--card-header_title">
-            <h3>Invoice Masuk</h3>
+            <h3>Agent Order Masuk</h3>
           </div>
         </div>
         <div class="uk-width-auto">

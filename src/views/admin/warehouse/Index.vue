@@ -85,7 +85,7 @@ export default {
         })
       })
     },
-    collapseToggle(index) {
+    collapseToggle (index) {
       this.warehouses[index].collapse = !this.warehouses[index].collapse
     }
   },
