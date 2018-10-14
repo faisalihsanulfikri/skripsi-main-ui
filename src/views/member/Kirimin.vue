@@ -15,7 +15,7 @@
               </ul>
             </div>
           </div>
-          <div class="uk-width-1-4">
+          <div class="uk-width-1-5">
             <div class="uk-margin">
               <label class="uk-form-label">NPWP</label>
               <select class="uk-select" v-model="input.npwp" @change="onChange()">
@@ -24,7 +24,16 @@
               </select>
             </div>
           </div>
-          <div class="uk-width-1-4">
+          <div class="uk-width-1-5">
+            <div class="uk-margin">
+              <label class="uk-form-label">Asuransi</label>
+              <select class="uk-select" v-model="input.asuransi" @change="onChange()">
+                <option :key="true" :value="true">Ya</option>
+                <option :key="false" :value="false">Tidak</option>
+              </select>
+            </div>
+          </div>
+          <div class="uk-width-1-5">
             <div class="uk-margin">
               <label class="uk-form-label">Gudang Kirimin</label>
               <select v-model="input.country" class="uk-select">
@@ -37,7 +46,7 @@
               </select>
             </div>
           </div>
-          <div class="uk-width-1-4">
+          <div class="uk-width-1-5">
             <div class="uk-margin">
               <label class="uk-form-label">Alamat Penerima</label>
               <select v-model="input.address" class="uk-select">
@@ -181,7 +190,8 @@ export default {
         address: '',
         courier: 'jne',
         npwp: false,
-        consolidate: false
+        consolidate: false,
+        asuransi: false
       },
       options: {
         category: [],
@@ -277,6 +287,7 @@ export default {
       let itemsWeight = 0
       let itemsPrice = 0
       let itemsNPWP = false
+      let itemsAsuransi = false
       if (this.kiriminitems.length === 0) {
         itemsLength = this.input.length
         itemsWidth = this.input.width
@@ -292,7 +303,8 @@ export default {
         itemsWidth = this.input.width
         itemsHeight = this.input.height
       }
-      itemsNPWP = this.input.NPWP
+      itemsNPWP = this.input.npwp
+      itemsAsuransi = this.input.asuransi
       this.$authHttp.post('/v1/calculator/cost', {
         origin: this.config.originCity,
         wunits: this.config.weightUnits,
@@ -306,7 +318,8 @@ export default {
         height: itemsHeight,
         harga: itemsPrice,
         qty: this.input.itemQuantity,
-        npwp: itemsNPWP
+        npwp: itemsNPWP,
+        asuransi: itemsAsuransi
       }).then(response => {
         if (response.data.status === '05') {
           if (response.data) {
@@ -345,7 +358,9 @@ export default {
         'goodsName': this.input.itemName,
         'type': 1,
         'agentId': 12,
-        'status': 1
+        'status': 1,
+        'asuransi': this.input.asuransi,
+        'npwp': this.input.npwp
       }).then(response => {
         this.clearInput()
         this.$router.push({ name: 'member-order' })
@@ -367,6 +382,7 @@ export default {
       this.input.width = ''
       this.input.height = ''
       this.input.address = ''
+      this.input.asuransi = true
     },
     addItem () {
       let item = {
@@ -390,6 +406,10 @@ export default {
     },
     onChange (value) {
       this.input.consolidate = value
+      console.log('log' + this.input)
+    },
+    onAsuransiChange (value) {
+      this.input.asuransi = value
       console.log('log' + this.input)
     }
   },
