@@ -24,12 +24,10 @@ Vue.mixin({
           })
       })
     },
-    __fetchDistrictsByCity (id, cb) {
+    __fetchDistrictsByCity (id) {
       return new Promise((resolve, reject) => {
         Vue.http().get(`/v1/calculator/kecamatan/${id}`)
           .then(res => {
-            res.data.data = res.data.data[0]
-
             resolve(res)
           })
           .catch(err => {
@@ -37,7 +35,7 @@ Vue.mixin({
           })
       })
     },
-    __fetchUserAddresses (cb) {
+    __fetchUserAddresses () {
       return new Promise((resolve, reject) => {
         Vue.authHttp().get('/v1/address')
           .then(res => {
