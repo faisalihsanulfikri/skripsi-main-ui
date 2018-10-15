@@ -34,6 +34,11 @@ export default {
       name: 'admin-order'
     },
     {
+      path: 'inbound',
+      component: aInbound,
+      name: 'admin-inbound'
+    },
+    {
       path: 'master/categories',
       component: aCategory,
       name: 'admin-category'
@@ -92,11 +97,6 @@ export default {
       path: 'users/:level',
       component: aUser,
       name: 'admin-user'
-    },
-    {
-      path: 'inbound',
-      component: aInbound,
-      name: 'admin-inbound'
-    },
+    }
   ]
 }

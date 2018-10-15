@@ -69,8 +69,8 @@
               <label class="uk-form-label">Jenis Barang</label>
               <select v-model="input.category" class="uk-select">
                 <option
-                  v-for="item in options.category"
-                  :key="item.value"
+                  v-for="(item, key) in options.category"
+                  :key="key"
                   :value="item.value">
                     {{ item.label }}
                   </option>
@@ -287,7 +287,9 @@ export default {
 
         let addresses = res.data.data.filter(item => item.primary)
 
-        this.input.address = addresses[0].kabupatenId
+        if (addresses.length > 0) {
+          this.input.address = addresses[0].kabupatenId
+        }
       })
     },
     check () {
