@@ -209,45 +209,39 @@ export default {
         })
     },
     fetchProvinces () {
-      this.__fetchProvinces(({ success, response }) => {
-        if (success) {
-          this.options.province = response.data.data.map(item => {
-            let $item = {
-              value: parseInt(item.id),
-              label: item.name
-            }
+      this.__fetchProvinces().then(res => {
+        this.options.province = res.data.data.map(item => {
+          let $item = {
+            value: parseInt(item.id),
+            label: item.name
+          }
 
-            return $item
-          })
-        }
+          return $item
+        })
       })
     },
     fetchCities () {
-      this.__fetchCitiesByProvince(this.input.provinceId, ({ success, response }) => {
-        if (success) {
-          this.options.city = response.data.data.map(item => {
-            let $item = {
-              value: parseInt(item.id),
-              label: (item.type === 'Kabupaten') ? `Kab. ${item.city}` : item.city
-            }
+      this.__fetchCitiesByProvince(this.input.provinceId).then(res => {
+        this.options.city = res.data.data.map(item => {
+          let $item = {
+            value: parseInt(item.id),
+            label: (item.type === 'Kabupaten') ? `Kab. ${item.city}` : item.city
+          }
 
-            return $item
-          })
-        }
+          return $item
+        })
       })
     },
     fetchDistricts () {
-      this.__fetchDistrictsByCity(this.input.cityId, ({ success, response }) => {
-        if (success) {
-          this.options.district = response.data.data.map(item => {
-            let $item = {
-              value: item.code,
-              label: item.kecamatan
-            }
+      this.__fetchDistrictsByCity(this.input.cityId).then(res => {
+        this.options.district = res.data.data.map(item => {
+          let $item = {
+            value: item.code,
+            label: item.kecamatan
+          }
 
-            return $item
-          })
-        }
+          return $item
+        })
       })
     },
     check () {
