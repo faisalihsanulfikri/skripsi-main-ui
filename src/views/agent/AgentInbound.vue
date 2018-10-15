@@ -86,7 +86,6 @@ export default {
     getWareHouse () {
       this.error = false
       this.errorMessage = ''
-
       this.$authHttp.get(`/v1/cfees/${this.$route.params.id}`).then(res => {
         this.input.code = res.data[0].code
         this.input.name = res.data[0].name

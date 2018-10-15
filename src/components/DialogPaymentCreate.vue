@@ -8,15 +8,24 @@
       <form>
         <div class="uk-margin">
           <label class="uk-form-label">Tanggal</label>
-          <input v-model="input.tanggal" class="uk-input"/>
+          <v-dialog
+            v-model="dialog.tanggal"
+            lazy
+            full-width
+            ref="dialog"
+            width="290px"
+            :return-value.sync="input.tanggal">
+            <input v-model="input.tanggal" slot="activator" class="uk-input" readonly/>
+            <v-date-picker v-model="input.tanggal" @input="$refs.dialog.save(input.tanggal)"/>
+          </v-dialog>
         </div>
         <div class="uk-margin">
           <label class="uk-form-label">Kode Order</label>
-          <input v-model="input.orderNo" class="uk-input"/>
+          <input class="uk-input" :value="orderNo" readonly/>
         </div>
         <div class="uk-margin">
           <label class="uk-form-label">Jumlah Bayar</label>
-          <input v-model="input.amount" class="uk-input"/>
+          <input :value="amountToPay" class="uk-input" @input="numericCheck('amount')"/>
         </div>
         <div class="uk-margin">
           <label class="uk-form-label">Dari Bank</label>
@@ -35,14 +44,19 @@ export default {
   props: {
     id: {
       required: true
-    }
+    },
+    orderNo: '',
+    amountToPay: ''
   },
   data () {
     return {
+      dialog: {
+        tanggal: false
+      },
       input: {
         tanggal: '',
-        orderNo: '',
-        amount: '',
+        orderNo: this.orderNo,
+        amount: this.amountToPay,
         bank: ''
       },
       options: {
@@ -54,6 +68,15 @@ export default {
     }
   },
   methods: {
+    numericCheck (key) {
+      let val = this.input[key].match(/\d/g)
+
+      if (val !== null) {
+        this.input[key] = val.join('')
+      } else {
+        this.input[key] = ''
+      }
+    },
     save () {
       this.error = false
       this.errorMessage = ''
@@ -81,6 +104,11 @@ export default {
       this.input.bank = ''
     }
   },
-  created () {}
+  created () {
+    let date = new Date(Date.parse(this.user.birthDate))
+    let birthdate = `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`
+
+    this.user.birthDate = birthdate
+  }
 }
 </script>

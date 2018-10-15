@@ -39,7 +39,7 @@
                     <font-awesome-icon v-else icon="angle-down"></font-awesome-icon>
                   </a>
                 </td>
-                <td>{{ order.goodsName }}</td>
+                <td>{{ order.orderNo }}</td>
                 <td>{{ order.goodsName }}</td>
                 <td>{{ order.goodsName }}</td>
                 <td class="uk-text-right">{{ order.status }}</td>
@@ -119,7 +119,7 @@ export default {
   },
   methods: {
     fetchOrders () {
-      this.$authHttp.get('/v1/summary/orders').then(res => {
+      this.$authHttp.get('/v1/summary/invoice').then(res => {
       //  this.$authHttp.get(`/v1/cfees`).then(res => {
         this.orders = res.data.data.map(order => {
           order['collapse'] = true

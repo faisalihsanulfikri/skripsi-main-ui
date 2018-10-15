@@ -10,7 +10,7 @@
             <thead>
               <tr>
                 <th>Kode Order</th>
-                <th>Negara</th>
+                <th>Asuransi</th>
                 <th>Nama Barang</th>
                 <th>Status</th>
                 <th>Pembayaran</th>
@@ -18,19 +18,23 @@
             </thead>
             <tbody>
               <tr v-for="(order, key) in orders" :key="key">
-                <td>{{ order.goodsName }}</td>
-                <td>{{ order.country }}</td>
-                <td>{{ order.goodsName }}</td>
-                <td>{{ order.qty }}</td>
+                <td>{{ order.orderNo }}</td>
+                <td>{{ order.isInsured }}</td>
                 <td>
-                  <button class="uk-button uk-button-primary" @click="showDialog(dialogPaymentCreate.id)">Konfirmasi Pembayaran</button>
+                  <ul v-for="(item, key) in order.items" :key="key" >
+                    <li>{{ item.goodsName }}</li>
+                  </ul>
+                </td>
+                <td>{{ order.shipStatus }}</td>
+                <td>
+                  <button class="uk-button uk-button-primary" @click="showDialog(dialogPaymentCreate.id, order.orderNo, order.price)" >Konfirmasi Pembayaran</button>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-      <dialog-payment-create :id="dialogPaymentCreate.id" @on-finish="onFinishCreatePayment"/>
+      <dialog-payment-create :id="dialogPaymentCreate.id" :orderNo="selected" :amountToPay="amount" @on-finish="onFinishCreatePayment"/>
     </div>
   </div>
 </template>
@@ -47,12 +51,14 @@ export default {
       dialogPaymentCreate: {
         id: 'dialog-payment-create'
       },
-      orders: []
+      orders: [],
+      selected: '',
+      amount: ''
     }
   },
   methods: {
     fetchOrders () {
-      this.$authHttp.get('/v1/summary/orders')
+      this.$authHttp.get('/v1/summary/invoice')
         .then(response => {
           this.orders = response.data.data
         })
@@ -60,7 +66,9 @@ export default {
           //
         })
     },
-    showDialog (id) {
+    showDialog (id, lorderNo, lamount) {
+      this.selected = lorderNo
+      this.amount = lamount
       this.UIkit.modal(`#${id}`).show()
     },
     onFinishCreatePayment (id) {
