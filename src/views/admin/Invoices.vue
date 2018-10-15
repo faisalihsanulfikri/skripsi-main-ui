@@ -26,66 +26,34 @@
               <th>Nama Customer</th>
               <th>Nama Barang</th>
               <th class="uk-text-right">Status</th>
-              <th class="uk-text-right">Country</th>
-
             </tr>
           </thead>
           <tbody>
-            <template v-for="(order, index) in orders">
+            <template v-for="(invoice, index) in invoices">
               <tr :key="index">
                 <td class="app--table-column__collapse-toggle" @click.prevent="collapseToggle(index)">
                   <a href="#">
-                    <font-awesome-icon v-if="order.collapse" icon="angle-right"></font-awesome-icon>
+                    <font-awesome-icon v-if="invoice.collapse" icon="angle-right"></font-awesome-icon>
                     <font-awesome-icon v-else icon="angle-down"></font-awesome-icon>
                   </a>
                 </td>
-                <td>{{ order.goodsName }}</td>
-                <td>{{ order.goodsName }}</td>
-                <td>{{ order.goodsName }}</td>
-                <td class="uk-text-right">{{ order.status }}</td>
-                <td>{{ order.country }}</td>
+                <td>{{ invoice.orderNo }}</td>
+                <td>{{ invoice.shipperName }}</td>
+                <td>{{ invoice.shipperAddress }}</td>
+                <td class="uk-text-right">{{ invoice.serviceCode }}</td>
               </tr>
-              <tr v-show="!order.collapse" :key="`d${index}`">
+              <tr v-show="!invoice.collapse" :key="`d${index}`">
                 <td></td>
                 <td colspan="5">
                   <form class="uk-margin-large">
                     <div uk-grid>
-                      <div class="uk-column-1-5 ">
-                        <div class="uk-margin">
-                          <label class="uk-form-label">Berat ({{ order.wunits }})</label>
-                          <div>
-                            <input type="text" class="uk-input" min="1" placeholder="Tinggi" :value="order.weight">
+                      <div class="uk-margin">
+                        <div class="uk-column-1-4">
+                          <div class="uk-margin uk-text-right">
+                            <button class="uk-button uk-button-primary uk-width-1-1" type="button" >Konfirmasi</button>
                           </div>
-                        </div>
-                        <div class="uk-margin">
-                          <label class="uk-form-label">Harga</label>
-                          <div>
-                            <input type="text" class="uk-input" min="1" placeholder="Harga" :value="order.harga">
-                          </div>
-                        </div>
-                        <div class="uk-margin">
-                          <label class="uk-form-label">Panjang {{ order.wunits }}</label>
-                          <input type="text" class="uk-input" min="1" placeholder="Panjang" :value="order.length">
-                        </div>
-                        <div class="uk-margin">
-                          <label class="uk-form-label">Lebar {{ order.wunits }}</label>
-                          <input type="text" class="uk-input" min="1" placeholder="Lebar" :value="order.width">
-                        </div>
-                        <div class="uk-margin">
-                          <label class="uk-form-label">Tinggi {{ order.wunits }}</label>
-                          <input type="text" class="uk-input" min="1" placeholder="Tinggi" :value="order.height">
                         </div>
                       </div>
-<div class="uk-margin">
-  <div class="uk-column-1-4">
-    <div class="uk-margin uk-text-right">
-      <button class="uk-button uk-button-primary uk-width-1-1" type="button" >Konfirmasi</button>
-    </div>
-    <div class="uk-margin uk-text-right">
-      <button class="uk-button uk-button-danger uk-width-1-1" type="button" @click="print">Print AWB</button>
-    </div>
-  </div>
-</div>
                     </div>
                   </form>
                 </td>
@@ -107,7 +75,7 @@ import { Printd } from 'printd'
 export default {
   data () {
     return {
-      orders: []
+      invoices: []
     }
   },
   mounted () {
@@ -118,25 +86,23 @@ export default {
     contentWindow.addEventListener('afterprint', () => console.log('after print event!'))
   },
   methods: {
-    fetchOrders () {
-      this.$authHttp.get('/v1/summary/orders').then(res => {
-      //  this.$authHttp.get(`/v1/cfees`).then(res => {
-        this.orders = res.data.data.map(order => {
-          order['collapse'] = true
-
-          return order
+    fetchInvoices () {
+      this.$authHttp.get('/v1/summary/invoice').then(res => {
+        this.invoices = res.data.data.map(invoice => {
+          invoice['collapse'] = true
+          return invoice
         })
       })
     },
     collapseToggle (index) {
-      this.orders[index].collapse = !this.orders[index].collapse
+      this.invoices[index].collapse = !this.invoices[index].collapse
     },
     print () {
       this.d.print(document.getElementById('testPrint', this.cssText))
     }
   },
   created () {
-    this.fetchOrders()
+    this.fetchInvoices()
   }
 }
 </script>

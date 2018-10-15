@@ -22,7 +22,6 @@
           <thead>
             <tr>
               <th>Rincian</th>
-              <th width="100">Order No</th>
               <th>Nama Customer</th>
               <th>Nama Barang</th>
               <th class="uk-text-right">Status</th>
@@ -39,7 +38,6 @@
                     <font-awesome-icon v-else icon="angle-down"></font-awesome-icon>
                   </a>
                 </td>
-                <td>{{ order.goodsName }}</td>
                 <td>{{ order.goodsName }}</td>
                 <td>{{ order.goodsName }}</td>
                 <td class="uk-text-right">{{ order.status }}</td>
@@ -80,9 +78,6 @@
   <div class="uk-column-1-4">
     <div class="uk-margin uk-text-right">
       <button class="uk-button uk-button-primary uk-width-1-1" type="button" >Konfirmasi</button>
-    </div>
-    <div class="uk-margin uk-text-right">
-      <button class="uk-button uk-button-danger uk-width-1-1" type="button" @click="print">Print AWB</button>
     </div>
   </div>
 </div>

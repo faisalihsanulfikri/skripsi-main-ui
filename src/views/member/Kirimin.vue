@@ -10,21 +10,30 @@
             <div class="uk-margin">
               <label class="uk-form-label">Consolidate</label>
               <ul class="uk-subnav uk-subnav-pill" uk-switcher="connect: .my-class">
-                <li><a href="#">Tidak</a></li>
-                <li><a href="#">Ya</a></li>
+                <li @click="onChange(false)"><a href="#">Tidak</a></li>
+                <li @click="onChange(true)"><a href="#">Ya</a></li>
               </ul>
             </div>
           </div>
-          <div class="uk-width-1-4">
+          <div class="uk-width-1-5">
             <div class="uk-margin">
               <label class="uk-form-label">NPWP</label>
-              <select class="uk-select">
-                <option>Ya</option>
-                <option>Tidak</option>
+              <select class="uk-select" v-model="input.npwp" @change="onChange()">
+                <option :key="true" :value="true">Ya</option>
+                <option :key="false" :value="false">Tidak</option>
               </select>
             </div>
           </div>
-          <div class="uk-width-1-4">
+          <div class="uk-width-1-5">
+            <div class="uk-margin">
+              <label class="uk-form-label">Asuransi</label>
+              <select class="uk-select" v-model="input.asuransi" @change="onChange()">
+                <option :key="true" :value="true">Ya</option>
+                <option :key="false" :value="false">Tidak</option>
+              </select>
+            </div>
+          </div>
+          <div class="uk-width-1-5">
             <div class="uk-margin">
               <label class="uk-form-label">Gudang Kirimin</label>
               <select v-model="input.country" class="uk-select">
@@ -37,7 +46,7 @@
               </select>
             </div>
           </div>
-          <div class="uk-width-1-4">
+          <div class="uk-width-1-5">
             <div class="uk-margin">
               <label class="uk-form-label">Alamat Penerima</label>
               <select v-model="input.address" class="uk-select">
@@ -179,7 +188,10 @@ export default {
         width: '',
         height: '',
         address: '',
-        courier: 'jne'
+        courier: 'jne',
+        npwp: false,
+        consolidate: false,
+        asuransi: false
       },
       options: {
         category: [],
@@ -224,10 +236,9 @@ export default {
         .then(response => {
           this.options.category = response.data.map(item => {
             let $item = {
-              value: item.code,
+              value: item.name,
               label: item.name
             }
-
             return $item
           })
         })
@@ -275,6 +286,8 @@ export default {
       let itemsHeight = 0
       let itemsWeight = 0
       let itemsPrice = 0
+      let itemsNPWP = false
+      let itemsAsuransi = false
       if (this.kiriminitems.length === 0) {
         itemsLength = this.input.length
         itemsWidth = this.input.width
@@ -290,6 +303,8 @@ export default {
         itemsWidth = this.input.width
         itemsHeight = this.input.height
       }
+      itemsNPWP = this.input.npwp
+      itemsAsuransi = this.input.asuransi
       this.$authHttp.post('/v1/calculator/cost', {
         origin: this.config.originCity,
         wunits: this.config.weightUnits,
@@ -302,14 +317,15 @@ export default {
         width: itemsWidth,
         height: itemsHeight,
         harga: itemsPrice,
-        qty: this.input.itemQuantity
+        qty: this.input.itemQuantity,
+        npwp: itemsNPWP,
+        asuransi: itemsAsuransi
       }).then(response => {
         if (response.data.status === '05') {
           if (response.data) {
             this.error = true
             this.errorMessage = response.data.message
           }
-
           return
         }
 
@@ -339,13 +355,18 @@ export default {
         'wunits': this.input.weightUnits,
         'harga': this.input.itemPrice,
         'qty': 1,
-        'goodsName': this.input.itemName
+        'goodsName': this.input.itemName,
+        'type': 1,
+        'agentId': 12,
+        'status': 1,
+        'asuransi': this.input.asuransi,
+        'npwp': this.input.npwp
       }).then(response => {
         this.clearInput()
-
         this.$router.push({ name: 'member-order' })
       }).catch(error => {
         if (error.response) {
+          console.log('Store Error')
           this.error = true
           this.errorMessage = error.response.data.message
         }
@@ -361,6 +382,7 @@ export default {
       this.input.width = ''
       this.input.height = ''
       this.input.address = ''
+      this.input.asuransi = true
     },
     addItem () {
       let item = {
@@ -382,6 +404,14 @@ export default {
       this.dialogOrderConfirmation.visible = false
       this.storeOrder()
     },
+    onChange (value) {
+      this.input.consolidate = value
+      console.log('log' + this.input)
+    },
+    onAsuransiChange (value) {
+      this.input.asuransi = value
+      console.log('log' + this.input)
+    }
   },
   created () {
     this.fetchCategories()

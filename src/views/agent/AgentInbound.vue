@@ -29,21 +29,23 @@
         <label class="uk-form-label">Nama Barang</label>
         <el-input v-model="input.price"></el-input>
       </div>
-      <div class="uk-margin">
-        <label class="uk-form-label">Berat Barang</label>
-        <el-input v-model="input.price"></el-input>
-      </div>
-      <div class="uk-margin">
-        <label class="uk-form-label">Panjang Barang</label>
-        <el-input v-model="input.price"></el-input>
-      </div>
-      <div class="uk-margin">
-        <label class="uk-form-label">Lebar Barang</label>
-        <el-input v-model="input.price"></el-input>
-      </div>
-      <div class="uk-margin">
-        <label class="uk-form-label">Tinggi Barang</label>
-        <el-input v-model="input.price"></el-input>
+      <div class="uk-flex">
+        <div class="uk-card uk-card-default uk-card-body">
+          <label class="uk-form-label">Berat Barang</label>
+          <el-input v-model="input.price"></el-input>
+        </div>
+        <div class="uk-card uk-card-default uk-card-body uk-margin-left">
+          <label class="uk-form-label">Panjang Barang</label>
+          <el-input v-model="input.price"></el-input>
+        </div>
+        <div class="uk-card uk-card-default uk-card-body uk-margin-left">
+          <label class="uk-form-label">Lebar Barang</label>
+          <el-input v-model="input.price"></el-input>
+        </div>
+        <div class="uk-card uk-card-default uk-card-body uk-margin-left">
+          <label class="uk-form-label">Tinggi Barang</label>
+          <el-input v-model="input.price"></el-input>
+        </div>
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Catatan</label>

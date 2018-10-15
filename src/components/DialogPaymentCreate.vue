@@ -8,19 +8,19 @@
       <form>
         <div class="uk-margin">
           <label class="uk-form-label">Tanggal</label>
-          <input v-model="input.alias" class="uk-input"/>
+          <input v-model="input.tanggal" class="uk-input"/>
         </div>
         <div class="uk-margin">
           <label class="uk-form-label">Kode Order</label>
-          <input v-model="input.name" class="uk-input"/>
+          <input v-model="input.orderNo" class="uk-input"/>
         </div>
         <div class="uk-margin">
           <label class="uk-form-label">Jumlah Bayar</label>
-          <input v-model="input.phone" class="uk-input"/>
+          <input v-model="input.amount" class="uk-input"/>
         </div>
         <div class="uk-margin">
           <label class="uk-form-label">Dari Bank</label>
-          <input v-model="input.phone" class="uk-input"/>
+          <input v-model="input.bank" class="uk-input"/>
         </div>
         <div class="uk-margin uk-text-right">
           <button class="uk-button uk-button-primary" type="button" @click="save">Simpan</button>
@@ -40,96 +40,29 @@ export default {
   data () {
     return {
       input: {
-        alias: '',
-        name: '',
-        phone: '',
-        province: '',
-        provinceId: '',
-        city: '',
-        cityId: '',
-        code: '',
-        district: '',
-        address1: '',
-        address2: ''
+        tanggal: '',
+        orderNo: '',
+        amount: '',
+        bank: ''
       },
       options: {
-        province: [],
-        city: []
+        banks: []
       },
-      provinces: [],
-      cities: [],
+      banks: [],
       error: false,
       errorMessage: ''
     }
   },
   methods: {
-    fetchProvinces () {
-      this.$http.get('/v1/calculator/province')
-        .then(reponse => {
-          this.provinces = reponse.data.data
-
-          this.options.province = reponse.data.data.map(item => {
-            let $item = {
-              value: parseInt(item.id),
-              label: item.name
-            }
-
-            return $item
-          })
-        })
-        .catch(() => {
-          //
-        })
-    },
-    fetchCities () {
-      this.$http.get(`/v1/calculator/city/${this.input.provinceId}/province`)
-        .then(reponse => {
-          this.cities = reponse.data.data
-
-          this.options.city = reponse.data.data.map(item => {
-            let $item = {
-              value: parseInt(item.id),
-              label: (item.type === 'Kabupaten') ? `Kab. ${item.city}` : item.city
-            }
-
-            return $item
-          })
-        })
-        .catch(() => {
-          //
-        })
-    },
-    onProvinceChanged () {
-      this.fetchCities()
-
-      let provinces = this.provinces.filter(province => province.id === this.input.provinceId)
-
-      if (provinces.length > 0) {
-        this.input.province = provinces[0].name
-      }
-    },
-    onCityChanged () {
-      let cities = this.cities.filter(city => city.id === this.input.cityId)
-
-      if (cities.length > 0) {
-        this.input.city = cities[0].city
-        this.input.code = cities[0].code
-      }
-    },
     save () {
       this.error = false
       this.errorMessage = ''
 
-      this.$authHttp.post(`/v1/address`, {
-        alias: this.input.alias,
-        province: this.input.province,
-        provinceId: this.input.provinceId,
-        kabupaten: this.input.city,
-        kabupatenId: this.input.cityId,
-        code: this.input.code,
-        kecamatan: this.input.district,
-        alamat1: this.input.address1,
-        alamat2: this.input.address2
+      this.$authHttp.post(`/v1/orders/confirm`, {
+        tanggal: this.input.tanggal,
+        orderNo: this.input.orderNo,
+        amount: this.input.amount,
+        bank: this.input.bank
       }).then(response => {
         this.clearInput()
 
@@ -142,21 +75,12 @@ export default {
       })
     },
     clearInput () {
-      this.input.alias = ''
-      this.input.name = ''
-      this.input.phone = ''
-      this.input.province = ''
-      this.input.provinceId = ''
-      this.input.city = ''
-      this.input.cityId = ''
-      this.input.code = ''
-      this.input.district = ''
-      this.input.address1 = ''
-      this.input.address2 = ''
+      this.input.tanggal = ''
+      this.input.orderNo = ''
+      this.input.amount = ''
+      this.input.bank = ''
     }
   },
-  created () {
-    this.fetchProvinces()
-  }
+  created () {}
 }
 </script>

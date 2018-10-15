@@ -3,7 +3,6 @@
     <div class="uk-card uk-card-default">
       <div class="uk-card-header">
         <h3 class="uk-card-title">Pesanan</h3>
-        <button class="uk-button uk-button-primary uk-width-1-4" @click="showDialog(dialogPaymentCreate.id)">Konfirmasi Pembayaran</button>
       </div>
       <div class="uk-card-body">
         <div class="uk-overflow-auto">
@@ -14,14 +13,18 @@
                 <th>Negara</th>
                 <th>Nama Barang</th>
                 <th>Status</th>
+                <th>Pembayaran</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(order, key) in orders" :key="key">
-                <td></td>
+                <td>{{ order.goodsName }}</td>
                 <td>{{ order.country }}</td>
                 <td>{{ order.goodsName }}</td>
-                <td></td>
+                <td>{{ order.qty }}</td>
+                <td>
+                  <button class="uk-button uk-button-primary" @click="showDialog(dialogPaymentCreate.id)">Konfirmasi Pembayaran</button>
+                </td>
               </tr>
             </tbody>
           </table>
