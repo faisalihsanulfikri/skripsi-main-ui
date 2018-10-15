@@ -3,8 +3,10 @@
     <div class="uk-card-header app--card-header">
       <div uk-grid>
         <div class="uk-width-auto">
-          <div class="app--card-header__icon">
-            <font-awesome-icon icon="map"></font-awesome-icon>
+          <div class="app--card-header__back">
+            <router-link :to="{ name: 'admin-area-province-city', params: { provinceId: $route.params.provinceId } }">
+              <font-awesome-icon icon="chevron-left"></font-awesome-icon>
+            </router-link>
           </div>
         </div>
         <div class="uk-width-expand">
