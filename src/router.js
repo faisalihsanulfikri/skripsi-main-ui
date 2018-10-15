@@ -17,16 +17,17 @@ import aMain from './views/admin/Main'
 import aDashboard from './views/admin/Dashboard'
 import aInvoice from './views/admin/Invoices'
 import aOrder from './views/admin/Orders'
+import aInbound from './views/admin/Inbound'
 import aCategory from './views/admin/category/Index'
 import aCategoryCreate from './views/admin/category/Create'
 import aWarehouse from './views/admin/warehouse/Index'
 import aWarehouseCreate from './views/admin/warehouse/Create'
-import aExchange from './views/admin/master/Exchange'
+import aExchange from './views/admin/exchange-rate/Index'
+import aExchangeCreate from './views/admin/exchange-rate/Create'
 import aArea from './views/admin/area/Index'
 import aAreaCity from './views/admin/area/City'
 import aAreaDistrict from './views/admin/area/District'
 import aUser from './views/admin/user/Index'
-import aInbound from './views/admin/Inbound'
 
 import gMain from './views/agent/Main'
 import gDashboard from './views/agent/Dashboard'
@@ -206,9 +207,14 @@ export default new Router({
           name: 'admin-warehouse-edit'
         },
         {
-          path: 'master/exchange',
+          path: 'master/exchange-rates',
           component: aExchange,
-          name: 'admin-exchange'
+          name: 'admin-exchange-rate'
+        },
+        {
+          path: 'master/exchange-rates/:id/edit',
+          component: aExchangeCreate,
+          name: 'admin-exchange-rate-edit'
         },
         {
           path: 'master/area',

@@ -16,7 +16,7 @@
           </template>
           <el-menu-item index="/admin/master/categories">Categories</el-menu-item>
           <el-menu-item index="/admin/master/warehouses">Warehouses</el-menu-item>
-          <el-menu-item index="/admin/master/exchange">Exchange Rates</el-menu-item>
+          <el-menu-item index="/admin/master/exchange-rates">Exchange Rates</el-menu-item>
           <el-menu-item index="/admin/master/area">Area</el-menu-item>
         </el-submenu>
         <el-submenu index="/admin/users">
