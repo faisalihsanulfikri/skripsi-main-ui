@@ -1,7 +1,7 @@
 import mMain from '../views/member/Main'
 import mAddress from '../views/member/Address'
 import mAccount from '../views/member/Account'
-import mKirimin from '../views/member/Kirimin'
+import mKirimin1 from '../views/member/Kirimin_1'
 import mBeliin from '../views/member/Beliin'
 import mOrder from '../views/member/Order'
 import mCalculator from '../views/member/Calculator'
@@ -23,7 +23,7 @@ export default {
     {
       path: 'kirimin',
       name: 'member-kirimin',
-      component: mKirimin
+      component: mKirimin1
     },
     {
       path: 'beliin',
