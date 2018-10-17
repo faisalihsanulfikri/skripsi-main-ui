@@ -279,7 +279,7 @@ export default {
 
             return $item
           })
-          
+
           if (this.options.warehouse.length > 0) {
             this.input.country = this.options.warehouse[0].value
           }
