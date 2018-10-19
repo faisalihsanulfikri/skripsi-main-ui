@@ -37,12 +37,12 @@ export default {
   },
   methods: {
     changeOrder () {
-      if (this.field == this.activeField) {
+      if (this.field === this.activeField) {
         this.order = this.order === 'asc' ? 'desc' : 'asc'
       } else {
         this.order = 'asc'
       }
-      
+
       this.$emit('change', {
         field: this.field,
         order: this.order
