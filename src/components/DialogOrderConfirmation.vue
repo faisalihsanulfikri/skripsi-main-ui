@@ -16,8 +16,8 @@
     </form>
     <h4>{{ message }}</h4>
     <div slot="footer">
-      <button class="uk-button uk-button-danger" @click="confirm">YA</button>
-      <button class="uk-button uk-button-default uk-margin-small-left" @click="close">TIDAK</button>
+      <button class="uk-button uk-button-danger" @click="close">TIDAK</button>
+      <button class="uk-button uk-button-primary uk-margin-small-left" @click="confirm">YA</button>
     </div>
   </el-dialog>
 </template>
