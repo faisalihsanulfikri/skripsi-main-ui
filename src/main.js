@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vue2Filters from 'vue2-filters'
+import VeeValidate from 'vee-validate'
 import App from './App.vue'
 import router from './router'
 import store from './store/index'
@@ -15,6 +16,7 @@ import './plugins/uikit'
 import './plugins/element-ui'
 
 Vue.use(Vue2Filters)
+Vue.use(VeeValidate)
 
 Vue.config.productionTip = false
 
