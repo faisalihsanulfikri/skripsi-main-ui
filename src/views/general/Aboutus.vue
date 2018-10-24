@@ -6,24 +6,17 @@
       </div>
       <div class="uk-card-body">
         <div uk-grid>
-          <p>Kirimin, adalah perusahaan perintins ("startup company"), yang bergerak di bidang logistik export import paket dari atau menuju Indonesia menggunakan jalur udara
+          <p>Kirimin, adalah perusahaan perintis ("startup company"), yang bergerak di bidang logistik export import paket dari atau menuju Indonesia menggunakan jalur udara
           </p>
 
           <dl class="uk-description-list">
               <dt>Mengapa Kami ?</dt>
-              <dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</dd>
+              <dd>Kami bekerja sama dengan perusahaan logitsik dari dan menuju negara pengirim</dd>
               <dt>Misi Kami</dt>
-              <dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</dd>
+              <dd>Memberikan layanan pengiriman yang mudah dan cepat</dd>
               <dt>Visi Kami</dt>
-              <dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</dd>
+              <dd>Layanan pengiriman yang memberi kenyamanan bagi pelanggan</dd>
           </dl>
-        </div>
-        <div uk-grid>
-          <div class="uk-flex">
-            <div class="uk-card uk-card-default uk-card-body"></div>
-            <div class="uk-card uk-card-default uk-card-body uk-margin-left"></div>
-            <div class="uk-card uk-card-default uk-card-body uk-margin-left"></div>
-          </div>
         </div>
       </div>
     </div>
