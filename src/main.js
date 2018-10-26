@@ -16,7 +16,9 @@ import './plugins/uikit'
 import './plugins/element-ui'
 
 Vue.use(Vue2Filters)
-Vue.use(VeeValidate)
+Vue.use(VeeValidate, {
+  events: 'blur'
+})
 
 Vue.config.productionTip = false
 

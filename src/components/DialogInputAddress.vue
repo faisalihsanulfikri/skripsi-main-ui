@@ -58,6 +58,10 @@
           <label class="uk-form-label">Alamat 2</label>
           <input v-model="input.address2" class="uk-input"/>
         </div>
+        <div class="uk-margin">
+          <label class="uk-form-label">Kode Pos</label>
+          <input v-model="input.zipcode" class="uk-input"/>
+        </div>
         <el-alert
           v-if="error"
           title="ERROR"
@@ -101,7 +105,8 @@ export default {
         district: '',
         code: '',
         address1: '',
-        address2: ''
+        address2: '',
+        zipcode: ''
       },
       provinces: [],
       cities: [],
@@ -119,7 +124,7 @@ export default {
     onDialogOpen () {
       if (this.edit) {
         this.input.alias = this.address.alias
-        this.input.name = this.address.name
+        this.input.name = this.address.penerima
         this.input.phone = this.address.phone
         this.input.province = this.address.province
         this.input.provinceId = this.address.provinceId
@@ -128,7 +133,8 @@ export default {
         this.input.code = this.address.code
         this.input.district = this.address.district
         this.input.address1 = this.address.alamat1
-        this.input.address2 = this.address.alamat2
+        this.input.address2 = this.address.alamat2,
+        this.input.zipcode = this.address.zipcode
 
         this.fetchCities()
         this.fetchDistricts()
@@ -223,6 +229,8 @@ export default {
 
       this.$authHttp.post(`/v1/address`, {
         alias: this.input.alias,
+        penerima: this.input.name,
+        phone: this.input.phone,
         province: this.input.province,
         provinceId: this.input.provinceId,
         kabupaten: this.input.city,
@@ -230,7 +238,8 @@ export default {
         code: this.input.code,
         kecamatan: this.input.district,
         alamat1: this.input.address1,
-        alamat2: this.input.address2
+        alamat2: this.input.address2,
+        zipcode: this.input.zipcode
       }).then(res => {
         this.$notify({
           title: 'SUCCESS',
@@ -252,6 +261,8 @@ export default {
 
       this.$authHttp.put(`/v1/address/${this.address.id}`, {
         alias: this.input.alias,
+        penerima: this.input.name,
+        phone: this.input.phone,
         province: this.input.province,
         provinceId: this.input.provinceId,
         kabupaten: this.input.city,
@@ -259,7 +270,8 @@ export default {
         code: this.input.code,
         kecamatan: this.input.district,
         alamat1: this.input.address1,
-        alamat2: this.input.address2
+        alamat2: this.input.address2,
+        zipcode: this.input.zipcode
       }).then(res => {
         this.$notify({
           title: 'SUCCESS',
