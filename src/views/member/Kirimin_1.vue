@@ -473,42 +473,48 @@ export default {
         return this.prepareCheckRequest(input)
       })
 
-      axios.all(allRequest).then(axios.spread((...response) => {
-        response.forEach(res => {
-          if (res.data.status === '05') {
-            if (res.data) {
-              this.error = true
-              this.errorMessage = res.data.message
+      return new Promise((resolve, reject) => {
+        axios.all(allRequest).then(axios.spread((...response) => {
+          response.forEach(res => {
+            if (res.data.status === '05') {
+              if (res.data) {
+                this.error = true
+                this.errorMessage = res.data.message
+              }
+
+              this.calculatorResult = this.$options.data().calculatorResult
+
+              setTimeout(() => {
+                document.getElementById('card-consolidate').scrollIntoView(true)
+              }, 1000)
+
+              reject(new Error('Opps! Something went wrong.'))
             }
 
-            this.calculatorResult = this.$options.data().calculatorResult
+            this.calculatorResult.items[0].harga += parseInt(res.data.data.items[0].harga)
+            this.calculatorResult.items[0].biayaInt += parseInt(res.data.data.items[0].biayaInt)
+            this.calculatorResult.items[0].biayaDom += parseInt(res.data.data.items[0].biayaDom)
+            this.calculatorResult.items[0].beamasuk += parseInt(res.data.data.items[0].beamasuk)
+            this.calculatorResult.items[0].ppn += parseInt(res.data.data.items[0].ppn)
+            this.calculatorResult.items[0].pph += parseInt(res.data.data.items[0].pph)
+            this.calculatorResult.items[0].total += parseInt(res.data.data.items[0].total)
+            this.calculatorResult.items[0].npwp += parseInt(res.data.data.items[0].npwp)
+            this.calculatorResult.items[0].totalBayar += parseInt(res.data.data.items[0].totalBayar)
+          })
 
-            setTimeout(() => {
-              document.getElementById('card-consolidate').scrollIntoView(true)
-            }, 1000)
+          document.getElementById('card-result').scrollIntoView(true)
 
-            return false
+          resolve()
+        })).catch(err => {
+          if (err.response) {
+            let message = err.response.data.message ? err.response.data.message : err.response.statusText
+
+            this.error = true
+            this.errorMessage = message
           }
 
-          this.calculatorResult.items[0].harga += parseInt(res.data.data.items[0].harga)
-          this.calculatorResult.items[0].biayaInt += parseInt(res.data.data.items[0].biayaInt)
-          this.calculatorResult.items[0].biayaDom += parseInt(res.data.data.items[0].biayaDom)
-          this.calculatorResult.items[0].beamasuk += parseInt(res.data.data.items[0].beamasuk)
-          this.calculatorResult.items[0].ppn += parseInt(res.data.data.items[0].ppn)
-          this.calculatorResult.items[0].pph += parseInt(res.data.data.items[0].pph)
-          this.calculatorResult.items[0].total += parseInt(res.data.data.items[0].total)
-          this.calculatorResult.items[0].npwp += parseInt(res.data.data.items[0].npwp)
-          this.calculatorResult.items[0].totalBayar += parseInt(res.data.data.items[0].totalBayar)
+          reject(new Error('Opps! Something went wrong.'))
         })
-
-        document.getElementById('card-result').scrollIntoView(true)
-      })).catch(err => {
-        if (err.response) {
-          let message = err.response.data.message ? err.response.data.message : err.response.statusText
-
-          this.error = true
-          this.errorMessage = message
-        }
       })
     },
     prepareOrderRequest (input) {
@@ -602,47 +608,42 @@ export default {
         return false
       }
 
-      let allRequest = this.consolidateItems.map(input => {
-        input.country = this.input.country
-        input.address = this.input.address
-        input.insurance = this.input.insurance
-        input.npwp = this.input.npwp
+      this.multiCheck().then(() => {
+        let allRequest = this.consolidateItems.map(input => {
+          input.country = this.input.country
+          input.address = this.input.address
+          input.insurance = this.input.insurance
+          input.npwp = this.input.npwp
+  
+          return this.prepareOrderRequest(input)
+        })
+  
+        axios.all(allRequest).then(axios.spread((...response) => {
+          let items = []
 
-        return this.prepareOrderRequest(input)
-      })
+          for (let i = 0; i < response.length; i++) {
+            items.push(response[i].data.id)
 
-      axios.all(allRequest).then(axios.spread((...response) => {
-        response.forEach(res => {
-          if (res.data.status === '05') {
-            if (res.data) {
-              this.error = true
-              this.errorMessage = res.data.message
+            if (i === (response.length - 1)) {
+              this.createInvoice(items)
             }
+          }
 
-            return false
+          this.consolidateItems = []
+        })).catch(err => {
+          if (err.response) {
+            let message = err.response.data.message ? err.response.data.message : err.response.statusText
+  
+            this.error = true
+            this.errorMessage = message
+
+            this.$notify({
+              title: 'ERROR',
+              message: this.errorMessage,
+              type: 'error'
+            })
           }
         })
-
-        this.$notify({
-          title: 'SUCCESS',
-          message: 'Congratulations, your order saved.',
-          type: 'success'
-        })
-
-        this.consolidateItems = []
-      })).catch(err => {
-        if (err.response) {
-          let message = err.response.data.message ? err.response.data.message : err.response.statusText
-
-          this.error = true
-          this.errorMessage = message
-
-          this.$notify({
-            title: 'ERROR',
-            message: this.errorMessage,
-            type: 'error'
-          })
-        }
       })
     },
     createInvoice (items) {
@@ -651,7 +652,7 @@ export default {
         shipperAddress: 'Jakarta',
         shipperCity: 'Jakarta',
         shipperRegion: 'Jakarta',
-        shipperZipCode: 19920,
+        shipperZipCode: '19920',
         shipperPhone: this.$auth.getUser().mobile,
         shipperOriginCode: 'TNCCGK10000',
 
@@ -664,10 +665,10 @@ export default {
         receiverDestCode: null,
 
         serviceCode: 'REG',
-        qty: items.length,
+        qty: `${items.length}`,
         weight: this.input.weight,
         desc: '',
-        amount: 0,
+        amount: this.calculatorResult.items[0].totalBayar,
         harga: 0,
         biayaInt: 0,
         biayaDom: 0,
@@ -680,9 +681,9 @@ export default {
         total: 0,
         totalBayar: 0,
         isInsured: this.input.insurance,
-        categoryId: 1,
+        categoryId: this.options.category[0].value,
         isCod: 'N',
-        codAmount: 0,
+        codAmount: '0',
         note: '',
         shipStatus: 'UN',
         items: items
@@ -697,7 +698,7 @@ export default {
         receiverAddress: `${address.alamat1}, ${address.alamat2}`,
         receiverCity: address.kabupaten,
         receiverRegion: address.province,
-        receiverZipCode: 404,
+        receiverZipCode: '404',
         receiverPhone: this.$auth.getUser().mobile,
         receiverDestCode: address.code
       }
@@ -710,6 +711,14 @@ export default {
 
       this.$authHttp.post('/v1/orders/delivery', data).then(res => {
         this.dialogOrderConfirmation = false
+
+        this.$notify({
+          title: 'SUCCESS',
+          message: res.data.message,
+          type: 'success'
+        })
+
+        this.$router.push({ name: 'member-order' })
       }).catch(err => {
         if (err.response) {
           let message = err.response.data.message ? err.response.data.message : err.response.statusText
