@@ -48,7 +48,7 @@
                           <table>
                             <thead>
                             <tr>
-                              <th>No</th
+                              <th>No</th>
                               <th>Nama</th>
                               <th>Berat</th>
                               <th>Harga</th>
@@ -70,7 +70,7 @@
                                 <td>{{ item.width }} {{ item.vunits }}</td>
                                 <td>{{ item.height }} {{ item.vunits }}</td>
                                 <td>
-                                  <button class="uk-button uk-button-primary" type="button" >Konfirmasi</button>
+                                  <button class="uk-button uk-button-primary" type="button" >Confirm</button>
                                 </td>
                                 <td>
                                   <button class="uk-button uk-button-danger" type="button" @click="print">Print AWB</button>
