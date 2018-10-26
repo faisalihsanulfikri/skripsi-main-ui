@@ -431,7 +431,23 @@ export default {
         }
       })
     },
-    addItem () {
+    async addItem () {
+      this.error = false
+      this.errorMessage = ''
+
+      if (!(await this.isValidInput())) {
+        this.error = true
+        this.errorMessage = 'Data tidak valid.'
+
+        this.$notify({
+          title: 'ERROR',
+          message: this.errorMessage,
+          type: 'error'
+        })
+
+        return
+      }
+
       this.pushItem(this.input.item)
 
       this.input.item = this.$options.data().input.item
