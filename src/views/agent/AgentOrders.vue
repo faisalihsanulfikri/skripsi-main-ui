@@ -48,7 +48,7 @@
                           <table>
                             <thead>
                             <tr>
-                              <th>No</th
+                              <th>No</th>
                               <th>Nama</th>
                               <th>Berat</th>
                               <th>Harga</th>
