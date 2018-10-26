@@ -1,7 +1,9 @@
 <template>
   <div>
     <h1>Dashboard Admin</h1>
-    <base-chart />
+    <div class="uk-flex">
+      <base-chart />
+    </div>
   </div>
 </template>
 

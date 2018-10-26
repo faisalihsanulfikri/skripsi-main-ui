@@ -3,7 +3,6 @@
     <h1>Dashboard Agent</h1>
     <div class="uk-flex">
       <base-chart />
-      <base-chart />
     </div>
   </div>
 </template>

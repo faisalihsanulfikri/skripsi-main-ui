@@ -24,10 +24,7 @@
               <th>Rincian</th>
               <th width="100">Order No</th>
               <th>Nama Customer</th>
-              <th>Nama Barang</th>
               <th class="uk-text-right">Status</th>
-              <th class="uk-text-right">Country</th>
-
             </tr>
           </thead>
           <tbody>
@@ -40,52 +37,49 @@
                   </a>
                 </td>
                 <td>{{ order.orderNo }}</td>
-                <td>{{ order.goodsName }}</td>
-                <td>{{ order.goodsName }}</td>
-                <td class="uk-text-right">{{ order.status }}</td>
-                <td>{{ order.country }}</td>
+                <td>{{ order.shipperName }}</td>
+                <td class="uk-text-right">{{ order.shipStatus }}</td>
               </tr>
               <tr v-show="!order.collapse" :key="`d${index}`">
-                <td></td>
-                <td colspan="5">
+                <td colspan="4">
                   <form class="uk-margin-large">
                     <div uk-grid>
-                      <div class="uk-column-1-5 ">
                         <div class="uk-margin">
-                          <label class="uk-form-label">Berat ({{ order.wunits }})</label>
-                          <div>
-                            <input type="text" class="uk-input" min="1" placeholder="Tinggi" :value="order.weight">
-                          </div>
+                          <table>
+                            <thead>
+                            <tr>
+                              <th>No</th
+                              <th>Nama</th>
+                              <th>Berat</th>
+                              <th>Harga</th>
+                              <th>Panjang</th>
+                              <th>Lebar</th>
+                              <th>Tinggi</th>
+                              <th></th>
+                              <th></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <template v-for="(item, initem) in order.items">
+                                <tr :key="item.id">
+                                <td>{{initem + 1}}</td>
+                                <td> {{ item.goodsName }}</td>
+                                <td>{{ item.weight }} {{ item.wunits }}</td>
+                                <td>{{ item.harga }} </td>
+                                <td>{{ item.length }} {{ item.vunits }}</td>
+                                <td>{{ item.width }} {{ item.vunits }}</td>
+                                <td>{{ item.height }} {{ item.vunits }}</td>
+                                <td>
+                                  <button class="uk-button uk-button-primary" type="button" >Konfirmasi</button>
+                                </td>
+                                <td>
+                                  <button class="uk-button uk-button-danger" type="button" @click="print">Print AWB</button>
+                                </td>
+                                </tr>
+                              </template>
+                            </tbody>
+                          </table>
                         </div>
-                        <div class="uk-margin">
-                          <label class="uk-form-label">Harga</label>
-                          <div>
-                            <input type="text" class="uk-input" min="1" placeholder="Harga" :value="order.harga">
-                          </div>
-                        </div>
-                        <div class="uk-margin">
-                          <label class="uk-form-label">Panjang {{ order.wunits }}</label>
-                          <input type="text" class="uk-input" min="1" placeholder="Panjang" :value="order.length">
-                        </div>
-                        <div class="uk-margin">
-                          <label class="uk-form-label">Lebar {{ order.wunits }}</label>
-                          <input type="text" class="uk-input" min="1" placeholder="Lebar" :value="order.width">
-                        </div>
-                        <div class="uk-margin">
-                          <label class="uk-form-label">Tinggi {{ order.wunits }}</label>
-                          <input type="text" class="uk-input" min="1" placeholder="Tinggi" :value="order.height">
-                        </div>
-                      </div>
-<div class="uk-margin">
-  <div class="uk-column-1-4">
-    <div class="uk-margin uk-text-right">
-      <button class="uk-button uk-button-primary uk-width-1-1" type="button" >Konfirmasi</button>
-    </div>
-    <div class="uk-margin uk-text-right">
-      <button class="uk-button uk-button-danger uk-width-1-1" type="button" @click="print">Print AWB</button>
-    </div>
-  </div>
-</div>
                     </div>
                   </form>
                 </td>
@@ -119,7 +113,7 @@ export default {
   },
   methods: {
     fetchOrders () {
-      this.$authHttp.get('/v1/summary/invoice').then(res => {
+      this.$authHttp.get('/v1/summary/delivery').then(res => {
       //  this.$authHttp.get(`/v1/cfees`).then(res => {
         this.orders = res.data.data.map(order => {
           order['collapse'] = true
