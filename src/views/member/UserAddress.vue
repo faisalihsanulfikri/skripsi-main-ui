@@ -13,7 +13,8 @@
         <div class="uk-card uk-card-default uk-card-small">
           <div class="uk-card-body">
             <h4>{{ address.alias }}</h4>
-            <p>{{ `${address.province}, ${address.kabupaten}, ${address.kecamatan}, ${address.alamat1}, ${address.alamat2}` }}</p>
+            <p>{{ `${address.province}, ${address.kabupaten}, ${address.kecamatan}, ${address.alamat1}, ${address.alamat2}, ${address.zipcode}` }}</p>
+            <p>{{ `${address.penerima} - ${address.phone}` }}</p>
           </div>
           <div class="uk-card-footer uk-text-right">
             <el-tooltip :content="address.primary ? 'Alamat Utama': 'Set Alamat Utama'" placement="top">
