@@ -729,7 +729,7 @@ export default {
         ...receiver,
         ...this.calculatorResult.items[0],
         ...{
-          amount: this.calculatorResult.items[0].total,
+          amount: this.calculatorResult.items[0].totalBayar,
           isInsured: this.input.insurance,
           categoryId: this.items[0].category,
           weight: this.items.map(item => parseInt(item.weight)).reduce((total, num) => total += num),
