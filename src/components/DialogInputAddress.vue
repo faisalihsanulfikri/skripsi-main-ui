@@ -21,8 +21,8 @@
           <label class="uk-form-label">Provinsi</label>
           <select v-model="input.provinceId" class="uk-select" @change="onProvinceChanged">
             <option
-              v-for="item in options.province"
-              :key="item.value"
+              v-for="(item, index) in options.province"
+              :key="index"
               :value="item.value">
                 {{ item.label }}
               </option>
@@ -32,8 +32,8 @@
           <label class="uk-form-label">Kota</label>
           <select v-model="input.cityId" class="uk-select" @change="onCityChanged">
             <option
-              v-for="item in options.city"
-              :key="item.value"
+              v-for="(item, index) in options.city"
+              :key="index"
               :value="item.value">
                 {{ item.label }}
               </option>
@@ -43,8 +43,8 @@
           <label class="uk-form-label">Kecamatan</label>
           <select v-model="input.code" class="uk-select" @change="onDistrictChange">
             <option
-              v-for="item in options.district"
-              :key="item.value"
+              v-for="(item, index) in options.district"
+              :key="index"
               :value="item.value">
                 {{ item.label }}
               </option>
