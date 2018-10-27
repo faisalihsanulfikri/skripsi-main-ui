@@ -11,7 +11,7 @@
               <div class="uk-width-1-2">
                 <div class="uk-margin-small">
                   <label class="uk-form-label">Gudang Kirimin</label>
-                  <select v-model="input.country" class="uk-select" @change="multiCheck">
+                  <select v-model="input.warehouse" class="uk-select" @change="multiCheck">
                     <option
                       v-for="item in options.warehouse"
                       :key="item.value"
@@ -192,7 +192,7 @@
 
     <div v-if="this.items.length > 0" id="card-consolidate" class="uk-card uk-card-default uk-card-small uk-margin">
       <div class="uk-card-header">
-        <h3 class="uk-card-title">Items</h3>
+        <h3 class="uk-card-title">Daftar Barang</h3>
       </div>
       <div class="uk-card-body">
         <div class="uk-overflow-auto">
@@ -228,14 +228,6 @@
           </table>
         </div>
       </div>
-      <div v-if="input.consolidate === 'Y'" class="uk-card-footer">
-        <div v-if="error" class="uk-alert-danger" uk-alert>
-          {{ errorMessage }}
-        </div>
-        <div class="uk-text-right">
-          <button class="uk-button uk-button-default" @click="multiCheck">Hitung</button>
-        </div>
-      </div>
     </div>
 
     <div id="card-result" class="uk-card uk-card-default uk-card-small uk-margin">
@@ -246,11 +238,16 @@
         <calculator-result :result="calculatorResult"></calculator-result>
       </div>
       <div class="uk-card-footer uk-text-right">
-        <button class="uk-button uk-button-primary uk-margin-small-left" @click="dialogOrderConfirmation = true">Lanjut Pengiriman</button>
+        <button
+        class="uk-button uk-button-primary uk-margin-small-left"
+        :disabled="items.length < 1"
+        @click="dialogOrderConfirmation = true">
+          Lanjut Pengiriman
+        </button>
       </div>
     </div>
 
-    <dialog-order-confirmation :visible="dialogOrderConfirmation" @close="onCloseConfrimOrder" @confirm="onConfirmOrder"></dialog-order-confirmation>
+    <dialog-order-confirmation :visible="dialogOrderConfirmation" @close="onCloseConfrimOrder" @confirm="storeOrder"></dialog-order-confirmation>
   </div>
 </template>
 
@@ -283,16 +280,7 @@ export default {
         address: []
       },
       input: {
-        categoryString: '',
-        country: '',
-        category: '',
-        itemName: '',
-        itemPrice: '',
-        itemQuantity: 1,
-        weight: '',
-        length: '',
-        width: '',
-        height: '',
+        warehouse: '',
         address: '',
         courier: 'jne',
         insurance: 'N',
@@ -317,14 +305,78 @@ export default {
         isNpwp: '',
         courier: '',
         country: '',
-        vunits: '',
         wunits: '',
+        vunits: '',
         harga: '',
         qty: '',
         weight: '',
         length: '',
         width: '',
         height: ''
+      },
+      orderModel:{
+        origin: '',
+        dest: '',
+        country: '',
+        wunits: '',
+        vunits: '',
+        weight: '',
+        length: '',
+        width: '',
+        height: '',
+        goodsName: '',
+        harga: '',
+        qty: '',
+        agentId: '',
+        status: '',
+        wunitsAg: '',
+        vunitsAg: '',
+        weightAg: '',
+        lengthAg: '',
+        widthAg: '',
+        heightAg: '',
+        type: '',
+        hargaAg: '',
+        qtyAg: ''
+      },
+      invoiceModel: {
+        shipperName: '',
+        shipperPhone: '',
+        shipperRegion: '',
+        shipperCity: '',
+        shipperAddress: '',
+        shipperZipCode: '',
+        shipperOriginCode: '',
+        receiverName: '',
+        receiverPhone: '',
+        receiverRegion: '',
+        receiverCity: '',
+        receiverAddress: '',
+        receiverZipCode: '',
+        receiverDestCode: '',
+        serviceCode: 'REG',
+        note: '',
+        qty: '',
+        weight: '',
+        desc: '',
+        amount: '',
+        harga: '',
+        biayaInt: '',
+        biayaDom: '',
+        beamasuk: '',
+        ppn: '',
+        pph: '',
+        npwp: '',
+        totalExc: '',
+        totalBayarExc: '',
+        total: '',
+        totalBayar: '',
+        isInsured: '',
+        categoryId: '',
+        isCod: 'N',
+        codAmount: '0',
+        shipStatus: 'UN',
+        items: []
       },
       consolidateItems: [],
       calculatorResult: {
@@ -406,7 +458,7 @@ export default {
           })
 
           if (this.options.warehouse.length > 0) {
-            this.input.country = this.options.warehouse[0].value
+            this.input.warehouse = this.options.warehouse[0].value
           }
         })
         .catch(() => {})
@@ -451,6 +503,8 @@ export default {
       this.pushItem(this.input.item)
 
       this.input.item = this.$options.data().input.item
+
+      this.multiCheck()
     },
     pushItem (item) {
       this.items.push(item)
@@ -459,6 +513,8 @@ export default {
     },
     removeItem (index) {
       this.items.splice(index, 1)
+
+      this.multiCheck()
     },
     prepareCalculatorData (items) {
       let data = Object.assign({}, JSON.parse(JSON.stringify(this.calculatorModel)))
@@ -468,7 +524,7 @@ export default {
       data.dest = this.input.address
       data.isNpwp = this.input.npwp
       data.courier = this.config.courier
-      data.country = this.input.country
+      data.country = this.input.warehouse
       data.vunits = this.config.volumeUnits
       data.wunits = this.config.weightUnits
       data.harga = 0
@@ -555,9 +611,7 @@ export default {
       this.error = false
       this.errorMessage = ''
 
-      if (this.items.length < 1) {
-        return
-      }
+      if (this.items.length < 1) return
 
       this.calculatorResult = this.$options.data().calculatorResult
 
@@ -567,376 +621,129 @@ export default {
 
       document.getElementById('card-result').scrollIntoView(true)
     },
-    // addItem () {
-    //   this.error = false
-    //   this.errorMessage = ''
+    prepareOrderData (items) {
+      let data = []
 
-    //   if (!this.isValidInput()) {
-    //     this.error = true
-    //     this.errorMessage = 'Data tidak valid.'
+      items.forEach(item => {
+        let order = Object.assign({}, JSON.parse(JSON.stringify(this.orderModel)))
 
-    //     this.$notify({
-    //       title: 'ERROR',
-    //       message: this.errorMessage,
-    //       type: 'error'
-    //     })
+        order.origin = this.config.origin
+        order.dest = this.input.address
+        order.country = this.input.warehouse
+        order.wunits = this.config.weightUnits
+        order.vunits = this.config.volumeUnits
+        order.weight = item.weight
+        order.length = item.length
+        order.width = item.weight
+        order.height = item.height
+        order.goodsName = item.name
+        order.harga = item.price
+        order.qty = item.quantity
+        order.agentId = ''
+        order.status = 1
+        order.wunitsAg = this.config.weightUnits
+        order.vunitsAg = this.config.volumeUnits
+        order.weightAg = item.weight
+        order.lengthAg = item.length
+        order.widthAg = item.width
+        order.heightAg = item.height
+        order.type = item.category
+        order.hargaAg = item.price
+        order.qtyAg = item.quantity
 
-    //     return false
-    //   }
-
-    //   this.consolidateItems.push(Object.assign({}, this.input))
-
-    //   this.input.categoryString = ''
-    //   this.input.category = ''
-    //   this.input.itemName = ''
-    //   this.input.itemPrice = ''
-    //   this.input.weight = ''
-    //   this.input.length = ''
-    //   this.input.width = ''
-    //   this.input.height = ''
-
-    //   this.$validator.reset()
-    // },
-    prepareCheckRequest (input) {
-      return this.$authHttp.post('/v1/calculator/cost', {
-        origin: this.config.originCity,
-        wunits: this.config.weightUnits,
-        vunits: this.config.volumeUnits,
-        country: input.country,
-        dest: input.address,
-        courier: input.courier,
-        weight: input.weight,
-        length: input.length,
-        width: input.width,
-        height: input.height,
-        harga: input.itemPrice,
-        qty: input.itemQuantity,
-        asuransi: input.insurance,
-        npwp: input.npwp
+        data.push(order)
       })
+
+      return data
     },
-    // singleCheck () {
-    //   this.error = false
-    //   this.errorMessage = ''
-
-    //   if (!this.isValidInput()) {
-    //     this.error = true
-    //     this.errorMessage = 'Data tidak valid.'
-
-    //     this.$notify({
-    //       title: 'ERROR',
-    //       message: this.errorMessage,
-    //       type: 'error'
-    //     })
-
-    //     return false
-    //   }
-
-    //   return new Promise((resolve, reject) => {
-    //     this.prepareCheckRequest(this.input).then(res => {
-    //       if (res.data.status === '05') {
-    //         if (res.data) {
-    //           this.error = true
-    //           this.errorMessage = res.data.message
-    //         }
-
-    //         reject(new Error('Opps! Something went wrong.'))
-    //       }
-
-    //       if (res.data.data) {
-    //         this.calculatorResult = res.data.data
-    //       }
-
-    //       document.getElementById('card-result').scrollIntoView(true)
-
-    //       resolve()
-    //     }).catch(err => {
-    //       if (err.response) {
-    //         let message = err.response.data.message ? err.response.data.message : err.response.statusText
-
-    //         this.error = true
-    //         this.errorMessage = message
-    //       }
-
-    //       reject(new Error('Opps! Something went wrong.'))
-    //     })
-    //   })
-    // },
-    // multiCheck () {
-    //   this.error = false
-    //   this.errorMessage = ''
-
-    //   if (this.consolidateItems.length < 1) {
-    //     this.error = true
-    //     this.errorMessage = 'Tidak ada barang.'
-
-    //     this.$notify({
-    //       title: 'ERROR',
-    //       message: this.errorMessage,
-    //       type: 'error'
-    //     })
-
-    //     return false
-    //   }
-
-    //   this.calculatorResult.items[0].harga = 0
-    //   this.calculatorResult.items[0].biayaInt = 0
-    //   this.calculatorResult.items[0].biayaDom = 0
-    //   this.calculatorResult.items[0].beamasuk = 0
-    //   this.calculatorResult.items[0].ppn = 0
-    //   this.calculatorResult.items[0].pph = 0
-    //   this.calculatorResult.items[0].total = 0
-    //   this.calculatorResult.items[0].npwp = 0
-    //   this.calculatorResult.items[0].totalBayar = 0
-
-    //   let allRequest = this.consolidateItems.map(input => {
-    //     input.country = this.input.country
-    //     input.address = this.input.address
-    //     input.insurance = this.input.insurance
-    //     input.npwp = this.input.npwp
-
-    //     return this.prepareCheckRequest(input)
-    //   })
-
-    //   return new Promise((resolve, reject) => {
-    //     axios.all(allRequest).then(axios.spread((...response) => {
-    //       response.forEach(res => {
-    //         if (res.data.status === '05') {
-    //           if (res.data) {
-    //             this.error = true
-    //             this.errorMessage = res.data.message
-    //           }
-
-    //           this.calculatorResult = this.$options.data().calculatorResult
-
-    //           setTimeout(() => {
-    //             document.getElementById('card-consolidate').scrollIntoView(true)
-    //           }, 1000)
-
-    //           reject(new Error('Opps! Something went wrong.'))
-    //         }
-
-    //         this.calculatorResult.items[0].harga += parseInt(res.data.data.items[0].harga)
-    //         this.calculatorResult.items[0].biayaInt += parseInt(res.data.data.items[0].biayaInt)
-    //         this.calculatorResult.items[0].biayaDom += parseInt(res.data.data.items[0].biayaDom)
-    //         this.calculatorResult.items[0].beamasuk += parseInt(res.data.data.items[0].beamasuk)
-    //         this.calculatorResult.items[0].ppn += parseInt(res.data.data.items[0].ppn)
-    //         this.calculatorResult.items[0].pph += parseInt(res.data.data.items[0].pph)
-    //         this.calculatorResult.items[0].total += parseInt(res.data.data.items[0].total)
-    //         this.calculatorResult.items[0].npwp += parseInt(res.data.data.items[0].npwp)
-    //         this.calculatorResult.items[0].totalBayar += parseInt(res.data.data.items[0].totalBayar)
-    //       })
-
-    //       document.getElementById('card-result').scrollIntoView(true)
-
-    //       resolve()
-    //     })).catch(err => {
-    //       if (err.response) {
-    //         let message = err.response.data.message ? err.response.data.message : err.response.statusText
-
-    //         this.error = true
-    //         this.errorMessage = message
-    //       }
-
-    //       reject(new Error('Opps! Something went wrong.'))
-    //     })
-    //   })
-    // },
-    prepareOrderRequest (input) {
-      return this.$authHttp.post('/v1/orders', {
-        origin: this.config.originCity,
-        wunits: this.config.weightUnits,
-        vunits: this.config.volumeUnits,
-        goodsName: input.itemName,
-        harga: input.itemPrice,
-        qty: input.itemQuantity,
-        asuransi: input.insurance,
-        country: input.country,
-        dest: input.address,
-        courier: input.courier,
-        weight: input.weight,
-        length: input.length,
-        width: input.width,
-        height: input.height,
-        npwp: input.npwp,
-        type: 1,
-        status: 1
-      })
-    },
-    singleOrder () {
-      this.error = false
-      this.errorMessage = ''
-
-      if (!this.isValidInput()) {
-        this.error = true
-        this.errorMessage = 'Data tidak valid.'
-
-        this.$notify({
-          title: 'ERROR',
-          message: this.errorMessage,
-          type: 'error'
-        })
-
-        this.dialogOrderConfirmation = false
-
-        return false
-      }
-
-      this.singleCheck().then(() => {
-        this.prepareOrderRequest(this.input).then(res => {
-          this.$validator.reset()
-
-          this.createInvoice([
-            res.data.id
-          ])
-
-          this.input.categoryString = ''
-          this.input.category = ''
-          this.input.itemName = ''
-          this.input.itemPrice = ''
-          this.input.weight = ''
-          this.input.length = ''
-          this.input.width = ''
-          this.input.height = ''
-        }).catch(err => {
-          if (err.response) {
-            let message = err.response.data.message ? err.response.data.message : err.response.statusText
-
-            this.error = true
-            this.errorMessage = message
-
-            this.$notify({
-              title: 'ERROR',
-              message: this.errorMessage,
-              type: 'error'
+    postOrder (request) {
+      return new Promise(resolve => {
+        axios.all(request).then(axios.spread((...response) => {
+          resolve({
+            success: true,
+            items: response.map(res => {
+              return res.data.id
             })
-          }
-        })
-      })
-    },
-    multiOrder () {
-      this.error = false
-      this.errorMessage = ''
-
-      if (this.consolidateItems.length < 1) {
-        this.error = true
-        this.errorMessage = 'Tidak ada barang.'
-
-        this.$notify({
-          title: 'ERROR',
-          message: this.errorMessage,
-          type: 'error'
-        })
-
-        this.dialogOrderConfirmation = false
-
-        return false
-      }
-
-      this.multiCheck().then(() => {
-        let allRequest = this.consolidateItems.map(input => {
-          input.country = this.input.country
-          input.address = this.input.address
-          input.insurance = this.input.insurance
-          input.npwp = this.input.npwp
-
-          return this.prepareOrderRequest(input)
-        })
-
-        axios.all(allRequest).then(axios.spread((...response) => {
-          let items = []
-
-          for (let i = 0; i < response.length; i++) {
-            items.push(response[i].data.id)
-
-            if (i === (response.length - 1)) {
-              this.createInvoice(items)
-            }
-          }
-
-          this.consolidateItems = []
+          })
         })).catch(err => {
-          if (err.response) {
-            let message = err.response.data.message ? err.response.data.message : err.response.statusText
-
-            this.error = true
-            this.errorMessage = message
-
-            this.$notify({
-              title: 'ERROR',
-              message: this.errorMessage,
-              type: 'error'
-            })
-          }
+          resolve({
+            success: false
+          })
         })
       })
     },
-    createInvoice (items) {
-      let __invoice = {
-        shipperName: this.$auth.getUser().fullName,
-        shipperAddress: 'Jakarta',
-        shipperCity: 'Jakarta',
-        shipperRegion: 'Jakarta',
-        shipperZipCode: '19920',
-        shipperPhone: this.$auth.getUser().mobile,
-        shipperOriginCode: 'TNCCGK10000',
+    async storeOrder () {
+      let data = this.prepareOrderData(this.items)
+      let orderRequest = []
 
-        receiverName: null,
-        receiverAddress: null,
-        receiverCity: null,
-        receiverRegion: null,
-        receiverZipCode: null,
-        receiverPhone: null,
-        receiverDestCode: null,
+      data.forEach(order => {
+        orderRequest.push(
+          this.$authHttp.post('/v1/orders', order)
+        )
+      })
 
-        serviceCode: 'REG',
-        qty: `${items.length}`,
-        weight: this.input.weight,
-        desc: '',
-        amount: this.calculatorResult.items[0].totalBayar,
-        harga: 0,
-        biayaInt: 0,
-        biayaDom: 0,
-        beamasuk: 0,
-        ppn: 0,
-        pph: 0,
-        npwp: 0,
-        totalExc: 0,
-        totalBayarExc: 0,
-        total: 0,
-        totalBayar: 0,
-        isInsured: this.input.insurance,
-        categoryId: this.options.category[0].value,
-        isCod: 'N',
-        codAmount: '0',
-        note: '',
-        shipStatus: 'UN',
-        items: items
+      let result = await this.postOrder(orderRequest)
+
+      if (result.success) {
+        this.createInvoice(result.items)
+      } else {
+        this.$notify({
+          title: 'ERROR',
+          message: 'Gagal melakukan order, silakan cek kembali data anda.',
+          type: 'error'
+        })
+
+        this.dialogOrderConfirmation = false
       }
+    },
+    prepareInvoiceData (items) {
+      let data = Object.assign({}, JSON.parse(JSON.stringify(this.invoiceModel)))
 
       let address = this.master.addresses.find(address => {
         return address.kabupatenId === this.input.address
       })
 
-      let receiver = {
-        receiverName: this.$auth.getUser().fullName,
-        receiverAddress: `${address.alamat1}, ${address.alamat2}`,
-        receiverCity: address.kabupaten,
-        receiverRegion: address.province,
-        receiverZipCode: '404',
-        receiverPhone: this.$auth.getUser().mobile,
-        receiverDestCode: address.code
+      let shipper = {
+        shipperName: address.penerima,
+        shipperPhone: address.phone,
+        shipperRegion: address.province,
+        shipperCity: address.kabupaten,
+        shipperAddress: `${address.alamat1} ${address.alamat2}`,
+        shipperZipCode: address.zipcode,
+        shipperOriginCode: address.code,
       }
 
-      let data = {
-        ...__invoice,
-        ...this.calculatorResult.items[0],
-        ...receiver
+      let receiver = {
+        receiverName: address.penerima,
+        receiverPhone: address.phone,
+        receiverRegion: address.province,
+        receiverCity: address.kabupaten,
+        receiverAddress: `${address.alamat1} ${address.alamat2}`,
+        receiverZipCode: address.zipcode,
+        receiverDestCode: address.code,
       }
+
+      let merged = {
+        ...data,
+        ...shipper,
+        ...receiver,
+        ...this.calculatorResult.items[0],
+        ...{
+          amount: this.calculatorResult.items[0].total,
+          isInsured: this.input.insurance,
+          categoryId: this.items[0].category,
+          weight: this.items.map(item => parseInt(item.weight)).reduce((total, num) => total += num),
+          qty: this.items.map(item => parseInt(item.quantity)).reduce((total, num) => total += num),
+          items: items
+        }
+      }
+
+      return merged
+    },
+    createInvoice (items) {
+      let data = this.prepareInvoiceData(items)
 
       this.$authHttp.post('/v1/orders/delivery', data).then(res => {
-        this.dialogOrderConfirmation = false
-
         this.$notify({
           title: 'SUCCESS',
           message: res.data.message,
@@ -946,19 +753,14 @@ export default {
         this.$router.push({ name: 'member-order' })
       }).catch(err => {
         if (err.response) {
-          let message = err.response.data.message ? err.response.data.message : err.response.statusText
-
-          this.error = true
-          this.errorMessage = message
+          let message = res.data.message ? res.data.message : res.statusText
 
           this.$notify({
             title: 'ERROR',
-            message: this.errorMessage,
+            message: message,
             type: 'error'
           })
         }
-
-        this.dialogOrderConfirmation = false
       })
     }
   },
