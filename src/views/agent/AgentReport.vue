@@ -19,16 +19,6 @@
     <div class="uk-card-body uk-card-small">
       <div class="uk-margin">
         <div class="uk-grid-small" uk-grid>
-          <div class="uk-wdith-1-3">
-            <el-select v-model="filter.verified" multiple>
-              <el-option
-                v-for="(item, index) in options.verified"
-                :key="index"
-                :value="item.value"
-                :label="item.label">
-              </el-option>
-            </el-select>
-          </div>
           <div class="uk-width-1-3">
             <el-input v-model="filter.keyword" placeholder="Search..."></el-input>
           </div>
