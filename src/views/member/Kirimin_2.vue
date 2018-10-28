@@ -314,7 +314,7 @@ export default {
         width: '',
         height: ''
       },
-      orderModel:{
+      orderModel: {
         origin: '',
         dest: '',
         country: '',
@@ -665,7 +665,7 @@ export default {
               return res.data.id
             })
           })
-        })).catch(err => {
+        })).catch(() => {
           resolve({
             success: false
           })
@@ -710,7 +710,7 @@ export default {
         shipperCity: address.kabupaten,
         shipperAddress: `${address.alamat1} ${address.alamat2}`,
         shipperZipCode: address.zipcode,
-        shipperOriginCode: address.code,
+        shipperOriginCode: address.code
       }
 
       let receiver = {
@@ -720,7 +720,7 @@ export default {
         receiverCity: address.kabupaten,
         receiverAddress: `${address.alamat1} ${address.alamat2}`,
         receiverZipCode: address.zipcode,
-        receiverDestCode: address.code,
+        receiverDestCode: address.code
       }
 
       let merged = {
@@ -732,8 +732,8 @@ export default {
           amount: this.calculatorResult.items[0].totalBayar,
           isInsured: this.input.insurance,
           categoryId: this.items[0].category,
-          weight: this.items.map(item => parseInt(item.weight)).reduce((total, num) => total += num),
-          qty: this.items.map(item => parseInt(item.quantity)).reduce((total, num) => total += num),
+          weight: this.items.map(item => parseInt(item.weight)).reduce((total, num) => { total += num }),
+          qty: this.items.map(item => parseInt(item.quantity)).reduce((total, num) => { total += num }),
           items: items
         }
       }
@@ -753,7 +753,7 @@ export default {
         this.$router.push({ name: 'member-order' })
       }).catch(err => {
         if (err.response) {
-          let message = res.data.message ? res.data.message : res.statusText
+          let message = err.response.data.message ? err.response.data.message : err.response.statusText
 
           this.$notify({
             title: 'ERROR',
