@@ -133,7 +133,7 @@ export default {
         this.input.code = this.address.code
         this.input.district = this.address.district
         this.input.address1 = this.address.alamat1
-        this.input.address2 = this.address.alamat2,
+        this.input.address2 = this.address.alamat2
         this.input.zipcode = this.address.zipcode
 
         this.fetchCities()

@@ -614,10 +614,10 @@ export default {
           input.address = this.input.address
           input.insurance = this.input.insurance
           input.npwp = this.input.npwp
-  
+
           return this.prepareOrderRequest(input)
         })
-  
+
         axios.all(allRequest).then(axios.spread((...response) => {
           let items = []
 
@@ -633,7 +633,7 @@ export default {
         })).catch(err => {
           if (err.response) {
             let message = err.response.data.message ? err.response.data.message : err.response.statusText
-  
+
             this.error = true
             this.errorMessage = message
 
