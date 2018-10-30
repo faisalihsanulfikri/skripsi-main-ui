@@ -11,17 +11,13 @@
             </td>
           </tr>
           <tr>
+            <td colspan="3"><hr/></td>
+          </tr>
+          <tr>
             <td>Biaya Internasional</td>
             <td>Rp. </td>
             <td class="uk-text-right">
               {{ item.biayaInt | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-            </td>
-          </tr>
-          <tr>
-            <td>Biaya Domestik</td>
-            <td>Rp. </td>
-            <td class="uk-text-right">
-              {{ item.biayaDom | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
             </td>
           </tr>
           <tr>
@@ -46,6 +42,23 @@
             </td>
           </tr>
           <tr>
+            <td>Biaya Pengiriman Domestik Indonesia</td>
+            <td>Rp. </td>
+            <td class="uk-text-right">
+              {{ item.biayaDom | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+            </td>
+          </tr>
+          <tr>
+            <td>Biaya Packaging</td>
+            <td>Rp. </td>
+            <td class="uk-text-right">
+              {{ item.biayaPackaging | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3"><hr/></td>
+          </tr>
+          <tr>
             <td>Total</td>
             <td>Rp. </td>
             <td class="uk-text-right">
@@ -58,6 +71,9 @@
             <td class="uk-text-right">
               {{ item.npwp | currency('- ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
             </td>
+          </tr>
+          <tr>
+            <td colspan="3"><hr/></td>
           </tr>
           <tr>
             <td>Estimasi Biaya Pengiriman</td>
@@ -88,7 +104,9 @@ export default {
               pph: 0,
               total: 0,
               npwp: 0,
-              totalBayar: 0
+              totalBayar: 0,
+              isConsolidate: false,
+              biayaPackaging: 0
             }
           ]
         }

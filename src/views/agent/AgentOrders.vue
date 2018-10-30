@@ -56,14 +56,14 @@
                             <thead>
                               <tr>
                                 <th>No</th>
-                                <th>Nama</th>
-                                <th>Berat</th>
-                                <th>Harga</th>
-                                <th>Panjang</th>
-                                <th>Lebar</th>
-                                <th>Tinggi</th>
-                                <th></th>
-                                <th></th>
+                                <th>Goods Name</th>
+                                <th>Weight</th>
+                                <th>Price</th>
+                                <th>Length</th>
+                                <th>Width</th>
+                                <th>Height</th>
+                                <th>Confirm</th>
+                                <th>Label</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -76,15 +76,22 @@
                                 <td>{{ item.length }} {{ item.vunits }}</td>
                                 <td>{{ item.width }} {{ item.vunits }}</td>
                                 <td>{{ item.height }} {{ item.vunits }}</td>
-                                <td>
-                                  <button class="uk-button uk-button-primary" type="button" >Confirm</button>
+                                <td class="uk-text-center">
+                                  <a class="uk-margin-small-left uk-text-danger" href="#" @click.prevent="printConfirmation(item.id)">
+                                    <font-awesome-icon icon="check"></font-awesome-icon>
+                                  </a>
+                                </td>
+                                <td class="uk-text-center">
+                                  <a class="uk-margin-small-left uk-text-danger" href="#" @click.prevent="printAWB(item.id)">
+                                    <font-awesome-icon icon="print"></font-awesome-icon>
+                                  </a>
                                 </td>
                                 </tr>
                               </template>
                             </tbody>
                             <tfoot>
                               <tr>
-                                <td colspan="6">
+                                <td colspan="3">
                                   <button class="uk-button uk-button-danger" type="button" @click="print">Print AWB</button>
                                 </td>
                               </tr>
@@ -133,8 +140,8 @@
           </thead>
           <tbody>
             <template v-for="(item, initem) in selectedItems">
-              <tr>
-                <td>{{initem + 1}}</td>
+              <tr :key="item.lineid">
+                <td>{{ initem + 1 }}</td>
                 <td>{{ item.goodsName }}</td>
                 <td>{{ item.weight }} {{ item.wunits }}</td>
                 <td>{{ item.harga }} </td>
@@ -157,8 +164,6 @@ import _ from 'lodash'
 import * as Level from '../../config/level'
 import ColumnSort from '../../components/ColumnSort'
 import { Printd } from 'printd'
-
-
 export default {
   components: {
     ColumnSort
@@ -166,22 +171,22 @@ export default {
   data () {
     return {
       selectedItems: {
-        id : '',
-        goodsName : 'empty',
-        weight : '',
-        harga : '',
-        wunits : '',
-        length : '',
-        width : '',
-        height : '',
-        vunits : ''
+        lineid: '',
+        goodsName: 'empty',
+        weight: '',
+        harga: '',
+        wunits: '',
+        length: '',
+        width: '',
+        height: '',
+        vunits: ''
       },
       orders: [],
       filter: {
         keyword: '',
         verified: [true, false],
         sort: {
-          field: 'goosName',
+          field: 'goodsName',
           order: 'asc'
         }
       },
@@ -258,6 +263,24 @@ export default {
     },
     print () {
       this.d.print(document.getElementById('testPrint', this.cssText))
+    },
+    printConfirmation (id) {
+      this.$confirm('Are you sure you have received this item ?', 'Waning', {
+        type: 'warning',
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No'
+      }).then(() => {
+        this.delete(id)
+      }).catch(() => {})
+    },
+    printAWB (id) {
+      this.$confirm('Are you sure want to create Airway bill ?', 'Waning', {
+        type: 'warning',
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No'
+      }).then(() => {
+        this.delete(id)
+      }).catch(() => {})
     }
   },
   created () {

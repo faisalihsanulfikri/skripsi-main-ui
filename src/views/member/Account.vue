@@ -13,6 +13,9 @@
             <li>
               <a href="#">Ganti Kata Sandi</a>
             </li>
+            <li>
+              <a href="#">Upload Dokumen</a>
+            </li>
           </ul>
         </div>
         <div class="uk-width-expand">
@@ -20,6 +23,7 @@
             <li><profile/></li>
             <li><my-address/></li>
             <li><change-password/></li>
+            <li><upload-dokumen/></li>
           </ul>
         </div>
       </div>
@@ -31,12 +35,14 @@
 import Profile from './UserProfile'
 import MyAddress from './UserAddress'
 import ChangePassword from './UserChangePassword'
+import UploadDokumen from './UserUpload'
 
 export default {
   components: {
     Profile,
     MyAddress,
-    ChangePassword
+    ChangePassword,
+    UploadDokumen
   }
 }
 </script>

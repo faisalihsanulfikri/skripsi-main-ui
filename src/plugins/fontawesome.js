@@ -25,7 +25,10 @@ import {
   faTruck,
   faUser,
   faWallet,
-  faWarehouse } from '@fortawesome/free-solid-svg-icons'
+  faWarehouse,
+  faPrint,
+  faInfoCircle,
+  faInfo } from '@fortawesome/free-solid-svg-icons'
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -54,7 +57,10 @@ library.add([
   faTruck,
   faUser,
   faWallet,
-  faWarehouse
+  faWarehouse,
+  faPrint,
+  faInfoCircle,
+  faInfo
 ])
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)

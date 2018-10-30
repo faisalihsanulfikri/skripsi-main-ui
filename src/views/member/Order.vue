@@ -105,6 +105,13 @@
                     </div>
                   </td>
                 </tr>
+                <tr v-if="!order.collapse" :key="`${index}_info`">
+                  <td colspan="5">
+                    <div class="uk-margin uk-text-right">
+                      Tracking Section...... (Status 1 - 2 - 3 - 4 - 5 )
+                    </div>
+                  </td>
+                </tr>
               </template>
             </tbody>
           </table>

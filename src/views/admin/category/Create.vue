@@ -25,6 +25,10 @@
         <label class="uk-form-label">Description</label>
         <el-input v-model="input.description" type="textarea" rows="10"></el-input>
       </div>
+      <div class="uk-margin">
+        <label class="uk-form-label">Required Document (Yes | No)</label>
+        <el-input v-model="input.document" type="textarea" rows="10"></el-input>
+      </div>
       <el-alert
           v-if="error"
           title="ERROR"
@@ -47,7 +51,8 @@ export default {
       title: 'New Category',
       input: {
         name: '',
-        description: ''
+        description: '',
+        document: ''
       },
       error: false,
       errorMessage: ''

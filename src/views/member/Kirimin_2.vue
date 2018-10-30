@@ -32,7 +32,11 @@
                   </select>
                 </div>
                 <div class="uk-margin-small">
-                  <label class="uk-form-label">Asuransi</label>
+                  <label class="uk-form-label">Asuransi
+                    <a class="uk-margin-small-left uk-text-danger" href="#" @click.prevent="showAsuransi()">
+                      <font-awesome-icon icon="info-circle"></font-awesome-icon>
+                    </a>
+                  </label>
                   <div class="uk-child-width-auto" uk-grid>
                     <label>
                       <input v-model="input.insurance" type="radio" value="Y" @change="multiCheck">
@@ -98,6 +102,15 @@
             </div>
             <div class="uk-margin-small">
               <label class="uk-form-label">Nama Barang</label>
+              <input
+                v-model="input.item.name"
+                v-validate="'required'"
+                name="itemName"
+                class="uk-input"
+                :class="{ 'uk-form-danger': errors.has('itemName') }">
+            </div>
+            <div class="uk-margin-small">
+              <label class="uk-form-label">Referensi (ex. Invoice#, SO#)</label>
               <input
                 v-model="input.item.name"
                 v-validate="'required'"
@@ -200,6 +213,7 @@
             <thead>
               <th>Jenis Barang</th>
               <th>Nama Barang</th>
+              <th>Referensi</th>
               <th class="uk-text-right">Jumlah Barang</th>
               <th class="uk-text-right">Harga Barang (IDR)</th>
               <th class="uk-text-center">Berat ({{ config.weightUnits }})</th>
@@ -210,6 +224,7 @@
               <tr v-for="(item, index) in items" :key="index">
                 <td>{{ item.categoryName }}</td>
                 <td>{{ item.name }}</td>
+                <td>(ref)</td>
                 <td class="uk-text-right">{{ item.quantity }}</td>
                 <td class="uk-text-right">{{ item.price | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
                 <td class="uk-text-center">{{ item.weight }}</td>
@@ -312,7 +327,8 @@ export default {
         weight: '',
         length: '',
         width: '',
-        height: ''
+        height: '',
+        isConsolidate: ''
       },
       orderModel: {
         origin: '',
@@ -762,6 +778,12 @@ export default {
           })
         }
       })
+    },
+    showAsuransi () {
+      this.$confirm('Insurance Benefit...... ', 'Information', {
+        type: 'warning',
+        confirmButtonText: 'Ok'
+      }).catch(() => {})
     }
   },
   created () {
