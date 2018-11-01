@@ -2,9 +2,9 @@
   <div>
     <div class="uk-card uk-card-default uk-card-small uk-card-body">
       <div uk-grid>
-        <div class="uk-width-small@m">
+        <div class="uk-width-medium@m">
           <ul class="uk-tab-left" uk-switcher="#user-tab" uk-tab>
-            <li v-for="warehouse in warehouses" :key="warehouse.id" class="uk-width-1-4">
+            <li v-for="warehouse in warehouses" :key="warehouse.id">
               <a href="">{{ warehouse.name }}</a>
             </li>
           </ul>
