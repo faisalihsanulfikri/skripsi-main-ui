@@ -159,8 +159,8 @@ export default {
         users = users.reverse()
       }
 
-      this.$set(this, 'pagination.total', users.length)
-      this.$set(this, 'pagination.total_pages', Math.ceil(this.pagination.total / this.pagination.per_page))
+      this.$set(this.pagination, 'total', users.length)
+      this.$set(this.pagination, 'total_pages', Math.ceil(this.pagination.total / this.pagination.per_page))
 
       let start = this.pagination.current_page > 1 ? (this.pagination.current_page * this.pagination.per_page) - this.pagination.per_page : 0
 
