@@ -111,7 +111,7 @@ export default {
         this.$refs.upload.clearFiles()
 
         this.fetchDocuments()
-      }).catch (err => {
+      }).catch(err => {
         if (err.response) {
           let message = err.response.data.message ? err.reponse.data.message : err.response.statusText
 
@@ -136,7 +136,7 @@ export default {
         link.setAttribute('download', doc.filename)
         link.click()
         link.remove()
-      }).catch (err => {
+      }).catch(err => {
         if (err.response) {
           let message = err.response.data.message ? err.reponse.data.message : err.response.statusText
 
