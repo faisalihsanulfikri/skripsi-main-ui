@@ -6,16 +6,21 @@ import {
   faAddressCard,
   faBullhorn,
   faCalculator,
-  faCheck,
-  faChevronLeft,
   faCaretUp,
   faCaretDown,
+  faCheck,
+  faChevronLeft,
+  faCloudDownloadAlt,
   faDollarSign,
   faEdit,
   faFileAlt,
   faFileInvoice,
+  faImage,
+  faInfo,
+  faInfoCircle,
   faMap,
   faPlus,
+  faPrint,
   faQuestion,
   faSignInAlt,
   faStar,
@@ -25,10 +30,8 @@ import {
   faTruck,
   faUser,
   faWallet,
-  faWarehouse,
-  faPrint,
-  faInfoCircle,
-  faInfo } from '@fortawesome/free-solid-svg-icons'
+  faWarehouse
+} from '@fortawesome/free-solid-svg-icons'
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -38,16 +41,21 @@ library.add([
   faAddressCard,
   faBullhorn,
   faCalculator,
-  faCheck,
-  faChevronLeft,
   faCaretUp,
   faCaretDown,
+  faCheck,
+  faChevronLeft,
+  faCloudDownloadAlt,
   faDollarSign,
   faEdit,
   faFileAlt,
   faFileInvoice,
+  faImage,
+  faInfo,
+  faInfoCircle,
   faMap,
   faPlus,
+  faPrint,
   faQuestion,
   faSignInAlt,
   faStar,
@@ -57,10 +65,7 @@ library.add([
   faTruck,
   faUser,
   faWallet,
-  faWarehouse,
-  faPrint,
-  faInfoCircle,
-  faInfo
+  faWarehouse
 ])
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
