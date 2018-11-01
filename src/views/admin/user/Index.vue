@@ -84,6 +84,14 @@
         </table>
       </div>
     </div>
+    <div class="uk-card-footer uk-text-center">
+      <el-pagination
+        layout="prev, pager, next"
+        :page-size="pagination.per_page"
+        :total="pagination.total"
+        @current-change="onChangePage">
+      </el-pagination>
+    </div>
   </div>
 </template>
 
@@ -101,6 +109,11 @@ export default {
   data () {
     return {
       users: [],
+      pagination: {
+        current_page:1,
+        per_page: 25,
+        total: 0,
+      },
       filter: {
         keyword: '',
         verified: [true, false],
@@ -146,7 +159,12 @@ export default {
         users = users.reverse()
       }
 
-      return users
+      this.pagination.total = users.length
+      this.pagination.total_pages = Math.ceil(this.pagination.total / this.pagination.per_page)
+
+      let start = this.pagination.current_page > 1 ? (this.pagination.current_page * this.pagination.per_page) - this.pagination.per_page : 0
+
+      return users.slice(start, this.pagination.current_page * this.pagination.per_page)
     },
     level () {
       return Level[this.$route.params.level.toUpperCase()]
@@ -158,6 +176,11 @@ export default {
     }
   },
   methods: {
+    onChangePage (page) {
+      this.pagination.current_page = page
+
+      this.fetchUsers()
+    },
     onSortChange (payload) {
       this.filter.sort.field = payload.field
       this.filter.sort.order = payload.order
