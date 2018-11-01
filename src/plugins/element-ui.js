@@ -4,4 +4,4 @@ import locale from 'element-ui/lib/locale/lang/en'
 
 import '../themes/element-ui.scss'
 
-Vue.use(ElementUI, locale)
+Vue.use(ElementUI, { locale })
