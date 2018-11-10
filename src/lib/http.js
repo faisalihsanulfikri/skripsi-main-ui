@@ -64,7 +64,7 @@ Vue.authHttp = () => {
 
     return response
   }, error => {
-    if (error.response) {
+    if (error.message === 'Network Error' || error.response) {
       if (error.response.status === 401) {
         Vue.auth.destroy()
 

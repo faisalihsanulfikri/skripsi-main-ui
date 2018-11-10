@@ -3,17 +3,17 @@ import Vue from 'vue'
 import router from '../router'
 
 Vue.auth = {
-  setAuth(auth) {
+  setAuth (auth) {
     localStorage.setItem('auth', JSON.stringify(auth))
   },
-  hasAuth() {
+  hasAuth () {
     let auth = localStorage.getItem('auth')
 
     if (auth === null) return false
 
     return true
   },
-  setUser(user) {
+  setUser (user) {
     localStorage.setItem('user', JSON.stringify(user))
   },
   async getUser () {
@@ -23,7 +23,7 @@ Vue.auth = {
       let res = await Vue.authHttp().get('/user')
 
       Vue.auth.setUser(res.data)
-      
+
       user = res.data
     }
 

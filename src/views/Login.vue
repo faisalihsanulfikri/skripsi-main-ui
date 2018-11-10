@@ -10,13 +10,31 @@
             <div>
               <div class="uk-margin">
                 <label class="uk-form-label">Email</label>
-                <input v-model="input.email" v-validate="rules.email" name="email" class="uk-input" type="text" placeholder="Email"/>
-                <p v-if="errors.first('email')" class="uk-margin-small uk-text-danger">{{ errors.first('email') }}</p>
+                <input
+                  v-model="input.email"
+                  v-validate="rules.email"
+                  name="email"
+                  class="uk-input"
+                  type="text"
+                  placeholder="Email"
+                  @keypress.enter="login" />
+                <p v-if="errors.first('email')" class="uk-margin-small uk-text-danger">
+                  {{ errors.first('email') }}
+                </p>
               </div>
               <div class="uk-margin">
                 <label class="uk-form-label">Kata Sandi</label>
-                <input v-model="input.password" v-validate="rules.password" name="password" class="uk-input" type="password" placeholder="Password"/>
-                <p v-if="errors.first('password')" class="uk-margin-small uk-text-danger">{{ errors.first('password') }}</p>
+                <input
+                  v-model="input.password"
+                  v-validate="rules.password"
+                  name="password"
+                  class="uk-input"
+                  type="password"
+                  placeholder="Password"
+                  @keypress.enter="login" />
+                <p v-if="errors.first('password')" class="uk-margin-small uk-text-danger">
+                  {{ errors.first('password') }}
+                </p>
               </div>
               <div class="uk-margin">
                 <el-alert
@@ -27,10 +45,14 @@
                 </el-alert>
               </div>
               <div class="uk-margin">
-                <button class="uk-button uk-button-primary uk-width-1-1" type="button" @click="login">Masuk</button>
+                <button class="uk-button uk-button-primary uk-width-1-1" type="button" @click="login">
+                  Masuk
+                </button>
               </div>
               <div class="uk-margin">
-                <router-link class="uk-button uk-button-default uk-width-1-1" tag="button" :to="{ name: 'register' }">Daftar</router-link>
+                <router-link class="uk-button uk-button-default uk-width-1-1" tag="button" :to="{ name: 'register' }">
+                  Daftar
+                </router-link>
               </div>
             </div>
           </div>
