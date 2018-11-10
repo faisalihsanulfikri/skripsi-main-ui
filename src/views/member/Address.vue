@@ -17,10 +17,9 @@
                   :price="`$${warehouse.price}`"
                   meta-price="Per Kilogram"
                   :address="warehouse.address"
-                  :customerId="user.custCode"
-                  :customerFirstName="user.fullName"
-                  customerLastName=""
-                  :zipcode="warehouse.zipcode"/>
+                  :customer-code="user.code"
+                  :customer-name="user.name"
+                  :zipcode="warehouse.zip_code" />
             </li>
           </ul>
         </div>
@@ -41,21 +40,16 @@ export default {
       warehouses: []
     }
   },
-  methods: {
-    fetchWareHouses () {
-      this.$authHttp.get('/v1/cfees')
-        .then(reponse => {
-          this.warehouses = reponse.data
-        })
-        .catch(() => {
-          //
-        })
-    }
+  async created () {
+    this.fetchWarehouses()
+    this.user = await this.$auth.getUser()
   },
-  created () {
-    this.fetchWareHouses()
-    this.user = this.$auth.getUser()
+  methods: {
+    fetchWarehouses () {
+      this.__fetchWarehouses().then(res => {
+        this.warehouses = res.data
+      })
+    }
   }
-
 }
 </script>

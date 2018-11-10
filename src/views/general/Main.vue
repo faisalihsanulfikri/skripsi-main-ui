@@ -42,7 +42,7 @@
               <li>
                 <router-link :to="{ name: 'faq' }">FAQ</router-link>
               </li>
-              <template v-if="$auth.hasToken()">
+              <template v-if="$auth.hasAuth()">
                 <li>
                   <a href="#">
                     <font-awesome-icon icon="user"/>
@@ -54,7 +54,7 @@
                         <router-link :to="{ name: 'member-account' }">Akun</router-link>
                       </li>
                       <li>
-                        <a href="#" @click.prevent="logout">Keluar</a>
+                        <a href="#" @click.prevent="__logout">Keluar</a>
                       </li>
                     </ul>
                   </div>
@@ -126,17 +126,3 @@
     </footer>
   </v-app>
 </template>
-
-<script>
-export default {
-  methods: {
-    logout () {
-      this.$auth.destroyToken()
-      this.$router.push({
-        path: '/',
-        force: true
-      })
-    }
-  }
-}
-</script>

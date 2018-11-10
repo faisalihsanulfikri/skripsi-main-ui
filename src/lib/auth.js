@@ -1,38 +1,51 @@
 import Vue from 'vue'
 
+import router from '../router'
+
 Vue.auth = {
-  setToken (token, user = null) {
-    localStorage.setItem('token', token)
-
-    if (user !== null) {
-      localStorage.setItem('user', JSON.stringify(user))
-    }
+  setAuth(auth) {
+    localStorage.setItem('auth', JSON.stringify(auth))
   },
-  getToken () {
-    let token = localStorage.getItem('token')
+  hasAuth() {
+    let auth = localStorage.getItem('auth')
 
-    return token
-  },
-  hasToken () {
-    let token = localStorage.getItem('token')
-
-    if (token === null) return false
+    if (auth === null) return false
 
     return true
   },
-  destroyToken () {
-    localStorage.removeItem('token')
-
-    if (Vue.auth.getUser() !== null) {
-      localStorage.removeItem('user')
-    }
+  setUser(user) {
+    localStorage.setItem('user', JSON.stringify(user))
   },
-  getUser () {
-    let user = localStorage.getItem('user')
+  async getUser () {
+    let user = JSON.parse(localStorage.getItem('user'))
 
-    if (user === null) return null
+    if (user === null) {
+      let res = await Vue.authHttp().get('/user')
 
-    return JSON.parse(user)
+      Vue.auth.setUser(res.data)
+      
+      user = res.data
+    }
+
+    return user
+  },
+  getToken () {
+    let auth = JSON.parse(localStorage.getItem('auth'))
+
+    if (auth === null) {
+      localStorage.clear()
+
+      router.push({
+        name: 'login'
+      })
+
+      return
+    }
+
+    return auth.access_token
+  },
+  destroy () {
+    localStorage.clear()
   }
 }
 

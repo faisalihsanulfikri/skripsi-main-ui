@@ -2,12 +2,12 @@
   <div>
     <div class="uk-overflow-auto">
       <table class="uk-table uk-table-small uk-text-small">
-        <tbody v-for="(item, key) in result.items" :key="key">
+        <tbody>
           <tr>
             <td>Harga Barang</td>
             <td width="50">Rp. </td>
             <td class="uk-text-right" width="150">
-              {{ item.harga | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+              {{ cost.itemPrice | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
             </td>
           </tr>
           <tr>
@@ -17,42 +17,49 @@
             <td>Biaya Internasional</td>
             <td>Rp. </td>
             <td class="uk-text-right">
-              {{ item.biayaInt | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+              {{ cost.domesticCost | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
             </td>
           </tr>
           <tr>
             <td>Bea Masuk (7.5%)</td>
             <td>Rp. </td>
             <td class="uk-text-right">
-              {{ item.beamasuk | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+              {{ cost.beaMasuk | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
             </td>
           </tr>
           <tr>
             <td>PPN (10%)</td>
             <td>Rp. </td>
             <td class="uk-text-right">
-              {{ item.ppn | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+              {{ cost.ppn | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
             </td>
           </tr>
           <tr>
             <td>PPH (20%)</td>
             <td>Rp. </td>
             <td class="uk-text-right">
-              {{ item.pph | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+              {{ cost.pph | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
             </td>
           </tr>
           <tr>
             <td>Biaya Pengiriman Domestik Indonesia</td>
             <td>Rp. </td>
             <td class="uk-text-right">
-              {{ item.biayaDom | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+              {{ cost.domesticCost | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
             </td>
           </tr>
           <tr>
             <td>Biaya Packaging</td>
             <td>Rp. </td>
             <td class="uk-text-right">
-              {{ item.biayaPackaging | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+              {{ cost.packagingCost | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+            </td>
+          </tr>
+          <tr>
+            <td>Asuransi</td>
+            <td>Rp. </td>
+            <td class="uk-text-right">
+              {{ cost.insurance | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
             </td>
           </tr>
           <tr>
@@ -62,14 +69,14 @@
             <td>Total</td>
             <td>Rp. </td>
             <td class="uk-text-right">
-              {{ item.total | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+              {{ cost.estimatedShippingCost | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
             </td>
           </tr>
           <tr class="uk-text-danger">
             <td>Potongan NPWP</td>
             <td>Rp. </td>
             <td class="uk-text-right">
-              {{ item.npwp | currency('- ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+              {{ cost.npwp | currency('- ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
             </td>
           </tr>
           <tr>
@@ -79,7 +86,7 @@
             <td>Estimasi Biaya Pengiriman</td>
             <td>Rp. </td>
             <td class="uk-text-right">
-              {{ item.totalBayar | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+              {{ cost.estimatedShippingCostFinal | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
             </td>
           </tr>
         </tbody>
@@ -91,24 +98,21 @@
 <script>
 export default {
   props: {
-    result: {
+    cost: {
       default: () => {
         return {
-          items: [
-            {
-              harga: 0,
-              biayaInt: 0,
-              biayaDom: 0,
-              beamasuk: 0,
-              ppn: 0,
-              pph: 0,
-              total: 0,
-              npwp: 0,
-              totalBayar: 0,
-              isConsolidate: false,
-              biayaPackaging: 0
-            }
-          ]
+          beaMasuk: 0,
+          domesticCost: 0,
+          estimatedCost: 0,
+          estimatedShippingCost: 0,
+          estimatedShippingCostFinal: 0,
+          insurance: 0,
+          internationalCost: 0,
+          itemPrice: 0,
+          npwp: 0,
+          pph: 0,
+          ppn: 0,
+          packagingCost: 0
         }
       }
     }

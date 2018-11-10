@@ -4,20 +4,44 @@
     <form>
       <div class="uk-margin">
         <label class="uk-form-label">Kata sandi sekarang</label>
-        <input v-model="input.oldPassword" class="uk-input" type="password">
+        <input
+          v-model="input.currentPassword"
+          v-validate="rules.currentPassword"
+          name="currentPassword"
+          class="uk-input"
+          type="password" />
+          <p v-if="errors.first('currentPassword')" class="uk-margin-small uk-text-danger">
+            {{ errors.first('currentPassword') }}
+          </p>
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Kata sandi baru</label>
-        <input v-model="input.password" class="uk-input" type="password">
+        <input
+          v-model="input.password"
+          v-validate="rules.password"
+          name="password"
+          class="uk-input"
+          type="password" />
+          <p v-if="errors.first('password')" class="uk-margin-small uk-text-danger">
+            {{ errors.first('password') }}
+          </p>
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Konfirmasi kata sandi baru</label>
-        <input v-model="input.confPassword" class="uk-input" type="password">
+        <input
+          v-model="input.passwordConfirmation"
+          v-validate="rules.passwordConfirmation"
+          name="passwordConfirmation"
+          class="uk-input"
+          type="password" />
       </div>
-      <div v-if="error" class="uk-margin">
-        <div class="uk-alert-danger" uk-alert>
-          {{ errorMessage }}
-        </div>
+      <div class="uk-margin">
+        <el-alert
+          v-if="error"
+          :title="errorMessage"
+          type="error"
+          show-icon>
+        </el-alert>
       </div>
       <div class="uk-margin uk-text-right">
         <button class="uk-button uk-button-primary" type="button" @click="changePassword">Simpan</button>
@@ -31,12 +55,18 @@ export default {
   data () {
     return {
       input: {
-        oldPassword: '',
+        currentPassword: '',
         password: '',
-        confPassword: ''
+        passwordConfirmation: ''
+      },
+      rules: {
+        currentPassword: 'required',
+        password: 'required|min:6',
+        passwordConfirmation: 'required|confirmed:password'
       },
       error: false,
-      errorMessage: ''
+      errorMessage: '',
+      validatorErrors: {}
     }
   },
   methods: {
@@ -48,25 +78,36 @@ export default {
     changePassword () {
       this.error = false
       this.errorMessage = ''
+      this.validatorErrors = {}
 
-      this.$authHttp.put('/v1/users/password', this.input)
+      this.$validator.errors.clear()
+
+      this.$authHttp.put('/user/password', this.input)
         .then(res => {
           this.$notify({
-            status: 'SUCCESS',
+            title: 'SUCCESS',
             message: res.data.message,
             type: 'success'
           })
 
-          this.clearInput()
+          this.input = this.$options.data().input
         })
         .catch(err => {
           if (err.response) {
-            this.error = 1
+            this.error = true
+            this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
 
-            if (err.response.data.message) {
-              this.errorMessage = err.response.data.message
-            } else {
-              this.errorMessage = err.response.statusText
+            this.$validator.errors.clear()
+
+            if (err.response.data.errorValidation) {
+              this.validationErrors = err.response.data.errors
+
+              Object.keys(this.validationErrors).forEach(key => {
+                this.$validator.errors.add({
+                  field: key,
+                  msg: this.validationErrors[key][0]
+                })
+              })
             }
           }
         })

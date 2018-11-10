@@ -10,11 +10,11 @@
           </div>
           <div class="uk-navbar-right">
             <ul class="uk-navbar-nav">
-              <template v-if="$auth.hasToken()">
+              <template v-if="$auth.hasAuth()">
                 <li>
                   <a href="#">
                     <font-awesome-icon icon="user"/>
-                    <span class="uk-margin-small-left" >{{ $auth.getUser().fullName }}</span>
+                    <span class="uk-margin-small-left" >{{ $auth.getUser().name }}</span>
                   </a>
                   <div class="uk-navbar-dropdown">
                     <ul class="uk-nav uk-navbar-dropdown-nav">
@@ -22,7 +22,7 @@
                         <router-link :to="{ name: 'member-account' }">Akun</router-link>
                       </li>
                       <li>
-                        <a href="#" @click.prevent="logout">Keluar</a>
+                        <a href="#" @click.prevent="__logout">Keluar</a>
                       </li>
                     </ul>
                   </div>
@@ -73,7 +73,7 @@
         </nav>
       </div>
     </div>
-    <div v-if="$auth.hasToken()" class="app--navbar-secondary">
+    <div v-if="$auth.hasAuth()" class="app--navbar-secondary">
       <div class="uk-container">
         <nav uk-navbar>
           <div class="uk-navbar-center">
@@ -188,17 +188,3 @@
     </footer>
   </v-app>
 </template>
-
-<script>
-export default {
-  methods: {
-    logout () {
-      this.$auth.destroyToken()
-      this.$router.push({
-        path: '/',
-        force: true
-      })
-    }
-  }
-}
-</script>

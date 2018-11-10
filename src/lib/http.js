@@ -4,7 +4,17 @@ import axios from 'axios'
 import $router from '../router'
 import $store from '../store/index'
 
-const api = 'http://45.76.163.191:3003'
+// const api = 'http://45.76.163.191:3003'
+const baseUrl = 'http://localhost:8000'
+const api = `${baseUrl}/api`
+
+Vue.web = () => {
+  let web = axios.create({
+    baseURL: baseUrl
+  })
+
+  return web
+}
 
 Vue.http = () => {
   let http = axios.create({
@@ -56,7 +66,7 @@ Vue.authHttp = () => {
   }, error => {
     if (error.response) {
       if (error.response.status === 401) {
-        Vue.auth.destroyToken()
+        Vue.auth.destroy()
 
         $router.push({ path: '/login' })
       }
@@ -71,6 +81,9 @@ Vue.authHttp = () => {
 }
 
 Object.defineProperties(Vue.prototype, {
+  $web: {
+    get () { return Vue.web() }
+  },
   $http: {
     get () { return Vue.http() }
   },

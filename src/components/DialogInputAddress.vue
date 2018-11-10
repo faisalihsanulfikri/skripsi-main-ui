@@ -7,19 +7,45 @@
       <form>
         <div class="uk-margin">
           <label class="uk-form-label">Alias</label>
-          <input v-model="input.alias" class="uk-input"/>
+          <input
+            v-model="input.alias"
+            v-validate="rules.alias"
+            name="alias"
+            class="uk-input" />
+          <p v-if="errors.first('alias')" class="uk-margin-small uk-text-danger">
+            {{ errors.first('alias') }}
+          </p>
         </div>
         <div class="uk-margin">
           <label class="uk-form-label">Penerima</label>
-          <input v-model="input.name" class="uk-input"/>
+          <input
+            v-model="input.name"
+            v-validate="rules.name"
+            name="name"
+            class="uk-input" />
+          <p v-if="errors.first('name')" class="uk-margin-small uk-text-danger">
+            {{ errors.first('name') }}
+          </p>
         </div>
         <div class="uk-margin">
           <label class="uk-form-label">Telepon</label>
-          <input v-model="input.phone" class="uk-input"/>
+          <input
+            v-model="input.phone"
+            v-validate="rules.phone"
+            name="phone"
+            class="uk-input" />
+          <p v-if="errors.first('phone')" class="uk-margin-small uk-text-danger">
+            {{ errors.first('phone') }}
+          </p>
         </div>
         <div class="uk-margin">
           <label class="uk-form-label">Provinsi</label>
-          <select v-model="input.provinceId" class="uk-select" @change="onProvinceChanged">
+          <select
+            v-model="input.provinceId"
+            v-validate="rules.province"
+            name="province"
+            class="uk-select"
+            @change="onProvinceChanged">
             <option
               v-for="(item, index) in options.province"
               :key="index"
@@ -27,10 +53,18 @@
                 {{ item.label }}
               </option>
           </select>
+          <p v-if="errors.first('province')" class="uk-margin-small uk-text-danger">
+            {{ errors.first('province') }}
+          </p>
         </div>
         <div class="uk-margin">
           <label class="uk-form-label">Kota</label>
-          <select v-model="input.cityId" class="uk-select" @change="onCityChanged">
+          <select
+            v-model="input.cityId"
+            v-validate="rules.city"
+            name="city"
+            class="uk-select"
+            @change="onCityChanged">
             <option
               v-for="(item, index) in options.city"
               :key="index"
@@ -38,35 +72,55 @@
                 {{ item.label }}
               </option>
           </select>
+          <p v-if="errors.first('city')" class="uk-margin-small uk-text-danger">
+            {{ errors.first('city') }}
+          </p>
         </div>
         <div class="uk-margin">
           <label class="uk-form-label">Kecamatan</label>
-          <select v-model="input.code" class="uk-select" @change="onDistrictChange">
+          <select
+            v-model="input.code"
+            v-validate="rules.subDistrict"
+            name="subDistrict"
+            class="uk-select"
+            @change="onDistrictChange">
             <option
-              v-for="(item, index) in options.district"
+              v-for="(item, index) in options.subDistrict"
               :key="index"
               :value="item.value">
                 {{ item.label }}
               </option>
           </select>
+          <p v-if="errors.first('subDistrict')" class="uk-margin-small uk-text-danger">
+            {{ errors.first('subDistrict') }}
+          </p>
         </div>
         <div class="uk-margin">
-          <label class="uk-form-label">Alamat 1</label>
-          <input v-model="input.address1" class="uk-input"/>
-        </div>
-        <div class="uk-margin">
-          <label class="uk-form-label">Alamat 2</label>
-          <input v-model="input.address2" class="uk-input"/>
+          <label class="uk-form-label">Alamat</label>
+          <input
+            v-model="input.address"
+            v-validate="rules.address"
+            name="address"
+            class="uk-input" />
+          <p v-if="errors.first('address')" class="uk-margin-small uk-text-danger">
+            {{ errors.first('address') }}
+          </p>
         </div>
         <div class="uk-margin">
           <label class="uk-form-label">Kode Pos</label>
-          <input v-model="input.zipcode" class="uk-input"/>
+          <input
+            v-model="input.postalCode"
+            v-validate="rules.postalCode"
+            name="postalCode"
+            class="uk-input" />
+          <p v-if="errors.first('postalCode')" class="uk-margin-small uk-text-danger">
+            {{ errors.first('postalCode') }}
+          </p>
         </div>
         <el-alert
           v-if="error"
-          title="ERROR"
+          :title="errorMessage"
           type="error"
-          :description="errorMessage"
           show-icon>
         </el-alert>
       </form>
@@ -96,95 +150,107 @@ export default {
     return {
       input: {
         alias: '',
+        code: '',
         name: '',
         phone: '',
         province: '',
-        provinceId: '',
         city: '',
+        subDistrict: '',
+        address: '',
+        postalCode: '',
+        provinceId: '',
         cityId: '',
-        district: '',
-        code: '',
         address1: '',
         address2: '',
         zipcode: ''
       },
+      rules: {
+        alias: 'required',
+        code: 'required',
+        name: 'required',
+        phone: 'required|min:10',
+        province: 'required',
+        city: 'required',
+        subDistrict: 'required',
+        address: 'required',
+        postalCode: 'required'
+      },
       provinces: [],
       cities: [],
-      districts: [],
+      subDistricts: [],
       options: {
         province: [],
         city: [],
-        district: []
+        subDistrict: []
       },
       error: false,
-      errorMessage: ''
+      errorMessage: '',
+      validationErrors: {}
     }
   },
   methods: {
-    onDialogOpen () {
+    async onDialogOpen () {
       if (this.edit) {
-        this.input.alias = this.address.alias
-        this.input.name = this.address.penerima
-        this.input.phone = this.address.phone
-        this.input.province = this.address.province
-        this.input.provinceId = this.address.provinceId
-        this.input.city = this.address.kabupaten
-        this.input.cityId = this.address.kabupatenId
-        this.input.code = this.address.code
-        this.input.district = this.address.district
-        this.input.address1 = this.address.alamat1
-        this.input.address2 = this.address.alamat2
-        this.input.zipcode = this.address.zipcode
-
-        this.fetchCities()
-        this.fetchDistricts()
+        this.input = Object.assign({}, this.address)
+        this.input.postalCode = this.input.postal_code
       }
 
-      this.fetchProvinces()
+      this.$validator.errors.clear()
+
+      await this.fetchProvinces()
+      await this.fetchCities()
+      await this.fetchDistricts()
     },
     onDialogClose () {
       this.error = false
       this.errorMessage = ''
+      this.validationErrors = {}
 
-      this.cleanInput()
+      this.input = this.$options.data().input
       this.$emit('close')
     },
-    fetchProvinces () {
-      this.__fetchProvinces().then(res => {
-        this.provinces = res.data.data
+    async fetchProvinces () {
+      await this.__fetchProvinces().then(res => {
+        this.provinces = res.data
+        this.input.provinceId = res.data[0].province_id
+        this.input.province = res.data[0].province
 
-        this.options.province = res.data.data.map(item => {
+        this.options.province = res.data.map(item => {
           let $item = {
-            value: parseInt(item.id),
-            label: item.name
+            value: parseInt(item.province_id),
+            label: item.province
           }
 
           return $item
         })
       })
     },
-    fetchCities () {
-      this.__fetchCitiesByProvince(this.input.provinceId).then(res => {
-        this.cities = res.data.data
+    async fetchCities () {
+      await this.__fetchCitiesByProvince(this.input.provinceId).then(res => {
+        this.cities = res.data
+        this.input.cityId = res.data[0].city_id
+        this.input.city = (res.data[0].type === 'Kabupaten') ? `Kab. ${res.data[0].city_name}` : res.data[0].city_name
 
-        this.options.city = res.data.data.map(item => {
+        this.options.city = res.data.map(item => {
           let $item = {
-            value: parseInt(item.id),
-            label: (item.type === 'Kabupaten') ? `Kab. ${item.city}` : item.city
+            value: parseInt(item.city_id),
+            label: (item.type === 'Kabupaten') ? `Kab. ${item.city_name}` : item.city_name
           }
 
           return $item
         })
       })
     },
-    fetchDistricts () {
-      this.__fetchDistrictsByCity(this.input.cityId).then(res => {
-        this.districts = res.data.data
+    async fetchDistricts () {
+      await this.__fetchDistrictsByCity(this.input.cityId).then(res => {
+        this.subDistricts = res.data
+        this.input.code = res.data[0].subdistrict_id
+        this.input.subDistrict = res.data[0].subdistrict_name
 
-        this.options.district = res.data.data.map(item => {
+        this.options.subDistrict = res.data.map(item => {
           let $item = {
-            value: item.code,
-            label: item.kecamatan
+            value: item.subdistrict_id,
+            label: item.subdistrict_name
           }
 
           return $item
@@ -210,10 +276,10 @@ export default {
       this.fetchDistricts()
     },
     onDistrictChange () {
-      let districts = this.districts.filter(district => district.code === this.input.code)
+      let subDistricts = this.subDistricts.filter(district => district.code === this.input.code)
 
-      if (districts.length > 0) {
-        this.input.district = districts[0].kecamatan
+      if (subDistricts.length > 0) {
+        this.input.district = subDistricts[0].kecamatan
       }
     },
     save () {
@@ -226,21 +292,9 @@ export default {
     store () {
       this.error = false
       this.errorMessage = ''
+      this.validationErrors = {}
 
-      this.$authHttp.post(`/v1/address`, {
-        alias: this.input.alias,
-        penerima: this.input.name,
-        phone: this.input.phone,
-        province: this.input.province,
-        provinceId: this.input.provinceId,
-        kabupaten: this.input.city,
-        kabupatenId: this.input.cityId,
-        code: this.input.code,
-        kecamatan: this.input.district,
-        alamat1: this.input.address1,
-        alamat2: this.input.address2,
-        zipcode: this.input.zipcode
-      }).then(res => {
+      this.$authHttp.post(`/user/addresses`, this.input).then(res => {
         this.$notify({
           title: 'SUCCESS',
           message: res.data.message,
@@ -251,7 +305,20 @@ export default {
       }).catch(err => {
         if (err.response) {
           this.error = true
-          this.errorMessage = err.response.data.message
+          this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
+
+          this.$validator.errors.clear()
+
+          if (err.response.data.errorValidation) {
+            this.validationErrors = err.response.data.errors
+
+            Object.keys(this.validationErrors).forEach(key => {
+              this.$validator.errors.add({
+                field: key,
+                msg: this.validationErrors[key][0]
+              })
+            })
+          }
         }
       })
     },
@@ -259,20 +326,7 @@ export default {
       this.error = false
       this.errorMessage = ''
 
-      this.$authHttp.put(`/v1/address/${this.address.id}`, {
-        alias: this.input.alias,
-        penerima: this.input.name,
-        phone: this.input.phone,
-        province: this.input.province,
-        provinceId: this.input.provinceId,
-        kabupaten: this.input.city,
-        kabupatenId: this.input.cityId,
-        code: this.input.code,
-        kecamatan: this.input.district,
-        alamat1: this.input.address1,
-        alamat2: this.input.address2,
-        zipcode: this.input.zipcode
-      }).then(res => {
+      this.$authHttp.put(`/user/addresses/${this.input.id}`, this.input).then(res => {
         this.$notify({
           title: 'SUCCESS',
           message: res.data.message,
@@ -283,22 +337,22 @@ export default {
       }).catch(err => {
         if (err.response) {
           this.error = true
-          this.errorMessage = err.response.data.message
+          this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
+
+          this.$validator.errors.clear()
+
+          if (err.response.data.errorValidation) {
+            this.validationErrors = err.response.data.errors
+
+            Object.keys(this.validationErrors).forEach(key => {
+              this.$validator.errors.add({
+                field: key,
+                msg: this.validationErrors[key][0]
+              })
+            })
+          }
         }
       })
-    },
-    cleanInput () {
-      this.input.alias = ''
-      this.input.name = ''
-      this.input.phone = ''
-      this.input.province = ''
-      this.input.provinceId = ''
-      this.input.city = ''
-      this.input.cityId = ''
-      this.input.code = ''
-      this.input.district = ''
-      this.input.address1 = ''
-      this.input.address2 = ''
     }
   }
 }

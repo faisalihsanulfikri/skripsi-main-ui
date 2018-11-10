@@ -9,7 +9,7 @@
           <div class="uk-width-1-2">
             <div class="uk-margin">
               <label class="uk-form-label">Gudang Kirimin</label>
-              <select v-model="input.country" class="uk-select">
+              <select v-model="input.warehouse" class="uk-select">
                 <option
                   v-for="item in options.warehouse"
                   :key="item.value"
@@ -42,9 +42,9 @@
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">Kecamatan</label>
-              <select v-model="input.code" class="uk-select">
+              <select v-model="input.destination" class="uk-select">
                 <option
-                  v-for="item in options.district"
+                  v-for="item in options.subDistrict"
                   :key="item.value"
                   :value="item.value">
                     {{ item.label }}
@@ -63,46 +63,56 @@
               </select>
             </div>
             <div class="uk-margin">
+              <label class="uk-form-label">Asuransi ?</label>
+              <select v-model="input.insurance" class="uk-select">
+                  <option value="1">Ya</option>
+                  <option value="0">Tidak</option>
+              </select>
+            </div>
+            <div class="uk-margin">
+              <label class="uk-form-label">Pakai NPWP ?</label>
+              <select v-model="input.npwp" class="uk-select">
+                  <option value="1">Ya</option>
+                  <option value="0">Tidak</option>
+              </select>
+            </div>
+            <div class="uk-margin">
               <label class="uk-form-label">Berat ({{ config.weightUnits }})</label>
-              <input v-model="input.weight" type="text" class="uk-input" @input="numericCheck('weight')">
+              <input v-model="input.items[0].weight" type="text" class="uk-input" @input="numericCheck('weight')">
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">Dimensi ({{ config.volumeUnits }})</label>
               <div class="uk-grid-small" uk-grid>
                 <div class="uk-width-1-3">
-                  <input v-model="input.length" type="text" class="uk-input" min="1" placeholder="Panjang" @input="numericCheck('length')">
+                  <input v-model="input.items[0].length" type="text" class="uk-input" min="1" placeholder="Panjang" @input="numericCheck('length')">
                 </div>
                 <div class="uk-width-1-3">
-                  <input v-model="input.width" type="text" class="uk-input" min="1" placeholder="Lebar" @input="numericCheck('width')">
+                  <input v-model="input.items[0].width" type="text" class="uk-input" min="1" placeholder="Lebar" @input="numericCheck('width')">
                 </div>
                 <div class="uk-width-1-3">
-                  <input v-model="input.height" type="text" class="uk-input" min="1" placeholder="Tinggi" @input="numericCheck('height')">
+                  <input v-model="input.items[0].height" type="text" class="uk-input" min="1" placeholder="Tinggi" @input="numericCheck('height')">
                 </div>
               </div>
             </div>
             <div class="uk-margin">
-              <div class="uk-grid-small" uk-grid>
-                <div class="uk-width-1-2">
-                  <label class="uk-form-label">Harga Barang</label>
-                  <input
-                    v-model="input.price"
-                    class="uk-input"
-                    type="text"
-                    @input="numericCheck('price')">
-                </div>
-                <div class="uk-width-1-2">
-                  <label class="uk-form-label">Pakai NPWP ?</label>
-                  <select class="uk-select">
-                      <option>Ya</option>
-                      <option>Tidak</option>
-                  </select>
-                </div>
-              </div>
+              <label class="uk-form-label">Harga Barang</label>
+              <input
+                v-model="input.items[0].price"
+                class="uk-input"
+                type="text"
+                @input="numericCheck('price')">
             </div>
             <div class="uk-margin">
-              <div v-if="error" class="uk-alert-danger" uk-alert>
-                {{ errorMessage }}
-              </div>
+              <label class="uk-form-label">Jumlah Barang</label>
+              <input v-model="input.items[0].quantity" type="text" class="uk-input" @input="numericCheck('weight')">
+            </div>
+            <div class="uk-margin">
+              <el-alert
+                v-if="error"
+                :title="errorMessage"
+                type="error"
+                show-icon>
+              </el-alert>
             </div>
             <div class="uk-margin uk-text-right">
               <button class="uk-button uk-button-primary uk-width-1-1" type="button" @click="check">Hitung</button>
@@ -114,7 +124,7 @@
                 <h4 class="uk-card-title">Perkiraan Biaya Pengiriman</h4>
               </div>
               <div class="uk-card-body">
-                <calculator-result :result="result"/>
+                <calculator-result :cost="cost"/>
               </div>
             </div>
           </div>
@@ -139,23 +149,32 @@ export default {
         volumeUnits: 'cm'
       },
       input: {
-        country: '',
+        warehouse: '',
+        destination: '',
+        npwp: 0,
+        insurance: 0,
+        items: [
+          {
+            name: '-',
+            price: 0,
+            quantity: 1,
+            weight: 1,
+            length: 0,
+            width: 0,
+            height: 0
+          }
+        ],
         provinceId: '',
+        province: '',
         cityId: '',
-        code: '',
-        courier: 'jne',
-        weight: '',
-        length: '',
-        width: '',
-        height: '',
-        price: '',
-        qty: 1
+        city: '',
+        subDistrict: ''
       },
       options: {
         warehouse: [],
         province: [],
         city: [],
-        district: [],
+        subDistrict: [],
         courier: [
           {
             value: 'jne',
@@ -163,24 +182,30 @@ export default {
           }
         ]
       },
-      result: {
-        items: [
-          {
-            harga: 0,
-            biayaInt: 0,
-            biayaDom: 0,
-            beamasuk: 0,
-            ppn: 0,
-            pph: 0,
-            total: 0,
-            npwp: 0,
-            totalBayar: 0
-          }
-        ]
+      cost: {
+        beaMasuk: 0,
+        domesticCost: 0,
+        estimatedCost: 0,
+        estimatedShippingCost: 0,
+        estimatedShippingCostFinal: 0,
+        insurance: 0,
+        internationalCost: 0,
+        itemPrice: 0,
+        npwp: 0,
+        pph: 0,
+        ppn: 0,
+        packagingCost: 0
       },
       error: false,
-      errorMessage: ''
+      errorMessage: '',
+      validatorErrors: {}
     }
+  },
+  async created () {
+    await this.fetchWarehouses()
+    await this.fetchProvinces()
+    await this.fetchCities()
+    await this.fetchDistricts()
   },
   methods: {
     numericCheck (key) {
@@ -192,27 +217,14 @@ export default {
         this.input[key] = ''
       }
     },
-    fetchWarehouses () {
-      this.$authHttp.get('/v1/cfees')
-        .then(reponse => {
-          this.options.warehouse = reponse.data.map(item => {
-            let $item = {
-              value: item.code,
-              label: item.name
-            }
+    async fetchWarehouses () {
+      await this.__fetchWarehouses().then(res => {
+        this.warehouses = res.data
+        this.input.warehouse = res.data[1].code
 
-            return $item
-          })
-        })
-        .catch(() => {
-          //
-        })
-    },
-    fetchProvinces () {
-      this.__fetchProvinces().then(res => {
-        this.options.province = res.data.data.map(item => {
+        this.options.warehouse = res.data.map(item => {
           let $item = {
-            value: parseInt(item.id),
+            value: item.code,
             label: item.name
           }
 
@@ -220,24 +232,48 @@ export default {
         })
       })
     },
-    fetchCities () {
-      this.__fetchCitiesByProvince(this.input.provinceId).then(res => {
-        this.options.city = res.data.data.map(item => {
+    async fetchProvinces () {
+      await this.__fetchProvinces().then(res => {
+        this.provinces = res.data
+        this.input.provinceId = res.data[0].province_id
+        this.input.province = res.data[0].province
+
+        this.options.province = res.data.map(item => {
           let $item = {
-            value: parseInt(item.id),
-            label: (item.type === 'Kabupaten') ? `Kab. ${item.city}` : item.city
+            value: parseInt(item.province_id),
+            label: item.province
           }
 
           return $item
         })
       })
     },
-    fetchDistricts () {
-      this.__fetchDistrictsByCity(this.input.cityId).then(res => {
-        this.options.district = res.data.data.map(item => {
+    async fetchCities () {
+      await this.__fetchCitiesByProvince(this.input.provinceId).then(res => {
+        this.cities = res.data
+        this.input.cityId = res.data[0].city_id
+        this.input.city = (res.data[0].type === 'Kabupaten') ? `Kab. ${res.data[0].city_name}` : res.data[0].city_name
+
+        this.options.city = res.data.map(item => {
           let $item = {
-            value: item.code,
-            label: item.kecamatan
+            value: parseInt(item.city_id),
+            label: (item.type === 'Kabupaten') ? `Kab. ${item.city_name}` : item.city_name
+          }
+
+          return $item
+        })
+      })
+    },
+    async fetchDistricts () {
+      await this.__fetchDistrictsByCity(this.input.cityId).then(res => {
+        this.subDistricts = res.data
+        this.input.destination = String(res.data[0].subdistrict_id)
+        this.input.subDistrict = res.data[0].subdistrict_name
+
+        this.options.subDistrict = res.data.map(item => {
+          let $item = {
+            value: String(item.subdistrict_id),
+            label: item.subdistrict_name
           }
 
           return $item
@@ -247,45 +283,32 @@ export default {
     check () {
       this.error = false
       this.errorMessage = ''
+      this.validatorErrors = {}
 
-      this.$authHttp.post('/v1/calculator/cost', {
-        origin: this.config.originCity,
-        wunits: this.config.weightUnits,
-        vunits: this.config.volumeUnits,
-        country: this.input.country,
-        dest: this.input.cityId,
-        courier: this.input.courier,
-        weight: this.input.weight,
-        length: this.input.length,
-        width: this.input.width,
-        height: this.input.height,
-        harga: this.input.price,
-        qty: this.input.qty
-      }).then(response => {
-        if (response.data.status === '05') {
-          if (response.data) {
-            this.error = true
-            this.errorMessage = response.data.message
-          }
+      this.$validator.errors.clear()
 
-          return
-        }
-
-        if (response.data.data) {
-          this.result = response.data.data
-        }
-      }).catch(error => {
-        if (error.response) {
+      this.$authHttp.post('/calculator', this.input).then(res => {
+        this.cost = res.data.result.cost
+      }).catch(err => {
+        if (err.response) {
           this.error = true
-          this.errorMessage = error.response.data.message
+          this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
+
+          this.$validator.errors.clear()
+
+          if (err.response.data.errorValidation) {
+            this.validationErrors = err.response.data.errors
+
+            Object.keys(this.validationErrors).forEach(key => {
+              this.$validator.errors.add({
+                field: key,
+                msg: this.validationErrors[key][0]
+              })
+            })
+          }
         }
       })
     }
-  },
-
-  created () {
-    this.fetchWarehouses()
-    this.fetchProvinces()
   }
 }
 </script>

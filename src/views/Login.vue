@@ -5,19 +5,26 @@
         <h3 class="uk-card-title">Masuk</h3>
       </div>
       <div class="uk-card-body">
-        <div v-if="error" class="uk-alert-danger" uk-alert>
-          {{ errorMessage }}
-        </div>
         <div uk-grid>
           <div class="uk-width-1-2">
             <div>
               <div class="uk-margin">
                 <label class="uk-form-label">Email</label>
-                <input v-model="input.email" class="uk-input" type="text" placeholder="Email"/>
+                <input v-model="input.email" v-validate="rules.email" name="email" class="uk-input" type="text" placeholder="Email"/>
+                <p v-if="errors.first('email')" class="uk-margin-small uk-text-danger">{{ errors.first('email') }}</p>
               </div>
               <div class="uk-margin">
-                <label class="uk-form-label">Kata sandi</label>
-                <input v-model="input.password" class="uk-input" type="password" placeholder="Password"/>
+                <label class="uk-form-label">Kata Sandi</label>
+                <input v-model="input.password" v-validate="rules.password" name="password" class="uk-input" type="password" placeholder="Password"/>
+                <p v-if="errors.first('password')" class="uk-margin-small uk-text-danger">{{ errors.first('password') }}</p>
+              </div>
+              <div class="uk-margin">
+                <el-alert
+                  v-if="error"
+                  :title="errorMessage"
+                  type="error"
+                  show-icon>
+                </el-alert>
               </div>
               <div class="uk-margin">
                 <button class="uk-button uk-button-primary uk-width-1-1" type="button" @click="login">Masuk</button>
@@ -44,33 +51,52 @@ export default {
         email: '',
         password: ''
       },
+      rules: {
+        email: 'required|email',
+        password: 'required'
+      },
       error: false,
-      errorMessage: ''
+      errorMessage: '',
+      validatorErrors: {}
     }
   },
   methods: {
-    clearInput () {
-      this.input.email = ''
-      this.input.password = ''
-    },
     login () {
       this.error = false
       this.errorMessage = ''
+      this.validatorErrors = {}
 
-      this.$http.post('/v1/login', this.input)
-        .then(response => {
-          this.$auth.setToken(response.data.token, response.data)
+      this.$validator.errors.clear()
 
-          this.clearInput()
+      this.$http.post('/login', this.input)
+        .then(async res => {
+          this.input = this.$options.data().input
+
+          this.$auth.setAuth(res.data)
+
+          let user = await this.$auth.getUser()
 
           this.$router.push({
-            name: Level.ROUTE_LEVEL[response.data.level]
+            name: Level.ROUTE_LEVEL[user.level]
           })
         })
-        .catch(error => {
-          if (error.response) {
+        .catch(err => {
+          if (err.response) {
             this.error = true
-            this.errorMessage = error.response.data.message
+            this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
+
+            this.$validator.errors.clear()
+
+            if (err.response.data.errorValidation) {
+              this.validationErrors = err.response.data.errors
+
+              Object.keys(this.validationErrors).forEach(key => {
+                this.$validator.errors.add({
+                  field: key,
+                  msg: this.validationErrors[key][0]
+                })
+              })
+            }
           }
         })
     }

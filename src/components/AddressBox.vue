@@ -12,13 +12,9 @@
           <h3 class="uk-card-title">Pengisian dengan 1 baris alamat</h3>
           <form class="uk-form-stacked">
               <div class="uk-margin">
-                  <label class="uk-form-label" for="form-stacked-text">First Name</label>
+                  <label class="uk-form-label" for="form-stacked-text">Name</label>
                   <div class="uk-form-controls">
-                      <input class="uk-input" id="form-stacked-text" type="text" :value="customerFirstName" readonly>
-                  </div>
-                  <label class="uk-form-label" for="form-stacked-text">Last Name</label>
-                  <div class="uk-form-controls">
-                      <input class="uk-input" id="form-stacked-text" type="text" :value="customerLastName + ' ' + customerId" readonly>
+                      <input class="uk-input" id="form-stacked-text" type="text" :value="customerName" readonly>
                   </div>
                   <label class="uk-form-label" for="form-stacked-text">Address Line 1</label>
                   <div class="uk-form-controls">
@@ -36,13 +32,9 @@
           <h3 class="uk-card-title">Pengisian dengan 2 baris alamat</h3>
           <form class="uk-form-stacked">
               <div class="uk-margin">
-                  <label class="uk-form-label" for="form-stacked-text">First Name</label>
+                  <label class="uk-form-label" for="form-stacked-text">Name</label>
                   <div class="uk-form-controls">
-                      <input class="uk-input" id="form-stacked-text" type="text" :value="customerFirstName" readonly>
-                  </div>
-                  <label class="uk-form-label" for="form-stacked-text">Last Name</label>
-                  <div class="uk-form-controls">
-                      <input class="uk-input" id="form-stacked-text" type="text" :value="customerLastName" readonly>
+                      <input class="uk-input" id="form-stacked-text" type="text" :value="customerName" readonly>
                   </div>
                   <label class="uk-form-label" for="form-stacked-text">Address Line 1</label>
                   <div class="uk-form-controls">
@@ -50,7 +42,7 @@
                   </div>
                   <label class="uk-form-label" for="form-stacked-text">Address Line 2</label>
                   <div class="uk-form-controls">
-                      <input class="uk-input" id="form-stacked-text" type="text" :value="customerId" readonly>
+                      <input class="uk-input" id="form-stacked-text" type="text" :value="customerCode" readonly>
                   </div>
                   <label class="uk-form-label" for="form-stacked-text">Zipcode</label>
                   <div class="uk-form-controls">
@@ -69,9 +61,8 @@ export default {
     price: '',
     metaPrice: '',
     address: '',
-    customerFirstName: '',
-    customerLastName: '',
-    customerId: '',
+    customerCode: '',
+    customerName: '',
     zipcode: ''
   }
 }

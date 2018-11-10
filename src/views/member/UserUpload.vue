@@ -8,7 +8,7 @@
         <div>
           <el-upload
             ref="upload"
-            :action="`${$http.defaults.baseURL}/v1/doc`"
+            :action="`${$http.defaults.baseURL}/files`"
             :auto-upload="true"
             :http-request="upload">
             <button class="uk-button uk-button-primary">Unggah</button>
@@ -52,6 +52,9 @@ export default {
       documents: []
     }
   },
+  created () {
+    this.fetchDocuments()
+  },
   methods: {
     isImage (type) {
       let regex = /jpg|jpeg|png/
@@ -68,8 +71,8 @@ export default {
       return false
     },
     fetchDocuments () {
-      this.$authHttp.get('/v1/doc').then(res => {
-        this.documents = res.data.data.map(item => {
+      this.$authHttp.get('/files').then(res => {
+        this.documents = res.data.map(item => {
           let result = item.type.match(/\/(.*)/)
 
           item.ext = result === null ? null : result[1]
@@ -97,11 +100,9 @@ export default {
         }
       }
 
-      data.append('file', req.file)
-      data.append('type', req.file.type)
-      data.append('description', '')
+      data.append('files[]', req.file)
 
-      this.$authHttp.post('/v1/doc', data, config).then(res => {
+      this.$authHttp.post('/files/upload', data, config).then(res => {
         this.$notify({
           title: 'SUCCESS',
           message: res.data.message,
@@ -112,8 +113,10 @@ export default {
 
         this.fetchDocuments()
       }).catch(err => {
+        this.$refs.upload.clearFiles()
+
         if (err.response) {
-          let message = err.response.data.message ? err.reponse.data.message : err.response.statusText
+          let message = err.response.data.message ? err.response.data.message : err.response.statusText
 
           this.$notify({
             title: 'ERROR',
@@ -123,8 +126,8 @@ export default {
         }
       })
     },
-    download (doc) {
-      this.$authHttp.get(`/v1/doc/${doc.id}/raw`, {
+    download (file) {
+      this.$web.get(`/files/${file.id}/${file.filename}/download`, {
         responseType: 'blob'
       }).then(res => {
         let blob = window.URL.createObjectURL(new Blob([res.data]))
@@ -133,12 +136,12 @@ export default {
         link.style.cssText = 'visibility:hidden;'
         link.href = blob
 
-        link.setAttribute('download', doc.filename)
+        link.setAttribute('download', file.filename)
         link.click()
         link.remove()
       }).catch(err => {
         if (err.response) {
-          let message = err.response.data.message ? err.reponse.data.message : err.response.statusText
+          let message = err.response.data.message ? err.response.data.message : err.response.statusText
 
           this.$notify({
             title: 'ERROR',
@@ -148,9 +151,6 @@ export default {
         }
       })
     }
-  },
-  created () {
-    this.fetchDocuments()
   }
 }
 </script>

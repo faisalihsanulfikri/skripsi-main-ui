@@ -152,7 +152,7 @@ export default {
   },
   methods: {
     fetchOrders () {
-      this.$authHttp.get('/v1/summary/delivery')
+      this.$authHttp.get('/orders')
         .then(response => {
           this.orders = response.data.data.map(item => {
             item.collapse = true

@@ -13,8 +13,8 @@
         <div class="uk-card uk-card-default uk-card-small">
           <div class="uk-card-body">
             <h4>{{ address.alias }}</h4>
-            <p>{{ `${address.province}, ${address.kabupaten}, ${address.kecamatan}, ${address.alamat1}, ${address.alamat2}, ${address.zipcode}` }}</p>
-            <p>{{ `${address.penerima} - ${address.phone}` }}</p>
+            <p>{{ `${address.province}, ${address.city}, ${address.sub_district}, ${address.address}, ${address.postal_code}` }}</p>
+            <p>{{ `${address.name} - ${address.phone}` }}</p>
           </div>
           <div class="uk-card-footer uk-text-right">
             <el-tooltip :content="address.primary ? 'Alamat Utama': 'Set Alamat Utama'" placement="top">
@@ -98,7 +98,7 @@ export default {
     },
     fetchAddresses () {
       this.__fetchUserAddresses().then(res => {
-        this.addresses = res.data.data
+        this.addresses = res.data
       })
     },
     createAddress () {
@@ -114,7 +114,7 @@ export default {
       this.dialogInput.address = this.addresses[index]
     },
     deleteAddress () {
-      this.$authHttp.delete(`/v1/address/${this.selectedAddress.id}`).then(res => {
+      this.$authHttp.delete(`/user/addresses/${this.selectedAddress.id}`).then(res => {
         this.fetchAddresses()
 
         this.$notify({
@@ -137,7 +137,7 @@ export default {
 
       if (address.primary) return
 
-      this.$authHttp.put(`/v1/address/${address.id}/primary`).then(res => {
+      this.$authHttp.put(`/user/addresses/${address.id}/primary`).then(res => {
         this.fetchAddresses()
 
         this.$notify({

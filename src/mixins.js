@@ -1,10 +1,31 @@
 import Vue from 'vue'
 
+import router from './router'
+
 Vue.mixin({
   methods: {
+    __logout () {
+      Vue.auth.destroy()
+
+      router.push({
+        path: '/',
+        force: true
+      })
+    },
+    __fetchWarehouses () {
+      return new Promise((resolve, reject) => {
+        Vue.http().get('/warehouses')
+          .then(res => {
+            resolve(res)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
     __fetchProvinces () {
       return new Promise((resolve, reject) => {
-        Vue.http().get('/v1/calculator/province')
+        Vue.http().get('/provinces')
           .then(res => {
             resolve(res)
           })
@@ -15,7 +36,7 @@ Vue.mixin({
     },
     __fetchCitiesByProvince (id) {
       return new Promise((resolve, reject) => {
-        Vue.http().get(`/v1/calculator/city/${id}/province`)
+        Vue.http().get(`/provinces/${id}/cities`)
           .then(res => {
             resolve(res)
           })
@@ -26,7 +47,7 @@ Vue.mixin({
     },
     __fetchDistrictsByCity (id) {
       return new Promise((resolve, reject) => {
-        Vue.http().get(`/v1/calculator/kecamatan/${id}`)
+        Vue.http().get(`/cities/${id}/sub-districts`)
           .then(res => {
             resolve(res)
           })
@@ -37,7 +58,7 @@ Vue.mixin({
     },
     __fetchUserAddresses () {
       return new Promise((resolve, reject) => {
-        Vue.authHttp().get('/v1/address')
+        Vue.authHttp().get('/user/addresses')
           .then(res => {
             resolve(res)
           })

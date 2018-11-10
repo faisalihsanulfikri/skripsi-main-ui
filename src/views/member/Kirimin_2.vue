@@ -462,22 +462,20 @@ export default {
         .catch(() => {})
     },
     fetchWarehouses () {
-      this.$authHttp.get('/v1/cfees')
-        .then(response => {
-          this.options.warehouse = response.data.map(item => {
-            let $item = {
-              value: item.code,
-              label: item.name
-            }
-
-            return $item
-          })
-
-          if (this.options.warehouse.length > 0) {
-            this.input.warehouse = this.options.warehouse[0].value
+      this.__fetchWarehouses().then(res => {
+        this.options.warehouse = res.data.map(item => {
+          let $item = {
+            value: item.code,
+            label: item.name
           }
+
+          return $item
         })
-        .catch(() => {})
+
+        if (res.data.length > 0) {
+          this.input.warehouse = res.data[0].code
+        }
+      })
     },
     fetchAddresses () {
       this.__fetchUserAddresses().then(res => {

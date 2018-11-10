@@ -6,8 +6,8 @@ export const AGENT = 4
 
 export const SUPERADMIN_ROUTE = 'admin-main'
 export const ADMIN_ROUTE = 'admin-main'
-export const REGULAR_ROUTE = 'member-account'
-export const PREMIUM_ROUTE = 'member-account'
+export const REGULAR_ROUTE = 'member-order'
+export const PREMIUM_ROUTE = 'member-order'
 export const AGENT_ROUTE = 'agent-main'
 
 export const ROUTE_LEVEL = {
