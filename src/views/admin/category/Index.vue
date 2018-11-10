@@ -62,8 +62,8 @@ export default {
   },
   methods: {
     fetchCategories () {
-      this.$authHttp.get(`/v1/categories`).then(res => {
-        this.categories = res.data
+      this.$authHttp.get(`/categories`).then(res => {
+        this.categories = res.data.data
       })
     },
     delete (id) {

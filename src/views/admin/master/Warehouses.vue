@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     fetchUsers () {
-      this.$authHttp.get(`/v1/users/regular/level`).then(res => {
+      this.$authHttp.get(`/warehouses`).then(res => {
         this.users = res.data.data
       })
     }

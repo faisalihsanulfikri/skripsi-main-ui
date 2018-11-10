@@ -24,11 +24,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="province in provinces" :key="province.id">
+            <tr v-for="province in provinces" :key="province.province_id">
               <td class="uk-text-right">{{ province.id }}</td>
               <td>
-                <router-link :to="{ name: 'admin-area-province-city', params: { provinceId: province.id } }">
-                  {{ province.name }}
+                <router-link :to="{ name: 'admin-area-province-city', params: { provinceId: province.province_id } }">
+                  {{ province.province }}
                 </router-link>
               </td>
             </tr>
@@ -48,8 +48,8 @@ export default {
   },
   methods: {
     fetchProvinces () {
-      this.$authHttp.get('/v1/calculator/province').then(res => {
-        this.provinces = res.data.data
+      this.$authHttp.get('/provinces').then(res => {
+        this.provinces = res.data
       })
     }
   },
