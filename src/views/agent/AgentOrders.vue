@@ -366,8 +366,7 @@ export default {
       this.filter.sort.order = payload.order
     },
     fetchOrders () {
-      this.$authHttp.get('/v1/summary/delivery').then(res => {
-      //  this.$authHttp.get(`/v1/cfees`).then(res => {
+      this.$authHttp.get('/orders').then(res => {
         this.orders = res.data.data.map(order => {
           order['collapse'] = true
 

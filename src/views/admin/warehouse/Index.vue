@@ -80,7 +80,7 @@ export default {
   },
   methods: {
     fetchWareHouses () {
-      this.$authHttp.get(`/v1/cfees`).then(res => {
+      this.$authHttp.get(`/warehouses`).then(res => {
         this.warehouses = res.data.map(warehouse => {
           warehouse['collapse'] = true
 

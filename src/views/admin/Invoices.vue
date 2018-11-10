@@ -87,7 +87,7 @@ export default {
   },
   methods: {
     fetchInvoices () {
-      this.$authHttp.get('/v1/summary/invoice').then(res => {
+      this.$authHttp.get('/invoices').then(res => {
         this.invoices = res.data.data.map(invoice => {
           invoice['collapse'] = true
           return invoice

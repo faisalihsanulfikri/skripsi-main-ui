@@ -47,12 +47,12 @@ export default {
   },
   methods: {
     fetchDistricts () {
-      this.$authHttp.get(`/v1/calculator/kecamatan/${this.$route.params.cityId}`).then(res => {
+      this.$authHttp.get(`/cities/${this.$route.params.cityId}/sub-districts`).then(res => {
         this.districts = res.data.data
       })
     },
     getCity () {
-      this.$authHttp.get(`/v1/calculator/city/${this.$route.params.cityId}`).then(res => {
+      this.$authHttp.get(`/cities/${this.$route.params.cityId}`).then(res => {
         this.city = res.data.data
       })
     }

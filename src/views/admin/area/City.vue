@@ -27,12 +27,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="city in cities" :key="city.id">
+            <tr v-for="city in cities" :key="city.city_id">
               <td class="uk-text-right">{{ city.id }}</td>
-              <td>{{ city.code }}</td>
+              <td>{{ city.city_name + ' ' + city.postal_code }}</td>
               <td>
                 <router-link :to="{ name: 'admin-area-province-city-district', params: { provinceId: city.provinceId, cityId: city.id } }">
-                  <span v-if="city.type === 'Kabupaten'">Kab. </span>{{ city.city }}
+                  <span v-if="city.type === 'Kabupaten'">Kab. </span>{{ city.city_name }}
                 </router-link>
               </td>
             </tr>
@@ -53,13 +53,13 @@ export default {
   },
   methods: {
     fetchCities () {
-      this.$authHttp.get(`/v1/calculator/city/${this.$route.params.provinceId}/province`).then(res => {
-        this.cities = res.data.data
+      this.$authHttp.get(`/provinces/${this.$route.params.provinceId}/cities`).then(res => {
+        this.cities = res.data
       })
     },
     getProvince () {
-      this.$authHttp.get(`/v1/calculator/province/${this.$route.params.provinceId}`).then(res => {
-        this.province = res.data.data
+      this.$authHttp.get(`/provinces/${this.$route.params.provinceId}`).then(res => {
+        this.province = res.data
       })
     }
   },
