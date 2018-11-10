@@ -29,16 +29,38 @@
           <thead>
             <tr>
               <th>Rincian</th>
-              <th width="100">Order No</th>
-              <th>Nama Customer</th>
-              <th class="uk-text-right">Status</th>
+              <th>
+                <column-sort
+                  title="Order No"
+                  field="orderNo"
+                  :active-field="filter.sort.field"
+                  @change="onSortChange">
+                </column-sort>
+              </th>
+              <th>
+                <column-sort
+                  title="Customer"
+                  field="customerName"
+                  :active-field="filter.sort.field"
+                  @change="onSortChange">
+                </column-sort>
+              </th>
+              <th>
+                <column-sort
+                  title="Status"
+                  field="status"
+                  :active-field="filter.sort.field"
+                  @change="onSortChange">
+                </column-sort>
+              </th>
             </tr>
           </thead>
           <tbody>
-            <template v-for="(order, index) in orders">
+            <template v-for="(order, index) in filteredOrders">
               <tr :key="index">
                 <td class="app--table-column__collapse-toggle" @click.prevent="collapseToggle(index)">
                   <a href="#">
+                    {{ index + 1 }}
                     <font-awesome-icon v-if="order.collapse" icon="angle-right"></font-awesome-icon>
                     <font-awesome-icon v-else icon="angle-down"></font-awesome-icon>
                   </a>
@@ -82,7 +104,7 @@
                                   </a>
                                 </td>
                                 <td class="uk-text-center">
-                                  <a class="uk-margin-small-left uk-text-danger" href="#" @click.prevent="printAWB(item.id)">
+                                  <a class="uk-margin-small-left uk-text-danger" href="#" @click.prevent="printLabel(item.id)">
                                     <font-awesome-icon icon="print"></font-awesome-icon>
                                   </a>
                                 </td>
@@ -92,7 +114,7 @@
                             <tfoot>
                               <tr>
                                 <td colspan="3">
-                                  <button class="uk-button uk-button-danger" type="button" @click="print">Print AWB</button>
+                                  <button class="uk-button uk-button-danger" type="button" @click.prevent="printAWB(order.orderNo)">Print AWB</button>
                                 </td>
                               </tr>
                             </tfoot>
@@ -106,8 +128,66 @@
           </tbody>
         </table>
       </div>
-      <div id="testPrint" class="uk-hidden">
-        <h4>PT. Kirimin</h4>
+      <div id="PrintAWB" class="printpage">
+        <h4>PT. Kirimin (AWB)</h4>
+        <table class="print-awb">
+          <tr>
+            <td>AWB NO : </td>
+            <td>{{ awbno }}</td>
+          </tr>
+          <tr>
+            <td>No Order: </td>
+            <td>{{ orderno }}</td>
+          </tr>
+          <tr>
+            <td>From : </td>
+            <td>{{ from }}</td>
+          </tr>
+          <tr>
+            <td>To : </td>
+            <td>{{ to }}</td>
+          </tr>
+        </table>
+        <table class="print-awb">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama</th>
+              <th>Berat</th>
+              <th>Harga</th>
+              <th>Panjang</th>
+              <th>Lebar</th>
+              <th>Tinggi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>2</td>
+              <td>3</td>
+              <td>4</td>
+              <td>5</td>
+              <td>6</td>
+              <td>7</td>
+            </tr>
+            <template v-for="(item, initem) in selectedItems">
+              <tr :key="item.initem">
+                <td>1{{ initem + 1 }}</td>
+                <td>2{{ item.goodsName }}</td>
+                <td>3{{ item.weight }} {{ item.wunits }}</td>
+                <td>4{{ item.harga }}</td>
+                <td>5{{ item.length }} {{ item.vunits }}</td>
+                <td>6{{ item.width }} {{ item.vunits }}</td>
+                <td>7{{ item.height }} {{ item.vunits }}</td>
+              </tr>
+            </template>
+          </tbody>
+          <tfoot>
+          </tfoot>
+        </table>
+      </div>
+      <div id="PrintLabel" class="uk-hidden printpage">
+        <h4>PT. Kirimin (Label)</h4>
         <table class="print-awb">
           <tr>
             <td>AWB NO : </td>
@@ -156,6 +236,14 @@
         </table>
       </div>
     </div>
+    <div class="uk-card-footer uk-text-center">
+      <el-pagination
+        layout="prev, pager, next"
+        :page-size="pagination.per_page"
+        :total="pagination.total"
+        @current-change="onChangePage">
+      </el-pagination>
+    </div>
   </div>
 </template>
 
@@ -182,6 +270,11 @@ export default {
         vunits: ''
       },
       orders: [],
+      pagination: {
+        current_page: 1,
+        per_page: 10,
+        total: 0
+      },
       filter: {
         keyword: '',
         verified: [true, false],
@@ -206,6 +299,24 @@ export default {
     }
   },
   mounted () {
+    this.cssText = `
+        body {
+          height: 29cm;
+          width: 14cm;
+          color: crimson;
+        }
+        h4, h3, h2, h1 {
+          text-align: center;
+          width: 100%;
+        }
+        label.underline {
+          border-bottom: solid black 1px;
+          height: 0.3cm;
+          width: 100%;
+        }
+        table {
+          width: 10cm;
+        }`
     this.d = new Printd()
     // Print dialog events (v0.0.9+)
     const { contentWindow } = this.d.getIFrame()
@@ -215,14 +326,10 @@ export default {
   computed: {
     filteredOrders () {
       let orders = this.orders.filter(order => {
-        let likeGoodsName = order.goodsName.toLowerCase().includes(this.filter.keyword.toLowerCase())
+        let likeOrderNo = order.orderNo.toLowerCase().includes(this.filter.keyword.toLowerCase())
 
-        return likeGoodsName
+        return likeOrderNo
       })
-
-      // users = users.filter(user => {
-      //  return this.filter.verified.indexOf(user.isVerified) !== -1
-      // })
 
       orders = _.sortBy(orders, order => {
         return order[this.filter.sort.field]
@@ -232,7 +339,12 @@ export default {
         orders = orders.reverse()
       }
 
-      return orders
+      this.$set(this.pagination, 'total', orders.length)
+      this.$set(this.pagination, 'total_pages', Math.ceil(this.pagination.total / this.pagination.per_page))
+
+      let start = this.pagination.current_page > 1 ? (this.pagination.current_page * this.pagination.per_page) - this.pagination.per_page : 0
+
+      return orders.slice(start, this.pagination.current_page * this.pagination.per_page)
     },
     level () {
       return Level[this.$route.params.level.toUpperCase()]
@@ -244,6 +356,11 @@ export default {
     }
   },
   methods: {
+    onChangePage (page) {
+      this.pagination.current_page = page
+
+      this.fetchOrders()
+    },
     onSortChange (payload) {
       this.filter.sort.field = payload.field
       this.filter.sort.order = payload.order
@@ -261,11 +378,17 @@ export default {
     collapseToggle (index) {
       this.orders[index].collapse = !this.orders[index].collapse
     },
-    print () {
-      this.d.print(document.getElementById('testPrint', this.cssText))
+    printLabel (id) {
+      this.$confirm('Are you sure want to print Label ?', 'Warning', {
+        type: 'warning',
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No'
+      }).then(() => {
+        this.d.print(document.getElementById('PrintLabel'), this.cssText)
+      }).catch(() => {})
     },
     printConfirmation (id) {
-      this.$confirm('Are you sure you have received this item ?', 'Waning', {
+      this.$confirm('Are you sure you have received this item ?', 'Warning', {
         type: 'warning',
         confirmButtonText: 'Yes',
         cancelButtonText: 'No'
@@ -274,12 +397,12 @@ export default {
       }).catch(() => {})
     },
     printAWB (id) {
-      this.$confirm('Are you sure want to create Airway bill ?', 'Waning', {
+      this.$confirm('Are you sure want to print Airway bill ?', 'Warning', {
         type: 'warning',
         confirmButtonText: 'Yes',
         cancelButtonText: 'No'
       }).then(() => {
-        this.delete(id)
+        this.d.print(document.getElementById('PrintAWB'), this.cssText)
       }).catch(() => {})
     }
   },
