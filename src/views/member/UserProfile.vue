@@ -114,19 +114,12 @@ export default {
 
   async created () {
     this.user = await this.$auth.getUser()
-
-    if (this.user.gender === null) {
-      this.user.gender = 'm'
-    }
-
-    if (this.user.birthdate === null) {
-      this.user.birthdate = moment().format('YYYY-MM-DD')
-    }
   },
 
   methods: {
     updateProfile () {
       this.error = false
+      this.errorMessage = ''
       this.validationErrors = {}
 
       this.$authHttp.put('/user', {

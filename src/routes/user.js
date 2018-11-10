@@ -11,7 +11,7 @@ export default {
   component: mMain,
   children: [
     {
-      path: 'adresses',
+      path: 'addresses',
       name: 'member-address',
       component: mAddress
     },
