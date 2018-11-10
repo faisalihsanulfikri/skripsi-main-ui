@@ -17,7 +17,7 @@
             <td>Biaya Internasional</td>
             <td>Rp. </td>
             <td class="uk-text-right">
-              {{ cost.domesticCost | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+              {{ cost.internationalCost | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
             </td>
           </tr>
           <tr>

@@ -289,6 +289,12 @@ export default {
 
       this.$authHttp.post('/calculator', this.input).then(res => {
         this.cost = res.data.result.cost
+
+        this.$notify({
+          title: 'SUCCESS',
+          message: 'Calculator complete.',
+          type: 'success'
+        })
       }).catch(err => {
         if (err.response) {
           this.error = true
