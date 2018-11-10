@@ -11,44 +11,40 @@
       <div class="uk-card uk-card-default uk-card-body uk-width-auto">
           <h3 class="uk-card-title">Pengisian dengan 1 baris alamat</h3>
           <form class="uk-form-stacked">
-              <div class="uk-margin">
-                  <label class="uk-form-label" for="form-stacked-text">Name</label>
-                  <div class="uk-form-controls">
-                      <input class="uk-input" id="form-stacked-text" type="text" :value="customerName" readonly>
-                  </div>
-                  <label class="uk-form-label" for="form-stacked-text">Address Line 1</label>
-                  <div class="uk-form-controls">
-                      <input class="uk-input" id="form-stacked-text" type="text" :value="address" readonly>
-                  </div>
-                  <label class="uk-form-label" for="form-stacked-text">Zipcode</label>
-                  <div class="uk-form-controls">
-                      <input class="uk-input" id="form-stacked-text" type="text" :value="zipcode" readonly>
-                  </div>
-              </div>
+            <div class="uk-margin">
+              <label class="uk-form-label" for="form-stacked-text">Name</label>
+              <input class="uk-input" id="form-stacked-text" type="text" :value="`${customerCode} ${customerName}`" readonly>
+            </div>
+            <div class="uk-margin">
+              <label class="uk-form-label" for="form-stacked-text">Address Line 1</label>
+              <input class="uk-input" id="form-stacked-text" type="text" :value="address" readonly>
+            </div>
+            <div class="uk-margin">
+              <label class="uk-form-label" for="form-stacked-text">Zipcode</label>
+              <input class="uk-input" id="form-stacked-text" type="text" :value="zipcode" readonly>
+            </div>
           </form>
       </div>
 
       <div class="uk-card uk-card-default uk-card-body uk-width-expand">
           <h3 class="uk-card-title">Pengisian dengan 2 baris alamat</h3>
           <form class="uk-form-stacked">
-              <div class="uk-margin">
-                  <label class="uk-form-label" for="form-stacked-text">Name</label>
-                  <div class="uk-form-controls">
-                      <input class="uk-input" id="form-stacked-text" type="text" :value="customerName" readonly>
-                  </div>
-                  <label class="uk-form-label" for="form-stacked-text">Address Line 1</label>
-                  <div class="uk-form-controls">
-                      <input class="uk-input" id="form-stacked-text" type="text" :value="address"  readonly>
-                  </div>
-                  <label class="uk-form-label" for="form-stacked-text">Address Line 2</label>
-                  <div class="uk-form-controls">
-                      <input class="uk-input" id="form-stacked-text" type="text" :value="customerCode" readonly>
-                  </div>
-                  <label class="uk-form-label" for="form-stacked-text">Zipcode</label>
-                  <div class="uk-form-controls">
-                      <input class="uk-input" id="form-stacked-text" type="text" :value="zipcode" readonly>
-                  </div>
-              </div>
+            <div class="uk-margin">
+              <label class="uk-form-label" for="form-stacked-text">Name</label>
+              <input class="uk-input" id="form-stacked-text" type="text" :value="customerName" readonly>
+            </div>
+            <div class="uk-margin">
+              <label class="uk-form-label" for="form-stacked-text">Address Line 1</label>
+              <input class="uk-input" id="form-stacked-text" type="text" :value="address" readonly>
+            </div>
+            <div class="uk-margin">
+              <label class="uk-form-label" for="form-stacked-text">Address Line 1</label>
+              <input class="uk-input" id="form-stacked-text" type="text" :value="customerCode" readonly>
+            </div>
+            <div class="uk-margin">
+              <label class="uk-form-label" for="form-stacked-text">Zipcode</label>
+              <input class="uk-input" id="form-stacked-text" type="text" :value="zipcode" readonly>
+            </div>
           </form>
       </div>
   </article>

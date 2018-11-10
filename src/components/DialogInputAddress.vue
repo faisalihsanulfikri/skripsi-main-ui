@@ -159,10 +159,7 @@ export default {
         address: '',
         postalCode: '',
         provinceId: '',
-        cityId: '',
-        address1: '',
-        address2: '',
-        zipcode: ''
+        cityId: ''
       },
       rules: {
         alias: 'required',
@@ -193,13 +190,15 @@ export default {
       if (this.edit) {
         this.input = Object.assign({}, this.address)
         this.input.postalCode = this.input.postal_code
+        this.input.subDistrict = this.input.sub_district
+
+        await this.fetchCities()
+        await this.fetchDistricts()
       }
 
       this.$validator.errors.clear()
 
       await this.fetchProvinces()
-      await this.fetchCities()
-      await this.fetchDistricts()
     },
     onDialogClose () {
       this.error = false
@@ -212,8 +211,6 @@ export default {
     async fetchProvinces () {
       await this.__fetchProvinces().then(res => {
         this.provinces = res.data
-        this.input.provinceId = res.data[0].province_id
-        this.input.province = res.data[0].province
 
         this.options.province = res.data.map(item => {
           let $item = {
@@ -228,8 +225,6 @@ export default {
     async fetchCities () {
       await this.__fetchCitiesByProvince(this.input.provinceId).then(res => {
         this.cities = res.data
-        this.input.cityId = res.data[0].city_id
-        this.input.city = (res.data[0].type === 'Kabupaten') ? `Kab. ${res.data[0].city_name}` : res.data[0].city_name
 
         this.options.city = res.data.map(item => {
           let $item = {
@@ -244,8 +239,6 @@ export default {
     async fetchDistricts () {
       await this.__fetchDistrictsByCity(this.input.cityId).then(res => {
         this.subDistricts = res.data
-        this.input.code = res.data[0].subdistrict_id
-        this.input.subDistrict = res.data[0].subdistrict_name
 
         this.options.subDistrict = res.data.map(item => {
           let $item = {
@@ -258,28 +251,28 @@ export default {
       })
     },
     onProvinceChanged () {
-      let provinces = this.provinces.filter(province => province.id === this.input.provinceId)
+      let provinces = this.provinces.filter(province => province.province_id === this.input.provinceId)
 
       if (provinces.length > 0) {
-        this.input.province = provinces[0].name
+        this.input.province = provinces[0].province
       }
 
       this.fetchCities()
     },
     onCityChanged () {
-      let cities = this.cities.filter(city => city.id === this.input.cityId)
+      let cities = this.cities.filter(city => city.city_id === this.input.cityId)
 
       if (cities.length > 0) {
-        this.input.city = cities[0].city
+        this.input.city = cities[0].city_name
       }
 
       this.fetchDistricts()
     },
     onDistrictChange () {
-      let subDistricts = this.subDistricts.filter(district => district.code === this.input.code)
+      let subDistricts = this.subDistricts.filter(district => district.subdistrict_id === this.input.code)
 
       if (subDistricts.length > 0) {
-        this.input.district = subDistricts[0].kecamatan
+        this.input.subDistrict = subDistricts[0].subdistrict_name
       }
     },
     save () {

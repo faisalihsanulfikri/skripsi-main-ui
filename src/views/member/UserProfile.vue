@@ -5,6 +5,10 @@
         <h3>Data Personal</h3>
         <form>
           <div class="uk-margin">
+            <label class="uk-form-label">Code</label>
+            <input class="uk-input" :value="user.code" readonly />
+          </div>
+          <div class="uk-margin">
             <label class="uk-form-label">Nama</label>
             <input
               v-model="user.name"

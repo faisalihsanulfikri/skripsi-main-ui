@@ -4,6 +4,12 @@
       <div class="uk-width-expand">
         <h3>Dokumen</h3>
       </div>
+      <div class="uk-width-medium">
+        <select v-model="input.documentType" class="uk-select">
+          <option value="NPWP">NPWP</option>
+          <option value="Document Import">Document Import</option>
+        </select>
+      </div>
       <div class="uk-width-auto">
         <div>
           <el-upload
@@ -29,7 +35,10 @@
               </div>
             </div>
             <div class="uk-width-expand uk-flex uk-flex-middle">
-              <div class="uk-text-small">{{ doc.filename }}</div>
+              <div>
+                <div class="uk-text-small">{{ doc.filename }}</div>
+                <div class="uk-text-small">{{ doc.description }}</div>
+              </div>
             </div>
             <div class="uk-width-auto uk-text-center uk-flex uk-flex-middle">
               <div style="width: 50px">
@@ -49,7 +58,10 @@
 export default {
   data () {
     return {
-      documents: []
+      documents: [],
+      input: {
+        documentType: 'NPWP'
+      }
     }
   },
   created () {
@@ -100,9 +112,10 @@ export default {
         }
       }
 
-      data.append('files[]', req.file)
+      data.append('file', req.file)
+      data.append('description', this.input.documentType)
 
-      this.$authHttp.post('/files/upload', data, config).then(res => {
+      this.$authHttp.post('/files/single-upload', data, config).then(res => {
         this.$notify({
           title: 'SUCCESS',
           message: res.data.message,

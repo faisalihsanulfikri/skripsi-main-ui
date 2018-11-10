@@ -4,7 +4,7 @@ import axios from 'axios'
 import $router from '../router'
 import $store from '../store/index'
 
-// const api = 'http://45.76.163.191:3003'
+// const baseUrl = 'http://ec2-13-58-214-153.us-east-2.compute.amazonaws.com'
 const baseUrl = 'http://localhost:8000'
 const api = `${baseUrl}/api`
 

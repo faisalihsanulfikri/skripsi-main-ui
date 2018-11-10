@@ -102,7 +102,7 @@
                 type="text"
                 @input="numericCheck('price')">
             </div>
-            <div class="uk-margin">
+            <div class="uk-margin uk-hidden">
               <label class="uk-form-label">Jumlah Barang</label>
               <input v-model="input.items[0].quantity" type="text" class="uk-input" @input="numericCheck('weight')">
             </div>
@@ -156,12 +156,12 @@ export default {
         items: [
           {
             name: '-',
-            price: 0,
-            quantity: 1,
-            weight: 1,
-            length: 0,
-            width: 0,
-            height: 0
+            price: '',
+            quantity: '',
+            weight: '',
+            length: '',
+            width: '',
+            height: ''
           }
         ],
         provinceId: '',
