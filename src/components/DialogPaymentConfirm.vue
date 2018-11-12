@@ -9,7 +9,7 @@
         <label class="uk-form-label">Kode Order</label>
         <input
         v-model="input.code"
-        v-validate="'required'"
+        v-validate="rules.code"
         name="code"
         class="uk-input"
         :class="{ 'uk-form-danger': errors.has('code') }"
@@ -26,32 +26,52 @@
         :return-value.sync="input.date">
           <input
           v-model="input.date"
-          v-validate="'required'"
+          v-validate="rules.date"
           name="date"
           slot="activator"
           class="uk-input"
-          :class="{ 'uk-form-danger': errors.has('date') }"
-          readonly/>
+          readonly />
           <v-date-picker v-model="input.date" @input="$refs.dialog.save(input.date)"/>
         </v-dialog>
+        <p v-if="errors.first('date')" class="uk-margin-small uk-text-danger">
+          {{ errors.first('date') }}
+        </p>
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Dari Bank</label>
         <input
         v-model="input.bank"
-        v-validate="'required'"
+        v-validate="rules.bank"
         name="bank"
-        class="uk-input"
-        :class="{ 'uk-form-danger': errors.has('bank') }">
+        class="uk-input" />
+        <p v-if="errors.first('bank')" class="uk-margin-small uk-text-danger">
+          {{ errors.first('bank') }}
+        </p>
       </div>
       <div class="uk-margin">
-        <label class="uk-form-label">Jumlah Bayar <b>(Rp. {{ data.totalBayar | currency('', 0, { thousandsSeparator: '.', decimalSeparator: ',' })}})</b></label>
+        <label class="uk-form-label">Jumlah Bayar <b>(Rp. {{ data.amount | currency('', 0, { thousandsSeparator: '.', decimalSeparator: ',' })}})</b></label>
         <input
-        v-model="input.amount"
-        v-validate="'required|numeric'"
-        name="amount"
-        class="uk-input"
-        :class="{ 'uk-form-danger': errors.has('amount') }">
+          v-model="input.amount"
+          v-validate="rules.amount"
+          name="amount"
+          class="uk-input" />
+        <p v-if="errors.first('amount')" class="uk-margin-small uk-text-danger">
+          {{ errors.first('amount') }}
+        </p>
+      </div>
+      <div class="uk-margin">
+        <input type="file" v-validate="rules.file" name="file" />
+        <p v-if="errors.first('file')" class="uk-margin-small uk-text-danger">
+          {{ errors.first('file') }}
+        </p>
+      </div>
+      <div class="uk-margin">
+        <el-alert
+          v-if="error"
+          :title="errorMessage"
+          type="error"
+          show-icon>
+        </el-alert>
       </div>
     </div>
     <div slot="footer">
@@ -80,9 +100,20 @@ export default {
         date: new Date().toLocaleString('id-ID').replace(/(\d{2})\/(\d{2})\/(\d{4})(.*)/, '$3-$2-$1'),
         amount: '',
         bank: ''
-      }
+      },
+      rules: {
+        code: 'required',
+        date: 'required|date_format:YYYY-MM-DD',
+        bank: 'required',
+        amount: 'required|numeric',
+        file: 'required'
+      },
+      error: false,
+      errorMessage: '',
+      validatorErrors: {}
     }
   },
+
   methods: {
     async isValidInput () {
       let valid = await this.$validator.validate()
@@ -92,7 +123,7 @@ export default {
       })
     },
     open () {
-      this.input.code = this.data.orderNo
+      this.input.code = this.data.code
     },
     close () {
       this.input = this.$options.data().input
@@ -101,34 +132,24 @@ export default {
 
       this.$emit('close')
     },
-    async confirm () {
-      if (!(await this.isValidInput())) {
-        let message = 'Data tidak valid.'
+    confirm () {
+      this.error = false
+      this.errorMessage = ''
+      this.validatorErrors = {}
 
-        this.$notify({
-          title: 'ERROR',
-          message: message,
-          type: 'error'
-        })
+      let formData = new FormData()
+      let keys = Object.keys(this.input)
 
-        return
-      }
+      keys.forEach(key => {
+        formData.append(key, this.input[key])
+      })
 
-      this.$authHttp.post('/v1/orders/confirm', {
-        orderNo: this.input.code,
-        tanggal: this.input.date,
-        amount: this.input.amount,
-        bank: this.input.bank
-      }).then(res => {
-        if (res.data.status !== '00') {
-          this.$notify({
-            title: 'ERROR',
-            message: res.data.message,
-            type: 'error'
-          })
+      formData.append('file', document.getElementsByName('file')[0].files[0])
 
-          return
-        }
+      this.$authHttp.post(`/orders/${this.data.code}/confirm`, formData).then(res => {
+        this.error = false
+        this.errorMessage = ''
+        this.validatorErrors = {}
 
         this.$notify({
           title: 'SUCCESS',
@@ -141,13 +162,21 @@ export default {
         this.$emit('confirm')
       }).catch(err => {
         if (err.response) {
-          let message = err.response.data.message ? err.response.data.message : err.response.statusText
+          this.error = true
+          this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
 
-          this.$notify({
-            title: 'ERROR',
-            message: message,
-            type: 'error'
-          })
+          this.$validator.errors.clear()
+
+          if (err.response.data.errorValidation) {
+            this.validationErrors = err.response.data.errors
+
+            Object.keys(this.validationErrors).forEach(key => {
+              this.$validator.errors.add({
+                field: key,
+                msg: this.validationErrors[key][0]
+              })
+            })
+          }
         }
       })
     }
