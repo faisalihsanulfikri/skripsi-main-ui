@@ -10,8 +10,8 @@
             <thead>
               <tr>
                 <th width="50"></th>
-                <th width="150">Kode Order</th>
-                <th width="150">Tanggal</th>
+                <th width="200">Kode Order</th>
+                <th width="100">Tanggal</th>
                 <th class="uk-text-right" width="150">Jumlah (IDR)</th>
                 <th class="uk-text-right" width="150">Jumlah Barang</th>
                 <th class="uk-text-center" width="100">Status</th>
@@ -26,77 +26,83 @@
                       <font-awesome-icon v-else icon="angle-down"></font-awesome-icon>
                     </a>
                   </td>
-                  <td>{{ order.orderNo }}</td>
-                  <td>{{ new Date(order.dateCreated).toLocaleDateString('id-ID') }}</td>
-                  <td class="uk-text-right">{{ order.amount | currency('', 0, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
-                  <td class="uk-text-right">{{ order.items.length }}</td>
-                  <td class="uk-text-center">{{ order.shipStatus }}</td>
+                  <td>{{ order.code }}</td>
+                  <td>{{ new Date(order.created_at).toLocaleDateString('id-ID') }}</td>
+                  <td class="uk-text-right">{{ order.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
+                  <td class="uk-text-right">
+                    {{ order.item_quantities | currency('', 0, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+                    dari
+                    {{ order.items.length | currency('', 0, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+                  </td>
+                  <td class="uk-text-center">{{ order.status }}</td>
                 </tr>
                 <tr v-if="!order.collapse" :key="`${index}_info`">
                   <td></td>
                   <td colspan="5">
+                    <div class="uk-margin-small">
+                      <h5 class="uk-margin-remove">Barang</h5>
+                      <table class="uk-table uk-table-small uk-text-small uk-margin-small">
+                        <thead>
+                          <th>Nama</th>
+                          <th class="uk-text-right">Harga</th>
+                          <th class="uk-text-right">Jumlah</th>
+                          <th class="uk-text-center">Berat (KG)</th>
+                          <th class="uk-text-center">Volume (CM)</th>
+                        </thead>
+                        <tbody>
+                          <tr v-for="item in order.items" :key="item.id">
+                            <td>
+                              <div>{{ item.name }}</div>
+                              <div>{{ item.url }}</div>
+                            </td>
+                            <td class="uk-text-right">{{ item.price | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
+                            <td class="uk-text-right">{{ item.quantity | currency('', 0, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
+                            <td class="uk-text-center">{{ item.weight | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
+                            <td class="uk-text-center">
+                              {{ item.length | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+                              x
+                              {{ item.width | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+                              x
+                              {{ item.height | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <hr>
                     <div class="uk-grid-small" uk-grid>
-                      <div class="uk-width-1-4">
-                        <h5 class="uk-margin-remove">Pengirim</h5>
-                        <ul class="uk-list uk-margin-small">
-                          <li>
-                            <div class="app--list-label">Nama</div>
-                            <div class="app--list-text">{{ order.shipperName }}</div>
-                          </li>
-                          <li>
-                            <div class="app--list-label">Telepon</div>
-                            <div class="app--list-text">{{ order.shipperPhone }}</div>
-                          </li>
-                          <li>
-                            <div class="app--list-label">Provinsi</div>
-                            <div class="app--list-text">{{ order.shipperRegion }}</div>
-                          </li>
-                          <li>
-                            <div class="app--list-label">Kota / Kab</div>
-                            <div class="app--list-text">{{ order.shipperCity }}</div>
-                          </li>
-                          <li>
-                            <div class="app--list-label">Alamat</div>
-                            <div class="app--list-text">{{ order.shipperAddress }}</div>
-                          </li>
-                          <li>
-                            <div class="app--list-label">Kode POS</div>
-                            <div class="app--list-text">{{ order.shipperZipCode }}</div>
-                          </li>
-                        </ul>
-                      </div>
-                      <div class="uk-width-1-4">
+                      <div class="uk-width-2-5">
                         <h5 class="uk-margin-remove">Penerima</h5>
                         <ul class="uk-list uk-margin-small">
                           <li>
                             <div class="app--list-label">Nama</div>
-                            <div class="app--list-text">{{ order.receiverName }}</div>
+                            <div class="app--list-text">{{ order.receiver.name }}</div>
                           </li>
                           <li>
                             <div class="app--list-label">Telepon</div>
-                            <div class="app--list-text">{{ order.receiverPhone }}</div>
+                            <div class="app--list-text">{{ order.receiver.phone }}</div>
                           </li>
                           <li>
                             <div class="app--list-label">Provinsi</div>
-                            <div class="app--list-text">{{ order.receiverRegion }}</div>
+                            <div class="app--list-text">{{ order.receiver.province }}</div>
                           </li>
                           <li>
                             <div class="app--list-label">Kota / Kab</div>
-                            <div class="app--list-text">{{ order.receiverCity }}</div>
+                            <div class="app--list-text">{{ order.receiver.city }}</div>
                           </li>
                           <li>
                             <div class="app--list-label">Alamat</div>
-                            <div class="app--list-text">{{ order.receiverAddress }}</div>
+                            <div class="app--list-text">{{ order.receiver.address }}</div>
                           </li>
                           <li>
                             <div class="app--list-label">Kode POS</div>
-                            <div class="app--list-text">{{ order.receiverZipCode }}</div>
+                            <div class="app--list-text">{{ order.receiver.postal_code }}</div>
                           </li>
                         </ul>
                       </div>
-                      <div class="uk-width-1-2">
+                      <div class="uk-width-3-5">
                         <h5 class="uk-margin-remove">Biaya</h5>
-                        <calculator-result :result="order.result"></calculator-result>
+                        <calculator-result :cost="order.detail.cost"></calculator-result>
                       </div>
                     </div>
                     <hr>
@@ -156,21 +162,6 @@ export default {
         .then(response => {
           this.orders = response.data.data.map(item => {
             item.collapse = true
-            item.result = {
-              items: [
-                {
-                  harga: item.harga,
-                  biayaInt: item.biayaInt,
-                  biayaDom: item.biayaDom,
-                  beamasuk: item.beamasuk,
-                  ppn: item.ppn,
-                  pph: item.pph,
-                  total: item.total,
-                  npwp: item.npwp,
-                  totalBayar: item.totalBayar
-                }
-              ]
-            }
 
             return item
           })

@@ -153,11 +153,12 @@ export default {
         destination: '',
         npwp: 0,
         insurance: 0,
+        consolidate: 0,
         items: [
           {
             name: '-',
             price: '',
-            quantity: '',
+            quantity: 1,
             weight: '',
             length: '',
             width: '',

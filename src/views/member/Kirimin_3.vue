@@ -288,12 +288,12 @@ export default {
       },
       input: {
         warehouse: '',
-        address: '',
         destination: '',
         npwp: 0,
         insurance: 0,
         consolidate: 0,
         items: [],
+        address: '',
         provinceId: '',
         province: '',
         cityId: '',
@@ -439,8 +439,11 @@ export default {
 
           return $item
         })
-        this.input.address = res.data[0].id
-        this.input.destination = res.data[0].code
+
+        if (res.data.length > 0) {
+          this.input.address = res.data[0].id
+          this.input.destination = res.data[0].code
+        }
       })
     },
     fetchCategories () {
