@@ -66,6 +66,11 @@ Vue.mixin({
             reject(err)
           })
       })
+    },
+    __focusElement (elementId) {
+      document.getElementById(elementId).scrollIntoView({
+        behavior: 'smooth'
+      })
     }
   }
 })

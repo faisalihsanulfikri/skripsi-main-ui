@@ -1,83 +1,64 @@
 <template>
   <div>
     <div class="uk-grid-small uk-grid-match uk-margin" uk-grid>
-      <div class="uk-width-2-3">
+      <div class="uk-width-1-2">
         <div class="uk-card uk-card-default uk-card-small">
           <div class="uk-card-header">
             <h3 class="uk-card-title">Pengiriman</h3>
           </div>
           <div class="uk-card-body">
-            <div uk-grid>
-              <div class="uk-width-1-2">
-                <div class="uk-margin-small">
-                  <label class="uk-form-label">Gudang Kirimin</label>
-                  <select v-model="input.warehouse" class="uk-select">
-                    <option
-                      v-for="item in options.warehouse"
-                      :key="item.value"
-                      :value="item.value">
-                        {{ item.label }}
-                      </option>
-                  </select>
-                </div>
-                <div class="uk-margin-small">
-                  <label class="uk-form-label">Alamat Penerima</label>
-                  <select v-model="input.address" class="uk-select" @change="onAddressChanged">
-                    <option
-                      v-for="(item, key) in options.address"
-                      :key="key"
-                      :value="item.value">
-                        {{ item.label }}
-                      </option>
-                  </select>
-                </div>
-                <div class="uk-margin-small">
-                  <label class="uk-form-label">Asuransi
-                    <a class="uk-margin-small-left uk-text-danger" href="#">
-                      <font-awesome-icon icon="info-circle"></font-awesome-icon>
-                    </a>
-                  </label>
-                  <div class="uk-child-width-auto" uk-grid>
-                    <label>
-                      <input v-model="input.insurance" type="radio" value="1" @change="check">
-                      <span class="uk-margin-small-left">Ya</span>
-                    </label>
-                    <label>
-                      <input v-model="input.insurance" type="radio" value="0" @change="check">
-                      <span class="uk-margin-small-left">Tidak</span>
-                    </label>
-                  </div>
-                </div>
-                <div class="uk-margin-small">
-                  <label class="uk-form-label">Consolidate</label>
-                  <div class="uk-child-width-auto" uk-grid>
-                    <label>
-                      <input v-model="input.consolidate" type="radio" value="1">
-                      <span class="uk-margin-small-left">Ya</span>
-                    </label>
-                    <label>
-                      <input v-model="input.consolidate" type="radio" value="0">
-                      <span class="uk-margin-small-left">Tidak</span>
-                    </label>
-                  </div>
-                </div>
+            <div class="uk-margin-small">
+              <label class="uk-form-label">Gudang Kirimin</label>
+              <select v-model="input.warehouse" class="uk-select" @change="onWarehouseChanged">
+                <option
+                  v-for="item in options.warehouse"
+                  :key="item.value"
+                  :value="item.value">
+                    {{ item.label }}
+                  </option>
+              </select>
+            </div>
+            <div class="uk-margin-small">
+              <label class="uk-form-label">Alamat Penerima</label>
+              <select v-model="input.address" class="uk-select" @change="onAddressChanged">
+                <option
+                  v-for="(item, key) in options.address"
+                  :key="key"
+                  :value="item.value">
+                    {{ item.label }}
+                  </option>
+              </select>
+            </div>
+            <div class="uk-margin-small">
+              <label class="uk-form-label">Asuransi</label>
+              <div class="uk-child-width-auto" uk-grid>
+                <label>
+                  <input v-model="input.insurance" type="radio" value="1" @change="onInsuranceChanged">
+                  <span class="uk-margin-small-left">Ya</span>
+                </label>
+                <label>
+                  <input v-model="input.insurance" type="radio" value="0" @change="onInsuranceChanged">
+                  <span class="uk-margin-small-left">Tidak</span>
+                </label>
               </div>
-              <div class="uk-width-1-2">
-                <div class="uk-alert-success uk-padding-small">
-                  <p>Mau potongan pembayaran dengan NPWP?</p>
-                  <div>
-                    <label>
-                      <input v-model="input.npwp" type="checkbox" value="1">
-                      <span class="uk-margin-small-left uk-text-small" style="color: #333;">Ya, saya mau.</span>
-                    </label>
-                  </div>
-                </div>
+            </div>
+            <div class="uk-margin-small">
+              <label class="uk-form-label">Consolidate</label>
+              <div class="uk-child-width-auto" uk-grid>
+                <label>
+                  <input v-model="input.consolidate" type="radio" value="1">
+                  <span class="uk-margin-small-left">Ya</span>
+                </label>
+                <label>
+                  <input v-model="input.consolidate" type="radio" value="0">
+                  <span class="uk-margin-small-left">Tidak</span>
+                </label>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="uk-width-1-3">
+      <div class="uk-width-1-2">
         <div class="uk-card uk-card-default uk-card-small">
           <div class="uk-card-header">
             <h3 class="uk-card-title">Barang</h3>
@@ -112,10 +93,8 @@
               <label class="uk-form-label">Referensi (ex. Invoice#, SO#)</label>
               <input
                 v-model="input.item.reference"
-                v-validate="'required'"
                 name="itemName"
-                class="uk-input"
-                :class="{ 'uk-form-danger': errors.has('itemName') }">
+                class="uk-input">
             </div>
             <div class="uk-margin-small">
               <label class="uk-form-label">Harga Barang (IDR)</label>
@@ -223,7 +202,7 @@
               <tr v-for="(item, index) in input.items" :key="index">
                 <td>{{ item.categoryName }}</td>
                 <td>{{ item.name }}</td>
-                <td>(ref)</td>
+                <td>{{ item.reference }}</td>
                 <td class="uk-text-right">{{ item.quantity }}</td>
                 <td class="uk-text-right">{{ item.price | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
                 <td class="uk-text-center">{{ item.weight }}</td>
@@ -244,18 +223,18 @@
       </div>
     </div>
 
-    <div id="card-result" class="uk-card uk-card-default uk-card-small uk-margin">
+    <div id="card-cost" class="uk-card uk-card-default uk-card-small uk-margin">
       <div class="uk-card-header">
         <h3 class="uk-card-title">Estimasi Biaya</h3>
       </div>
       <div class="uk-card-body">
-        <calculator-result :cost="cost"></calculator-result>
+        <calculator-result :cost="cost" @npwp-change="onNpwpChanged"></calculator-result>
       </div>
       <div class="uk-card-footer uk-text-right">
         <button
-        class="uk-button uk-button-primary uk-margin-small-left"
-        :disabled="input.items.length < 1"
-        @click="order">
+          class="uk-button uk-button-primary uk-margin-small-left"
+          :disabled="input.items.length < 1"
+          @click="order">
           Lanjut Pengiriman
         </button>
       </div>
@@ -294,11 +273,6 @@ export default {
         consolidate: 0,
         items: [],
         address: '',
-        provinceId: '',
-        province: '',
-        cityId: '',
-        city: '',
-        subDistrict: '',
         item: {
           category: '',
           categoryName: '',
@@ -314,17 +288,11 @@ export default {
       },
       master: {
         warehouses: [],
-        provinces: [],
-        cities: [],
-        subDistricts: [],
         addresses: [],
         categories: []
       },
       options: {
         warehouse: [],
-        province: [],
-        city: [],
-        subDistrict: [],
         address: [],
         category: [],
         courier: [
@@ -354,11 +322,12 @@ export default {
     }
   },
 
+  watch: {
+    'input.consolidate': 'onConsolidateChanged'
+  },
+
   async created () {
     await this.fetchWarehouses()
-    await this.fetchProvinces()
-    await this.fetchCities()
-    await this.fetchDistricts()
     await this.fetchAddresses()
 
     this.fetchCategories()
@@ -374,54 +343,6 @@ export default {
           let $item = {
             value: item.code,
             label: item.name
-          }
-
-          return $item
-        })
-      })
-    },
-    async fetchProvinces () {
-      await this.__fetchProvinces().then(res => {
-        this.master.provinces = res.data
-        this.input.provinceId = res.data[0].province_id
-        this.input.province = res.data[0].province
-
-        this.options.province = res.data.map(item => {
-          let $item = {
-            value: parseInt(item.province_id),
-            label: item.province
-          }
-
-          return $item
-        })
-      })
-    },
-    async fetchCities () {
-      await this.__fetchCitiesByProvince(this.input.provinceId).then(res => {
-        this.master.cities = res.data
-        this.input.cityId = res.data[0].city_id
-        this.input.city = (res.data[0].type === 'Kabupaten') ? `Kab. ${res.data[0].city_name}` : res.data[0].city_name
-
-        this.options.city = res.data.map(item => {
-          let $item = {
-            value: parseInt(item.city_id),
-            label: (item.type === 'Kabupaten') ? `Kab. ${item.city_name}` : item.city_name
-          }
-
-          return $item
-        })
-      })
-    },
-    async fetchDistricts () {
-      await this.__fetchDistrictsByCity(this.input.cityId).then(res => {
-        this.master.subDistricts = res.data
-        this.input.destination = String(res.data[0].subdistrict_id)
-        this.input.subDistrict = res.data[0].subdistrict_name
-
-        this.options.subDistrict = res.data.map(item => {
-          let $item = {
-            value: String(item.subdistrict_id),
-            label: item.subdistrict_name
           }
 
           return $item
@@ -461,12 +382,34 @@ export default {
         this.input.item.categoryName = res.data[0].name
       })
     },
+    onWarehouseChanged () {
+      if (this.input.items.length > 0) {
+        this.check()
+      }
+    },
     onAddressChanged () {
       let address = this.master.addresses.find(address => {
         return address.id === this.input.address
       })
 
       this.input.destination = address.code
+
+      if (this.input.items.length > 0) {
+        this.check()
+      }
+    },
+    onInsuranceChanged () {
+      if (this.input.items.length > 0) {
+        this.check()
+      }
+    },
+    onConsolidateChanged (newVal, oldVal) {
+      this.input.items = []
+    },
+    onNpwpChanged (val) {
+      this.input.npwp = val === true ? 1 : 0
+
+      this.check()
     },
     onCategoryChanged () {
       let category = this.master.categories.find(category => {
@@ -477,6 +420,12 @@ export default {
     },
     removeItem (index) {
       this.input.items.splice(index, 1)
+
+      if (this.input.items.length === 0) {
+        this.cost = this.$options.data().cost
+
+        return
+      }
 
       this.check()
     },
@@ -489,12 +438,15 @@ export default {
     multiCheck () {
       this.input.items.push(Object.assign({}, this.input.item))
       this.input.item = this.$options.data().input.item
+      this.input.item.category = this.master.categories[0].id
 
       this.check()
     },
     check () {
       this.$authHttp.post('/calculator', this.input).then(res => {
         this.cost = res.data.result.cost
+
+        this.__focusElement('card-cost')
       }).catch(err => {
         if (err.response) {
           this.error = true

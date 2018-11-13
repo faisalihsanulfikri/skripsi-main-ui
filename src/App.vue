@@ -4,6 +4,10 @@
 
 <script>
 export default {
+  created () {
+    this.$store.dispatch('kirimin/getFormula')
+  },
+
   methods: {
     logout () {
       this.$auth.destroyToken()

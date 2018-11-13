@@ -1,44 +1,50 @@
-import mMain from '../views/member/Main'
-import mAddress from '../views/member/Address'
-import mAccount from '../views/member/Account'
-import mKirimin1 from '../views/member/Kirimin_3'
-import mBeliin from '../views/member/Beliin'
-import mOrder from '../views/member/Order'
-import mCalculator from '../views/member/Calculator'
+import Main from '../views/member/Main'
+import Address from '../views/member/Address'
+import Account from '../views/member/Account'
+import mKirimin from '../views/member/Kirimin_3'
+import Beliin from '../views/member/Beliin'
+import Order from '../views/member/Order'
+import OrderHistory from '../views/member/OrderHistory'
+import Calculator from '../views/member/Calculator'
 
 export default {
   path: '/u',
-  component: mMain,
+  component: Main,
   children: [
     {
       path: 'addresses',
       name: 'member-address',
-      component: mAddress
+      component: Address
     },
     {
       path: 'account',
       name: 'member-account',
-      component: mAccount
+      component: Account
     },
     {
       path: 'kirimin',
       name: 'member-kirimin',
-      component: mKirimin1
+      component: mKirimin
     },
     {
       path: 'beliin',
       name: 'member-beliin',
-      component: mBeliin
+      component: Beliin
     },
     {
       path: 'orders',
       name: 'member-order',
-      component: mOrder
+      component: Order
+    },
+    {
+      path: 'orders/:code/histories',
+      name: 'member-order-history',
+      component: OrderHistory
     },
     {
       path: 'calculator',
       name: 'member-calculator',
-      component: mCalculator
+      component: Calculator
     }
   ]
 }

@@ -4,9 +4,10 @@ $global-font-family: "Poppins", sans-serif !default;
 $app--primary-color: #0D47A1 !default;
 $app--secondary-color: #0c2f55 !default;
 
-@import "uikit/src/scss/variables-theme.scss";
-@import "uikit/src/scss/mixins-theme.scss";
-@import "uikit/src/scss/uikit-theme.scss";
+@import "~uikit/src/scss/variables-theme.scss";
+@import "~uikit/src/scss/mixins-theme.scss";
+@import "~uikit/src/scss/uikit-theme.scss";
+@import "~animate.css/animate.css";
 
 body, #app, main {
   min-height: 100vh;

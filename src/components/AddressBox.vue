@@ -10,42 +10,42 @@
 
       <div class="uk-card uk-card-default uk-card-body uk-width-auto">
           <h3 class="uk-card-title">Pengisian dengan 1 baris alamat</h3>
-          <form class="uk-form-stacked">
+          <div>
             <div class="uk-margin">
-              <label class="uk-form-label" for="form-stacked-text">Name</label>
-              <input class="uk-input" id="form-stacked-text" type="text" :value="`${customerCode} ${customerName}`" readonly>
+              <label class="uk-form-label">Name</label>
+              <input class="uk-input" type="text" :value="`${customerCode} ${customerName}`" readonly>
             </div>
             <div class="uk-margin">
-              <label class="uk-form-label" for="form-stacked-text">Address Line 1</label>
-              <input class="uk-input" id="form-stacked-text" type="text" :value="address" readonly>
+              <label class="uk-form-label">Address Line 1</label>
+              <input class="uk-input" type="text" :value="address" readonly>
             </div>
             <div class="uk-margin">
-              <label class="uk-form-label" for="form-stacked-text">Zipcode</label>
-              <input class="uk-input" id="form-stacked-text" type="text" :value="zipcode" readonly>
+              <label class="uk-form-label">Zipcode</label>
+              <input class="uk-input" type="text" :value="zipcode" readonly>
             </div>
-          </form>
+          </div>
       </div>
 
       <div class="uk-card uk-card-default uk-card-body uk-width-expand">
           <h3 class="uk-card-title">Pengisian dengan 2 baris alamat</h3>
-          <form class="uk-form-stacked">
+          <div>
             <div class="uk-margin">
-              <label class="uk-form-label" for="form-stacked-text">Name</label>
-              <input class="uk-input" id="form-stacked-text" type="text" :value="customerName" readonly>
+              <label class="uk-form-label">Name</label>
+              <input class="uk-input" type="text" :value="customerName" readonly>
             </div>
             <div class="uk-margin">
-              <label class="uk-form-label" for="form-stacked-text">Address Line 1</label>
-              <input class="uk-input" id="form-stacked-text" type="text" :value="address" readonly>
+              <label class="uk-form-label">Address Line 1</label>
+              <input class="uk-input" type="text" :value="address" readonly>
             </div>
             <div class="uk-margin">
-              <label class="uk-form-label" for="form-stacked-text">Address Line 1</label>
-              <input class="uk-input" id="form-stacked-text" type="text" :value="customerCode" readonly>
+              <label class="uk-form-label">Address Line 1</label>
+              <input class="uk-input" type="text" :value="customerCode" readonly>
             </div>
             <div class="uk-margin">
-              <label class="uk-form-label" for="form-stacked-text">Zipcode</label>
-              <input class="uk-input" id="form-stacked-text" type="text" :value="zipcode" readonly>
+              <label class="uk-form-label">Zipcode</label>
+              <input class="uk-input" type="text" :value="zipcode" readonly>
             </div>
-          </form>
+          </div>
       </div>
   </article>
 </template>

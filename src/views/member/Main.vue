@@ -135,7 +135,12 @@
       <div class="uk-container">
         <div class="uk-margin-top uk-margin-bottom uk-margin-small" uk-grid>
           <div class="uk-width-expand">
-            <router-view/>
+            <transition
+              name="router-anim"
+              enter-active-class="animated zoomIn delay-1s"
+              leave-active-class="animated zoomOut">
+              <router-view></router-view>
+            </transition>
           </div>
         </div>
       </div>

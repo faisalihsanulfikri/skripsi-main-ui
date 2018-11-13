@@ -10,11 +10,11 @@
             <thead>
               <tr>
                 <th width="50"></th>
-                <th width="200">Kode Order</th>
-                <th width="100">Tanggal</th>
-                <th class="uk-text-right" width="150">Jumlah (IDR)</th>
-                <th class="uk-text-right" width="150">Jumlah Barang</th>
-                <th class="uk-text-center" width="100">Status</th>
+                <th width="250">Kode Order</th>
+                <th>Tanggal</th>
+                <th class="uk-text-right" width="250">Jumlah (IDR)</th>
+                <th class="uk-text-center" width="250">Jumlah Barang</th>
+                <th class="uk-text-center" width="150">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -29,7 +29,7 @@
                   <td>{{ order.code }}</td>
                   <td>{{ new Date(order.created_at).toLocaleDateString('id-ID') }}</td>
                   <td class="uk-text-right">{{ order.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
-                  <td class="uk-text-right">
+                  <td class="uk-text-center">
                     {{ order.item_quantities | currency('', 0, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
                     dari
                     {{ order.items.length | currency('', 0, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
@@ -40,36 +40,88 @@
                   <td></td>
                   <td colspan="5">
                     <div class="uk-margin-small">
+                      <h5 class="uk-margin-remove">Pembayaran</h5>
+                      <div class="uk-grid-small uk-margin-small" uk-grid>
+                        <div class="uk-width-1-3">
+                          <div class="app--list-label">Metode Pembayaran</div>
+                          <div class="app--list-text">{{ order.invoice.payment_method }}</div>
+                        </div>
+                        <div class="uk-width-1-3">
+                          <div class="app--list-label">Status</div>
+                          <div class="app--list-text">
+                            <el-tag v-if="parseInt(order.invoice.paid) === 1" type="success" size="mini">Dibayar</el-tag>
+                            <el-tag v-else type="danger" size="mini">Belum dibayar</el-tag>
+                          </div>
+                        </div>
+                        <div class="uk-width-1-3">
+                          <div class="app--list-label">Tanggal Bayar</div>
+                          <div v-if="parseInt(order.invoice.paid) === 1" class="app--list-text">{{ new Date(order.invoice.paid_date).toLocaleDateString('id-ID') }}</div>
+                          <div v-else class="app--list-text">-</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="uk-margin-small">
+                      <h5 class="uk-margin-remove">Konfirmasi Pembayaran</h5>
+                      <table class="uk-table uk-table-small uk-text-small uk-margin-small">
+                          <thead>
+                            <tr>
+                              <th>Tanggal</th>
+                              <th>Bank</th>
+                              <th class="uk-text-right" width="250">Jumlah</th>
+                              <th class="uk-text-center" width="150">Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr v-for="(confirmation, key) in order.payment_confirmations" :key="key">
+                              <td>{{ new Date(confirmation.date).toLocaleDateString('id-ID') }}</td>
+                              <td>{{ confirmation.bank }}</td>
+                              <td class="uk-text-right">{{ confirmation.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
+                              <td class="uk-text-center">{{ confirmation.status }}</td>
+                            </tr>
+                          </tbody>
+                      </table>
+                    </div>
+
+                    <div class="uk-margin-small">
                       <h5 class="uk-margin-remove">Barang</h5>
                       <table class="uk-table uk-table-small uk-text-small uk-margin-small">
                         <thead>
                           <th>Nama</th>
-                          <th class="uk-text-right">Harga</th>
-                          <th class="uk-text-right">Jumlah</th>
-                          <th class="uk-text-center">Berat (KG)</th>
-                          <th class="uk-text-center">Volume (CM)</th>
+                          <th width="200">Referensi</th>
+                          <th class="uk-text-right" width="200">Harga</th>
+                          <th class="uk-text-right" width="100">Jumlah</th>
+                          <th class="uk-text-center" width="100">Berat (KG)</th>
+                          <th class="uk-text-center" width="200">Volume (CM)</th>
                         </thead>
                         <tbody>
-                          <tr v-for="item in order.items" :key="item.id">
-                            <td>
-                              <div>{{ item.name }}</div>
-                              <div>{{ item.url }}</div>
-                            </td>
-                            <td class="uk-text-right">{{ item.price | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
-                            <td class="uk-text-right">{{ item.quantity | currency('', 0, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
-                            <td class="uk-text-center">{{ item.weight | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
-                            <td class="uk-text-center">
-                              {{ item.length | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-                              x
-                              {{ item.width | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-                              x
-                              {{ item.height | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-                            </td>
-                          </tr>
+                          <template v-for="item in order.items">
+                            <tr :key="`${item.id}_item`">
+                              <td>{{ item.name }}</td>
+                              <td>{{ item.reference }}</td>
+                              <td class="uk-text-right">{{ item.price | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
+                              <td class="uk-text-right">{{ item.quantity | currency('', 0, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
+                              <td class="uk-text-center">{{ item.weight | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
+                              <td class="uk-text-center">
+                                {{ item.length | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+                                x
+                                {{ item.width | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+                                x
+                                {{ item.height | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+                              </td>
+                            </tr>
+                            <tr v-if="order.type.toUpperCase() === 'BELIIN'" :key="`${item.id}_url`">
+                              <td colspan="6">{{ item.url }}</td>
+                            </tr>
+                          </template>
                         </tbody>
                       </table>
                     </div>
+
                     <hr>
+
                     <div class="uk-grid-small" uk-grid>
                       <div class="uk-width-2-5">
                         <h5 class="uk-margin-remove">Penerima</h5>
@@ -102,19 +154,20 @@
                       </div>
                       <div class="uk-width-3-5">
                         <h5 class="uk-margin-remove">Biaya</h5>
-                        <calculator-result :cost="order.detail.cost"></calculator-result>
+                        <calculator-result :final="true" :cost="order.detail.cost"></calculator-result>
                       </div>
                     </div>
+
                     <hr>
+
                     <div class="uk-margin uk-text-right">
-                      <button class="uk-button uk-button-primary" @click="showPaymentDialog(index)">Konfirmasi Pembayaran</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr v-if="!order.collapse" :key="`${index}_tracking_info`">
-                  <td colspan="5">
-                    <div class="uk-margin uk-text-right">
-                      Tracking Section...... (Status 1 - 2 - 3 - 4 - 5 )
+                      <router-link
+                        :to="{ name: 'member-order-history', params: { code: order.code } }"
+                        tag="button"
+                        class="uk-button uk-button-default">
+                        Histori order
+                      </router-link>
+                      <button v-if="parseInt(order.invoice.paid) === 0" class="uk-margin-small-left uk-button uk-button-primary" @click="showPaymentDialog(index)">Konfirmasi Pembayaran</button>
                     </div>
                   </td>
                 </tr>

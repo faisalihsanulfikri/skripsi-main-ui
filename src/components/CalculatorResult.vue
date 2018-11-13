@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="uk-overflow-auto">
-      <table class="uk-table uk-table-small uk-text-small">
+      <table class="uk-table uk-table-small uk-table-middle uk-text-small">
         <tbody>
           <tr>
             <td>Harga Barang</td>
@@ -72,8 +72,19 @@
               {{ cost.estimatedShippingCost | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
             </td>
           </tr>
-          <tr class="uk-text-danger">
-            <td>Potongan NPWP</td>
+          <tr v-if="isTaxable" class="uk-text-danger">
+            <td>
+              <div v-if="final">Potongan NPWP</div>
+              <div v-else>
+                <p class="uk-text-success">Mau potongan pembayaran dengan NPWP?</p>
+                <div>
+                  <label>
+                    <input v-model="input.npwp" type="checkbox" @change="onNpwpChanged">
+                    <span class="uk-margin-small-left uk-text-small" style="color: #333;">Ya, saya mau.</span>
+                  </label>
+                </div>
+              </div>
+            </td>
             <td>Rp. </td>
             <td class="uk-text-right">
               {{ cost.npwp | currency('- ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
@@ -96,8 +107,13 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   props: {
+    final: {
+      default: false
+    },
     cost: {
       default: () => {
         return {
@@ -115,6 +131,34 @@ export default {
           packagingCost: 0
         }
       }
+    }
+  },
+
+  data () {
+    return {
+      input: {
+        npwp: false
+      }
+    }
+  },
+
+  computed: {
+    ...mapState('kirimin', [
+      'formula'
+    ]),
+    isTaxable () {
+      let priceUSD = this.cost.itemPrice / this.formula.dollar_rate
+
+      return priceUSD >= this.formula.minimum_taxable
+    },
+    estimatedShippingCostFinal () {
+      return this.input.npwp === 1 ? this.cost.estimatedShippingCostFinal : this.cost.estimatedShippingCost
+    }
+  },
+
+  methods: {
+    onNpwpChanged () {
+      this.$emit('npwp-change', this.input.npwp)
     }
   }
 }
