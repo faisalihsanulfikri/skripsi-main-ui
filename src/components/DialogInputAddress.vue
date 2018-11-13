@@ -209,6 +209,8 @@ export default {
       this.$emit('close')
     },
     async fetchProvinces () {
+      this.__startLoading()
+
       await this.__fetchProvinces().then(res => {
         this.provinces = res.data
 
@@ -221,8 +223,12 @@ export default {
           return $item
         })
       })
+
+      this.__stopLoading()
     },
     async fetchCities () {
+      this.__startLoading()
+
       await this.__fetchCitiesByProvince(this.input.provinceId).then(res => {
         this.cities = res.data
 
@@ -235,8 +241,12 @@ export default {
           return $item
         })
       })
+
+      this.__stopLoading()
     },
     async fetchDistricts () {
+      this.__startLoading()
+
       await this.__fetchDistrictsByCity(this.input.cityId).then(res => {
         this.subDistricts = res.data
 
@@ -249,6 +259,8 @@ export default {
           return $item
         })
       })
+
+      this.__stopLoading()
     },
     onProvinceChanged () {
       let provinces = this.provinces.filter(province => province.province_id === this.input.provinceId)
@@ -275,19 +287,23 @@ export default {
         this.input.subDistrict = subDistricts[0].subdistrict_name
       }
     },
-    save () {
+    async save () {
+      this.__startLoading()
+
       if (!this.edit) {
-        this.store()
+        await this.store()
       } else {
-        this.update()
+        await this.update()
       }
+
+      this.__stopLoading()
     },
-    store () {
+    async store () {
       this.error = false
       this.errorMessage = ''
       this.validationErrors = {}
 
-      this.$authHttp.post(`/user/addresses`, this.input).then(res => {
+      await this.$authHttp.post(`/user/addresses`, this.input).then(res => {
         this.$notify({
           title: 'SUCCESS',
           message: res.data.message,
@@ -315,11 +331,11 @@ export default {
         }
       })
     },
-    update () {
+    async update () {
       this.error = false
       this.errorMessage = ''
 
-      this.$authHttp.put(`/user/addresses/${this.input.id}`, this.input).then(res => {
+      await this.$authHttp.put(`/user/addresses/${this.input.id}`, this.input).then(res => {
         this.$notify({
           title: 'SUCCESS',
           message: res.data.message,

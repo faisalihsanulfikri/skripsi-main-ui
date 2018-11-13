@@ -64,8 +64,12 @@ export default {
       }
     }
   },
-  created () {
-    this.fetchDocuments()
+  async created () {
+    this.__startLoading()
+
+    await this.fetchDocuments()
+
+    this.__stopLoading()
   },
   methods: {
     isImage (type) {
@@ -82,8 +86,8 @@ export default {
 
       return false
     },
-    fetchDocuments () {
-      this.$authHttp.get('/files').then(res => {
+    async fetchDocuments () {
+      await this.$authHttp.get('/files').then(res => {
         this.documents = res.data.map(item => {
           let result = item.type.match(/\/(.*)/)
 
@@ -103,7 +107,9 @@ export default {
         }
       })
     },
-    upload (req) {
+    async upload (req) {
+      this.__startLoading()
+
       let data = new FormData()
 
       let config = {
@@ -115,7 +121,7 @@ export default {
       data.append('file', req.file)
       data.append('description', this.input.documentType)
 
-      this.$authHttp.post('/files/single-upload', data, config).then(res => {
+      await this.$authHttp.post('/files/single-upload', data, config).then(res => {
         this.$notify({
           title: 'SUCCESS',
           message: res.data.message,
@@ -138,6 +144,8 @@ export default {
           })
         }
       })
+
+      this.__stopLoading()
     },
     download (file) {
       this.$web.get(`/files/${file.id}/${file.filename}/download`, {

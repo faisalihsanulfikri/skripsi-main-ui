@@ -58,6 +58,7 @@ export default {
     DialogInputAddress,
     DialogConfirmDelete
   },
+
   data () {
     return {
       dialogInput: {
@@ -73,14 +74,27 @@ export default {
       selectedAddress: {}
     }
   },
+  
+  async created () {
+    this.__startLoading()
+
+    await this.fetchAddresses()
+
+    this.__stopLoading()    
+  },
+
   methods: {
-    onInputClose () {
+    async onInputClose () {
       this.dialogInput.title = 'Tambah Alamat'
       this.dialogInput.visible = false
       this.dialogInput.edit = false
       this.dialogInput.address = {}
 
-      this.fetchAddresses()
+      this.__startLoading()
+
+      await this.fetchAddresses()
+
+      this.__stopLoading()
     },
     showConfirmDelete (index) {
       this.selectedAddress = this.addresses[index]
@@ -96,8 +110,8 @@ export default {
       this.selectedAddress = {}
       this.dialogDelete.visible = false
     },
-    fetchAddresses () {
-      this.__fetchUserAddresses().then(res => {
+    async fetchAddresses () {
+      await this.__fetchUserAddresses().then(res => {
         this.addresses = res.data
       })
     },
@@ -113,8 +127,10 @@ export default {
       this.dialogInput.edit = true
       this.dialogInput.address = this.addresses[index]
     },
-    deleteAddress () {
-      this.$authHttp.delete(`/user/addresses/${this.selectedAddress.id}`).then(res => {
+    async deleteAddress () {
+      this.__startLoading()
+
+      await this.$authHttp.delete(`/user/addresses/${this.selectedAddress.id}`).then(res => {
         this.fetchAddresses()
 
         this.$notify({
@@ -131,13 +147,17 @@ export default {
           })
         }
       })
+
+      this.__stopLoading()
     },
-    setPrimaryAddress (index) {
+    async setPrimaryAddress (index) {
       let address = this.addresses[index]
 
       if (address.primary) return
 
-      this.$authHttp.put(`/user/addresses/${address.id}/primary`).then(res => {
+      this.__startLoading()
+
+      await this.$authHttp.put(`/user/addresses/${address.id}/primary`).then(res => {
         this.fetchAddresses()
 
         this.$notify({
@@ -154,10 +174,9 @@ export default {
           })
         }
       })
+
+      this.__stopLoading()
     }
-  },
-  created () {
-    this.fetchAddresses()
   }
 }
 </script>

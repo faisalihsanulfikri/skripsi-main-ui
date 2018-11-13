@@ -211,15 +211,19 @@ export default {
   },
   methods: {
     fetchOrders () {
-      this.$authHttp.get('/orders')
-        .then(response => {
-          this.orders = response.data.data.map(item => {
-            item.collapse = true
+      this.__startLoading()
 
-            return item
-          })
+      this.$authHttp.get('/orders').then(response => {
+        this.orders = response.data.data.map(item => {
+          item.collapse = true
+
+          return item
         })
-        .catch(() => {})
+
+        this.__stopLoading()
+      }).catch(() => {
+        this.__stopLoading()
+      })
     },
     collapseToggle (index) {
       this.orders[index].collapse = !this.orders[index].collapse

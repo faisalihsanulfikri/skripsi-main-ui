@@ -1,9 +1,16 @@
 import Vue from 'vue'
 
 import router from './router'
+import store from './store'
 
 Vue.mixin({
   methods: {
+    __startLoading () {
+      store.dispatch('app/startLoading')
+    },
+    __stopLoading () {
+      store.dispatch('app/stopLoading')
+    },
     __logout () {
       Vue.auth.destroy()
 

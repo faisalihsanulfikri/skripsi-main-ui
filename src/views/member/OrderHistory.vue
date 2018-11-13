@@ -22,7 +22,7 @@
           <tr v-for="history in order.histories" :key="history.id">
             <td width="200">{{ history.type.toUpperCase() }}</td>
             <td>{{ history.description }}</td>
-            <td class="uk-text-center" width="100">{{ history.date }}</td>
+            <td class="uk-text-center" width="100">{{ new Date(history.date).toLocaleDateString('id-ID') }}</td>
             <td class="uk-text-center" width="100">{{ history.time }}</td>
           </tr>
         </tbody>
@@ -45,8 +45,12 @@ export default {
 
   methods: {
     getOrderHistories () {
+      this.__startLoading()
+
       this.$authHttp.get(`/orders/${this.$route.params.code}/histories`).then(res => {
         this.order = res.data
+
+        this.__stopLoading()
       }).catch(err => {
         if (err.response) {
           let message = err.response.data.message ? err.response.data.message : err.response.statusText
@@ -60,6 +64,8 @@ export default {
           this.$router.push({ name: 'member-order' })
         }
       })
+
+      this.__stopLoading()
     }
   }
 }

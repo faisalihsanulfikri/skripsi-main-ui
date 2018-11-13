@@ -124,6 +124,7 @@ export default {
     },
     open () {
       this.input.code = this.data.code
+      this.input.amount = this.data.amount
     },
     close () {
       this.input = this.$options.data().input
@@ -133,6 +134,8 @@ export default {
       this.$emit('close')
     },
     confirm () {
+      this.__startLoading()
+
       this.error = false
       this.errorMessage = ''
       this.validatorErrors = {}
@@ -160,6 +163,8 @@ export default {
         this.input = this.$options.data().input
 
         this.$emit('confirm')
+
+        this.__stopLoading()
       }).catch(err => {
         if (err.response) {
           this.error = true
@@ -178,6 +183,8 @@ export default {
             })
           }
         }
+
+        this.__stopLoading()
       })
     }
   }

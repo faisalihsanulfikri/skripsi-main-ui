@@ -21,24 +21,6 @@ Vue.http = () => {
     baseURL: api
   })
 
-  http.interceptors.request.use(config => {
-    $store.dispatch('app/startLoading')
-
-    return config
-  }, error => {
-    return Promise.reject(error)
-  })
-
-  http.interceptors.response.use(response => {
-    $store.dispatch('app/stopLoading')
-
-    return response
-  }, error => {
-    $store.dispatch('app/stopLoading')
-
-    return Promise.reject(error)
-  })
-
   return http
 }
 
@@ -51,17 +33,7 @@ Vue.authHttp = () => {
     }
   })
 
-  http.interceptors.request.use(config => {
-    $store.dispatch('app/startLoading')
-
-    return config
-  }, error => {
-    return Promise.reject(error)
-  })
-
   http.interceptors.response.use(response => {
-    $store.dispatch('app/stopLoading')
-
     return response
   }, error => {
     if (error.message === 'Network Error' || error.response) {

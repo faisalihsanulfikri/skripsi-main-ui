@@ -68,9 +68,10 @@
               <label class="uk-form-label">Jenis Barang</label>
               <select
                 v-model="input.item.category"
-                v-validate="'required'"
+                v-validate="rules.item.category"
                 name="category"
                 class="uk-select"
+                :class="{ 'uk-form-danger': errors.has('category') }"
                 @change="onCategoryChanged">
                 <option
                   v-for="(item, key) in options.category"
@@ -84,47 +85,43 @@
               <label class="uk-form-label">Nama Barang</label>
               <input
                 v-model="input.item.name"
-                v-validate="'required'"
-                name="itemName"
+                v-validate="rules.item.name"
+                name="name"
                 class="uk-input"
-                :class="{ 'uk-form-danger': errors.has('itemName') }">
+                :class="{ 'uk-form-danger': errors.has('name') }" />
             </div>
             <div class="uk-margin-small">
               <label class="uk-form-label">Referensi (ex. Invoice#, SO#)</label>
               <input
                 v-model="input.item.reference"
-                name="itemName"
-                class="uk-input">
+                class="uk-input" />
             </div>
             <div class="uk-margin-small">
               <label class="uk-form-label">Harga Barang (IDR)</label>
               <input
                 v-model="input.item.price"
-                v-validate="'required|decimal'"
-                name="itemPrice"
+                v-validate="rules.item.price"
+                name="price"
                 class="uk-input"
-                :class="{ 'uk-form-danger': errors.has('itemPrice') }"
-                @input="numericCheck('itemPrice')">
+                :class="{ 'uk-form-danger': errors.has('price') }" />
             </div>
             <div class="uk-margin-small">
               <label class="uk-form-label">Jumlah Barang</label>
               <input
                 v-model="input.item.quantity"
-                v-validate="'required|decimal'"
+                v-validate="rules.item.quantity"
                 name="quantity"
                 class="uk-input"
-                :class="{ 'uk-form-danger': errors.has('quantity') }"
-                @input="numericCheck('itemQuantity')">
+                :class="{ 'uk-form-danger': errors.has('quantity') }" />
             </div>
             <div class="uk-margin-small">
               <label class="uk-form-label">Berat ({{ config.weightUnits }})</label>
               <input
                 v-model="input.item.weight"
-                v-validate="'required|decimal'"
+                v-validate="rules.item.weight"
                 name="weight"
                 class="uk-input"
-                :class="{ 'uk-form-danger': errors.has('weight') }"
-                @input="numericCheck('weight')">
+                :class="{ 'uk-form-danger': errors.has('weight') }" />
             </div>
             <div class="uk-margin-small">
               <label class="uk-form-label">Dimensi ({{ config.volumeUnits }})</label>
@@ -132,40 +129,30 @@
                 <div class="uk-width-1-3">
                   <input
                     v-model="input.item.length"
-                    v-validate="'required|decimal'" name="length"
+                    v-validate="rules.item.length"
+                    name="length"
                     class="uk-input"
                     :class="{ 'uk-form-danger': errors.has('length') }"
-                    min="1"
-                    placeholder="Panjang"
-                    @input="numericCheck('length')">
+                    placeholder="Panjang" />
                 </div>
                 <div class="uk-width-1-3">
                   <input
                     v-model="input.item.width"
-                    v-validate="'required|decimal'"
+                    v-validate="rules.item.width"
                     name="width"
                     class="uk-input"
                     :class="{ 'uk-form-danger': errors.has('width') }"
-                    min="1"
-                    placeholder="Lebar"
-                    @input="numericCheck('width')">
+                    placeholder="Lebar">
                 </div>
                 <div class="uk-width-1-3">
                   <input
                     v-model="input.item.height"
-                    v-validate="'required|decimal'"
+                    v-validate="rules.item.height"
                     name="height"
                     class="uk-input"
                     :class="{ 'uk-form-danger': errors.has('height') }"
-                    min="1"
-                    placeholder="Tinggi"
-                    @input="numericCheck('height')">
+                    placeholder="Tinggi">
                 </div>
-              </div>
-            </div>
-            <div class="uk-margin-large-top">
-              <div v-if="error && input.consolidate === 'N'" class="uk-alert-danger" uk-alert>
-                {{ errorMessage }}
               </div>
             </div>
           </div>
@@ -286,6 +273,18 @@ export default {
           height: ''
         }
       },
+      rules: {
+        item: {
+          category: 'required',
+          name: 'required',
+          price: 'required|decimal:2',
+          quantity: 'required|numeric',
+          weight: 'required|decimal:2',
+          length: 'required|decimal:2',
+          width: 'required|decimal:2',
+          height: 'required|decimal:2'
+        }
+      },
       master: {
         warehouses: [],
         addresses: [],
@@ -327,10 +326,14 @@ export default {
   },
 
   async created () {
+    this.__startLoading()
+
     await this.fetchWarehouses()
     await this.fetchAddresses()
 
     this.fetchCategories()
+
+    this.__stopLoading()
   },
 
   methods: {
@@ -405,6 +408,7 @@ export default {
     },
     onConsolidateChanged (newVal, oldVal) {
       this.input.items = []
+      this.cost = this.$options.data().cost
     },
     onNpwpChanged (val) {
       this.input.npwp = val === true ? 1 : 0
@@ -429,21 +433,27 @@ export default {
 
       this.check()
     },
-    singleCheck () {
+    async singleCheck () {
+      if (!(await this.$validator.validate())) return
+
       this.input.items = []
       this.input.items.push(this.input.item)
 
       this.check()
     },
-    multiCheck () {
+    async multiCheck () {
+      if (!(await this.$validator.validate())) return
+
       this.input.items.push(Object.assign({}, this.input.item))
       this.input.item = this.$options.data().input.item
       this.input.item.category = this.master.categories[0].id
 
       this.check()
     },
-    check () {
-      this.$authHttp.post('/calculator', this.input).then(res => {
+    async check () {
+      this.__startLoading()
+
+      await this.$authHttp.post('/calculator', this.input).then(res => {
         this.cost = res.data.result.cost
 
         this.__focusElement('card-cost')
@@ -466,9 +476,13 @@ export default {
           }
         }
       })
+
+      this.__stopLoading()
     },
-    order () {
-      this.$authHttp.post('/orders/kirimin', this.input).then(res => {
+    async order () {
+      this.__startLoading();
+
+      await this.$authHttp.post('/orders/kirimin', this.input).then(res => {
         if (res.data.success) {
           this.$notify({
             title: 'SUCCESS',
@@ -497,6 +511,8 @@ export default {
           }
         }
       })
+
+      this.__stopLoading()
     }
   }
 }

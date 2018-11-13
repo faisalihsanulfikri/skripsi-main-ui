@@ -46,8 +46,14 @@ export default {
   },
   methods: {
     fetchWarehouses () {
+      this.__startLoading()
+
       this.__fetchWarehouses().then(res => {
         this.warehouses = res.data
+
+        this.__stopLoading()
+      }).catch(() => {
+        this.__stopLoading()
       })
     }
   }

@@ -78,19 +78,43 @@
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">Berat ({{ config.weightUnits }})</label>
-              <input v-model="input.items[0].weight" type="text" class="uk-input" @input="numericCheck('weight')">
+              <input
+                v-model="input.items[0].weight"
+                v-validate="rules.item.weight"
+                class="uk-input"
+                name="weight"
+                :class="{ 'uk-form-danger': errors.has('weight') }"
+                placeholder="Berat" />
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">Dimensi ({{ config.volumeUnits }})</label>
               <div class="uk-grid-small" uk-grid>
                 <div class="uk-width-1-3">
-                  <input v-model="input.items[0].length" type="text" class="uk-input" min="1" placeholder="Panjang" @input="numericCheck('length')">
+                  <input
+                    v-model="input.items[0].length"
+                    v-validate="rules.item.length"
+                    name="length"
+                    class="uk-input"
+                    :class="{ 'uk-form-danger': errors.has('length') }"
+                    placeholder="Panjang" />
                 </div>
                 <div class="uk-width-1-3">
-                  <input v-model="input.items[0].width" type="text" class="uk-input" min="1" placeholder="Lebar" @input="numericCheck('width')">
+                  <input
+                    v-model="input.items[0].width"
+                    v-validate="rules.item.width"
+                    name="width"
+                    class="uk-input"
+                    :class="{ 'uk-form-danger': errors.has('width') }"
+                    placeholder="Lebar" />
                 </div>
                 <div class="uk-width-1-3">
-                  <input v-model="input.items[0].height" type="text" class="uk-input" min="1" placeholder="Tinggi" @input="numericCheck('height')">
+                  <input
+                    v-model="input.items[0].height"
+                    v-validate="rules.item.height"
+                    class="uk-input"
+                    name="height"
+                    :class="{ 'uk-form-danger': errors.has('height') }"
+                    placeholder="Tinggi" />
                 </div>
               </div>
             </div>
@@ -98,13 +122,14 @@
               <label class="uk-form-label">Harga Barang</label>
               <input
                 v-model="input.items[0].price"
+                v-validate="rules.item.price"
+                name="price"
                 class="uk-input"
-                type="text"
-                @input="numericCheck('price')">
+                :class="{ 'uk-form-danger': errors.has('price') }" />
             </div>
             <div class="uk-margin uk-hidden">
               <label class="uk-form-label">Jumlah Barang</label>
-              <input v-model="input.items[0].quantity" type="text" class="uk-input" @input="numericCheck('weight')">
+              <input v-model="input.items[0].quantity" type="text" class="uk-input" />
             </div>
             <div class="uk-margin">
               <el-alert
@@ -124,7 +149,7 @@
                 <h4 class="uk-card-title">Perkiraan Biaya Pengiriman</h4>
               </div>
               <div class="uk-card-body">
-                <calculator-result :cost="cost"/>
+                <calculator-result :cost="cost" @npwp-change="onNpwpChanged"></calculator-result>
               </div>
             </div>
           </div>
@@ -171,6 +196,17 @@ export default {
         city: '',
         subDistrict: ''
       },
+      rules: {
+        warehouse: 'required',
+        destination: 'required',
+        item: {
+          price: 'required|numeric',
+          weight: 'required|decimal:2',
+          length: 'required|decimal:2',
+          width: 'required|decimal:2',
+          height: 'required|decimal:2',
+        }
+      },
       options: {
         warehouse: [],
         province: [],
@@ -209,16 +245,14 @@ export default {
     await this.fetchDistricts()
   },
   methods: {
-    numericCheck (key) {
-      let val = this.input[key].match(/\d/g)
+    onNpwpChanged (val) {
+      this.input.npwp = val ? 1 : 0
 
-      if (val !== null) {
-        this.input[key] = val.join('')
-      } else {
-        this.input[key] = ''
-      }
+      this.check()
     },
     async fetchWarehouses () {
+      this.__startLoading()
+
       await this.__fetchWarehouses().then(res => {
         this.warehouses = res.data
         this.input.warehouse = res.data[1].code
@@ -232,8 +266,12 @@ export default {
           return $item
         })
       })
+
+      this.__stopLoading()
     },
     async fetchProvinces () {
+      this.__startLoading()
+
       await this.__fetchProvinces().then(res => {
         this.provinces = res.data
         this.input.provinceId = res.data[0].province_id
@@ -248,8 +286,12 @@ export default {
           return $item
         })
       })
+
+      this.__stopLoading()
     },
     async fetchCities () {
+      this.__startLoading()
+
       await this.__fetchCitiesByProvince(this.input.provinceId).then(res => {
         this.cities = res.data
         this.input.cityId = res.data[0].city_id
@@ -264,8 +306,12 @@ export default {
           return $item
         })
       })
+
+      this.__stopLoading()
     },
     async fetchDistricts () {
+      this.__startLoading()
+
       await this.__fetchDistrictsByCity(this.input.cityId).then(res => {
         this.subDistricts = res.data
         this.input.destination = String(res.data[0].subdistrict_id)
@@ -280,15 +326,21 @@ export default {
           return $item
         })
       })
+
+      this.__stopLoading()
     },
-    check () {
+    async check () {
+      if (!(await this.$validator.validate())) return
+
+      this.__startLoading()
+
       this.error = false
       this.errorMessage = ''
       this.validatorErrors = {}
 
       this.$validator.errors.clear()
 
-      this.$authHttp.post('/calculator', this.input).then(res => {
+      await this.$authHttp.post('/calculator', this.input).then(res => {
         this.cost = res.data.result.cost
 
         this.$notify({
@@ -315,6 +367,8 @@ export default {
           }
         }
       })
+
+      this.__stopLoading()
     }
   }
 }

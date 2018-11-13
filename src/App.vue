@@ -1,21 +1,20 @@
 <template>
-  <router-view></router-view>
+  <div>
+    <router-view></router-view>
+    <loading-full-screen v-if="$store.state.app.loading"></loading-full-screen>
+  </div>
 </template>
 
 <script>
+import LoadingFullScreen from './components/LoadingFullScreen'
+
 export default {
-  created () {
-    this.$store.dispatch('kirimin/getFormula')
+  components: {
+    LoadingFullScreen
   },
 
-  methods: {
-    logout () {
-      this.$auth.destroyToken()
-      this.$router.go({
-        name: 'home',
-        force: true
-      })
-    }
+  created () {
+    this.$store.dispatch('kirimin/getFormula')
   }
 }
 </script>

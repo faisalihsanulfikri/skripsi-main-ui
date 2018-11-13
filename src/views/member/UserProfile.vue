@@ -111,16 +111,22 @@ export default {
   },
 
   async created () {
+    this.__startLoading()
+
     this.user = await this.$auth.getUser()
+
+    this.__stopLoading()
   },
 
   methods: {
-    updateProfile () {
+    async updateProfile () {
+      this.__startLoading()
+
       this.error = false
       this.errorMessage = ''
       this.validationErrors = {}
 
-      this.$authHttp.put('/user', {
+      await this.$authHttp.put('/user', {
         name: this.user.name,
         email: this.user.email,
         phone: this.user.phone,
@@ -151,6 +157,8 @@ export default {
           }
         }
       })
+
+      this.__stopLoading()
     }
   }
 }

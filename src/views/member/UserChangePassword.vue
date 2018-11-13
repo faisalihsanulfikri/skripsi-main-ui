@@ -75,14 +75,16 @@ export default {
       this.input.password = ''
       this.input.confPassword = ''
     },
-    changePassword () {
+    async changePassword () {
+      this.__startLoading()
+
       this.error = false
       this.errorMessage = ''
       this.validatorErrors = {}
 
       this.$validator.errors.clear()
 
-      this.$authHttp.put('/user/password', this.input)
+      await this.$authHttp.put('/user/password', this.input)
         .then(res => {
           this.$notify({
             title: 'SUCCESS',
@@ -111,6 +113,8 @@ export default {
             }
           }
         })
+
+      this.__stopLoading()
     }
   }
 }
