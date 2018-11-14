@@ -39,7 +39,7 @@
               <th>
                 <column-sort
                   title="Name"
-                  field="fullName"
+                  field="name"
                   :active-field="filter.sort.field"
                   @change="onSortChange">
                 </column-sort>
@@ -55,7 +55,7 @@
               <th>
                 <column-sort
                   title="Mobile"
-                  field="mobile"
+                  field="phone"
                   :active-field="filter.sort.field"
                   @change="onSortChange">
                 </column-sort>
@@ -63,7 +63,7 @@
               <th>
                 <column-sort
                   title="Verified"
-                  field="isVerified"
+                  field="active"
                   :active-field="filter.sort.field"
                   @change="onSortChange">
                 </column-sort>
@@ -72,11 +72,11 @@
           </thead>
           <tbody>
             <tr v-for="user in filteredUsers" :key="user.id">
-              <td>{{ user.fullName }}</td>
+              <td>{{ user.name }}</td>
               <td>{{ user.email }}</td>
-              <td>{{ user.mobile }}</td>
+              <td>{{ user.phone }}</td>
               <td>
-                <el-tag v-if="user.isVerified" type="success" size="small">Yes</el-tag>
+                <el-tag v-if="user.active" type="success" size="small">Yes</el-tag>
                 <el-tag v-else type="danger" size="small">No</el-tag>
               </td>
             </tr>
@@ -118,7 +118,7 @@ export default {
         keyword: '',
         verified: [true, false],
         sort: {
-          field: 'fullName',
+          field: 'name',
           order: 'asc'
         }
       },
@@ -134,22 +134,22 @@ export default {
           }
         ]
       },
-      sortField: 'fullName'
+      sortField: 'name'
     }
   },
   computed: {
     filteredUsers () {
       let users = this.users.filter(user => {
-        let likeFullName = user.fullName.toLowerCase().includes(this.filter.keyword.toLowerCase())
+        let likeFullName = user.name.toLowerCase().includes(this.filter.keyword.toLowerCase())
         let likeEmail = user.email.toLowerCase().includes(this.filter.keyword.toLowerCase())
-        let likeMobile = user.mobile.toLowerCase().includes(this.filter.keyword.toLowerCase())
+        let likeMobile = user.phone.toLowerCase().includes(this.filter.keyword.toLowerCase())
 
         return likeFullName || likeEmail || likeMobile
       })
 
-      users = users.filter(user => {
-        return this.filter.verified.indexOf(user.isVerified) !== -1
-      })
+      // users = users.filter(user => {
+      //   return user[this.filter.level.field]
+      // })
 
       users = _.sortBy(users, user => {
         return user[this.filter.sort.field]
@@ -186,8 +186,10 @@ export default {
       this.filter.sort.order = payload.order
     },
     fetchUsers () {
-      this.$authHttp.get(`/v1/users/${this.level}/level`).then(res => {
-        this.users = res.data.data
+      //this.$authHttp.get(`/users/${this.level}`).then(res => {
+      this.$authHttp.get(`/users`).then(res => {
+        this.users = res.data.data 
+        this.users = this.users.level.includes(Level[this.$route.params.level.toUpperCase()])
       })
     }
   },
