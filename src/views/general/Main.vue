@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <div>
     <div class="app--navbar-default">
       <div class="uk-container">
         <nav uk-navbar>
@@ -46,7 +46,7 @@
                 <li>
                   <a href="#">
                     <font-awesome-icon icon="user"/>
-                    <span class="uk-margin-small-left">{{ $auth.getUser().fullName }}</span>
+                    <span class="uk-margin-small-left">{{ $root.user.name }}</span>
                   </a>
                   <div class="uk-navbar-dropdown">
                     <ul class="uk-nav uk-navbar-dropdown-nav">
@@ -124,5 +124,5 @@
         </div>
       </div>
     </footer>
-  </v-app>
+  </div>
 </template>
