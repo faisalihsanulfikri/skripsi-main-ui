@@ -45,31 +45,47 @@
             <label class="uk-form-label">Jenis Kelamin</label>
             <div>
               <label>
-                <input v-model="user.gender" id="profile-gender-male" class="uk-radion" type="radio" value="m" /> Male
+                <input
+                    v-model="user.gender"
+                    v-validate="rules.gender"
+                    name="gender"
+                    id="user-gender-male"
+                    class="uk-radion"
+                    type="radio"
+                    value="m" />
+                  Male
               </label>
               <label class="uk-margin-small-left">
-                <input v-model="user.gender" id="profile-gender-female" class="uk-radion" type="radio" value="f" /> Female
+                <input
+                  v-model="user.gender"
+                  v-validate="rules.gender"
+                  name="gender"
+                  id="user-gender-female"
+                  class="uk-radion"
+                  type="radio"
+                  value="f" />
+                Female
               </label>
             </div>
+            <p v-if="errors.first('gender')" class="uk-margin-small uk-text-danger">
+              {{ errors.first('gender') }}
+            </p>
           </div>
           <div class="uk-margin">
             <label class="uk-form-label">Tanggal Lahir</label>
-            <v-dialog
-              v-model="dialog.birthdate"
-              lazy
-              full-width
-              ref="dialog"
-              width="290px"
-              :return-value.sync="user.birthdate">
-              <input
+            <div>
+              <el-date-picker
                 v-model="user.birthdate"
                 v-validate="rules.birthdate"
                 name="birthdate"
-                slot="activator"
-                class="uk-input"
-                readonly />
-              <v-date-picker v-model="user.birthdate" @input="$refs.dialog.save(user.birthdate)" />
-            </v-dialog>
+                type="date"
+                format="dd-MM-yyyy"
+                value-format="yyyy-MM-dd">
+              </el-date-picker>
+            </div>
+            <p v-if="errors.first('birthdate')" class="uk-margin-small uk-text-danger">
+              {{ errors.first('birthdate') }}
+            </p>
           </div>
           <div class="uk-margin">
             <el-alert
@@ -99,7 +115,7 @@ export default {
         email: 'required|email',
         phone: 'required|min:10',
         gender: 'required|in:m,f',
-        birthdate: 'required|date_format:YYYY-MM-DD'
+        birthdate: 'required'
       },
       dialog: {
         birthdate: false
