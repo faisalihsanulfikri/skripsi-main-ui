@@ -95,7 +95,7 @@ export default {
       },
       rules: {
         code: 'required',
-        date: 'required|date_format:YYYY-MM-DD',
+        date: 'required',
         bank: 'required',
         amount: 'required|numeric',
         file: 'required'
