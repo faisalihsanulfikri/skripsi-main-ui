@@ -17,22 +17,14 @@
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Tanggal</label>
-        <v-dialog
-        v-model="dialogDate.visible"
-        lazy
-        full-width
-        ref="dialog"
-        width="290px"
-        :return-value.sync="input.date">
-          <input
-          v-model="input.date"
-          v-validate="rules.date"
-          name="date"
-          slot="activator"
-          class="uk-input"
-          readonly />
-          <v-date-picker v-model="input.date" @input="$refs.dialog.save(input.date)"/>
-        </v-dialog>
+        <div>
+          <el-date-picker
+            v-model="input.date"
+            type="date"
+            format="dd-MM-yyyy"
+            format-value="yyyy-MM-dd">
+          </el-date-picker>
+        </div>
         <p v-if="errors.first('date')" class="uk-margin-small uk-text-danger">
           {{ errors.first('date') }}
         </p>
@@ -124,7 +116,7 @@ export default {
     },
     open () {
       this.input.code = this.data.code
-      this.input.amount = this.data.amount
+      this.input.amount = parseInt(this.data.amount)
     },
     close () {
       this.input = this.$options.data().input
@@ -133,7 +125,7 @@ export default {
 
       this.$emit('close')
     },
-    confirm () {
+    async confirm () {
       this.__startLoading()
 
       this.error = false
@@ -149,7 +141,7 @@ export default {
 
       formData.append('file', document.getElementsByName('file')[0].files[0])
 
-      this.$authHttp.post(`/orders/${this.data.code}/confirm`, formData).then(res => {
+      await this.$authHttp.post(`/orders/${this.data.code}/confirm`, formData).then(res => {
         this.error = false
         this.errorMessage = ''
         this.validatorErrors = {}
@@ -163,8 +155,6 @@ export default {
         this.input = this.$options.data().input
 
         this.$emit('confirm')
-
-        this.__stopLoading()
       }).catch(err => {
         if (err.response) {
           this.error = true
@@ -183,9 +173,9 @@ export default {
             })
           }
         }
-
-        this.__stopLoading()
       })
+
+      this.__stopLoading()
     }
   }
 }
