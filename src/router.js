@@ -6,9 +6,11 @@ import AdminRoutes from './routes/admin'
 import AgentRoutes from './routes/agent'
 import UserRoutes from './routes/user'
 
+import navigationGuard from './lib/navigationGuard'
+
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   scrollBehavior () {
     return { x: 0, y: 0 }
   },
@@ -19,3 +21,7 @@ export default new Router({
     UserRoutes
   ]
 })
+
+router.beforeEach(navigationGuard)
+
+export default router
