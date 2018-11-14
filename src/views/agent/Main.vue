@@ -20,12 +20,12 @@
               <li>
                 <a href="#">
                   <font-awesome-icon icon="user"/>
-                  <span class="uk-margin-small-left" >{{ $auth.getUser().fullName }}</span>
+                  <span class="uk-margin-small-left" >{{ $root.user.name }}</span>
                 </a>
                 <div class="uk-navbar-dropdown">
                   <ul class="uk-nav uk-navbar-dropdown-nav">
                     <li>
-                      <a href="#" @click.prevent="logout">Keluar</a>
+                      <a href="#" @click.prevent="__logout">Keluar</a>
                     </li>
                   </ul>
                 </div>
@@ -40,20 +40,6 @@
     </el-container>
   </el-container>
 </template>
-
-<script>
-export default {
-  methods: {
-    logout () {
-      this.$auth.destroyToken()
-      this.$router.push({
-        path: '/login',
-        force: true
-      })
-    }
-  }
-}
-</script>
 
 <style lang="scss" scoped>
 .el-header {
