@@ -87,7 +87,7 @@ export default {
       return false
     },
     async fetchDocuments () {
-      await this.$authHttp.get('/files').then(res => {
+      await this.$authHttp.get('/files/list').then(res => {
         this.documents = res.data.map(item => {
           let result = item.type.match(/\/(.*)/)
 

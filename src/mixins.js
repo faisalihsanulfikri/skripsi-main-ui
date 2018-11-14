@@ -21,7 +21,7 @@ Vue.mixin({
     },
     __fetchWarehouses () {
       return new Promise((resolve, reject) => {
-        Vue.http().get('/warehouses')
+        Vue.http().get('/warehouses/list')
           .then(res => {
             resolve(res)
           })
@@ -65,7 +65,7 @@ Vue.mixin({
     },
     __fetchUserAddresses () {
       return new Promise((resolve, reject) => {
-        Vue.authHttp().get('/user/addresses')
+        Vue.authHttp().get('/user/addresses/list')
           .then(res => {
             resolve(res)
           })
