@@ -22,7 +22,7 @@
             v-model="input.date"
             type="date"
             format="dd-MM-yyyy"
-            format-value="yyyy-MM-dd">
+            value-format="yyyy-MM-dd">
           </el-date-picker>
         </div>
         <p v-if="errors.first('date')" class="uk-margin-small uk-text-danger">
