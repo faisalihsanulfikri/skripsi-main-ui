@@ -24,6 +24,18 @@ Vue.config.productionTip = false
 
 new Vue({
   router,
+
   store,
-  render: h => h(App)
+
+  render: h => h(App),
+
+  data () {
+    return {
+      user: {}
+    }
+  },
+
+  async created () {
+    this.user = await this.$auth.getUser()
+  }
 }).$mount('#app')

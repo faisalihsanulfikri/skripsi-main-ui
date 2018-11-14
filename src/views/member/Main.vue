@@ -14,7 +14,7 @@
                 <li>
                   <a href="#">
                     <font-awesome-icon icon="user"/>
-                    <span class="uk-margin-small-left">{{ user.name }}</span>
+                    <span class="uk-margin-small-left">{{ $root.user.name }}</span>
                   </a>
                   <div class="uk-navbar-dropdown">
                     <ul class="uk-nav uk-navbar-dropdown-nav">
@@ -193,16 +193,3 @@
     </footer>
   </v-app>
 </template>
-
-<script>
-export default {
-  data () {
-    return {
-      user: {}
-    }
-  },
-  async created () {
-    this.user = await this.$auth.getUser()
-  }
-}
-</script>

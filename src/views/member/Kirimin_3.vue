@@ -46,11 +46,11 @@
               <label class="uk-form-label">Consolidate</label>
               <div class="uk-child-width-auto" uk-grid>
                 <label>
-                  <input v-model="input.consolidate" type="radio" value="1">
+                  <input v-model="input.consolidate" type="radio" value="1" :disabled="$root.user.level != 3">
                   <span class="uk-margin-small-left">Ya</span>
                 </label>
                 <label>
-                  <input v-model="input.consolidate" type="radio" value="0">
+                  <input v-model="input.consolidate" type="radio" value="0" :disabled="$root.user.level != 3">
                   <span class="uk-margin-small-left">Tidak</span>
                 </label>
               </div>
