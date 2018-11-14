@@ -1,6 +1,6 @@
 import Main from '../views/admin/Main'
 import Dashboard from '../views/admin/Dashboard'
-import Invoice from '../views/admin/Invoices'
+import Invoice from '../views/admin/invoice/Index'
 import Order from '../views/admin/Orders'
 import Inbound from '../views/admin/Inbound'
 import Category from '../views/admin/category/Index'

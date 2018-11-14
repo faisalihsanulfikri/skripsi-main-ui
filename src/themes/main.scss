@@ -221,6 +221,18 @@ button.uk-button {
   justify-content: center;
 }
 
+.app--no-content-container {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  div {
+    color: #CCC;
+    text-align: center;
+  }
+}
+
 .my-class {
   margin-top : 4px;
 }
