@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <div>
     <div class="app--navbar-default">
       <div class="uk-container">
         <nav uk-navbar>
@@ -191,5 +191,5 @@
         </div>
       </div>
     </footer>
-  </v-app>
+  </div>
 </template>
