@@ -1,102 +1,168 @@
-import aMain from '../views/admin/Main'
-import aDashboard from '../views/admin/Dashboard'
-import aInvoice from '../views/admin/Invoices'
-import aOrder from '../views/admin/Orders'
-import aInbound from '../views/admin/Inbound'
-import aCategory from '../views/admin/category/Index'
-import aCategoryCreate from '../views/admin/category/Create'
-import aWarehouse from '../views/admin/warehouse/Index'
-import aWarehouseCreate from '../views/admin/warehouse/Create'
-import aExchange from '../views/admin/exchange-rate/Index'
-import aExchangeCreate from '../views/admin/exchange-rate/Create'
-import aArea from '../views/admin/area/Index'
-import aAreaCity from '../views/admin/area/City'
-import aAreaDistrict from '../views/admin/area/District'
-import aUser from '../views/admin/user/Index'
+import Main from '../views/admin/Main'
+import Dashboard from '../views/admin/Dashboard'
+import Invoice from '../views/admin/Invoices'
+import Order from '../views/admin/Orders'
+import Inbound from '../views/admin/Inbound'
+import Category from '../views/admin/category/Index'
+import CategoryCreate from '../views/admin/category/Create'
+import Warehouse from '../views/admin/warehouse/Index'
+import WarehouseCreate from '../views/admin/warehouse/Create'
+import Exchange from '../views/admin/exchange-rate/Index'
+import ExchangeCreate from '../views/admin/exchange-rate/Create'
+import Area from '../views/admin/area/Index'
+import AreaCity from '../views/admin/area/City'
+import AreaDistrict from '../views/admin/area/District'
+import User from '../views/admin/user/Index'
+
+import { ADMIN } from '../config/level'
 
 export default {
   path: '/admin',
-  component: aMain,
+  component: Main,
   children: [
     {
       path: '/',
-      component: aDashboard,
-      name: 'admin-main'
+      name: 'admin-main',
+      component: Dashboard,
+      meta: {
+        auth: true,
+        level: [ADMIN]
+      }
     },
     {
       path: 'invoices',
-      component: aInvoice,
-      name: 'admin-invoice'
+      name: 'admin-invoice',
+      component: Invoice,
+      meta: {
+        auth: true,
+        level: [ADMIN]
+      }
     },
     {
       path: 'orders',
-      component: aOrder,
-      name: 'admin-order'
+      name: 'admin-order',
+      component: Order,
+      meta: {
+        auth: true,
+        level: [ADMIN]
+      }
     },
     {
       path: 'inbound',
-      component: aInbound,
-      name: 'admin-inbound'
+      name: 'admin-inbound',
+      component: Inbound,
+      meta: {
+        auth: true,
+        level: [ADMIN]
+      }
     },
     {
       path: 'master/categories',
-      component: aCategory,
-      name: 'admin-category'
+      name: 'admin-category',
+      component: Category,
+      meta: {
+        auth: true,
+        level: [ADMIN]
+      }
     },
     {
       path: 'master/categories/create',
-      component: aCategoryCreate,
-      name: 'admin-category-create'
+      name: 'admin-category-create',
+      component: CategoryCreate,
+      meta: {
+        auth: true,
+        level: [ADMIN]
+      }
     },
     {
       path: 'master/categories/:id/edit',
-      component: aCategoryCreate,
-      name: 'admin-category-edit'
+      name: 'admin-category-edit',
+      component: CategoryCreate,
+      meta: {
+        auth: true,
+        level: [ADMIN]
+      }
     },
     {
       path: 'master/warehouses',
-      component: aWarehouse,
-      name: 'admin-warehouse'
+      name: 'admin-warehouse',
+      component: Warehouse,
+      meta: {
+        auth: true,
+        level: [ADMIN]
+      }
     },
     {
       path: 'master/warehouses/create',
-      component: aWarehouseCreate,
-      name: 'admin-warehouse-create'
+      name: 'admin-warehouse-create',
+      component: WarehouseCreate,
+      meta: {
+        auth: true,
+        level: [ADMIN]
+      }
     },
     {
       path: 'master/warehouses/:id/edit',
-      component: aWarehouseCreate,
-      name: 'admin-warehouse-edit'
+      name: 'admin-warehouse-edit',
+      component: WarehouseCreate,
+      meta: {
+        auth: true,
+        level: [ADMIN]
+      }
     },
     {
       path: 'master/exchange-rates',
-      component: aExchange,
-      name: 'admin-exchange-rate'
+      name: 'admin-exchange-rate',
+      component: Exchange,
+      meta: {
+        auth: true,
+        level: [ADMIN]
+      }
     },
     {
       path: 'master/exchange-rates/:id/edit',
-      component: aExchangeCreate,
-      name: 'admin-exchange-rate-edit'
+      name: 'admin-exchange-rate-edit',
+      component: ExchangeCreate,
+      meta: {
+        auth: true,
+        level: [ADMIN]
+      }
     },
     {
       path: 'master/area',
-      component: aArea,
-      name: 'admin-area'
+      name: 'admin-area',
+      component: Area,
+      meta: {
+        auth: true,
+        level: [ADMIN]
+      }
     },
     {
       path: 'master/area/provinces/:provinceId/cities',
-      component: aAreaCity,
-      name: 'admin-area-province-city'
+      name: 'admin-area-province-city',
+      component: AreaCity,
+      meta: {
+        auth: true,
+        level: [ADMIN]
+      }
     },
     {
       path: 'master/area/provinces/:provinceId/cities/:cityId/district',
-      component: aAreaDistrict,
-      name: 'admin-area-province-city-district'
+      name: 'admin-area-province-city-district',
+      component: AreaDistrict,
+      meta: {
+        auth: true,
+        level: [ADMIN]
+      }
     },
     {
       path: 'users/:level',
-      component: aUser,
-      name: 'admin-user'
+      name: 'admin-user',
+      component: User,
+      meta: {
+        auth: true,
+        level: [ADMIN]
+      }
     }
   ]
 }

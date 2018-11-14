@@ -204,7 +204,7 @@ export default {
           weight: 'required|decimal:2',
           length: 'required|decimal:2',
           width: 'required|decimal:2',
-          height: 'required|decimal:2',
+          height: 'required|decimal:2'
         }
       },
       options: {

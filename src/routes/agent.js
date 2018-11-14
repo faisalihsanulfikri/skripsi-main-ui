@@ -1,32 +1,50 @@
-import gMain from '../views/agent/Main'
-import gDashboard from '../views/agent/Dashboard'
-import gAgentOrders from '../views/agent/AgentOrders'
-import gAgentInbound from '../views/agent/AgentInbound'
-import gAgentReport from '../views/agent/AgentReport'
+import Main from '../views/agent/Main'
+import Dashboard from '../views/agent/Dashboard'
+import AgentOrders from '../views/agent/AgentOrders'
+import AgentInbound from '../views/agent/AgentInbound'
+import AgentReport from '../views/agent/AgentReport'
+
+import { AGENT } from '../config/level'
 
 export default {
   path: '/agent',
-  component: gMain,
+  component: Main,
   children: [
     {
       path: '/',
-      component: gDashboard,
-      name: 'agent-main'
+      name: 'agent-main',
+      component: Dashboard,
+      meta: {
+        auth: true,
+        level: [AGENT]
+      }
     },
     {
       path: 'orders',
-      component: gAgentOrders,
-      name: 'agent-orders'
+      name: 'agent-orders',
+      component: AgentOrders,
+      meta: {
+        auth: true,
+        level: [AGENT]
+      }
     },
     {
       path: 'inbound',
-      component: gAgentInbound,
-      name: 'agent-inbound'
+      name: 'agent-inbound',
+      component: AgentInbound,
+      meta: {
+        auth: true,
+        level: [AGENT]
+      }
     },
     {
       path: 'report',
-      component: gAgentReport,
-      name: 'agent-report'
+      name: 'agent-report',
+      component: AgentReport,
+      meta: {
+        auth: true,
+        level: [AGENT]
+      }
     }
   ]
 }

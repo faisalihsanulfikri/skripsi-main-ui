@@ -1,23 +1,27 @@
 import Vue from 'vue'
 
-import $store from '../store/index'
+import * as Level from '../config/level'
 
-export default (to, from, next) => {
-  $store.dispatch('app/setError')
+export default async (to, from, next) => {
+  if (to.name === 'login' || to.name === 'register') {
+    if (Vue.auth.hasAuth()) {
+      let user = await Vue.auth.getUser()
 
-  if (to.name !== 'splash-screen' && !$store.state.app.initialize) {
-    next({ name: 'splash-screen' })
-  } else if (to.name === 'login' || to.name === 'register') {
-    if (Vue.auth.hasToken()) {
-      next({ name: 'home' })
+      next({
+        name: Level.ROUTE_LEVEL[user.level]
+      })
     } else {
       next()
     }
   } else if (to.matched.some(record => record.meta.auth)) {
-    if (Vue.auth.hasToken()) {
+    let user = await Vue.auth.getUser()
+
+    if (to.meta.level.includes(user.level)) {
       next()
     } else {
-      next({ name: 'login' })
+      next({
+        name: Level.ROUTE_LEVEL[user.level]
+      })
     }
   } else {
     next()

@@ -7,6 +7,8 @@ import Order from '../views/member/Order'
 import OrderHistory from '../views/member/OrderHistory'
 import Calculator from '../views/member/Calculator'
 
+import { REGULAR, PREMIUM } from '../config/level'
+
 export default {
   path: '/u',
   component: Main,
@@ -14,37 +16,65 @@ export default {
     {
       path: 'addresses',
       name: 'member-address',
-      component: Address
+      component: Address,
+      meta: {
+        auth: true,
+        level: [REGULAR, PREMIUM]
+      }
     },
     {
       path: 'account',
       name: 'member-account',
-      component: Account
+      component: Account,
+      meta: {
+        auth: true,
+        level: [REGULAR, PREMIUM]
+      }
     },
     {
       path: 'kirimin',
       name: 'member-kirimin',
-      component: mKirimin
+      component: mKirimin,
+      meta: {
+        auth: true,
+        level: [REGULAR, PREMIUM]
+      }
     },
     {
       path: 'beliin',
       name: 'member-beliin',
-      component: Beliin
+      component: Beliin,
+      meta: {
+        auth: true,
+        level: [REGULAR, PREMIUM]
+      }
     },
     {
       path: 'orders',
       name: 'member-order',
-      component: Order
+      component: Order,
+      meta: {
+        auth: true,
+        level: [REGULAR, PREMIUM]
+      }
     },
     {
       path: 'orders/:code/histories',
       name: 'member-order-history',
-      component: OrderHistory
+      component: OrderHistory,
+      meta: {
+        auth: true,
+        level: [REGULAR, PREMIUM]
+      }
     },
     {
       path: 'calculator',
       name: 'member-calculator',
-      component: Calculator
+      component: Calculator,
+      meta: {
+        auth: true,
+        level: [REGULAR, PREMIUM]
+      }
     }
   ]
 }
