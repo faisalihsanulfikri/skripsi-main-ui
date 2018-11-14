@@ -25,108 +25,9 @@
         </div>
       </div>
       <div class="uk-overflow-auto">
-        <table class="uk-table uk-table-divider uk-table-small">
-          <thead>
-            <tr>
-              <th>Rincian</th>
-              <th>
-                <column-sort
-                  title="Order No"
-                  field="orderNo"
-                  :active-field="filter.sort.field"
-                  @change="onSortChange">
-                </column-sort>
-              </th>
-              <th>
-                <column-sort
-                  title="Customer"
-                  field="customerName"
-                  :active-field="filter.sort.field"
-                  @change="onSortChange">
-                </column-sort>
-              </th>
-              <th>
-                <column-sort
-                  title="Status"
-                  field="status"
-                  :active-field="filter.sort.field"
-                  @change="onSortChange">
-                </column-sort>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <template v-for="(order, index) in filteredOrders">
-              <tr :key="index">
-                <td class="app--table-column__collapse-toggle" @click.prevent="collapseToggle(index)">
-                  <a href="#">
-                    {{ index + 1 }}
-                    <font-awesome-icon v-if="order.collapse" icon="angle-right"></font-awesome-icon>
-                    <font-awesome-icon v-else icon="angle-down"></font-awesome-icon>
-                  </a>
-                </td>
-                <td>{{ order.orderNo }}</td>
-                <td>{{ order.shipperName }}</td>
-                <td class="uk-text-right">{{ order.shipStatus }}</td>
-              </tr>
-              <tr v-show="!order.collapse" :key="`d${index}`">
-                <td colspan="4">
-                  <form class="uk-margin-large">
-                    <div uk-grid>
-                        <div class="uk-margin">
-                          <table>
-                            <thead>
-                              <tr>
-                                <th>No</th>
-                                <th>Goods Name</th>
-                                <th>Weight</th>
-                                <th>Price</th>
-                                <th>Length</th>
-                                <th>Width</th>
-                                <th>Height</th>
-                                <th>Confirm</th>
-                                <th>Label</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <template v-for="(item, initem) in order.items">
-                                <tr :key="item.id">
-                                <td>{{initem + 1}}</td>
-                                <td> {{ item.goodsName }}</td>
-                                <td>{{ item.weight }} {{ item.wunits }}</td>
-                                <td>{{ item.harga }} </td>
-                                <td>{{ item.length }} {{ item.vunits }}</td>
-                                <td>{{ item.width }} {{ item.vunits }}</td>
-                                <td>{{ item.height }} {{ item.vunits }}</td>
-                                <td class="uk-text-center">
-                                  <a class="uk-margin-small-left uk-text-danger" href="#" @click.prevent="printConfirmation(item.id)">
-                                    <font-awesome-icon icon="check"></font-awesome-icon>
-                                  </a>
-                                </td>
-                                <td class="uk-text-center">
-                                  <a class="uk-margin-small-left uk-text-danger" href="#" @click.prevent="printLabel(item.id)">
-                                    <font-awesome-icon icon="print"></font-awesome-icon>
-                                  </a>
-                                </td>
-                                </tr>
-                              </template>
-                            </tbody>
-                            <tfoot>
-                              <tr>
-                                <td colspan="3">
-                                  <button class="uk-button uk-button-danger" type="button" @click.prevent="printAWB(order.orderNo)">Print AWB</button>
-                                </td>
-                              </tr>
-                            </tfoot>
-                          </table>
-                        </div>
-                    </div>
-                  </form>
-                </td>
-              </tr>
-            </template>
-          </tbody>
-        </table>
+          <inbound-order
+          :orders=orders
+          />
       </div>
       <div id="PrintAWB" class="printpage">
         <h4>PT. Kirimin (AWB)</h4>
@@ -251,10 +152,13 @@
 import _ from 'lodash'
 import * as Level from '../../config/level'
 import ColumnSort from '../../components/ColumnSort'
-import { Printd } from 'printd'
+import Printd from 'printd'
+import InboundOrder from '../../components/InboundOrder'
+
 export default {
   components: {
-    ColumnSort
+    ColumnSort,
+    InboundOrder
   },
   data () {
     return {
@@ -373,9 +277,6 @@ export default {
           return order
         })
       })
-    },
-    collapseToggle (index) {
-      this.orders[index].collapse = !this.orders[index].collapse
     },
     printLabel (id) {
       this.$confirm('Are you sure want to print Label ?', 'Warning', {

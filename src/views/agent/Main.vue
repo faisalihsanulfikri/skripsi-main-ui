@@ -7,8 +7,8 @@
         active-text-color="#FFF"
         :router="true">
         <el-menu-item index="/agent">DASHBOARD</el-menu-item>
-        <el-menu-item index="/agent/orders">INBOUND</el-menu-item>
-        <el-menu-item index="/agent/inbound">SUBMIT INBOUND</el-menu-item>
+        <el-menu-item index="/agent/orders">ENTRY ORDER</el-menu-item>
+        <el-menu-item index="/agent/inbound">INBOUND</el-menu-item>
         <el-menu-item index="/agent/report">REPORT</el-menu-item>
       </el-menu>
     </el-aside>

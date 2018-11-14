@@ -70,7 +70,7 @@ export default {
   data () {
     return {
       edit: false,
-      title: 'New Inbound',
+      title: 'Entry Order',
       input: {
         code: '',
         name: '',
