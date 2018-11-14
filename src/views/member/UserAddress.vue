@@ -74,13 +74,13 @@ export default {
       selectedAddress: {}
     }
   },
-  
+
   async created () {
     this.__startLoading()
 
     await this.fetchAddresses()
 
-    this.__stopLoading()    
+    this.__stopLoading()
   },
 
   methods: {

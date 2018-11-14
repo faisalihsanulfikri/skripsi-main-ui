@@ -480,7 +480,7 @@ export default {
       this.__stopLoading()
     },
     async order () {
-      this.__startLoading();
+      this.__startLoading()
 
       await this.$authHttp.post('/orders/kirimin', this.input).then(res => {
         if (res.data.success) {
