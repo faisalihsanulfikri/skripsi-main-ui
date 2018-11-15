@@ -205,7 +205,7 @@ export default {
 
           let user = await this.$auth.getUser()
 
-          console.log(Level.ROUTE_LEVEL[user.level])
+          this.$root.user = user
 
           this.$router.push({
             name: Level.ROUTE_LEVEL[user.level],

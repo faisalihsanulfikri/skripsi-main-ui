@@ -18,9 +18,7 @@
     </div>
     <div class="uk-card-body uk-card-small">
       <div class="uk-overflow-auto">
-        <inbound-order
-          :orders=orders
-          />
+        <inbound-order :orders=orders></inbound-order>
       </div>
       <div id="testPrint" class="uk-hidden">
         <h1>Test Print AWB</h1>

@@ -144,7 +144,7 @@ export default {
       this.$confirm('Are you sure to confirm this payment?', 'Confirm', {
         type: 'warning'
       }).then(() => {
-        this.updatePaymentStatus(paymentId, 'cancel')
+        this.updatePaymentStatus(paymentId, 'reject')
       }).catch(() => {})
     },
     async updatePaymentStatus (paymentId, status) {

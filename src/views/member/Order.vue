@@ -143,6 +143,10 @@
                             <div class="app--list-text">{{ order.receiver.city }}</div>
                           </li>
                           <li>
+                            <div class="app--list-label">Kecamatan</div>
+                            <div class="app--list-text">{{ order.receiver.sub_district }}</div>
+                          </li>
+                          <li>
                             <div class="app--list-label">Alamat</div>
                             <div class="app--list-text">{{ order.receiver.address }}</div>
                           </li>

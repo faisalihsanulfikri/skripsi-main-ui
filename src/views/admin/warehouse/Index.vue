@@ -59,7 +59,7 @@
                 <td colspan="4">
                   <div>
                     <div class="uk-margin-small">Address : {{ warehouse.address }}</div>
-                    <div class="uk-margin-small">Zip Code : {{ warehouse.zipcode }}</div>
+                    <div class="uk-margin-small">Zip Code : {{ warehouse.zip_code }}</div>
                   </div>
                 </td>
               </tr>
@@ -81,7 +81,7 @@ export default {
   methods: {
     fetchWareHouses () {
       this.$authHttp.get(`/warehouses`).then(res => {
-        this.warehouses = res.data.map(warehouse => {
+        this.warehouses = res.data.data.map(warehouse => {
           warehouse['collapse'] = true
 
           return warehouse
