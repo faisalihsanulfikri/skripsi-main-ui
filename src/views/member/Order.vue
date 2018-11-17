@@ -170,7 +170,7 @@
                         :to="{ name: 'member-order-history', params: { code: order.code } }"
                         tag="button"
                         class="uk-button uk-button-default">
-                        Histori order
+                        Histori Pesanan
                       </router-link>
                       <button v-if="parseInt(order.invoice.paid) === 0" class="uk-margin-small-left uk-button uk-button-primary" @click="showPaymentDialog(index)">Konfirmasi Pembayaran</button>
                     </div>
