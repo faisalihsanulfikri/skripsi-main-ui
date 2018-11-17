@@ -74,6 +74,17 @@ Vue.mixin({
           })
       })
     },
+    __fetchAgentAddresses () {
+      return new Promise((resolve, reject) => {
+        Vue.authHttp().get('/agent/addresses/list')
+          .then(res => {
+            resolve(res)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
     __focusElement (elementId) {
       document.getElementById(elementId).scrollIntoView({
         behavior: 'smooth'

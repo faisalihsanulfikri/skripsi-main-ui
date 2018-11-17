@@ -49,11 +49,15 @@
                 <td colspan="4">
                   <div class="uk-grid-small" uk-grid>
                     <div class="uk-width-2-5">
-                      <h5>
+                      <h5 class="uk-margin-small">
+                        <font-awesome-icon icon="shipping-fast"></font-awesome-icon>
+                        <span class="uk-text-primary uk-margin-small-left">{{ order.awb }}</span>
+                      </h5>
+                      <h5 class="uk-margin-remove">
                         <font-awesome-icon icon="truck"></font-awesome-icon>
                         <span class="uk-margin-small-left">Destination Address</span>
                       </h5>
-                      <div>
+                      <div class="uk-padding-small">
                         <div class="app--list-text">{{ order.receiver.name }}</div>
                         <div class="app--list-text">{{ order.receiver.address }}</div>
                         <div class="app--list-text">
@@ -76,39 +80,44 @@
 
                   <div class="uk-margin-small uk-overflow-auto">
                     <h5 class="uk-margin-remove">
-                        <font-awesome-icon icon="cubes"></font-awesome-icon>
-                        <span class="uk-margin-small-left">Items</span>
-                      </h5>
-                    <table class="uk-table uk-table-small uk-table-divider uk-table-middle uk-text-small">
-                      <tbody>
-                        <template v-for="item in order.items">
-                          <tr :key="`${item.id}_item`">
-                            <td>
-                              <div>
-                                <span class="uk-text-primary">{{ item.name }} # {{ item.reference }}</span>
-                              </div>
-                              <div>{{ item.url }}</div>
-                              <div>{{ `${item.stringWeight} ${order.detail.formula.weight_unit} - ${item.stringLength} x ${item.stringWidth} x ${item.stringLength} ${order.detail.formula.volume_unit}` }}</div>
-                              <div>
-                                {{ item.stringQuantity }} item's x IDR {{ item.stringPrice }}
-                              </div>
-                            </td>
-                            <td class="uk-text-center" width="100">{{ item.status }}</td>
-                            <td class="uk-text-center" width="200">
-                              <el-button type="success" size="mini" @click="receivedItem(order.code, item.id)">Received</el-button>
-                              <el-button type="danger" size="mini" @click="rejectItem(order.code, item.id)">Reject</el-button>
-                            </td>
-                          </tr>
-                        </template>
-                      </tbody>
-                    </table>
+                      <font-awesome-icon icon="cubes"></font-awesome-icon>
+                      <span class="uk-margin-small-left">Items</span>
+                    </h5>
+                    <div>
+                      <table class="uk-table uk-table-small uk-table-divider uk-table-middle uk-text-small">
+                        <tbody>
+                          <template v-for="item in order.items">
+                            <tr :key="`${item.id}_item`">
+                              <td class="uk-text-center" width="20">
+                                <el-checkbox v-model="item.selected"></el-checkbox>
+                              </td>
+                              <td>
+                                <div>
+                                  <span class="uk-text-primary">{{ item.name }} # {{ item.reference }}</span>
+                                </div>
+                                <div>{{ item.url }}</div>
+                                <div>{{ `${item.stringWeight} ${order.detail.formula.weight_unit} - ${item.stringLength} x ${item.stringWidth} x ${item.stringLength} ${order.detail.formula.volume_unit}` }}</div>
+                                <div>
+                                  {{ item.stringQuantity }} item's x IDR {{ item.stringPrice }}
+                                </div>
+                              </td>
+                              <td class="uk-text-center" width="100">{{ item.status }}</td>
+                              <td class="uk-text-center" width="200">
+                                <el-button type="success" size="mini" @click="receivedItem(order.code, item.id)">Received</el-button>
+                                <el-button type="danger" size="mini" @click="rejectItem(order.code, item.id)">Reject</el-button>
+                              </td>
+                            </tr>
+                          </template>
+                        </tbody>
+                      </table>
+                    </div>
                     <hr>
                     <div class="uk-grid-small" uk-grid>
                       <div class="uk-width-auto">
-                        <el-button>CREATE AWB</el-button>
+                        <el-button @click="openCreateAwbDialog(order.id)">CREATE AWB | {{ countSelectedItems(order.id) }} item's</el-button>
                       </div>
                       <div class="uk-width-auto">
-                        <el-button>PRINT AWB</el-button>
+                        <el-button>PRINT AWB | {{ countSelectedItems(order.id) }} item's</el-button>
                       </div>
                     </div>
                   </div>
@@ -119,19 +128,31 @@
         </table>
       </div>
     </div>
+    <dialog-create-awb
+      :visible="dialogCreateAwb.visible"
+      :order="dialogCreateAwb.data"
+      @close="closeCreateAwbDialog"
+      @done="onAwbCreated">
+    </dialog-create-awb>
   </div>
 </template>
 
 <script>
 import CalculatorResult from '../../../components/CalculatorResult'
+import DialogCreateAwb from '../../../components/DialogCreateAwb'
 
 export default {
   components: {
-    CalculatorResult
+    CalculatorResult,
+    DialogCreateAwb
   },
 
   data () {
     return {
+      dialogCreateAwb: {
+        visible: false,
+        data: {}
+      },
       orders: {}
     }
   },
@@ -139,14 +160,36 @@ export default {
   async created () {
     this.__startLoading()
 
-    await this.fetchOrders()  
+    await this.fetchOrders()
 
     this.__stopLoading()
   },
 
   methods: {
+    openCreateAwbDialog (orderId) {
+      this.dialogCreateAwb.data = this.orders.find(order => order.id === orderId)
+      this.dialogCreateAwb.visible = true
+    },
+    closeCreateAwbDialog () {
+      this.dialogCreateAwb.data = {}
+      this.dialogCreateAwb.visible = false
+    },
+    async onAwbCreated () {
+      this.closeCreateAwbDialog()
+
+      this.__startLoading()
+
+      await this.fetchOrders()
+
+      this.__stopLoading()
+    },
     collapseToggle (index) {
       this.orders[index].collapse = !this.orders[index].collapse
+    },
+    countSelectedItems (orderId) {
+      let order = this.orders.find(order => order.id === orderId)
+
+      return order.items.filter(item => item.selected).length
     },
     async fetchOrders () {
       await this.$authHttp.get('/orders').then(res => {
@@ -154,6 +197,7 @@ export default {
           order['collapse'] = true
 
           order.items.map(item => {
+            item['selected'] = true
             item['stringPrice'] = this.$options.filters.currency(item.price, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
             item['stringQuantity'] = this.$options.filters.currency(item.quantity, '', 0, { thousandsSeparator: '.', decimalSeparator: ',' })
             item['stringWeight'] = this.$options.filters.currency(item.weight, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })

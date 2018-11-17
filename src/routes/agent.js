@@ -1,7 +1,7 @@
 import Main from '../views/agent/Main'
 import Dashboard from '../views/agent/Dashboard'
 import AgentOrders from '../views/agent/OrderEntry'
-import AgentInbound from '../views/agent/Inbound'
+import AgentInbound from '../views/admin/order/Inbound'
 import AgentReport from '../views/agent/AgentReport'
 
 import { AGENT } from '../config/level'
