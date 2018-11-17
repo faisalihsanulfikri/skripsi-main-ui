@@ -114,9 +114,9 @@ export default {
     async fetchAddress () {
       await this.__fetchAgentAddresses().then(res => {
         this.master.addresses = res.data
-      }).catch(() => {})  
+      }).catch(() => {})
     },
-    async createAwb() {
+    async createAwb () {
       this.__startLoading()
 
       this.error = false
@@ -140,7 +140,7 @@ export default {
 
         this.input = this.$options.data().input
 
-        this.$emit('done');
+        this.$emit('done')
       }).catch(err => {
         if (err.response) {
           this.error = true

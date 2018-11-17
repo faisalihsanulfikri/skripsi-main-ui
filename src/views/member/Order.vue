@@ -64,7 +64,10 @@
                     <hr>
 
                     <div class="uk-margin-small">
-                      <h5 class="uk-margin-remove">Konfirmasi Pembayaran</h5>
+                      <h5 class="uk-margin-remove">
+                        <font-awesome-icon icon="credit-card"></font-awesome-icon>
+                        <span class="uk-margin-small-left">Konfirmasi Pembayaran</span>
+                      </h5>
                       <table class="uk-table uk-table-small uk-text-small uk-margin-small">
                           <thead>
                             <tr>
@@ -85,8 +88,13 @@
                       </table>
                     </div>
 
+                    <hr>
+
                     <div class="uk-margin-small">
-                      <h5 class="uk-margin-remove">Barang</h5>
+                      <h5 class="uk-margin-remove">
+                        <font-awesome-icon icon="cubes"></font-awesome-icon>
+                        <span class="uk-margin-small-left">Barang</span>
+                      </h5>
                       <table class="uk-table uk-table-small uk-text-small uk-margin-small">
                         <thead>
                           <th>Nama</th>
@@ -124,40 +132,33 @@
 
                     <div class="uk-grid-small" uk-grid>
                       <div class="uk-width-2-5">
-                        <h5 class="uk-margin-remove">Penerima</h5>
-                        <ul class="uk-list uk-margin-small">
-                          <li>
-                            <div class="app--list-label">Nama</div>
-                            <div class="app--list-text">{{ order.receiver.name }}</div>
-                          </li>
-                          <li>
-                            <div class="app--list-label">Telepon</div>
-                            <div class="app--list-text">{{ order.receiver.phone }}</div>
-                          </li>
-                          <li>
-                            <div class="app--list-label">Provinsi</div>
-                            <div class="app--list-text">{{ order.receiver.province }}</div>
-                          </li>
-                          <li>
-                            <div class="app--list-label">Kota / Kab</div>
-                            <div class="app--list-text">{{ order.receiver.city }}</div>
-                          </li>
-                          <li>
-                            <div class="app--list-label">Kecamatan</div>
-                            <div class="app--list-text">{{ order.receiver.sub_district }}</div>
-                          </li>
-                          <li>
-                            <div class="app--list-label">Alamat</div>
-                            <div class="app--list-text">{{ order.receiver.address }}</div>
-                          </li>
-                          <li>
-                            <div class="app--list-label">Kode POS</div>
-                            <div class="app--list-text">{{ order.receiver.postal_code }}</div>
-                          </li>
-                        </ul>
+                        <h5 class="uk-margin-small">
+                          <font-awesome-icon icon="shipping-fast"></font-awesome-icon>
+                          <span class="uk-text-primary uk-margin-small-left">{{ order.awb }}</span>
+                        </h5>
+                        <h5 class="uk-margin-remove">
+                          <font-awesome-icon icon="truck"></font-awesome-icon>
+                          <span class="uk-margin-small-left">Tujuan</span>
+                        </h5>
+                        <div class="uk-padding-small">
+                          <div class="app--list-text">{{ order.receiver.name }}</div>
+                          <div class="app--list-text">{{ order.receiver.address }}</div>
+                          <div class="app--list-text">
+                            {{ order.receiver.sub_district }}, {{ order.receiver.city }} {{ order.receiver.postal_code }}
+                          </div>
+                          <div class="app--list-text">{{ order.receiver.province }}</div>
+                          <div class="app--list-text">{{ order.receiver.phone }}</div>
+                        </div>
+                        <h5 class="uk-margin-remove">
+                          <font-awesome-icon icon="globe-asia"></font-awesome-icon>
+                          <span class="uk-margin-small-left">{{ order.detail.warehouse.name }}</span>
+                        </h5>
                       </div>
                       <div class="uk-width-3-5">
-                        <h5 class="uk-margin-remove">Biaya</h5>
+                        <h5 class="uk-margin-remove">
+                          <font-awesome-icon icon="dollar-sign"></font-awesome-icon>
+                          <span class="uk-margin-small-left">Biaya</span>
+                        </h5>
                         <calculator-result :final="true" :cost="order.detail.cost"></calculator-result>
                       </div>
                     </div>

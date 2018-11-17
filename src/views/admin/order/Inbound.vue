@@ -66,6 +66,10 @@
                         <div class="app--list-text">{{ order.receiver.province }}</div>
                         <div class="app--list-text">{{ order.receiver.phone }}</div>
                       </div>
+                      <h5 class="uk-margin-remove">
+                        <font-awesome-icon icon="globe-asia"></font-awesome-icon>
+                        <span class="uk-margin-small-left">{{ order.detail.warehouse.name }}</span>
+                      </h5>
                     </div>
                     <div class="uk-width-3-5">
                       <h5 class="uk-margin-remove">
