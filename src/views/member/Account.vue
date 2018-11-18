@@ -3,46 +3,25 @@
     <div class="uk-card uk-card-default uk-card-small uk-card-body">
       <div uk-grid>
         <div class="uk-width-medium@m">
-          <ul class="uk-tab-left" uk-switcher="#user-tab" uk-tab>
-            <li>
-              <a href="#">Data Personal</a>
+          <ul class="uk-tab-left" uk-tab>
+            <li :class="{ 'uk-active': $route.name === 'member-account' }">
+              <router-link :to="{ name: 'member-account' }">Data Personal</router-link>
             </li>
-            <li>
-              <a href="#">Alamat</a>
+            <li :class="{ 'uk-active': $route.name === 'member-account-address' }">
+              <router-link :to="{ name: 'member-account-address' }">Alamat</router-link>
             </li>
-            <li>
-              <a href="#">Ganti Kata Sandi</a>
+            <li :class="{ 'uk-active': $route.name === 'member-account-password' }">
+              <router-link :to="{ name: 'member-account-password' }">Ganti Kata Sandi</router-link>
             </li>
-            <li>
-              <a href="#">Upload Dokumen</a>
+            <li :class="{ 'uk-active': $route.name === 'member-account-file' }">
+              <router-link :to="{ name: 'member-account-file' }">Upload Dokumen</router-link>
             </li>
           </ul>
         </div>
         <div class="uk-width-expand">
-          <ul id="user-tab" class="uk-switcher">
-            <li><profile/></li>
-            <li><my-address/></li>
-            <li><change-password/></li>
-            <li><upload-dokumen/></li>
-          </ul>
+          <router-view></router-view>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<script>
-import Profile from './UserProfile'
-import MyAddress from './UserAddress'
-import ChangePassword from './UserChangePassword'
-import UploadDokumen from './UserUpload'
-
-export default {
-  components: {
-    Profile,
-    MyAddress,
-    ChangePassword,
-    UploadDokumen
-  }
-}
-</script>

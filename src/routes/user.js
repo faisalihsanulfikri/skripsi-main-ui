@@ -1,7 +1,11 @@
 import Main from '../views/member/Main'
 import Address from '../views/member/Address'
 import Account from '../views/member/Account'
-import mKirimin from '../views/member/Kirimin_3'
+import UserProfile from '../views/member/UserProfile'
+import UserAddress from '../views/member/UserAddress'
+import UserPassword from '../views/member/UserChangePassword'
+import UserFile from '../views/member/UserFile'
+import Kirimin from '../views/member/Kirimin_3'
 import Beliin from '../views/member/Beliin'
 import Order from '../views/member/Order'
 import OrderHistory from '../views/member/OrderHistory'
@@ -24,17 +28,50 @@ export default {
     },
     {
       path: 'account',
-      name: 'member-account',
       component: Account,
-      meta: {
-        auth: true,
-        level: [REGULAR, PREMIUM]
-      }
+      children: [
+        {
+          path: '/',
+          name: 'member-account',
+          component: UserProfile,
+          meta: {
+            auth: true,
+            level: [REGULAR, PREMIUM]
+          }
+        },
+        {
+          path: 'addresses',
+          name: 'member-account-address',
+          component: UserAddress,
+          meta: {
+            auth: true,
+            level: [REGULAR, PREMIUM]
+          }
+        },
+        {
+          path: 'password',
+          name: 'member-account-password',
+          component: UserPassword,
+          meta: {
+            auth: true,
+            level: [REGULAR, PREMIUM]
+          }
+        },
+        {
+          path: 'files',
+          name: 'member-account-file',
+          component: UserFile,
+          meta: {
+            auth: true,
+            level: [REGULAR, PREMIUM]
+          }
+        }
+      ]
     },
     {
       path: 'kirimin',
       name: 'member-kirimin',
-      component: mKirimin,
+      component: Kirimin,
       meta: {
         auth: true,
         level: [REGULAR, PREMIUM]
