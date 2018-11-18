@@ -8,13 +8,15 @@
         <button class="uk-button uk-button-primary" @click="createAddress">Tambah</button>
       </div>
     </div>
-    <div class="uk-grid uk-grid-small uk-grid-match uk-child-width-1-2" uk-grid>
+    <div class="uk-grid uk-grid-small uk-child-width-1-2" uk-grid uk-height-match="target: .uk-card-body">
       <div v-for="(address, index) in addresses" :key="address.id">
         <div class="uk-card uk-card-default uk-card-small">
           <div class="uk-card-body">
-            <h4>{{ address.alias }}</h4>
-            <p>{{ `${address.province}, ${address.city}, ${address.sub_district}, ${address.address}, ${address.postal_code}` }}</p>
-            <p>{{ `${address.name} - ${address.phone}` }}</p>
+            <div>
+              <h4>{{ address.alias }}</h4>
+              <p>{{ `${address.province}, ${address.city}, ${address.sub_district}, ${address.address}, ${address.postal_code}` }}</p>
+              <p>{{ `${address.name} - ${address.phone}` }}</p>
+            </div>
           </div>
           <div class="uk-card-footer uk-text-right">
             <el-tooltip :content="address.primary ? 'Alamat Utama': 'Set Alamat Utama'" placement="top">
@@ -185,10 +187,6 @@ export default {
 .uk-card-default {
   background-color: #ECEFF1;
   box-shadow: none;
-
-  .uk-card-body {
-    min-height: calc(100% - 51px);
-  }
 }
 
 .primary-address {
