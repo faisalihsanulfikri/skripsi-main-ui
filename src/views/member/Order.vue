@@ -13,7 +13,7 @@
                 <th width="250">Kode Order</th>
                 <th>Tanggal</th>
                 <th class="uk-text-right" width="250">Jumlah (IDR)</th>
-                <th class="uk-text-center" width="250">Jumlah Barang</th>
+                <th class="uk-text-center" width="250">Jumlah Paket</th>
                 <th class="uk-text-center" width="150">Status</th>
               </tr>
             </thead>
@@ -30,8 +30,6 @@
                   <td>{{ new Date(order.created_at).toLocaleDateString('id-ID') }}</td>
                   <td class="uk-text-right">{{ order.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
                   <td class="uk-text-center">
-                    {{ order.item_quantities | currency('', 0, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-                    dari
                     {{ order.items.length | currency('', 0, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
                   </td>
                   <td class="uk-text-center">{{ order.status }}</td>
