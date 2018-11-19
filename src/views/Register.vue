@@ -198,6 +198,11 @@ export default {
             this.success = true
             this.successMessage = res.data.message
 
+            this.$alert(res.data.message, 'Info', {
+              type: 'info',
+              showClose: false
+            })
+
             return
           }
 
