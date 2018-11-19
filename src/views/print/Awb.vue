@@ -82,8 +82,8 @@ export default {
         })
 
         setTimeout(() => {
-          // window.print()
-          // window.close()
+          window.print()
+          window.close()
         }, 500)
       } catch (err) {
         if (err.response) {
