@@ -5,8 +5,9 @@
         <img src="../../assets/logo-kirimin.jpg" width="200" />
       </div>
       <div class="uk-width-expand uk-flex uk-flex-center uk-flex-middle">
-        <div>
-          <h5>{{ order.awb }}</h5>
+        <div class="uk-text-center">
+          <img v-if="order.awb" :src="`${$web.defaults.baseURL}/barcode/${order.awb}`" />
+          <h5 class="uk-margin-small-top">{{ order.awb }}</h5>
         </div>
       </div>
     </div>
