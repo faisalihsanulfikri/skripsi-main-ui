@@ -25,16 +25,19 @@ export default {
       required: true
     }
   },
+
   data () {
     return {
       order: 'asc'
     }
   },
+
   computed: {
     active () {
       return this.field === this.activeField
     }
   },
+
   methods: {
     changeOrder () {
       if (this.field === this.activeField) {

@@ -158,7 +158,9 @@ button.uk-button {
     padding: 0 10px;
 
     h3 {
+      display: flex;
       margin: 0 !important;
+      align-items: center;
     }
   }
 

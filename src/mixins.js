@@ -11,6 +11,11 @@ Vue.mixin({
     __stopLoading () {
       store.dispatch('app/stopLoading')
     },
+    __focusElement (elementId) {
+      document.getElementById(elementId).scrollIntoView({
+        behavior: 'smooth'
+      })
+    },
     __logout () {
       Vue.auth.destroy()
 
@@ -85,9 +90,9 @@ Vue.mixin({
           })
       })
     },
-    __focusElement (elementId) {
-      document.getElementById(elementId).scrollIntoView({
-        behavior: 'smooth'
+    __getUsersByLevel (level, params) {
+      return Vue.authHttp().get(`/users/${level}`, {
+        params
       })
     }
   }

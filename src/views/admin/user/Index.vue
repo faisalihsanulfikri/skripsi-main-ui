@@ -9,7 +9,10 @@
         </div>
         <div class="uk-width-expand">
           <div class="app--card-header_title">
-            <h3>Users <small>[{{ $route.params.level }}]</small></h3>
+            <h3>
+              <span>Users</span>
+              <el-tag class="uk-margin-small-left" size="small">{{ $route.params.level.toUpperCase() }}</el-tag>
+            </h3>
           </div>
         </div>
       </div>
@@ -17,8 +20,8 @@
     <div class="uk-card-body">
       <div class="uk-margin">
         <div class="uk-grid-small" uk-grid>
-          <div class="uk-wdith-1-3">
-            <el-select v-model="filter.verified" multiple>
+          <div class="uk-width-1-3">
+            <el-select v-model="filter.verified" class="uk-width-1-1" multiple>
               <el-option
                 v-for="(item, index) in options.verified"
                 :key="index"
@@ -30,6 +33,9 @@
           <div class="uk-width-1-3">
             <el-input v-model="filter.keyword" placeholder="Search..."></el-input>
           </div>
+          <div class="uk-width-auto">
+            <el-button type="primary" @click="fetchUsers">Filter</el-button>
+          </div>
         </div>
       </div>
       <div class="uk-overflow-auto">
@@ -40,7 +46,7 @@
                 <column-sort
                   title="Name"
                   field="name"
-                  :active-field="filter.sort.field"
+                  :active-field="filter.sortField"
                   @change="onSortChange">
                 </column-sort>
               </th>
@@ -48,7 +54,7 @@
                 <column-sort
                   title="Email"
                   field="email"
-                  :active-field="filter.sort.field"
+                  :active-field="filter.sortField"
                   @change="onSortChange">
                 </column-sort>
               </th>
@@ -56,26 +62,26 @@
                 <column-sort
                   title="Mobile"
                   field="phone"
-                  :active-field="filter.sort.field"
+                  :active-field="filter.sortField"
                   @change="onSortChange">
                 </column-sort>
               </th>
-              <th>
+              <th class="uk-text-center">
                 <column-sort
                   title="Verified"
                   field="active"
-                  :active-field="filter.sort.field"
+                  :active-field="filter.sortField"
                   @change="onSortChange">
                 </column-sort>
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="user in filteredUsers" :key="user.id">
+            <tr v-for="user in users" :key="user.id">
               <td>{{ user.name }}</td>
               <td>{{ user.email }}</td>
               <td>{{ user.phone }}</td>
-              <td>
+              <td class="uk-text-center">
                 <el-tag v-if="user.active" type="success" size="small">Yes</el-tag>
                 <el-tag v-else type="danger" size="small">No</el-tag>
               </td>
@@ -88,6 +94,7 @@
       <el-pagination
         layout="prev, pager, next"
         :page-size="pagination.per_page"
+        :page-count="pagination.last_page"
         :total="pagination.total"
         @current-change="onChangePage">
       </el-pagination>
@@ -98,14 +105,13 @@
 <script>
 import _ from 'lodash'
 
-import * as Level from '../../../config/level'
-
 import ColumnSort from '../../../components/ColumnSort'
 
 export default {
   components: {
     ColumnSort
   },
+
   data () {
     return {
       users: [],
@@ -116,85 +122,88 @@ export default {
       },
       filter: {
         keyword: '',
-        verified: [true, false],
-        sort: {
-          field: 'name',
-          order: 'asc'
-        }
+        verified: [1, 0],
+        sortField: 'active',
+        sortOrder: 'desc'
       },
       options: {
         verified: [
           {
-            value: true,
-            label: 'Yes'
+            value: 1,
+            label: 'Verified'
           },
           {
-            value: false,
-            label: 'No'
+            value: 0,
+            label: 'Unverified'
           }
         ]
       },
       sortField: 'name'
     }
   },
-  computed: {
-    filteredUsers () {
-      let users = this.users.filter(user => {
-        let likeFullName = user.name.toLowerCase().includes(this.filter.keyword.toLowerCase())
-        let likeEmail = user.email.toLowerCase().includes(this.filter.keyword.toLowerCase())
-        let likeMobile = user.phone.toLowerCase().includes(this.filter.keyword.toLowerCase())
 
-        return likeFullName || likeEmail || likeMobile
-      })
-
-      // users = users.filter(user => {
-      //   return user[this.filter.level.field]
-      // })
-
-      users = _.sortBy(users, user => {
-        return user[this.filter.sort.field]
-      })
-
-      if (this.filter.sort.order === 'desc') {
-        users = users.reverse()
-      }
-
-      this.$set(this.pagination, 'total', users.length)
-      this.$set(this.pagination, 'total_pages', Math.ceil(this.pagination.total / this.pagination.per_page))
-
-      let start = this.pagination.current_page > 1 ? (this.pagination.current_page * this.pagination.per_page) - this.pagination.per_page : 0
-
-      return users.slice(start, this.pagination.current_page * this.pagination.per_page)
-    },
-    level () {
-      return Level[this.$route.params.level.toUpperCase()]
-    }
-  },
   watch: {
     $route: {
       handler: 'fetchUsers'
     }
   },
+
+  async created () {
+    this.__startLoading()
+
+    await this.fetchUsers()
+
+    this.__stopLoading()
+  },
+
   methods: {
-    onChangePage (page) {
+    async onChangePage (page) {
       this.pagination.current_page = page
 
-      this.fetchUsers()
+      this.__startLoading()
+
+      await this.fetchUsers()
+
+      this.__stopLoading()
     },
-    onSortChange (payload) {
-      this.filter.sort.field = payload.field
-      this.filter.sort.order = payload.order
+    async onSortChange (payload) {
+      this.filter.sortField = payload.field
+      this.filter.sortOrder = payload.order
+
+      this.__startLoading()
+
+      await this.fetchUsers()
+
+      this.__stopLoading()
     },
-    fetchUsers () {
-      //this.$authHttp.get(`/users/${this.level}`).then(res => {
-      this.$authHttp.get(`/users`).then(res => {
-        this.users = res.data.data 
-        this.users = this.users.level.includes(Level[this.$route.params.level.toUpperCase()])
-      })
+    async fetchUsers () {
+      try {
+        let res = await this.__getUsersByLevel(this.$route.params.level, {
+          page: this.pagination.current_page,
+          sort: [
+            this.filter.sortField,
+            this.filter.sortOrder
+          ],
+          active: this.filter.verified,
+          search: this.filter.keyword
+        })
+
+        this.users = res.data.data
+        this.pagination = res.data
+
+        delete this.pagination.data
+      } catch (err) {
+        if (err.response) {
+          let msg = err.response.data.message ? err.response.data.message : err.response.statusText
+
+          this.$notify({
+            title: 'ERROR',
+            message: msg,
+            type: 'error'
+          })
+        }
+      }
     }
-  },
-  created () {
-    this.fetchUsers()
   }
 }
 </script>
