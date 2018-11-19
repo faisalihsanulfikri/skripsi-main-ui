@@ -121,7 +121,7 @@
                         <el-button @click="openCreateAwbDialog(order.id)">CREATE AWB | {{ countSelectedItems(order.id) }} item's</el-button>
                       </div>
                       <div class="uk-width-auto">
-                        <el-button>PRINT AWB | {{ countSelectedItems(order.id) }} item's</el-button>
+                        <el-button @click="printAwb(order.code)">PRINT AWB | {{ countSelectedItems(order.id) }} item's</el-button>
                       </div>
                     </div>
                   </div>
@@ -157,7 +157,8 @@ export default {
         visible: false,
         data: {}
       },
-      orders: {}
+      orders: {},
+      printWindow: null
     }
   },
 
@@ -264,6 +265,13 @@ export default {
       }).then(() => {
         this.updateItemStatus(orderCode, itemId, 'reject')
       }).catch(() => {})
+    },
+    printAwb (code) {
+      this.printWindow = window.open(
+        `#/print-awb/${code}`,
+        'Kirimin - Print AWB',
+        'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=800'
+      )
     }
   }
 }
