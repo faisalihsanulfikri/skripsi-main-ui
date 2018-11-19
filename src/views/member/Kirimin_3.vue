@@ -92,9 +92,10 @@
             </div>
             <div class="uk-margin-small">
               <label class="uk-form-label">Referensi (ex. Invoice#, SO#)</label>
-              <input
+              <textarea
                 v-model="input.item.reference"
-                class="uk-input" />
+                class="uk-textarea"
+                rows="5"></textarea>
             </div>
             <div class="uk-margin-small">
               <label class="uk-form-label">Harga Barang (IDR)</label>
@@ -105,7 +106,7 @@
                 class="uk-input"
                 :class="{ 'uk-form-danger': errors.has('price') }" />
             </div>
-            <div class="uk-margin-small">
+            <div class="uk-margin-small uk-hidden">
               <label class="uk-form-label">Jumlah Barang</label>
               <input
                 v-model="input.item.quantity"
@@ -266,7 +267,7 @@ export default {
           name: '',
           reference: '',
           price: '',
-          quantity: '',
+          quantity: 1,
           weight: '',
           length: '',
           width: '',
@@ -447,6 +448,7 @@ export default {
       this.input.items.push(Object.assign({}, this.input.item))
       this.input.item = this.$options.data().input.item
       this.input.item.category = this.master.categories[0].id
+      this.input.item.quantity = 1
 
       this.check()
     },
