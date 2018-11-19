@@ -143,7 +143,9 @@ export default {
       default: false
     },
     address: {
-      default: {}
+      default: () => {
+        return {}
+      }
     }
   },
   data () {
@@ -196,15 +198,15 @@ export default {
         await this.fetchDistricts()
       }
 
+      this.error = false
+      this.errorMessage = ''
+      this.validationErrors = {}
+
       this.$validator.errors.clear()
 
       await this.fetchProvinces()
     },
     onDialogClose () {
-      this.error = false
-      this.errorMessage = ''
-      this.validationErrors = {}
-
       this.input = this.$options.data().input
       this.$emit('close')
     },
@@ -310,7 +312,9 @@ export default {
           type: 'success'
         })
 
-        this.onDialogClose()
+        this.input = this.$options.data().input
+
+        this.$emit('saved', res.data.data)
       }).catch(err => {
         if (err.response) {
           this.error = true

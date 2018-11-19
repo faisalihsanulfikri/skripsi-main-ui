@@ -20,14 +20,27 @@
             </div>
             <div class="uk-margin-small">
               <label class="uk-form-label">Alamat Penerima</label>
-              <select v-model="input.address" class="uk-select" @change="onAddressChanged">
-                <option
-                  v-for="(item, key) in options.address"
-                  :key="key"
-                  :value="item.value">
-                    {{ item.label }}
-                  </option>
-              </select>
+              <div class="uk-grid-small" uk-grid>
+                <div class="uk-width-expand">
+                  <select
+                    v-model="input.address"
+                    v-validate="rules.address"
+                    name="address"
+                    class="uk-select"
+                    :class="{ 'uk-form-danger': errors.has('address') }"
+                    @change="onAddressChanged">
+                    <option
+                      v-for="(item, key) in options.address"
+                      :key="key"
+                      :value="item.value">
+                        {{ item.label }}
+                      </option>
+                  </select>
+                </div>
+                <div class="uk-width-auto">
+                  <button class="uk-button uk-button-default" @click="openNewAddressDialog">Baru</button>
+                </div>
+              </div>
             </div>
             <div class="uk-margin-small">
               <label class="uk-form-label">Asuransi</label>
@@ -228,6 +241,13 @@
       </div>
     </div>
 
+    <dialog-input-address
+      title="Tambah Alamat"
+      :visible.sync="dialogNewAddress.visible"
+      @close="closeNewAddressDialog"
+      @saved="onAddressSaved">
+  </dialog-input-address>
+
     <dialog-order-confirmation
       :visible="dialogOrderConfimation.visible"
       :amount="cost.estimatedShippingCostFinal"
@@ -239,16 +259,21 @@
 
 <script>
 import CalculatorResult from '../../components/CalculatorResult'
+import DialogInputAddress from '../../components/DialogInputAddress'
 import DialogOrderConfirmation from '../../components/DialogOrderConfirmation'
 
 export default {
   components: {
     CalculatorResult,
+    DialogInputAddress,
     DialogOrderConfirmation
   },
 
   data () {
     return {
+      dialogNewAddress: {
+        visible: false
+      },
       dialogOrderConfimation: {
         visible: false,
         data: {}
@@ -280,6 +305,7 @@ export default {
         }
       },
       rules: {
+        address: 'required',
         item: {
           category: 'required',
           name: 'required',
@@ -343,6 +369,20 @@ export default {
   },
 
   methods: {
+    openNewAddressDialog () {
+      this.dialogNewAddress.visible = true
+    },
+    closeNewAddressDialog () {
+      this.dialogNewAddress.visible = false
+    },
+    async onAddressSaved (address) {
+      await this.fetchAddresses()
+
+      this.input.address = address.id
+
+      this.onAddressChanged()
+      this.closeNewAddressDialog()
+    },
     openConfirmationDialog () {
       this.dialogOrderConfimation.visible = true
     },
@@ -474,6 +514,12 @@ export default {
         if (err.response) {
           this.error = true
           this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
+
+          this.$notify({
+            title: 'ERROR',
+            message: this.errorMessage,
+            type: 'error'
+          })
 
           this.$validator.errors.clear()
 
