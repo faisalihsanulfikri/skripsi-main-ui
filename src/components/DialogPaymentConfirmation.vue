@@ -65,6 +65,15 @@
           show-icon>
         </el-alert>
       </div>
+      <hr />
+      <h5>Daftar Rekening</h5>
+      <div class="uk-grid-small uk-child-width-1-2" uk-grid>
+        <div v-for="(bank, index) in bankAccounts" :key="index">
+          <h5>{{ bank.bank }}</h5>
+          <div class="uk-margin-small">{{ bank.name }}</div>
+          <div class="uk-margin-small">{{ bank.account_number }}</div>
+        </div>
+      </div>
     </div>
     <div slot="footer">
       <button class="uk-button uk-button-primary uk-margin-small-left" @click="confirm">SIMPAN</button>
@@ -100,6 +109,7 @@ export default {
         amount: 'required|numeric',
         file: 'required'
       },
+      bankAccounts: [],
       error: false,
       errorMessage: '',
       validatorErrors: {}
@@ -115,6 +125,8 @@ export default {
       })
     },
     open () {
+      this.fetchBankAccounts()
+
       this.input.code = this.data.code
       this.input.amount = parseInt(this.data.amount)
     },
@@ -124,6 +136,23 @@ export default {
       this.$validator.reset()
 
       this.$emit('close')
+    },
+    async fetchBankAccounts () {
+      try {
+        let res = await this.$authHttp('/configs/bank_accounts')
+
+        this.bankAccounts = res.data.value
+      } catch (err) {
+        if (err.response) {
+          let msg = err.response.data.message ? err.response.data.message : err.response.statusText
+
+          this.$notify({
+            title: 'ERROR',
+            message: msg,
+            type: 'error'
+          })
+        }
+      }
     },
     async confirm () {
       this.__startLoading()

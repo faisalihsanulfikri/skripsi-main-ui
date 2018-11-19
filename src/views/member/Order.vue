@@ -180,23 +180,23 @@
         </div>
       </div>
     </div>
-    <dialog-payment-confirm
+    <dialog-payment-confirmation
     :visible="dialogPayment.visible"
     :data="dialogPayment.data"
     @close="closePaymentDialog"
     @confirm="confirmPaymentDialog">
-    </dialog-payment-confirm>
+    </dialog-payment-confirmation>
   </div>
 </template>
 
 <script>
 import CalculatorResult from '../../components/CalculatorResult'
-import DialogPaymentConfirm from '../../components/DialogPaymentConfirm'
+import DialogPaymentConfirmation from '../../components/DialogPaymentConfirmation'
 
 export default {
   components: {
     CalculatorResult,
-    DialogPaymentConfirm
+    DialogPaymentConfirmation
   },
   data () {
     return {
