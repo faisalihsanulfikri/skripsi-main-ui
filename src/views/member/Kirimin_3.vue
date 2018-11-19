@@ -222,17 +222,18 @@
         <button
           class="uk-button uk-button-primary uk-margin-small-left"
           :disabled="input.items.length < 1"
-          @click="order">
-          Lanjut Pengiriman
+          @click="openConfirmationDialog">
+          Lanjut
         </button>
       </div>
     </div>
 
-    <!-- <dialog-order-confirmation
-      :visible="dialogOrderConfirmation"
-      @close="onCloseConfrimOrder"
-      @confirm="storeOrder">
-    </dialog-order-confirmation> -->
+    <dialog-order-confirmation
+      :visible="dialogOrderConfimation.visible"
+      :amount="cost.estimatedShippingCostFinal"
+      @close="closeConfirmationDialog"
+      @confirm="order">
+    </dialog-order-confirmation>
   </div>
 </template>
 
@@ -248,6 +249,10 @@ export default {
 
   data () {
     return {
+      dialogOrderConfimation: {
+        visible: false,
+        data: {}
+      },
       config: {
         originCity: 151,
         weightUnits: 'kg',
@@ -338,6 +343,12 @@ export default {
   },
 
   methods: {
+    openConfirmationDialog () {
+      this.dialogOrderConfimation.visible = true
+    },
+    closeConfirmationDialog () {
+      this.dialogOrderConfimation.visible = false
+    },
     async fetchWarehouses () {
       await this.__fetchWarehouses().then(res => {
         this.master.warehouses = res.data
