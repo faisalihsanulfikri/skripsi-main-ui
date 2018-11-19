@@ -46,8 +46,18 @@
     <hr />
     <div>
       <div v-for="item in order.items" :key="`${item.id}_item`" class="uk-margin-small">
-        <div>{{ item.name }} # {{ item.reference }}</div>
-        <div>{{ item.stringPrice }} IDR</div>
+        <div class="uk-grid-small" uk-grid>
+          <div class="uk-width-2-3">
+            <div>{{ item.category.name }} # {{ item.name }} # {{ item.reference }}</div>
+            <div>{{ item.stringPrice }} IDR</div>
+          </div>
+          <div class="uk-width-1-3">
+            <div>{{ item.stringWeight }} {{ order.detail.formula.weight_unit }}</div>
+            <div>
+              {{ item.stringLength }} x {{ item.stringWidth }} x {{ item.stringLength }} {{ order.detail.formula.volume_unit }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
