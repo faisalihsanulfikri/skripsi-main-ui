@@ -19,8 +19,8 @@
     <div class="uk-card-body uk-card-small">
       <div class="uk-margin uk-grid-small" uk-grid>
         <div class="uk-width-1-3 uk-margin-auto-left">
-          <el-input placeholder="Search...">
-            <el-button slot="append" icon="el-icon-search">
+          <el-input v-model="filter.search" placeholder="Search...">
+            <el-button slot="append" icon="el-icon-search" @click="fetchOrders">
             </el-button>
           </el-input>
         </div>
@@ -179,7 +179,10 @@ export default {
         visible: false,
         data: {}
       },
-      orders: {}
+      orders: [],
+      filter: {
+        search: ''
+      }
     }
   },
 
@@ -272,7 +275,9 @@ export default {
       this.__startLoading()
 
       try {
-        let res = await this.$service.getOrders()
+        let res = await this.$service.getOrders({
+          search: this.filter.search
+        })
 
         this.orders = res.data.data.map(order => {
           order['collapse'] = true
