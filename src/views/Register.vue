@@ -10,26 +10,59 @@
             <div>
               <div class="uk-margin">
                 <label class="uk-form-label">Nama</label>
-                <input v-model="input.name" v-validate="rules.name" name="name" class="uk-input" type="text" placeholder="Name"/>
+                <input
+                  v-model="input.name"
+                  v-validate="rules.name"
+                  name="name"
+                  class="uk-input"
+                  type="text"
+                  placeholder="Name" />
                 <p v-if="errors.first('name')" class="uk-margin-small uk-text-danger">{{ errors.first('name') }}</p>
               </div>
               <div class="uk-margin">
                 <label class="uk-form-label">Email</label>
-                <input v-model="input.email" v-validate="rules.email" name="email" class="uk-input" type="text" placeholder="Email"/>
+                <input
+                  v-model="input.email"
+                  v-validate="rules.email"
+                  name="email"
+                  class="uk-input"
+                  type="text"
+                  placeholder="Email" />
                 <p v-if="errors.first('email')" class="uk-margin-small uk-text-danger">{{ errors.first('email') }}</p>
               </div>
               <div class="uk-margin">
                 <label class="uk-form-label">Kata Sandi</label>
-                <input v-model="input.password" v-validate="rules.password" name="password" class="uk-input" type="password" placeholder="Password"/>
+                <input
+                  v-model="input.password"
+                  v-validate="rules.password"
+                  name="password"
+                  class="uk-input"
+                  type="password"
+                  placeholder="Password"
+                  ref="password" />
                 <p v-if="errors.first('password')" class="uk-margin-small uk-text-danger">{{ errors.first('password') }}</p>
               </div>
               <div class="uk-margin">
                 <label class="uk-form-label">Konfirmasi Kata Sandi</label>
-                <input v-model="input.passwordConfirmation" v-validate="rules.passwordConfirmation" class="uk-input" name="password_confirmation" type="password" placeholder="Password Confirmation"/>
+                <input
+                  v-model="input.passwordConfirmation"
+                  v-validate="rules.passwordConfirmation"
+                  name="password_confirmation"
+                  class="uk-input"
+                  type="password"
+                  placeholder="Password Confirmation"
+                  data-vv-as="password" />
+                <p v-if="errors.first('password_confirmation')" class="uk-margin-small uk-text-danger">{{ errors.first('password_confirmation') }}</p>
               </div>
               <div class="uk-margin">
                 <label class="uk-form-label">Nomor Handphone</label>
-                <input v-model="input.phone" v-validate="rules.phone" name="phone" class="uk-input" type="text" placeholder="Mobile"/>
+                <input
+                  v-model="input.phone"
+                  v-validate="rules.phone"
+                  name="phone"
+                  class="uk-input"
+                  type="text"
+                  placeholder="Mobile" />
                 <p v-if="errors.first('phone')" class="uk-margin-small uk-text-danger">{{ errors.first('phone') }}</p>
               </div>
               <div class="uk-margin">
@@ -44,10 +77,12 @@
                       <tr class="uk-form-controls uk-form-controls-text">
                           <td>Pilihan</td>
                           <td>
-                            <input v-model="input.level" class="uk-radio" type="radio" value="2">
+                            <input
+                              v-model="input.level" class="uk-radio" type="radio" value="2">
                           </td>
                           <td>
-                            <input v-model="input.level" class="uk-radio" type="radio" value="3">
+                            <input
+                              v-model="input.level" class="uk-radio" type="radio" value="3">
                           </td>
                       </tr>
                   </thead>
@@ -68,10 +103,21 @@
                 </el-alert>
               </div>
               <div class="uk-margin">
-                <button class="uk-button uk-button-primary uk-width-1-1" type="button" @click="register">Daftar</button>
+                <button
+                  class="uk-button uk-button-primary uk-width-1-1"
+                  type="button"
+                  @click="register">
+                  <span v-if="!application.loading">Daftar</span>
+                  <font-awesome-icon v-else icon="spinner" spin></font-awesome-icon>
+                </button>
               </div>
               <div class="uk-margin">
-                <router-link class="uk-button uk-button-default uk-width-1-1" tag="button" :to="{ name: 'login' }">Masuk</router-link>
+                <button
+                  class="uk-button uk-button-default uk-width-1-1"
+                  :disabled="application.loading"
+                  @click="$router.push({ name: 'login'})">
+                  Masuk
+                </button>
               </div>
             </div>
           </div>
@@ -183,59 +229,49 @@ export default {
     }
   },
   methods: {
-    register () {
+    async register () {
+      if (this.application.loading) return
+
+      if (!(await this.$validator.validate())) return
+
+      this.__startLoading(false)
+
       this.error = false
-      this.success = false
-      this.validationErrors = {}
+      this.errorMessage = ''
+      this.validatorErrors = {}
 
       this.$validator.errors.clear()
 
-      this.$http.post('/register', this.input)
-        .then(async res => {
-          this.input = this.$options.data().input
+      try {
+        let res = await this.$service.register(this.input)
 
-          if (res.data.success) {
-            this.success = true
-            this.successMessage = res.data.message
+        this.input = this.$options.data().input
 
-            this.$alert(res.data.message, 'Info', {
-              type: 'info',
-              showClose: false
-            })
+        if (res.data.success) {
+          this.success = true
+          this.successMessage = res.data.message
 
-            return
-          }
-
+          this.$alert(res.data.message, 'Info', {
+            type: 'info',
+            showClose: false
+          })
+        } else {
           this.$auth.setAuth(res.data)
-
+  
           let user = await this.$auth.getUser()
-
+  
           this.$root.user = user
 
           this.$router.push({
             name: Level.ROUTE_LEVEL[user.level],
             force: true
           })
-        })
-        .catch(err => {
-          if (err.response) {
-            this.error = true
-            this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
+        }
+      } catch (err) {
+        this.__handleError(this, err)
+      }
 
-            this.$validator.errors.clear()
-
-            if (err.response.data.errorValidation) {
-              this.validationErrors = err.response.data.errors
-
-              Object.keys(this.validationErrors).forEach(key => {
-                this.$validator.errors.add({
-                  field: key,
-                  msg: this.validationErrors[key][0]
-                })
-              })
-            }
-          }
-        })
+      this.__stopLoading()
     }
   }
 }

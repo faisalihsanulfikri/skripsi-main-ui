@@ -140,7 +140,7 @@ export default {
 
         this.input = this.$options.data().input
 
-        this.$emit('done')
+        this.$emit('done', res)
       }).catch(err => {
         if (err.response) {
           this.error = true

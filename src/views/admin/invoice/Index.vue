@@ -75,8 +75,20 @@
                             <td class="uk-text-right">{{ payment.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
                             <td class="uk-text-center">{{ payment.status }}</td>
                             <td class="uk-text-center">
-                              <el-button type="primary" size="mini" @click="confirmPayment(payment.id)">Confirm</el-button>
-                              <el-button type="danger" size="mini" @click="rejectPayment(payment.id)">Reject</el-button>
+                              <el-button
+                                v-if="payment.status === 'new' || payment.status === 'reject'"
+                                type="primary"
+                                size="mini"
+                                @click="confirmPayment(payment.id)">
+                                Confirm
+                              </el-button>
+                              <el-button
+                                v-if="payment.status === 'new' || payment.status === 'confirmed'"
+                                type="danger"
+                                size="mini"
+                                @click="rejectPayment(payment.id)">
+                                Reject
+                              </el-button>
                             </td>
                           </tr>
                         </tbody>
@@ -96,8 +108,6 @@
 </template>
 
 <script>
-import { Printd } from 'printd'
-
 export default {
   data () {
     return {
@@ -109,27 +119,7 @@ export default {
     await this.fetchInvoices()
   },
 
-  mounted () {
-    this.d = new Printd()
-    // Print dialog events (v0.0.9+)
-    const { contentWindow } = this.d.getIFrame()
-    contentWindow.addEventListener('beforeprint', () => console.log('before print event!'))
-    contentWindow.addEventListener('afterprint', () => console.log('after print event!'))
-  },
   methods: {
-    async fetchInvoices () {
-      this.__startLoading()
-
-      await this.$authHttp.get('/invoices').then(res => {
-        this.invoices = res.data.data.map(invoice => {
-          invoice['collapse'] = true
-
-          return invoice
-        })
-      })
-
-      this.__stopLoading()
-    },
     collapseToggle (index) {
       this.invoices[index].collapse = !this.invoices[index].collapse
     },
@@ -147,35 +137,49 @@ export default {
         this.updatePaymentStatus(paymentId, 'reject')
       }).catch(() => {})
     },
+    async fetchInvoices () {
+      this.__startLoading()
+
+      try {
+        let res = await this.$service.getInvoices()
+
+        this.invoices = res.data.data.map(invoice => {
+          invoice['collapse'] = true
+
+          return invoice
+        })
+      } catch (err) {
+        this.__handleError(this, err, true)
+      }
+
+      this.__stopLoading()
+    },
     async updatePaymentStatus (paymentId, status) {
       this.__startLoading()
 
-      await this.$authHttp.put(`/payments/${paymentId}/status`, {
-        status: status
-      }).then(res => {
+      try {
+        let res = await this.$service.updatePaymentStatus(paymentId, {
+          status: status
+        })
+
         this.$notify({
           title: 'SUCCESS',
           message: res.data.message,
           type: 'success'
         })
 
-        this.fetchInvoices()
-      }).catch(err => {
-        if (err.response) {
-          let message = err.response.data.message ? err.response.data.message : err.response.statusText
+        this.invoices = this.invoices.map(invoice => {
+          if (invoice.id === res.data.data.id) {
+            return res.data.data
+          }
 
-          this.$notify({
-            title: 'ERROR',
-            message: message,
-            type: 'error'
-          })
-        }
-      })
+          return invoice
+        })
+      } catch (err) {
+        this.__handleError(this, err, true)
+      }
 
       this.__stopLoading()
-    },
-    print () {
-      this.d.print(document.getElementById('testPrint', this.cssText))
     }
   }
 }

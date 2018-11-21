@@ -130,6 +130,10 @@
 
                     <div class="uk-grid-small" uk-grid>
                       <div class="uk-width-2-5">
+                        <h5 class="uk-margin-remove">
+                          <font-awesome-icon icon="globe-asia"></font-awesome-icon>
+                          <span class="uk-margin-small-left">{{ order.detail.warehouse.name }}</span>
+                        </h5>
                         <h5 class="uk-margin-small">
                           <font-awesome-icon icon="shipping-fast"></font-awesome-icon>
                           <span class="uk-text-primary uk-margin-small-left">{{ order.awb }}</span>
@@ -148,9 +152,10 @@
                           <div class="app--list-text">{{ order.receiver.phone }}</div>
                         </div>
                         <h5 class="uk-margin-remove">
-                          <font-awesome-icon icon="globe-asia"></font-awesome-icon>
-                          <span class="uk-margin-small-left">{{ order.detail.warehouse.name }}</span>
+                          <font-awesome-icon icon="pen-alt"></font-awesome-icon>
+                          <span class="uk-margin-small-left">Catatan</span>
                         </h5>
+                        <p class="uk-margin-small">{{ order.note }}</p>
                       </div>
                       <div class="uk-width-3-5">
                         <h5 class="uk-margin-remove">
@@ -180,11 +185,12 @@
         </div>
       </div>
     </div>
+
     <dialog-payment-confirmation
-    :visible="dialogPayment.visible"
-    :data="dialogPayment.data"
-    @close="closePaymentDialog"
-    @confirm="confirmPaymentDialog">
+      :visible="dialogPayment.visible"
+      :data="dialogPayment.data"
+      @close="closePaymentDialog"
+      @confirm="confirmPaymentDialog">
     </dialog-payment-confirmation>
   </div>
 </template>

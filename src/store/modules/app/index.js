@@ -4,15 +4,17 @@ const namespaced = true
 
 const state = {
   initialize: false,
-  loading: false
+  loading: false,
+  loadingFullScreen: true
 }
 
 const mutations = {
   [type.INITIALIZED] (state) {
     state.initialize = true
   },
-  [type.CHANGE_LOADING] (state, status) {
-    state.loading = status
+  [type.CHANGE_LOADING] (state, payload) {
+    state.loading = payload.status
+    state.loadingFullScreen = payload.fullScreen
   },
   [type.SET_ERROR] (state, error) {
     if (error === null) {
@@ -30,11 +32,17 @@ const mutations = {
 }
 
 const actions = {
-  startLoading ({ commit }) {
-    commit(type.CHANGE_LOADING, true)
+  startLoading ({ commit }, fullScreen) {
+    commit(type.CHANGE_LOADING, {
+      status: true,
+      fullScreen: fullScreen
+    })
   },
   stopLoading ({ commit }) {
-    commit(type.CHANGE_LOADING, false)
+    commit(type.CHANGE_LOADING, {
+      status: false,
+      fullScreen: false
+    })
   },
   setError ({ commit }, error = null) {
     commit(type.SET_ERROR, error)

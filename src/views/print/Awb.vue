@@ -6,7 +6,7 @@
       </div>
       <div class="uk-width-expand uk-flex uk-flex-center uk-flex-middle">
         <div class="uk-text-center">
-          <img v-if="order.awb" :src="`${$web.defaults.baseURL}/barcode/${order.awb}`" />
+          <img v-if="order.awb" :src="`${$web.defaults.baseURL}/barcode/${order.awb}`" @load="print" />
           <h5 class="uk-margin-small-top">{{ order.awb }}</h5>
         </div>
       </div>
@@ -48,7 +48,8 @@
       <div v-for="item in order.items" :key="`${item.id}_item`" class="uk-margin-small">
         <div class="uk-grid-small" uk-grid>
           <div class="uk-width-2-3">
-            <div>{{ item.category.name }} # {{ item.name }} # {{ item.reference }}</div>
+            <div>{{ item.name }} # {{ item.category.name }}</div>
+            <div>{{ item.reference }}</div>
             <div>{{ item.stringPrice }} IDR</div>
           </div>
           <div class="uk-width-1-3">
@@ -76,6 +77,10 @@ export default {
   },
 
   methods: {
+    print () {
+      window.print()
+      window.close()
+    },
     async getOrder () {
       try {
         let res = await this.$authHttp.get(`/orders/${this.$route.params.code}`)
@@ -91,11 +96,6 @@ export default {
           item['stringWidth'] = this.$options.filters.currency(item.width, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
           item['stringHeight'] = this.$options.filters.currency(item.height, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
         })
-
-        setTimeout(() => {
-          window.print()
-          window.close()
-        }, 500)
       } catch (err) {
         if (err.response) {
           let msg = err.response.data.message ? err.response.data.message : err.response.statusText

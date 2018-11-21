@@ -45,14 +45,21 @@
                 </el-alert>
               </div>
               <div class="uk-margin">
-                <button class="uk-button uk-button-primary uk-width-1-1" type="button" @click="login">
-                  Masuk
+                <button
+                  class="uk-button uk-button-primary uk-width-1-1"
+                  type="button"
+                  @click="login">
+                  <span v-if="!application.loading">Masuk</span>
+                  <font-awesome-icon v-else icon="spinner" spin></font-awesome-icon>
                 </button>
               </div>
               <div class="uk-margin">
-                <router-link class="uk-button uk-button-default uk-width-1-1" tag="button" :to="{ name: 'register' }">
+                <button
+                  class="uk-button uk-button-default uk-width-1-1"
+                  :disabled="application.loading"
+                  @click="$router.push({ name: 'register'})">
                   Daftar
-                </router-link>
+                </button>
               </div>
             </div>
           </div>
@@ -83,46 +90,38 @@ export default {
     }
   },
   methods: {
-    login () {
+    async login () {
+      if (this.application.loading) return
+
+      if (!(await this.$validator.validate())) return
+
+      this.__startLoading(false)
+
       this.error = false
       this.errorMessage = ''
       this.validatorErrors = {}
 
       this.$validator.errors.clear()
 
-      this.$http.post('/login', this.input)
-        .then(async res => {
-          this.input = this.$options.data().input
+      try {
+        let res = await this.$service.login(this.input)
 
-          this.$auth.setAuth(res.data)
+        this.input = this.$options.data().input
 
-          let user = await this.$auth.getUser()
+        this.$auth.setAuth(res.data)
 
-          this.$root.user = user
+        let user = await this.$auth.getUser()
 
-          this.$router.push({
-            name: Level.ROUTE_LEVEL[user.level]
-          })
+        this.$root.user = user
+
+        this.$router.push({
+          name: Level.ROUTE_LEVEL[user.level]
         })
-        .catch(err => {
-          if (err.response) {
-            this.error = true
-            this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
+      } catch (err) {
+        this.__handleError(this, err)
+      }
 
-            this.$validator.errors.clear()
-
-            if (err.response.data.errorValidation) {
-              this.validationErrors = err.response.data.errors
-
-              Object.keys(this.validationErrors).forEach(key => {
-                this.$validator.errors.add({
-                  field: key,
-                  msg: this.validationErrors[key][0]
-                })
-              })
-            }
-          }
-        })
+      this.__stopLoading()
     }
   }
 }

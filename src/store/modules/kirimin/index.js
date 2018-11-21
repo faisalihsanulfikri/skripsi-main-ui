@@ -5,25 +5,36 @@ import * as TYPES from './types'
 const namespaced = true
 
 const state = {
-  formula: {}
+  formula: {},
+  status: {}
 }
 
 const mutations = {
-  [TYPES.SET_FORMULA] (state, data) {
-    state.formula = data
+  [TYPES.SET_STATUS] (state, status) {
+    state.status = status
+  },
+  [TYPES.SET_FORMULA] (state, formula) {
+    state.formula = formula
   }
 }
 
 const actions = {
-  async getFormula ({ state, commit }) {
-    let keys = Object.keys(state.formula)
+  initialize ({ dispatch }) {
+    dispatch('getFormula')
+    dispatch('getStaticConfig')
+  },
+  async getStaticConfig ({ commit }) {
+    let res = await Vue.http().get('/static-configs')
 
-    if (keys.length < 1) {
-      let res = await Vue.http().get('/configs/formula')
+    if (res.data) {
+      commit(TYPES.SET_STATUS, res.data)
+    }
+  },
+  async getFormula ({ commit }) {
+    let res = await Vue.http().get('/configs/formula')
 
-      if (res.data) {
-        commit(TYPES.SET_FORMULA, res.data.value)
-      }
+    if (res.data) {
+      commit(TYPES.SET_FORMULA, res.data.value)
     }
   }
 }

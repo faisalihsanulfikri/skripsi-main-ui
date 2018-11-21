@@ -45,16 +45,18 @@ export default {
     this.user = await this.$auth.getUser()
   },
   methods: {
-    fetchWarehouses () {
+    async fetchWarehouses () {
       this.__startLoading()
 
-      this.__fetchWarehouses().then(res => {
-        this.warehouses = res.data
+      try {
+        let res = await this.$service.getAllWarehouses()
 
-        this.__stopLoading()
-      }).catch(() => {
-        this.__stopLoading()
-      })
+        this.warehouses = res.data
+      } catch(err) {
+        this.__handleError(this, err, true)
+      }
+
+      this.__stopLoading()
     }
   }
 }

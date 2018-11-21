@@ -1,7 +1,7 @@
 <template>
   <div>
     <router-view></router-view>
-    <loading-full-screen v-if="$store.state.app.loading"></loading-full-screen>
+    <loading-full-screen v-if="application.loading && application.loadingFullScreen"></loading-full-screen>
   </div>
 </template>
 
@@ -14,7 +14,7 @@ export default {
   },
 
   created () {
-    this.$store.dispatch('kirimin/getFormula')
+    this.$store.dispatch('kirimin/initialize')
   }
 }
 </script>

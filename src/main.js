@@ -9,6 +9,7 @@ import './mixins'
 
 import './lib/http'
 import './lib/auth'
+import './lib/service'
 
 import './plugins/fontawesome'
 import './plugins/uikit'

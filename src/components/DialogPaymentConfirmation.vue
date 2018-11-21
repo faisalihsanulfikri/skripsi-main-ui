@@ -8,12 +8,12 @@
       <div class="uk-margin">
         <label class="uk-form-label">Kode Order</label>
         <input
-        v-model="input.code"
-        v-validate="rules.code"
-        name="code"
-        class="uk-input"
-        :class="{ 'uk-form-danger': errors.has('code') }"
-        readonly>
+          v-model="input.code"
+          v-validate="rules.code"
+          name="code"
+          class="uk-input"
+          :class="{ 'uk-form-danger': errors.has('code') }"
+          readonly>
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Tanggal</label>
@@ -32,10 +32,10 @@
       <div class="uk-margin">
         <label class="uk-form-label">Dari Bank</label>
         <input
-        v-model="input.bank"
-        v-validate="rules.bank"
-        name="bank"
-        class="uk-input" />
+          v-model="input.bank"
+          v-validate="rules.bank"
+          name="bank"
+          class="uk-input" />
         <p v-if="errors.first('bank')" class="uk-margin-small uk-text-danger">
           {{ errors.first('bank') }}
         </p>
@@ -155,6 +155,8 @@ export default {
       }
     },
     async confirm () {
+      if (this.application.loading) return
+
       this.__startLoading()
 
       this.error = false

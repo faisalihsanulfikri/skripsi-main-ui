@@ -17,6 +17,14 @@
       </div>
     </div>
     <div class="uk-card-body uk-card-small">
+      <div class="uk-margin uk-grid-small" uk-grid>
+        <div class="uk-width-1-3 uk-margin-auto-left">
+          <el-input placeholder="Search...">
+            <el-button slot="append" icon="el-icon-search">
+            </el-button>
+          </el-input>
+        </div>
+      </div>
       <div class="uk-overflow-auto">
         <table class="uk-table uk-table-divider uk-table-small">
           <thead>
@@ -50,6 +58,10 @@
                   <div class="uk-grid-small" uk-grid>
                     <div class="uk-width-2-5">
                       <h5 class="uk-margin-small">
+                        <font-awesome-icon icon="globe-asia"></font-awesome-icon>
+                        <span class="uk-margin-small-left">{{ order.detail.warehouse.name }}</span>
+                      </h5>
+                      <h5 class="uk-margin-small">
                         <font-awesome-icon icon="shipping-fast"></font-awesome-icon>
                         <span class="uk-text-primary uk-margin-small-left">{{ order.awb }}</span>
                       </h5>
@@ -66,10 +78,6 @@
                         <div class="app--list-text">{{ order.receiver.province }}</div>
                         <div class="app--list-text">{{ order.receiver.phone }}</div>
                       </div>
-                      <h5 class="uk-margin-remove">
-                        <font-awesome-icon icon="globe-asia"></font-awesome-icon>
-                        <span class="uk-margin-small-left">{{ order.detail.warehouse.name }}</span>
-                      </h5>
                     </div>
                     <div class="uk-width-3-5">
                       <h5 class="uk-margin-remove">
@@ -97,9 +105,10 @@
                               </td>
                               <td>
                                 <div>
-                                  <span class="uk-text-primary">{{ item.name }} # {{ item.reference }}</span>
+                                  <span class="uk-text-primary">{{ item.name }} # {{ item.category.name }}</span>
                                 </div>
                                 <div>{{ item.url }}</div>
+                                <div>{{ item.reference }}</div>
                                 <div>{{ `${item.stringWeight} ${order.detail.formula.weight_unit} - ${item.stringLength} x ${item.stringWidth} x ${item.stringLength} ${order.detail.formula.volume_unit}` }}</div>
                                 <div>
                                   {{ item.stringQuantity }} item's x IDR {{ item.stringPrice }}
@@ -107,8 +116,20 @@
                               </td>
                               <td class="uk-text-center" width="100">{{ item.status }}</td>
                               <td class="uk-text-center" width="200">
-                                <el-button type="success" size="mini" @click="receivedItem(order.code, item.id)">Received</el-button>
-                                <el-button type="danger" size="mini" @click="rejectItem(order.code, item.id)">Reject</el-button>
+                                <el-button
+                                  v-if="item.showReceivedButton"
+                                  type="success"
+                                  size="mini"
+                                  @click="receivedItem(order.code, item.id)">
+                                  Received
+                                </el-button>
+                                <el-button
+                                  v-if="item.showRejectButton"
+                                  type="danger"
+                                  size="mini"
+                                  @click="rejectItem(order.code, item.id)">
+                                  Reject
+                                </el-button>
                               </td>
                             </tr>
                           </template>
@@ -117,10 +138,10 @@
                     </div>
                     <hr>
                     <div class="uk-grid-small" uk-grid>
-                      <div class="uk-width-auto">
+                      <div v-if="!order.awb" class="uk-width-auto">
                         <el-button @click="openCreateAwbDialog(order.id)">CREATE AWB | {{ countSelectedItems(order.id) }} item's</el-button>
                       </div>
-                      <div class="uk-width-auto">
+                      <div v-else class="uk-width-auto">
                         <el-button @click="printAwb(order.code)">PRINT AWB | {{ countSelectedItems(order.id) }} item's</el-button>
                       </div>
                     </div>
@@ -132,6 +153,7 @@
         </table>
       </div>
     </div>
+
     <dialog-create-awb
       :visible="dialogCreateAwb.visible"
       :order="dialogCreateAwb.data"
@@ -157,17 +179,12 @@ export default {
         visible: false,
         data: {}
       },
-      orders: {},
-      printWindow: null
+      orders: {}
     }
   },
 
-  async created () {
-    this.__startLoading()
-
-    await this.fetchOrders()
-
-    this.__stopLoading()
+  created () {
+    this.fetchOrders()
   },
 
   methods: {
@@ -179,14 +196,21 @@ export default {
       this.dialogCreateAwb.data = {}
       this.dialogCreateAwb.visible = false
     },
-    async onAwbCreated () {
+    async onAwbCreated (res) {
       this.closeCreateAwbDialog()
 
-      this.__startLoading()
+      this.orders = this.orders.map(order => {
+        if (order.id === res.data.data.id) {
+          let $order = res.data.data
 
-      await this.fetchOrders()
+          $order['collapse'] = false
+          $order.items = this.mappedItems($order)
 
-      this.__stopLoading()
+          return $order
+        }
+
+        return order
+      })
     },
     collapseToggle (index) {
       this.orders[index].collapse = !this.orders[index].collapse
@@ -196,82 +220,103 @@ export default {
 
       return order.items.filter(item => item.selected).length
     },
-    async fetchOrders () {
-      await this.$authHttp.get('/orders').then(res => {
-        this.orders = res.data.data.map(order => {
-          order['collapse'] = true
-
-          order.items.map(item => {
-            item['selected'] = true
-            item['stringPrice'] = this.$options.filters.currency(item.price, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
-            item['stringQuantity'] = this.$options.filters.currency(item.quantity, '', 0, { thousandsSeparator: '.', decimalSeparator: ',' })
-            item['stringWeight'] = this.$options.filters.currency(item.weight, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
-            item['stringLength'] = this.$options.filters.currency(item.length, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
-            item['stringWidth'] = this.$options.filters.currency(item.width, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
-            item['stringHeight'] = this.$options.filters.currency(item.height, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
-          })
-
-          return order
-        })
-      }).catch(err => {
-        if (err.response) {
-          let message = err.response.data.message ? err.response.data.message : err.response.statusText
-
-          this.$notify({
-            title: 'ERROR',
-            message: message,
-            type: 'error'
-          })
-        }
-      })
-    },
-    async updateItemStatus (orderCode, itemId, status) {
-      this.__startLoading()
-
-      await this.$authHttp.put(`/orders/${orderCode}/items/${itemId}/status`, {
-        status: status
-      }).then(async res => {
-        this.$notify({
-          title: 'SUCCESS',
-          message: res.data.message,
-          type: 'success'
-        })
-
-        await this.fetchOrders()
-      }).catch(err => {
-        if (err.response) {
-          let message = err.response.data.message ? err.response.data.message : err.response.statusText
-
-          this.$notify({
-            title: 'ERROR',
-            message: message,
-            type: 'error'
-          })
-        }
-      })
-
-      this.__stopLoading()
-    },
     receivedItem (orderCode, itemId) {
       this.$confirm('Are you sure to confirm this item?', 'Confirm', {
         type: 'warning'
       }).then(() => {
-        this.updateItemStatus(orderCode, itemId, 'received')
+        this.updateItemStatus(orderCode, itemId, this.$store.state.kirimin.status.item_status.RECEIVED)
       }).catch(() => {})
     },
     rejectItem (orderCode, itemId) {
       this.$confirm('Are you sure to reject this payment?', 'Confirm', {
         type: 'warning'
       }).then(() => {
-        this.updateItemStatus(orderCode, itemId, 'reject')
+        this.updateItemStatus(orderCode, itemId, this.$store.state.kirimin.status.item_status.REJECTED)
       }).catch(() => {})
     },
     printAwb (code) {
-      this.printWindow = window.open(
+      window.open(
         `#/print-awb/${code}`,
         'Kirimin - Print AWB',
         'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=800'
       )
+    },
+    mappedItems (order) {
+      let items = order.items.map(item => {
+        item['selected'] = true
+        item['stringPrice'] = this.$options.filters.currency(item.price, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
+        item['stringQuantity'] = this.$options.filters.currency(item.quantity, '', 0, { thousandsSeparator: '.', decimalSeparator: ',' })
+        item['stringWeight'] = this.$options.filters.currency(item.weight, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
+        item['stringLength'] = this.$options.filters.currency(item.length, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
+        item['stringWidth'] = this.$options.filters.currency(item.width, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
+        item['stringHeight'] = this.$options.filters.currency(item.height, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
+
+        let { order_status, item_status } = this.$store.state.kirimin.status
+
+        let isNewOrder = order.status === order_status.NEW
+        let isCancelOrder = order.status === order_status.CANCEL
+
+        let isWaiting = item.status === item_status.WAITING
+        let isReceived = item.status === item_status.RECEIVED
+        let isRejected = item.status === item_status.REJECTED
+
+        item['showReceivedButton'] = (!isNewOrder && !isCancelOrder) && (isWaiting || isRejected)
+        item['showRejectButton'] = (!isNewOrder && !isCancelOrder) && (isWaiting || isReceived)
+
+        return item
+      })
+
+      return items
+    },
+    async fetchOrders () {
+      this.__startLoading()
+
+      try {
+        let res = await this.$service.getOrders()
+
+        this.orders = res.data.data.map(order => {
+          order['collapse'] = true
+          order.items = this.mappedItems(order)
+
+          return order
+        })
+      } catch (err) {
+        this.__handleError(this, err, true)
+      }
+
+      this.__stopLoading()
+    },
+    async updateItemStatus (orderCode, itemId, status) {
+      this.__startLoading()
+
+      try {
+        let res = await this.$service.updateItemStatus(orderCode, itemId, {
+          status: status
+        })
+
+        this.$notify({
+          title: 'SUCCESS',
+          message: res.data.message,
+          type: 'success'
+        })
+
+        this.orders = this.orders.map(order => {
+          if (order.id === res.data.data.id) {
+            let $order = res.data.data
+
+            $order['collapse'] = false
+            $order.items = this.mappedItems($order)
+
+            return $order
+          }
+
+          return order
+        })
+      } catch (err) {
+        this.__handleError(this, err, true)
+      }
+
+      this.__stopLoading()
     }
   }
 }

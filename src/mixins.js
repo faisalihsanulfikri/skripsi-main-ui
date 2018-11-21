@@ -1,15 +1,51 @@
 import Vue from 'vue'
 
-import router from './router'
-import store from './store'
+import $router from './router'
+import $store from './store'
 
 Vue.mixin({
+  computed: {
+    application () {
+      return {
+        loading: $store.state.app.loading,
+        loadingFullScreen: $store.state.app.loadingFullScreen
+      }
+    }
+  },
+
   methods: {
-    __startLoading () {
-      store.dispatch('app/startLoading')
+    __startLoading (fullScreen = true) {
+      $store.dispatch('app/startLoading', fullScreen)
     },
     __stopLoading () {
-      store.dispatch('app/stopLoading')
+      $store.dispatch('app/stopLoading')
+    },
+    __handleError (context, err, notify = false) {
+      if (err.response) {
+        context.error = true
+        context.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
+
+        if (notify) {
+          context.$notify({
+            title: 'ERROR',
+            message: context.errorMessage,
+            type: 'error'
+          })
+        }
+
+        if (err.response.data.errorValidation) {
+          context.$validator.errors.clear()
+
+          context.validationErrors = err.response.data.errors
+
+          Object.keys(context.validationErrors).forEach(key => {
+            context.$validator.errors.add({
+              field: key,
+              msg: context.validationErrors[key][0]
+            })
+          })
+        }
+      }
     },
     __focusElement (elementId) {
       document.getElementById(elementId).scrollIntoView({
@@ -19,7 +55,7 @@ Vue.mixin({
     __logout () {
       Vue.auth.destroy()
 
-      router.push({
+      $router.push({
         path: '/',
         force: true
       })

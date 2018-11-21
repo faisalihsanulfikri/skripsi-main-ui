@@ -38,7 +38,7 @@
                   </select>
                 </div>
                 <div class="uk-width-auto">
-                  <button class="uk-button uk-button-default" @click="openNewAddressDialog">Baru</button>
+                  <button class="uk-button uk-button-default" @click="openNewAddressDialog">Tambah Alamat</button>
                 </div>
               </div>
             </div>
@@ -67,6 +67,10 @@
                   <span class="uk-margin-small-left">Tidak</span>
                 </label>
               </div>
+            </div>
+            <div class="uk-margin-small">
+              <label class="uk-form-label">Catatan</label>
+              <textarea v-model="input.note" class="uk-textarea" rows="5"></textarea>
             </div>
           </div>
         </div>
@@ -111,7 +115,12 @@
                 rows="5"></textarea>
             </div>
             <div class="uk-margin-small">
-              <label class="uk-form-label">Harga Barang (IDR)</label>
+              <label class="uk-form-label">
+                <span class="uk-margin-small-right">Harga Barang (IDR)</span>
+                <el-tooltip class="item" effect="dark" content="Total harga barang dalam paket." placement="top">
+                  <font-awesome-icon icon="info-circle"></font-awesome-icon>
+                </el-tooltip>
+              </label>
               <input
                 v-model="input.item.price"
                 v-validate="rules.item.price"
@@ -129,7 +138,12 @@
                 :class="{ 'uk-form-danger': errors.has('quantity') }" />
             </div>
             <div class="uk-margin-small">
-              <label class="uk-form-label">Berat ({{ config.weightUnits }})</label>
+              <label class="uk-form-label">
+                <span class="uk-margin-small-right">Berat ({{ config.weightUnits }})</span>
+                <el-tooltip class="item" effect="dark" content="Berat paket." placement="top">
+                  <font-awesome-icon icon="info-circle"></font-awesome-icon>
+                </el-tooltip>
+              </label>
               <input
                 v-model="input.item.weight"
                 v-validate="rules.item.weight"
@@ -138,7 +152,12 @@
                 :class="{ 'uk-form-danger': errors.has('weight') }" />
             </div>
             <div class="uk-margin-small">
-              <label class="uk-form-label">Dimensi ({{ config.volumeUnits }})</label>
+              <label class="uk-form-label">
+                <span class="uk-margin-small-right">Dimensi ({{ config.volumeUnits }})</span>
+                <el-tooltip class="item" effect="dark" content="Volume paket." placement="top">
+                  <font-awesome-icon icon="info-circle"></font-awesome-icon>
+                </el-tooltip>
+              </label>
               <div class="uk-grid-small" uk-grid>
                 <div class="uk-width-1-3">
                   <input
@@ -246,7 +265,7 @@
       :visible.sync="dialogNewAddress.visible"
       @close="closeNewAddressDialog"
       @saved="onAddressSaved">
-  </dialog-input-address>
+    </dialog-input-address>
 
     <dialog-order-confirmation
       :visible="dialogOrderConfimation.visible"
@@ -289,6 +308,7 @@ export default {
         npwp: 0,
         insurance: 0,
         consolidate: 0,
+        note: '',
         items: [],
         address: '',
         item: {
@@ -504,6 +524,8 @@ export default {
       this.check()
     },
     async check () {
+      if (this.application.loading) return
+
       this.__startLoading()
 
       await this.$authHttp.post('/calculator', this.input).then(res => {
@@ -539,6 +561,8 @@ export default {
       this.__stopLoading()
     },
     async order () {
+      if (this.application.loading) return
+
       this.__startLoading()
 
       await this.$authHttp.post('/orders/kirimin', this.input).then(res => {
