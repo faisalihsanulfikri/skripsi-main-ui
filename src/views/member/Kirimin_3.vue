@@ -43,7 +43,12 @@
               </div>
             </div>
             <div class="uk-margin-small">
-              <label class="uk-form-label">Asuransi</label>
+              <label class="uk-form-label">
+                Asuransi
+                <el-tooltip class="item" effect="dark" content="Perlindungan pengiriman" placement="top">
+                  <font-awesome-icon icon="info-circle"></font-awesome-icon>
+                </el-tooltip>
+              </label>
               <div class="uk-child-width-auto" uk-grid>
                 <label>
                   <input v-model="input.insurance" type="radio" value="1" @change="onInsuranceChanged">
@@ -56,7 +61,12 @@
               </div>
             </div>
             <div class="uk-margin-small">
-              <label class="uk-form-label">Consolidate</label>
+              <label class="uk-form-label">
+                Consolidate
+                <el-tooltip class="item" effect="dark" content="Pengiriman lebih dari 1 paket" placement="top">
+                  <font-awesome-icon icon="info-circle"></font-awesome-icon>
+                </el-tooltip>
+              </label>
               <div class="uk-child-width-auto" uk-grid>
                 <label>
                   <input v-model="input.consolidate" type="radio" value="1" :disabled="$root.user.level != 3">
@@ -99,24 +109,83 @@
               </select>
             </div>
             <div class="uk-margin-small">
-              <label class="uk-form-label">Nama Barang</label>
-              <input
-                v-model="input.item.name"
-                v-validate="rules.item.name"
-                name="name"
-                class="uk-input"
-                :class="{ 'uk-form-danger': errors.has('name') }" />
-            </div>
-            <div class="uk-margin-small">
-              <label class="uk-form-label">Referensi (ex. Invoice#, SO#)</label>
-              <textarea
-                v-model="input.item.reference"
-                class="uk-textarea"
-                rows="5"></textarea>
+              <div class="uk-section uk-section-muted">
+                <div class="uk-margin-small">
+                  <div class="uk-grid-small" uk-grid>
+                    <div class="uk-width-1-3">
+                      <label class="uk-form-label">
+                        Nama Barang
+                        <el-tooltip class="item" effect="dark" content="Barang" placement="top">
+                          <font-awesome-icon icon="info-circle"></font-awesome-icon>
+                        </el-tooltip>
+                      </label>
+                      <input
+                        v-model="input.item.addName"
+                        v-validate="rules.item.addName"
+                        name="namabarang"
+                        class="uk-input"
+                        :class="{ 'uk-form-danger': errors.has('namabarang') }"
+                        placeholder="Nama Barang" />
+                    </div>
+                    <div class="uk-width-1-3">
+                      <label class="uk-form-label">
+                        Jumlah
+                        <el-tooltip class="item" effect="dark" content="Sertakan unit / satuan" placement="top">
+                          <font-awesome-icon icon="info-circle"></font-awesome-icon>
+                        </el-tooltip>
+                      </label>
+                      <input
+                        v-model="input.item.addQty"
+                        v-validate="rules.item.addQty"
+                        name="qtybarang"
+                        class="uk-input"
+                        :class="{ 'uk-form-danger': errors.has('qtybarang') }"
+                        placeholder="Jumlah" />
+                    </div>
+                    <div class="uk-width-1-3">
+                      <label class="uk-form-label">&nbsp;</label>
+                      <div class="uk-text-left">
+                        <button v-if="parseInt(input.consolidate) === 1" class="uk-button uk-button-default" @click="multiCheck">Tambah</button>
+                        <template v-else>
+                          <button class="uk-button uk-button-default" @click="addToList">Add To List</button>
+                        </template>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="uk-margin-small">
+                  <label class="uk-form-label">
+                    Isi Paket
+                    <el-tooltip class="item" effect="dark" content="Isi Paket" placement="top">
+                      <font-awesome-icon icon="info-circle"></font-awesome-icon>
+                    </el-tooltip>
+                  </label>
+                  <textarea
+                    rows="5"
+                    v-model="input.item.name"
+                    v-validate="rules.item.name"
+                    name="name"
+                    class="uk-textarea"
+                    :class="{ 'uk-form-danger': errors.has('name') }"
+                    />
+                </div>
+              </div>  
             </div>
             <div class="uk-margin-small">
               <label class="uk-form-label">
-                <span class="uk-margin-small-right">Harga Barang (IDR)</span>
+                Referensi (ex. Invoice#, SO#)
+                <el-tooltip class="item" effect="dark" content="Referensi" placement="top">
+                  <font-awesome-icon icon="info-circle"></font-awesome-icon>
+                </el-tooltip>
+              </label>
+              <textarea
+                v-model="input.item.reference"
+                class="uk-textarea"
+                rows="2"></textarea>
+            </div>
+            <div class="uk-margin-small">
+              <label class="uk-form-label">
+                <span class="uk-margin-small-right">Total Harga Barang dalam Paket (IDR)</span>
                 <el-tooltip class="item" effect="dark" content="Total harga barang dalam paket." placement="top">
                   <font-awesome-icon icon="info-circle"></font-awesome-icon>
                 </el-tooltip>
@@ -200,7 +269,6 @@
         </div>
       </div>
     </div>
-
     <div v-if="input.items.length > 0" id="card-consolidate" class="uk-card uk-card-default uk-card-small uk-margin">
       <div class="uk-card-header">
         <h3 class="uk-card-title">Daftar Barang</h3>
@@ -321,7 +389,9 @@ export default {
           weight: '',
           length: '',
           width: '',
-          height: ''
+          height: '',
+          addName: '',
+          addQty: ''
         }
       },
       rules: {
@@ -334,7 +404,9 @@ export default {
           weight: 'required|decimal:2',
           length: 'required|decimal:2',
           width: 'required|decimal:2',
-          height: 'required|decimal:2'
+          height: 'required|decimal:2',
+          addName: '',
+          addQty: ''
         }
       },
       master: {
@@ -596,6 +668,11 @@ export default {
       })
 
       this.__stopLoading()
+    },
+    addToList () {
+      this.input.name += this.input.addName + '(' + this.input.addQty + ')'
+      this.input.addName = ''
+      this.input.addQty = ''
     }
   }
 }
