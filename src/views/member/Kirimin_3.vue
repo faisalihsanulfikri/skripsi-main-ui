@@ -88,7 +88,7 @@
       <div class="uk-width-1-2">
         <div class="uk-card uk-card-default uk-card-small">
           <div class="uk-card-header">
-            <h3 class="uk-card-title">Barang</h3>
+            <h3 class="uk-card-title">Paket</h3>
           </div>
           <div class="uk-card-body">
             <div class="uk-margin-small">
@@ -108,69 +108,87 @@
                   </option>
               </select>
             </div>
+
+            <hr>
+
             <div class="uk-margin-small">
-              <div class="uk-section uk-section-muted">
-                <div class="uk-margin-small">
-                  <div class="uk-grid-small" uk-grid>
-                    <div class="uk-width-1-3">
-                      <label class="uk-form-label">
-                        Nama Barang
-                        <el-tooltip class="item" effect="dark" content="Barang" placement="top">
-                          <font-awesome-icon icon="info-circle"></font-awesome-icon>
-                        </el-tooltip>
-                      </label>
-                      <input
-                        v-model="input.item.addName"
-                        v-validate="rules.item.addName"
-                        name="namabarang"
-                        class="uk-input"
-                        :class="{ 'uk-form-danger': errors.has('namabarang') }"
-                        placeholder="Nama Barang" />
-                    </div>
-                    <div class="uk-width-1-3">
-                      <label class="uk-form-label">
-                        Jumlah
-                        <el-tooltip class="item" effect="dark" content="Sertakan unit / satuan" placement="top">
-                          <font-awesome-icon icon="info-circle"></font-awesome-icon>
-                        </el-tooltip>
-                      </label>
-                      <input
-                        v-model="input.item.addQty"
-                        v-validate="rules.item.addQty"
-                        name="qtybarang"
-                        class="uk-input"
-                        :class="{ 'uk-form-danger': errors.has('qtybarang') }"
-                        placeholder="Jumlah" />
-                    </div>
-                    <div class="uk-width-1-3">
-                      <label class="uk-form-label">&nbsp;</label>
-                      <div class="uk-text-left">
-                        <button v-if="parseInt(input.consolidate) === 1" class="uk-button uk-button-default" @click="multiCheck">Tambah</button>
-                        <template v-else>
-                          <button class="uk-button uk-button-default" @click="addToList">Add To List</button>
-                        </template>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="uk-margin-small">
+              <div class="uk-grid-small" uk-grid>
+                <div class="uk-width-expand">
                   <label class="uk-form-label">
-                    Isi Paket
-                    <el-tooltip class="item" effect="dark" content="Isi Paket" placement="top">
+                    Nama Barang
+                    <el-tooltip class="item" effect="dark" content="Barang" placement="top">
                       <font-awesome-icon icon="info-circle"></font-awesome-icon>
                     </el-tooltip>
                   </label>
-                  <textarea
-                    rows="5"
-                    v-model="input.item.name"
-                    v-validate="rules.item.name"
-                    name="name"
-                    class="uk-textarea"
-                    :class="{ 'uk-form-danger': errors.has('name') }"
-                    />
+                  <input
+                    v-model="input.item.goods.name"
+                    name="item.goods.name"
+                    class="uk-input"
+                    :class="{ 'uk-form-danger': errors.has('item.goods.name') }"
+                    placeholder="Nama Barang" />
                 </div>
-              </div>  
+                <div class="uk-width-expand">
+                  <label class="uk-form-label">
+                    Jumlah
+                    <el-tooltip class="item" effect="dark" content="Jumlah barang" placement="top">
+                      <font-awesome-icon icon="info-circle"></font-awesome-icon>
+                    </el-tooltip>
+                  </label>
+                  <input
+                    v-model="input.item.goods.quantity"
+                    name="item.goods.quantity"
+                    class="uk-input"
+                    :class="{ 'uk-form-danger': errors.has('item.goods.quantity') }"
+                    placeholder="Jumlah" />
+                </div>
+                <div class="uk-width-expand">
+                  <label class="uk-form-label">
+                    Satuan
+                    <el-tooltip class="item" effect="dark" content="Unit / satuan barang" placement="top">
+                      <font-awesome-icon icon="info-circle"></font-awesome-icon>
+                    </el-tooltip>
+                  </label>
+                  <input
+                    v-model="input.item.goods.unit"
+                    name="item.goods.unit"
+                    class="uk-input"
+                    :class="{ 'uk-form-danger': errors.has('item.goods.unit') }"
+                    placeholder="Satuan" />
+                </div>
+                <div class="uk-width-auto">
+                  <label class="uk-form-label">&nbsp;</label>
+                  <div>
+                    <button class="uk-button uk-button-default" @click="addGoods">
+                      <font-awesome-icon icon="plus"></font-awesome-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
+            <div class="uk-margin">
+              <label class="uk-form-label">
+                Isi Paket
+                <el-tooltip class="item" effect="dark" content="Isi Paket" placement="top">
+                  <font-awesome-icon icon="info-circle"></font-awesome-icon>
+                </el-tooltip>
+              </label>
+              <ul v-if="input.item.goodsList.length > 0" class="uk-list">
+                <li v-for="(goods, index) in input.item.goodsList" :key="index">
+                  <div class="uk-grid-small" uk-grid>
+                    <div class="uk-width-expand">
+                      {{ goods.name }} {{ goods.quantity }} {{ goods.unit }}
+                    </div>
+                    <div class="uk-width-auto">
+                      <a href="#" class="uk-text-danger" @click.prevent="removeGoods(index)">
+                        <font-awesome-icon icon="trash-alt"></font-awesome-icon>
+                      </a>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+              <div v-else class="uk-text-center">Tidak ada barang.</div>
+            </div>
+            <hr>
             <div class="uk-margin-small">
               <label class="uk-form-label">
                 Referensi (ex. Invoice#, SO#)
@@ -271,16 +289,16 @@
     </div>
     <div v-if="input.items.length > 0" id="card-consolidate" class="uk-card uk-card-default uk-card-small uk-margin">
       <div class="uk-card-header">
-        <h3 class="uk-card-title">Daftar Barang</h3>
+        <h3 class="uk-card-title">Daftar Paket</h3>
       </div>
       <div class="uk-card-body">
         <div class="uk-overflow-auto">
           <table class="uk-table uk-table-divider uk-table-small uk-text-small">
             <thead>
               <th>Jenis Barang</th>
-              <th>Nama Barang</th>
+              <th>Nama Paket</th>
               <th>Referensi</th>
-              <th class="uk-text-right">Jumlah Barang</th>
+              <th class="uk-text-right">Jumlah Paket</th>
               <th class="uk-text-right">Harga Barang (IDR)</th>
               <th class="uk-text-center">Berat ({{ config.weightUnits }})</th>
               <th class="uk-text-center">Dimensi ({{ config.volumeUnits }})</th>
@@ -382,7 +400,7 @@ export default {
         item: {
           category: '',
           categoryName: '',
-          name: '',
+          name: 'Paket',
           reference: '',
           price: '',
           quantity: 1,
@@ -390,8 +408,12 @@ export default {
           length: '',
           width: '',
           height: '',
-          addName: '',
-          addQty: ''
+          goods: {
+            name: '',
+            quantity: '',
+            unit: ''
+          },
+          goodsList: []
         }
       },
       rules: {
@@ -405,8 +427,11 @@ export default {
           length: 'required|decimal:2',
           width: 'required|decimal:2',
           height: 'required|decimal:2',
-          addName: '',
-          addQty: ''
+          goods: {
+            name: 'required',
+            quantity: 'required|numeric',
+            unit: 'required'
+          }
         }
       },
       master: {
@@ -566,6 +591,14 @@ export default {
 
       this.input.item.categoryName = category.name
     },
+    async addGoods () {
+      this.input.item.goodsList.push(Object.assign({}, this.input.item.goods))
+
+      this.input.item.goods = this.$options.data().input.item.goods
+    },
+    removeGoods (index) {
+      this.input.item.goodsList.splice(index, 1)
+    },
     removeItem (index) {
       this.input.items.splice(index, 1)
 
@@ -580,6 +613,16 @@ export default {
     async singleCheck () {
       if (!(await this.$validator.validate())) return
 
+      if (this.input.item.goodsList.length < 1) {
+        this.$notify({
+          title: 'ERROR',
+          message: 'Tidak ada barang.',
+          type: 'error'
+        })
+
+        return
+      }
+
       this.input.items = []
       this.input.items.push(this.input.item)
 
@@ -587,6 +630,16 @@ export default {
     },
     async multiCheck () {
       if (!(await this.$validator.validate())) return
+
+      if (this.input.item.goodsList.length < 1) {
+        this.$notify({
+          title: 'ERROR',
+          message: 'Tidak ada barang.',
+          type: 'error'
+        })
+
+        return
+      }
 
       this.input.items.push(Object.assign({}, this.input.item))
       this.input.item = this.$options.data().input.item
@@ -605,29 +658,7 @@ export default {
 
         this.__focusElement('card-cost')
       }).catch(err => {
-        if (err.response) {
-          this.error = true
-          this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
-
-          this.$notify({
-            title: 'ERROR',
-            message: this.errorMessage,
-            type: 'error'
-          })
-
-          this.$validator.errors.clear()
-
-          if (err.response.data.errorValidation) {
-            this.validationErrors = err.response.data.errors
-
-            Object.keys(this.validationErrors).forEach(key => {
-              this.$validator.errors.add({
-                field: key,
-                msg: this.validationErrors[key][0]
-              })
-            })
-          }
-        }
+        this.__handleError(this, err, true)
       })
 
       this.__stopLoading()
@@ -648,31 +679,10 @@ export default {
 
         this.$router.push({ name: 'member-order' })
       }).catch(err => {
-        if (err.response) {
-          this.error = true
-          this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
-
-          this.$validator.errors.clear()
-
-          if (err.response.data.errorValidation) {
-            this.validationErrors = err.response.data.errors
-
-            Object.keys(this.validationErrors).forEach(key => {
-              this.$validator.errors.add({
-                field: key,
-                msg: this.validationErrors[key][0]
-              })
-            })
-          }
-        }
+        this.__handleError(this, err, true)
       })
 
       this.__stopLoading()
-    },
-    addToList () {
-      this.input.name += this.input.addName + '(' + this.input.addQty + ')'
-      this.input.addName = ''
-      this.input.addQty = ''
     }
   }
 }

@@ -137,8 +137,7 @@ export default {
             label: 'Unverified'
           }
         ]
-      },
-      sortField: 'name'
+      }
     }
   },
 
@@ -178,7 +177,7 @@ export default {
     },
     async fetchUsers () {
       try {
-        let res = await this.__getUsersByLevel(this.$route.params.level, {
+        let res = await this.$service.getUsersByLevel(this.$route.params.level, {
           page: this.pagination.current_page,
           sort: [
             this.filter.sortField,
@@ -192,16 +191,9 @@ export default {
         this.pagination = res.data
 
         delete this.pagination.data
+        delete this.pagination.filter
       } catch (err) {
-        if (err.response) {
-          let msg = err.response.data.message ? err.response.data.message : err.response.statusText
-
-          this.$notify({
-            title: 'ERROR',
-            message: msg,
-            type: 'error'
-          })
-        }
+        this.__handleError(this, err, true)
       }
     }
   }

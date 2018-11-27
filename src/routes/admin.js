@@ -14,7 +14,7 @@ import AreaCity from '../views/admin/area/City'
 import AreaDistrict from '../views/admin/area/District'
 import User from '../views/admin/user/Index'
 
-import { ADMIN } from '../config/level'
+import { ADMIN, SUPER_ADMIN } from '../config/level'
 
 export default {
   path: '/admin',
@@ -26,7 +26,7 @@ export default {
       component: Dashboard,
       meta: {
         auth: true,
-        level: [ADMIN]
+        level: [ADMIN, SUPER_ADMIN]
       }
     },
     {
@@ -35,7 +35,7 @@ export default {
       component: Invoice,
       meta: {
         auth: true,
-        level: [ADMIN]
+        level: [ADMIN, SUPER_ADMIN]
       }
     },
     {
@@ -44,7 +44,7 @@ export default {
       component: Order,
       meta: {
         auth: true,
-        level: [ADMIN]
+        level: [ADMIN, SUPER_ADMIN]
       }
     },
     {
@@ -53,7 +53,7 @@ export default {
       component: Inbound,
       meta: {
         auth: true,
-        level: [ADMIN]
+        level: [ADMIN, SUPER_ADMIN]
       }
     },
     {
@@ -62,7 +62,7 @@ export default {
       component: Category,
       meta: {
         auth: true,
-        level: [ADMIN]
+        level: [ADMIN, SUPER_ADMIN]
       }
     },
     {
@@ -71,7 +71,7 @@ export default {
       component: CategoryCreate,
       meta: {
         auth: true,
-        level: [ADMIN]
+        level: [ADMIN, SUPER_ADMIN]
       }
     },
     {
@@ -80,7 +80,7 @@ export default {
       component: CategoryCreate,
       meta: {
         auth: true,
-        level: [ADMIN]
+        level: [ADMIN, SUPER_ADMIN]
       }
     },
     {
@@ -89,7 +89,7 @@ export default {
       component: Warehouse,
       meta: {
         auth: true,
-        level: [ADMIN]
+        level: [ADMIN, SUPER_ADMIN]
       }
     },
     {
@@ -98,7 +98,7 @@ export default {
       component: WarehouseCreate,
       meta: {
         auth: true,
-        level: [ADMIN]
+        level: [ADMIN, SUPER_ADMIN]
       }
     },
     {
@@ -107,7 +107,7 @@ export default {
       component: WarehouseCreate,
       meta: {
         auth: true,
-        level: [ADMIN]
+        level: [ADMIN, SUPER_ADMIN]
       }
     },
     {
@@ -116,7 +116,7 @@ export default {
       component: Exchange,
       meta: {
         auth: true,
-        level: [ADMIN]
+        level: [ADMIN, SUPER_ADMIN]
       }
     },
     {
@@ -125,7 +125,7 @@ export default {
       component: ExchangeCreate,
       meta: {
         auth: true,
-        level: [ADMIN]
+        level: [ADMIN, SUPER_ADMIN]
       }
     },
     {
@@ -134,7 +134,7 @@ export default {
       component: Area,
       meta: {
         auth: true,
-        level: [ADMIN]
+        level: [ADMIN, SUPER_ADMIN]
       }
     },
     {
@@ -143,7 +143,7 @@ export default {
       component: AreaCity,
       meta: {
         auth: true,
-        level: [ADMIN]
+        level: [ADMIN, SUPER_ADMIN]
       }
     },
     {
@@ -152,7 +152,7 @@ export default {
       component: AreaDistrict,
       meta: {
         auth: true,
-        level: [ADMIN]
+        level: [ADMIN, SUPER_ADMIN]
       }
     },
     {
@@ -161,7 +161,7 @@ export default {
       component: User,
       meta: {
         auth: true,
-        level: [ADMIN]
+        level: [ADMIN, SUPER_ADMIN]
       }
     }
   ]

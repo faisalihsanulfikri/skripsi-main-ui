@@ -37,9 +37,9 @@
             </tr>
           </thead>
           <tbody>
-            <template v-for="(order, index) in orders">
-              <tr :key="index">
-                <td class="app--table-column__collapse-toggle" @click.prevent="collapseToggle(index)">
+            <template v-for="(order, orderIndex) in orders">
+              <tr :key="orderIndex">
+                <td class="app--table-column__collapse-toggle" @click.prevent="collapseToggle(orderIndex)">
                   <a href="#">
                     <font-awesome-icon v-if="order.collapse" icon="angle-right"></font-awesome-icon>
                     <font-awesome-icon v-else icon="angle-down"></font-awesome-icon>
@@ -52,7 +52,7 @@
                 </td>
                 <td class="uk-text-center">{{ order.status }}</td>
               </tr>
-              <tr v-show="!order.collapse" :key="`${index}_info`">
+              <tr v-show="!order.collapse" :key="`${orderIndex}_info`">
                 <td></td>
                 <td colspan="4">
                   <div class="uk-grid-small" uk-grid>
@@ -60,10 +60,6 @@
                       <h5 class="uk-margin-small">
                         <font-awesome-icon icon="globe-asia"></font-awesome-icon>
                         <span class="uk-margin-small-left">{{ order.detail.warehouse.name }}</span>
-                      </h5>
-                      <h5 class="uk-margin-small">
-                        <font-awesome-icon icon="shipping-fast"></font-awesome-icon>
-                        <span class="uk-text-primary uk-margin-small-left">{{ order.awb }}</span>
                       </h5>
                       <h5 class="uk-margin-remove">
                         <font-awesome-icon icon="truck"></font-awesome-icon>
@@ -93,58 +89,70 @@
                   <div class="uk-margin-small uk-overflow-auto">
                     <h5 class="uk-margin-remove">
                       <font-awesome-icon icon="cubes"></font-awesome-icon>
-                      <span class="uk-margin-small-left">Items</span>
+                      <span class="uk-margin-small-left">Packets</span>
                     </h5>
                     <div>
                       <table class="uk-table uk-table-small uk-table-divider uk-table-middle uk-text-small">
                         <tbody>
-                          <template v-for="item in order.items">
-                            <tr :key="`${item.id}_item`">
-                              <td class="uk-text-center" width="20">
-                                <el-checkbox v-model="item.selected"></el-checkbox>
-                              </td>
+                          <template v-for="(items, groupIndex) in order.item_groups">
+                            <tr :key="groupIndex">
                               <td>
-                                <div>
-                                  <span class="uk-text-primary">{{ item.name }} # {{ item.category.name }}</span>
-                                </div>
-                                <div>{{ item.url }}</div>
-                                <div>{{ item.reference }}</div>
-                                <div>{{ `${item.stringWeight} ${order.detail.formula.weight_unit} - ${item.stringLength} x ${item.stringWidth} x ${item.stringLength} ${order.detail.formula.volume_unit}` }}</div>
-                                <div>
-                                  {{ item.stringQuantity }} item's x IDR {{ item.stringPrice }}
-                                </div>
+                                <a href="#">{{ items[0].category.name }}</a>
                               </td>
-                              <td class="uk-text-center" width="100">{{ item.status }}</td>
-                              <td class="uk-text-center" width="200">
-                                <el-button
-                                  v-if="item.showReceivedButton"
-                                  type="success"
-                                  size="mini"
-                                  @click="receivedItem(order.code, item.id)">
-                                  Received
-                                </el-button>
-                                <el-button
-                                  v-if="item.showRejectButton"
-                                  type="danger"
-                                  size="mini"
-                                  @click="rejectItem(order.code, item.id)">
-                                  Reject
-                                </el-button>
+                              <td class="uk-text-center" width="300">{{ `${items[0].stringWeight} ${order.detail.formula.weight_unit} - ${items[0].stringLength} x ${items[0].stringWidth} x ${items[0].stringLength} ${order.detail.formula.volume_unit}` }}</td>
+                              <td class="uk-text-right" width="200">Rp. {{ items[0].stringPrice }}</td>
+                            </tr>
+                            <tr :key="`${groupIndex}_goods`">
+                              <td colspan="3">
+                                <table class="uk-table uk-table-small">
+                                  <tr v-for="(item, itemIndex) in items" :key="itemIndex">
+                                    <td class="uk-text-center" width="20">
+                                      <el-checkbox v-model="item.selected" :disabled="item.checkDisabled"></el-checkbox>
+                                    </td>
+                                    <td>{{ item.name }}</td>
+                                    <td width="100">{{ item.quantity }} {{ item.unit }}</td>
+                                    <td class="uk-text-center" width="100">{{ item.status }}</td>
+                                    <td class="uk-text-center" width="100">
+                                      <el-button
+                                        v-if="item.showReceivedButton"
+                                        type="success"
+                                        size="mini"
+                                        @click="receivedItem(order.code, item.id)">
+                                        <font-awesome-icon icon="check"></font-awesome-icon>
+                                      </el-button>
+                                      <el-button
+                                        v-if="item.showRejectButton"
+                                        type="danger"
+                                        size="mini"
+                                        @click="rejectItem(order.code, item.id)">
+                                        <font-awesome-icon icon="times"></font-awesome-icon>
+                                      </el-button>
+                                    </td>
+                                  </tr>
+                                </table>
                               </td>
                             </tr>
                           </template>
                         </tbody>
                       </table>
                     </div>
-                    <hr>
-                    <div class="uk-grid-small" uk-grid>
-                      <div v-if="!order.awb" class="uk-width-auto">
-                        <el-button @click="openCreateAwbDialog(order.id)">CREATE AWB | {{ countSelectedItems(order.id) }} item's</el-button>
-                      </div>
-                      <div v-else class="uk-width-auto">
-                        <el-button @click="printAwb(order.code)">PRINT AWB | {{ countSelectedItems(order.id) }} item's</el-button>
-                      </div>
+                  </div>
+
+                  <hr>
+
+                  <div class="uk-grid-small" uk-grid>
+                    <div class="uk-width-auto">
+                      <el-button
+                        :disabled="!canCreateAwb(orderIndex)"
+                        @click="openCreateAwbDialog(orderIndex)">
+                        CREATE AWB | {{ countSelectedItems(orderIndex) }} item's</el-button>
                     </div>
+                  </div>
+
+                  <hr>
+
+                  <div class="uk-margin">
+                    
                   </div>
                 </td>
               </tr>
@@ -191,8 +199,8 @@ export default {
   },
 
   methods: {
-    openCreateAwbDialog (orderId) {
-      this.dialogCreateAwb.data = this.orders.find(order => order.id === orderId)
+    openCreateAwbDialog (index) {
+      this.dialogCreateAwb.data = this.orders[index]
       this.dialogCreateAwb.visible = true
     },
     closeCreateAwbDialog () {
@@ -207,7 +215,10 @@ export default {
           let $order = res.data.data
 
           $order['collapse'] = false
-          $order.items = this.mappedItems($order)
+          $order.item_groups = $order.item_groups.map(items => {
+              return this.mappedItems($order, items)
+            })
+          $order.items = this.mappedItems($order, $order.items)
 
           return $order
         }
@@ -218,10 +229,29 @@ export default {
     collapseToggle (index) {
       this.orders[index].collapse = !this.orders[index].collapse
     },
-    countSelectedItems (orderId) {
-      let order = this.orders.find(order => order.id === orderId)
+    countSelectedItems (index) {
+      let order = this.orders[index]
+      let items = order.item_groups.flat()
 
-      return order.items.filter(item => item.selected).length
+      return items.filter(item => item.selected).length
+    },
+    canCreateAwb (index) {
+      let order = this.orders[index]
+      let items = order.item_groups.flat()
+      let selectedItems = items.filter(item => item.selected)
+      let invalidItems = selectedItems.filter(item => {
+        let { item_status } = this.$store.state.kirimin.status
+        
+        let isWaiting = item.status === item_status.WAITING
+        let isRejected = item.status === item_status.REJECTED
+        let isShipping = item.status === item_status.SHIPPING
+
+        return isWaiting || isRejected || isShipping
+      })
+
+      if (selectedItems.length > 0 && invalidItems.length == 0) return true
+
+      return false
     },
     receivedItem (orderCode, itemId) {
       this.$confirm('Are you sure to confirm this item?', 'Confirm', {
@@ -244,9 +274,8 @@ export default {
         'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=800'
       )
     },
-    mappedItems (order) {
-      let items = order.items.map(item => {
-        item['selected'] = true
+    mappedItems (order, items) {
+      let $items = items.map(item => {
         item['stringPrice'] = this.$options.filters.currency(item.price, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
         item['stringQuantity'] = this.$options.filters.currency(item.quantity, '', 0, { thousandsSeparator: '.', decimalSeparator: ',' })
         item['stringWeight'] = this.$options.filters.currency(item.weight, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
@@ -260,11 +289,13 @@ export default {
         let isCancelOrder = order.status === order_status.CANCEL
 
         let isWaiting = item.status === item_status.WAITING
-        let isReceived = item.status === item_status.RECEIVED
         let isRejected = item.status === item_status.REJECTED
+        let isReceived = item.status === item_status.RECEIVED
+        let isShipping = item.status === item_status.SHIPPING
 
-        item['showReceivedButton'] = (!isNewOrder && !isCancelOrder) && (isWaiting || isRejected)
-        item['showRejectButton'] = (!isNewOrder && !isCancelOrder) && (isWaiting || isReceived)
+        item['selected'] = false
+        item['showReceivedButton'] = (!isCancelOrder) && (isWaiting || isRejected)
+        item['showRejectButton'] = (!isCancelOrder) && (isWaiting || isReceived)
 
         return item
       })
@@ -281,7 +312,10 @@ export default {
 
         this.orders = res.data.data.map(order => {
           order['collapse'] = true
-          order.items = this.mappedItems(order)
+          order.item_groups = order.item_groups.map(items => {
+            return this.mappedItems(order, items)
+          })
+          order.items = this.mappedItems(order, order.items)
 
           return order
         })
@@ -310,7 +344,10 @@ export default {
             let $order = res.data.data
 
             $order['collapse'] = false
-            $order.items = this.mappedItems($order)
+            $order.item_groups = $order.item_groups.map(items => {
+              return this.mappedItems($order, items)
+            })
+            $order.items = this.mappedItems($order, $order.items)
 
             return $order
           }
