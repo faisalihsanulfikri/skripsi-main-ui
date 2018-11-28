@@ -7,10 +7,10 @@ const services = {
   register (data = {}) {
     return Vue.http().post('/register', data)
   },
-  createAwb(data = {}) {
+  createAwb (data = {}) {
     return Vue.authHttp().post('/awb', data)
   },
-  deleteCategory(id) {
+  deleteCategory (id) {
     return Vue.authHttp().delete(`/categories/${id}`)
   },
   getAllWarehouses () {

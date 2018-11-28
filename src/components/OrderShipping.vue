@@ -94,7 +94,7 @@ export default {
     }
   },
 
-  created () {
+  async created () {
     await this.fetchWarehouses()
     await this.fetchAddresses()
   },
@@ -124,7 +124,7 @@ export default {
             value: item.code,
             label: item.label
           }
-          
+
           return item
         })
 
@@ -133,7 +133,7 @@ export default {
           this.input.destination = res.data[0].code
         }
       })
-    },
+    }
   }
 }
 </script>

@@ -35,7 +35,6 @@
               <th></th>
               <th width="150">Code</th>
               <th>Customer</th>
-              <th class="uk-text-right" width="200">Amount (IDR)</th>
               <th class="uk-text-center" width="150">Status</th>
             </tr>
           </thead>
@@ -50,16 +49,13 @@
                 </td>
                 <td>{{ order.code }}</td>
                 <td>{{ order.user.name }}</td>
-                <td class="uk-text-right">
-                  {{ order.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-                </td>
                 <td class="uk-text-center">{{ order.status }}</td>
               </tr>
               <tr v-show="!order.collapse" :key="`${orderIndex}_info`">
                 <td></td>
                 <td colspan="4">
                   <div class="uk-grid-small" uk-grid>
-                    <div class="uk-width-2-5">
+                    <div class="uk-width-1-2">
                       <h5 class="uk-margin-small">
                         <font-awesome-icon icon="globe-asia"></font-awesome-icon>
                         <span class="uk-margin-small-left">{{ order.detail.warehouse.name }}</span>
@@ -78,24 +74,17 @@
                         <div class="app--list-text">{{ order.receiver.phone }}</div>
                       </div>
                     </div>
-                    <div class="uk-width-3-5">
-                      <h5 class="uk-margin-remove">
-                        <font-awesome-icon icon="dollar-sign"></font-awesome-icon>
-                        <span class="uk-margin-small-left">Cost</span>
-                      </h5>
-                      <calculator-result :final="true" :cost="order.detail.cost"></calculator-result>
-                    </div>
                   </div>
 
                   <hr>
 
-                  <div class="uk-margin-small uk-overflow-auto">
+                  <div class="uk-margin-small">
                     <h5 class="uk-margin-remove">
                       <font-awesome-icon icon="cubes"></font-awesome-icon>
                       <span class="uk-margin-small-left">Packets</span>
                       <el-badge :value="order.item_groups.length"></el-badge>
                     </h5>
-                    <div>
+                    <div class="uk-overflow-auto">
                       <table class="uk-table uk-table-small uk-table-divider uk-table-middle uk-text-small">
                         <tbody>
                           <template v-for="(items, groupIndex) in order.item_groups">
@@ -110,15 +99,34 @@
                               <td colspan="3">
                                 <table class="uk-table uk-table-small">
                                   <tr>
-                                    <td colspan="3">
+                                    <td colspan="5">
                                       <div class="app--list-label">Reference</div>
                                       <div class="app--list-text">{{ items[0].reference }}</div>
                                     </td>
                                   </tr>
                                   <tr v-for="(item, itemIndex) in items" :key="itemIndex">
+                                    <td class="uk-text-center" width="20">
+                                      <el-checkbox v-model="item.selected" :disabled="item.checkDisabled"></el-checkbox>
+                                    </td>
                                     <td>{{ item.name }}</td>
                                     <td width="100">{{ item.quantity }} {{ item.unit }}</td>
                                     <td class="uk-text-center" width="100">{{ item.status }}</td>
+                                    <td class="uk-text-center" width="100">
+                                      <el-button
+                                        v-if="item.showReceivedButton"
+                                        type="success"
+                                        size="mini"
+                                        @click="receivedItem(order.code, item.id)">
+                                        <font-awesome-icon icon="check"></font-awesome-icon>
+                                      </el-button>
+                                      <el-button
+                                        v-if="item.showRejectButton"
+                                        type="danger"
+                                        size="mini"
+                                        @click="rejectItem(order.code, item.id)">
+                                        <font-awesome-icon icon="times"></font-awesome-icon>
+                                      </el-button>
+                                    </td>
                                   </tr>
                                 </table>
                               </td>
@@ -126,6 +134,17 @@
                           </template>
                         </tbody>
                       </table>
+                    </div>
+                  </div>
+
+                  <hr>
+
+                  <div class="uk-grid-small" uk-grid>
+                    <div class="uk-width-auto">
+                      <el-button
+                        :disabled="!canCreateAwb(orderIndex)"
+                        @click="openCreateAwbDialog(orderIndex)">
+                        CREATE AWB | {{ countSelectedItems(orderIndex) }} item's</el-button>
                     </div>
                   </div>
 
@@ -141,19 +160,32 @@
         </table>
       </div>
     </div>
+
+    <dialog-create-awb
+      :visible="dialogCreateAwb.visible"
+      :order="dialogCreateAwb.data"
+      @close="closeCreateAwbDialog"
+      @done="onAwbCreated">
+    </dialog-create-awb>
   </div>
 </template>
 
 <script>
 import CalculatorResult from '../../../components/CalculatorResult'
+import DialogCreateAwb from '../../../components/DialogCreateAwb'
 
 export default {
   components: {
-    CalculatorResult
+    CalculatorResult,
+    DialogCreateAwb
   },
 
   data () {
     return {
+      dialogCreateAwb: {
+        visible: false,
+        data: {}
+      },
       orders: [],
       pagination: {
         total: 0,
@@ -170,8 +202,73 @@ export default {
   },
 
   methods: {
+    openCreateAwbDialog (index) {
+      this.dialogCreateAwb.data = this.orders[index]
+      this.dialogCreateAwb.visible = true
+    },
+    closeCreateAwbDialog () {
+      this.dialogCreateAwb.data = {}
+      this.dialogCreateAwb.visible = false
+    },
+    async onAwbCreated (res) {
+      this.closeCreateAwbDialog()
+
+      this.orders = this.orders.map(order => {
+        if (order.id === res.data.data.id) {
+          let $order = res.data.data
+
+          $order['collapse'] = false
+          $order.item_groups = $order.item_groups.map(items => {
+            return this.mappingItems($order, items)
+          })
+          $order.items = this.mappingItems($order, $order.items)
+
+          return $order
+        }
+
+        return order
+      })
+    },
     collapseToggle (index) {
       this.orders[index].collapse = !this.orders[index].collapse
+    },
+    countSelectedItems (index) {
+      let order = this.orders[index]
+      let items = order.item_groups.flat()
+
+      return items.filter(item => item.selected).length
+    },
+    canCreateAwb (index) {
+      let order = this.orders[index]
+      let items = order.item_groups.flat()
+      let selectedItems = items.filter(item => item.selected)
+      let invalidItems = selectedItems.filter(item => {
+        let { item_status: itemStatus } = this.$store.state.kirimin.status
+
+        let isWaiting = item.status === itemStatus.WAITING
+        let isRejected = item.status === itemStatus.REJECTED
+        let isShipping = item.status === itemStatus.SHIPPING
+
+        return isWaiting || isRejected || isShipping
+      })
+
+      if (selectedItems.length > 0 && invalidItems.length === 0) return true
+
+      return false
+    },
+    receivedItem (orderCode, itemId) {
+      this.$confirm('Are you sure to confirm this item?', 'Confirm', {
+        type: 'warning'
+      }).then(() => {
+        this.updateItemStatus(orderCode, itemId, this.$store.state.kirimin.status.item_status.RECEIVED)
+      }).catch(() => {})
+    },
+    rejectItem (orderCode, itemId) {
+      this.$confirm('Are you sure to reject this payment?', 'Confirm', {
+        type: 'warning'
+      }).then(() => {
+        this.updateItemStatus(orderCode, itemId, this.$store.state.kirimin.status.item_status.REJECTED)
+      }).catch(() => {})
     },
     printAwb (code) {
       window.open(
@@ -182,6 +279,21 @@ export default {
     },
     mappingItems (order, items) {
       let $items = this.$util.orderItem.stringCurrency(items)
+        .map(item => {
+          let { order_status: orderStatus, item_status: itemStatus } = this.$store.state.kirimin.status
+
+          let isCancelOrder = order.status === orderStatus.CANCEL
+
+          let isWaiting = item.status === itemStatus.WAITING
+          let isRejected = item.status === itemStatus.REJECTED
+          let isReceived = item.status === itemStatus.RECEIVED
+
+          item['selected'] = false
+          item['showReceivedButton'] = (!isCancelOrder) && (isWaiting || isRejected)
+          item['showRejectButton'] = (!isCancelOrder) && (isWaiting || isReceived)
+
+          return item
+        })
 
       return $items
     },
@@ -206,6 +318,41 @@ export default {
         this.pagination = res.data
 
         delete this.pagination.data
+      } catch (err) {
+        this.__handleError(this, err, true)
+      }
+
+      this.__stopLoading()
+    },
+    async updateItemStatus (orderCode, itemId, status) {
+      this.__startLoading()
+
+      try {
+        let res = await this.$service.updateItemStatus(orderCode, itemId, {
+          status: status
+        })
+
+        this.$notify({
+          title: 'SUCCESS',
+          message: res.data.message,
+          type: 'success'
+        })
+
+        this.orders = this.orders.map(order => {
+          if (order.id === res.data.data.id) {
+            let $order = res.data.data
+
+            $order['collapse'] = false
+            $order.item_groups = $order.item_groups.map(items => {
+              return this.mappingItems($order, items)
+            })
+            $order.items = this.mappingItems($order, $order.items)
+
+            return $order
+          }
+
+          return order
+        })
       } catch (err) {
         this.__handleError(this, err, true)
       }

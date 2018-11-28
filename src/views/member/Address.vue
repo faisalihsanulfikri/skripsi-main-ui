@@ -52,7 +52,7 @@ export default {
         let res = await this.$service.getAllWarehouses()
 
         this.warehouses = res.data
-      } catch(err) {
+      } catch (err) {
         this.__handleError(this, err, true)
       }
 

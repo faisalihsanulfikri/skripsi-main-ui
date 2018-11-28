@@ -4,8 +4,7 @@ import axios from 'axios'
 import $router from '../router'
 import $store from '../store/index'
 
-// const baseUrl = 'http://ec2-13-58-214-153.us-east-2.compute.amazonaws.com'
-const baseUrl = 'http://localhost:8000'
+const baseUrl = process.env.VUE_APP_ROOT_API
 const api = `${baseUrl}/api`
 
 Vue.web = () => {

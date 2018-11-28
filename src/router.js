@@ -8,7 +8,7 @@ import UserRoutes from './routes/user'
 
 import { PrintAwb } from './routes/print'
 
-import navigationGuard from './lib/navigationGuard'
+import navigationGuard from './lib/navigation-guard'
 
 Vue.use(Router)
 

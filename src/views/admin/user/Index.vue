@@ -103,8 +103,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
-
 import ColumnSort from '../../../components/ColumnSort'
 
 export default {

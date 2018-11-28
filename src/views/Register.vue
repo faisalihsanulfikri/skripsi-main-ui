@@ -257,9 +257,9 @@ export default {
           })
         } else {
           this.$auth.setAuth(res.data)
-  
+
           let user = await this.$auth.getUser()
-  
+
           this.$root.user = user
 
           this.$router.push({

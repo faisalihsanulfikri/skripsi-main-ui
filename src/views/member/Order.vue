@@ -30,7 +30,7 @@
                   <td>{{ new Date(order.created_at).toLocaleDateString('id-ID') }}</td>
                   <td class="uk-text-right">{{ order.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
                   <td class="uk-text-center">
-                    {{ order.items.length | currency('', 0, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
+                    {{ order.item_groups.length | currency('', 0, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
                   </td>
                   <td class="uk-text-center">{{ order.status }}</td>
                 </tr>
@@ -88,46 +88,6 @@
 
                     <hr>
 
-                    <div class="uk-margin-small">
-                      <h5 class="uk-margin-remove">
-                        <font-awesome-icon icon="cubes"></font-awesome-icon>
-                        <span class="uk-margin-small-left">Barang</span>
-                      </h5>
-                      <table class="uk-table uk-table-small uk-text-small uk-margin-small">
-                        <thead>
-                          <th>Nama</th>
-                          <th width="200">Referensi</th>
-                          <th class="uk-text-right" width="200">Harga</th>
-                          <th class="uk-text-right" width="100">Jumlah</th>
-                          <th class="uk-text-center" width="100">Berat (KG)</th>
-                          <th class="uk-text-center" width="200">Volume (CM)</th>
-                        </thead>
-                        <tbody>
-                          <template v-for="item in order.items">
-                            <tr :key="`${item.id}_item`">
-                              <td>{{ item.name }}</td>
-                              <td>{{ item.reference }}</td>
-                              <td class="uk-text-right">{{ item.price | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
-                              <td class="uk-text-right">{{ item.quantity | currency('', 0, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
-                              <td class="uk-text-center">{{ item.weight | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
-                              <td class="uk-text-center">
-                                {{ item.length | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-                                x
-                                {{ item.width | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-                                x
-                                {{ item.height | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-                              </td>
-                            </tr>
-                            <tr v-if="order.type.toUpperCase() === 'BELIIN'" :key="`${item.id}_url`">
-                              <td colspan="6">{{ item.url }}</td>
-                            </tr>
-                          </template>
-                        </tbody>
-                      </table>
-                    </div>
-
-                    <hr>
-
                     <div class="uk-grid-small" uk-grid>
                       <div class="uk-width-2-5">
                         <h5 class="uk-margin-remove">
@@ -163,6 +123,47 @@
                           <span class="uk-margin-small-left">Biaya</span>
                         </h5>
                         <calculator-result :final="true" :cost="order.detail.cost"></calculator-result>
+                      </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="uk-margin-small uk-overflow-auto">
+                      <h5 class="uk-margin-remove">
+                        <font-awesome-icon icon="cubes"></font-awesome-icon>
+                        <span class="uk-margin-small-left">Paket</span>
+                      </h5>
+                      <div>
+                        <table class="uk-table uk-table-small uk-table-divider uk-table-middle uk-text-small">
+                          <tbody>
+                            <template v-for="(items, groupIndex) in order.item_groups">
+                              <tr :key="groupIndex">
+                                <td>
+                                  <a href="#">{{ items[0].category.name }}</a>
+                                </td>
+                                <td class="uk-text-center" width="300">{{ `${items[0].stringWeight} ${order.detail.formula.weight_unit} - ${items[0].stringLength} x ${items[0].stringWidth} x ${items[0].stringLength} ${order.detail.formula.volume_unit}` }}</td>
+                                <td class="uk-text-right" width="200">Rp. {{ items[0].stringPrice }}</td>
+                              </tr>
+                              <tr :key="`${groupIndex}_goods`">
+                                <td colspan="3">
+                                  <table class="uk-table uk-table-small">
+                                    <tr>
+                                      <td colspan="3">
+                                        <div class="app--list-label">Reference</div>
+                                        <div class="app--list-text">{{ items[0].reference }}</div>
+                                      </td>
+                                    </tr>
+                                    <tr v-for="(item, itemIndex) in items" :key="itemIndex">
+                                      <td>{{ item.name }}</td>
+                                      <td width="100">{{ item.quantity }} {{ item.unit }}</td>
+                                      <td class="uk-text-center" width="100">{{ item.status }}</td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>
+                            </template>
+                          </tbody>
+                        </table>
                       </div>
                     </div>
 
@@ -219,20 +220,27 @@ export default {
     }
   },
   methods: {
-    fetchOrders () {
+    async fetchOrders () {
       this.__startLoading()
 
-      this.$authHttp.get('/orders').then(response => {
-        this.orders = response.data.data.map(item => {
+      try {
+        let res = await this.$service.getOrders({
+
+        })
+
+        this.orders = res.data.data.map(item => {
           item.collapse = true
+          item.item_groups = item.item_groups.map(items => {
+            return this.$util.orderItem.stringCurrency(items)
+          })
 
           return item
         })
+      } catch (err) {
+        this.__handleError(this, err, true)
+      }
 
-        this.__stopLoading()
-      }).catch(() => {
-        this.__stopLoading()
-      })
+      this.__stopLoading()
     },
     collapseToggle (index) {
       this.orders[index].collapse = !this.orders[index].collapse

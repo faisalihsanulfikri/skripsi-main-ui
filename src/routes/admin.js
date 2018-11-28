@@ -1,7 +1,6 @@
 import Main from '../views/admin/Main'
 import Dashboard from '../views/admin/Dashboard'
 import Invoice from '../views/admin/invoice/Index'
-import Order from '../views/admin/order/Inbound'
 import Inbound from '../views/admin/order/Inbound'
 import Category from '../views/admin/category/Index'
 import CategoryCreate from '../views/admin/category/Create'
@@ -41,7 +40,7 @@ export default {
     {
       path: 'orders',
       name: 'admin-order',
-      component: Order,
+      component: Inbound,
       meta: {
         auth: true,
         level: [ADMIN, SUPER_ADMIN]

@@ -4,6 +4,7 @@ import VeeValidate from 'vee-validate'
 import App from './App.vue'
 import router from './router'
 import store from './store/index'
+import util from './utils'
 
 import './mixins'
 
@@ -19,6 +20,7 @@ Vue.use(Vue2Filters)
 Vue.use(VeeValidate, {
   events: 'blur'
 })
+Vue.use(util)
 
 Vue.config.productionTip = false
 
