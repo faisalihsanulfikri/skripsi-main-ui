@@ -1,63 +1,61 @@
 <template>
-  <div class="print-wrapper" uk-height-viewport>
-    <div class="uk-grid uk-grid-small">
-      <div class="uk-width-auto">
-        <img src="../../assets/logo-kirimin.jpg" width="200" />
-      </div>
-      <div class="uk-width-expand uk-flex uk-flex-center uk-flex-middle">
-        <div class="uk-text-center">
-          <img v-if="order.awb" :src="`${$web.defaults.baseURL}/barcode/${order.awb}`" @load="print" />
-          <h5 class="uk-margin-small-top">{{ order.awb }}</h5>
+  <div class="print-wrapper">
+    <div class="print-content">
+      <div class="uk-grid uk-grid-small">
+        <div class="uk-width-expand">
+          <img src="../../assets/logo-kirimin.jpg" width="100" />
         </div>
       </div>
-    </div>
-    <div class="uk-grid uk-grid-small" uk-grid>
-      <div class="uk-width-1-2">
-        <div v-if="order.shipper">
-          <h5 class="uk-margin-remove">
-            <span class="uk-text-bold">Shipper</span>
-            <span> : {{ order.shipper.name }}</span>
-          </h5>
-          <div class="uk-margin-small">
-            {{ `${order.shipper.address} ${order.shipper.city} ${order.shipper.zip_code}` }}
-          </div>
-          <div class="uk-margin-small">
-            {{ order.shipper.region }}
-          </div>
-          <div class="uk-margin-small">{{ order.shipper.phone }}</div>
-        </div>
+
+      <div v-if="awb.order" class="uk-margin">
+        <h6 class="uk-heading-line uk-text-left">
+          <span>{{ awb.order.user.code }}</span>
+        </h6>
       </div>
-      <div class="uk-width-1-2">
-        <div v-if="order.receiver">
-          <h5 class="uk-margin-remove">
-            <span class="uk-text-bold">Receiver</span>
-            <span> : {{ order.receiver.name }}</span>
-          </h5>
-          <div class="uk-margin-small">
-            {{ `${order.receiver.address} ${order.receiver.sub_district} ${order.receiver.city} ${order.receiver.postal_code}` }}
-          </div>
-          <div class="uk-margin-small">
-            {{ order.receiver.province }}
-          </div>
-          <div class="uk-margin-small">{{ order.receiver.phone }}</div>
-        </div>
-      </div>
-    </div>
-    <hr />
-    <div>
-      <div v-for="item in order.items" :key="`${item.id}_item`" class="uk-margin-small">
-        <div class="uk-grid-small" uk-grid>
-          <div class="uk-width-2-3">
-            <div>{{ item.name }} # {{ item.category.name }}</div>
-            <div>{{ item.reference }}</div>
-            <div>{{ item.stringPrice }} IDR</div>
-          </div>
-          <div class="uk-width-1-3">
-            <div>{{ item.stringWeight }} {{ order.detail.formula.weight_unit }}</div>
-            <div>
-              {{ item.stringLength }} x {{ item.stringWidth }} x {{ item.stringLength }} {{ order.detail.formula.volume_unit }}
+
+      <div class="uk-grid-small uk-grid-divider" uk-grid>
+        <div class="uk-width-expand">
+          <div class="uk-margin">
+            <h5 class="uk-margin-remove uk-text-bold">SHIPPER</h5>
+            <div v-if="awb.detail" class="uk-padding-small">
+              <div>{{ `${awb.detail.shipper_name} - ${awb.detail.shipper_phone}` }}</div>
+              <div>{{ `${awb.detail.shipper_address}, ${awb.detail.shipper_city} ${awb.detail.shipper_zip_code}` }}</div>
+              <div>{{ awb.detail.shipper_region }}</div>
             </div>
           </div>
+          <div class="uk-margin">
+            <h5 class="uk-margin-remove uk-text-bold">RECEIVER</h5>
+            <div v-if="awb.detail" class="uk-padding-small">
+              <div>{{ `${awb.detail.receiver_name} - ${awb.detail.receiver_phone}` }}</div>
+              <div>{{ `${awb.detail.receiver_address}, ${awb.detail.receiver_city} ${awb.detail.receiver_zip_code}` }}</div>
+              <div>{{ awb.detail.shipper_region }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="uk-width-1-2">
+          <div class="uk-margin">
+            <div v-if="awb.order" class="uk-text-center">
+              <img class="barcode-image" :src="`${$web.defaults.baseURL}/barcode/${awb.order.code}?w=1&h=75`" width="150" />
+              <h5 class="uk-margin-small-top">{{ awb.order.code }}</h5>
+            </div>
+            <div v-if="awb.awb" class="uk-text-center">
+              <img class="barcode-image" :src="`${$web.defaults.baseURL}/barcode/${awb.awb}?w=1&h=75`" width="150" />
+              <h5 class="uk-margin-small-top">{{ awb.awb }}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr>
+
+      <div v-if="awb.items" class="uk-margin">
+        <h5 class="uk-margin-remove uk-text-bold">GOODS</h5>
+        <div class="uk-padding-small">
+          <ul class="uk-list uk-list uk-margin-remove">
+            <li v-for="(item, index) in awb.items" :key="index">
+              {{ `${item.name} ${item.quantity} ${item.unit}` }}
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -68,12 +66,24 @@
 export default {
   data () {
     return {
-      order: {}
+      awb: {}
     }
   },
 
   async created () {
-    await this.getOrder()
+    await this.getAirWaybill()
+
+    let images = document.querySelectorAll('.barcode-image')
+    let totalImages = images.length
+    let loadedImages = 0
+
+    images.forEach(image => {
+      image.onload = () => {
+        loadedImages += 1
+
+        if (totalImages === loadedImages) this.print()
+      }
+    })
   },
 
   methods: {
@@ -81,40 +91,41 @@ export default {
       window.print()
       window.close()
     },
-    async getOrder () {
+    async getAirWaybill () {
       try {
-        let res = await this.$authHttp.get(`/orders/${this.$route.params.code}`)
+        let res = await this.$service.getOrderAirwayBills(this.$route.params.number)
 
-        this.order = res.data
+        this.awb = res.data
 
-        this.order.items.map(item => {
-          item['selected'] = true
-          item['stringPrice'] = this.$options.filters.currency(item.price, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
-          item['stringQuantity'] = this.$options.filters.currency(item.quantity, '', 0, { thousandsSeparator: '.', decimalSeparator: ',' })
-          item['stringWeight'] = this.$options.filters.currency(item.weight, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
-          item['stringLength'] = this.$options.filters.currency(item.length, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
-          item['stringWidth'] = this.$options.filters.currency(item.width, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
-          item['stringHeight'] = this.$options.filters.currency(item.height, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
-        })
+        this.$util.orderItem.stringCurrency(this.awb.items)
       } catch (err) {
-        if (err.response) {
-          let msg = err.response.data.message ? err.response.data.message : err.response.statusText
-
-          this.$notify({
-            title: 'ERROR',
-            message: msg,
-            type: 'error'
-          })
-        }
+        this.__handleError(this, err, true)
       }
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .print-wrapper {
   background-color: #FFF;
+  height: 100vh;
   padding: 20px;
+
+  .print-content {
+    width: 105mm;
+    height: 148mm;
+    padding: 2mm;
+    border: solid 1px #E5E5E5;
+    font-size: 0.5rem;
+
+    h5 {
+      font-size: 0.6rem;
+    }
+
+    h6 {
+      font-size: 0.5rem;
+    }
+  }
 }
 </style>

@@ -31,6 +31,9 @@ const services = {
       params: params
     })
   },
+  getOrderAirwayBills (code) {
+    return Vue.authHttp().get(`/awb/${code}`)
+  },
   getUsersByLevel (level = null, params = {}) {
     return Vue.authHttp().get(`/users/${level}`, {
       params: params

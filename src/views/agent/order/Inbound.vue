@@ -151,7 +151,32 @@
                   <hr>
 
                   <div class="uk-margin">
-
+                    <h5 class="uk-margin-remove">
+                      <font-awesome-icon icon="shipping-fast"></font-awesome-icon>
+                      <span class="uk-margin-small-left">Air Waybills</span>
+                    </h5>
+                    <div>
+                      <table class="uk-table uk-table-small uk-table-divider uk-text-small">
+                        <thead>
+                          <tr>
+                            <th>AWB Number</th>
+                            <th width="150">Created At</th>
+                            <th width="50"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="(awb, index) in order.air_waybills" :key="index">
+                            <td>{{ awb.awb }}</td>
+                            <td>{{ awb.created_at }}</td>
+                            <td class="uk-text-center">
+                              <el-button type="primary" size="small" @click="printAwb(awb.awb)">
+                                <font-awesome-icon icon="print"></font-awesome-icon>
+                              </el-button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -274,7 +299,7 @@ export default {
       window.open(
         `#/print-awb/${code}`,
         'Kirimin - Print AWB',
-        'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=800'
+        'directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=0,resizable=0,width=800'
       )
     },
     mappingItems (order, items) {
