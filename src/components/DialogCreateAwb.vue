@@ -185,7 +185,7 @@ export default {
         })
 
       try {
-        let res = await this.$service.createAwb(data)
+        let res = await this.$service.awb.create(data)
 
         this.$notify({
           title: 'SUCCESS',

@@ -93,7 +93,7 @@ export default {
     },
     async getAirWaybill () {
       try {
-        let res = await this.$service.getOrderAirwayBills(this.$route.params.number)
+        let res = await this.$service.orderAirWaybill.find(this.$route.params.number)
 
         this.awb = res.data
 

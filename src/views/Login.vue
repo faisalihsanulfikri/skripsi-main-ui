@@ -104,7 +104,7 @@ export default {
       this.$validator.errors.clear()
 
       try {
-        let res = await this.$service.login(this.input)
+        let res = await this.$service.auth.login(this.input)
 
         this.input = this.$options.data().input
 

@@ -175,7 +175,7 @@ export default {
     },
     async fetchUsers () {
       try {
-        let res = await this.$service.getUsersByLevel(this.$route.params.level, {
+        let res = await this.$service.user.getByLevel(this.$route.params.level, {
           page: this.pagination.current_page,
           sort: [
             this.filter.sortField,

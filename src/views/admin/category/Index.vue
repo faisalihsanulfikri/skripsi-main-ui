@@ -98,7 +98,7 @@ export default {
       this.__startLoading()
 
       try {
-        let res = await this.$service.getCategories()
+        let res = await this.$service.category.get()
 
         this.categories = res.data.data
         this.pagination = res.data
@@ -116,7 +116,7 @@ export default {
       this.errorMessage = ''
 
       try {
-        let res = await this.$service.deleteCategory(id)
+        let res = await this.$service.category.delete(id)
 
         this.$notify({
           title: 'SUCCESS',

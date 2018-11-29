@@ -49,7 +49,7 @@ export default {
       this.__startLoading()
 
       try {
-        let res = await this.$service.getAllWarehouses()
+        let res = await this.$service.warehouse.all()
 
         this.warehouses = res.data
       } catch (err) {

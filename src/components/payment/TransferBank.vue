@@ -1,9 +1,5 @@
 <template>
-  <el-dialog
-    title="Konfirmasi Pembayaran"
-    :visible="visible"
-    @open="open"
-    @close="close">
+  <div>
     <div>
       <div class="uk-margin">
         <label class="uk-form-label">Kode Order</label>
@@ -66,7 +62,7 @@
         </el-alert>
       </div>
       <hr>
-      <h5>Daftar Rekening</h5>
+      <h5 class="uk-margin-small">Daftar Rekening</h5>
       <div class="uk-grid-small uk-child-width-1-2" uk-grid>
         <div v-for="(bank, index) in bankAccounts" :key="index">
           <h5>{{ bank.bank }}</h5>
@@ -74,23 +70,21 @@
           <div class="uk-margin-small">{{ bank.account_number }}</div>
         </div>
       </div>
+      <div class="uk-margin">
+        <button class="uk-button uk-button-primary uk-width-1-1" @click="confirm">SIMPAN</button>
+      </div>
     </div>
-    <div slot="footer">
-      <button class="uk-button uk-button-primary uk-margin-small-left" @click="confirm">SIMPAN</button>
-    </div>
-  </el-dialog>
+  </div>
 </template>
 
 <script>
 export default {
   props: {
-    visible: {
-      default: false
-    },
     data: {
       required: true
     }
   },
+
   data () {
     return {
       dialogDate: {
@@ -116,6 +110,13 @@ export default {
     }
   },
 
+  mounted () {
+    this.fetchBankAccounts()
+
+    this.input.code = this.data.code
+    this.input.amount = parseInt(this.data.amount)
+  },
+
   methods: {
     async isValidInput () {
       let valid = await this.$validator.validate()
@@ -124,34 +125,13 @@ export default {
         resolve(valid)
       })
     },
-    open () {
-      this.fetchBankAccounts()
-
-      this.input.code = this.data.code
-      this.input.amount = parseInt(this.data.amount)
-    },
-    close () {
-      this.input = this.$options.data().input
-
-      this.$validator.reset()
-
-      this.$emit('close')
-    },
     async fetchBankAccounts () {
       try {
-        let res = await this.$authHttp('/configs/bank_accounts')
+        let res = await this.$service.config.getBankAccounts()
 
         this.bankAccounts = res.data.value
       } catch (err) {
-        if (err.response) {
-          let msg = err.response.data.message ? err.response.data.message : err.response.statusText
-
-          this.$notify({
-            title: 'ERROR',
-            message: msg,
-            type: 'error'
-          })
-        }
+        this.__handleError(this, err, true)
       }
     },
     async confirm () {
@@ -172,10 +152,8 @@ export default {
 
       formData.append('file', document.getElementsByName('file')[0].files[0])
 
-      await this.$authHttp.post(`/orders/${this.data.code}/confirm`, formData).then(res => {
-        this.error = false
-        this.errorMessage = ''
-        this.validatorErrors = {}
+      try {
+        let res = await this.$service.invoice.paymentConfirmation(this.data.code, formData)
 
         this.$notify({
           title: 'SUCCESS',
@@ -183,31 +161,14 @@ export default {
           type: 'success'
         })
 
-        this.input = this.$options.data().input
-
-        this.$emit('confirm')
-      }).catch(err => {
-        if (err.response) {
-          this.error = true
-          this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
-
-          this.$validator.errors.clear()
-
-          if (err.response.data.errorValidation) {
-            this.validationErrors = err.response.data.errors
-
-            Object.keys(this.validationErrors).forEach(key => {
-              this.$validator.errors.add({
-                field: key,
-                msg: this.validationErrors[key][0]
-              })
-            })
-          }
-        }
-      })
+        this.$router.push({ name: 'member-order' })
+      } catch (err) {
+        this.__handleError(this, err, true)
+      }
 
       this.__stopLoading()
     }
   }
 }
 </script>
+

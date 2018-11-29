@@ -243,7 +243,7 @@ export default {
       this.$validator.errors.clear()
 
       try {
-        let res = await this.$service.register(this.input)
+        let res = await this.$service.auth.register(this.input)
 
         this.input = this.$options.data().input
 

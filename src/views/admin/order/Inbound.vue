@@ -189,7 +189,7 @@ export default {
       this.__startLoading()
 
       try {
-        let res = await this.$service.getOrders({
+        let res = await this.$service.order.get({
           search: this.filter.search
         })
 

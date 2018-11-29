@@ -58,28 +58,33 @@ export default {
       errorMessage: ''
     }
   },
+
+  created () {
+    if (this.$route.params.id) {
+      this.edit = true
+      this.title = 'Edit Category'
+
+      this.getCategory()
+    }
+  },
+
   methods: {
-    getCategory () {
+    async getCategory () {
+      this.__startLoading()
+
       this.error = false
       this.errorMessage = ''
 
-      this.$authHttp.get(`/v1/categories/${this.$route.params.id}`).then(res => {
-        this.input.name = res.data[0].name
-        this.input.description = res.data[0].description
-      }).catch(err => {
-        if (err.response) {
-          this.error = true
-          this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
+      try {
+        let res = await this.$service.category.find(this.$route.params.id)
 
-          this.$notify({
-            title: 'ERROR',
-            message: this.errorMessage,
-            type: 'error'
-          })
+        this.input.name = res.data.name
+        this.input.description = res.data.description
+      } catch (err) {
+        this.__handleError(this, err, true)
+      }
 
-          this.$router.push({ name: 'admin-category' })
-        }
-      })
+      this.__stopLoading()
     },
     save () {
       if (this.edit) {
@@ -88,11 +93,15 @@ export default {
         this.store()
       }
     },
-    store () {
+    async store () {
+      this.__startLoading()
+
       this.error = false
       this.errorMessage = ''
 
-      this.$authHttp.post('/v1/categories', this.input).then(res => {
+      try {
+        let res = await this.$service.category.create(this.input)
+
         this.$notify({
           title: 'SUCCESS',
           message: res.data.message,
@@ -100,18 +109,21 @@ export default {
         })
 
         this.$router.push({ name: 'admin-category' })
-      }).catch(err => {
-        if (err.response) {
-          this.error = true
-          this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
-        }
-      })
+      } catch (err) {
+        this.__handleError(this, err, true)
+      }
+
+      this.__stopLoading()
     },
-    update () {
+    async update () {
+      this.__startLoading()
+
       this.error = false
       this.errorMessage = ''
 
-      this.$authHttp.put(`/v1/categories/${this.$route.params.id}`, this.input).then(res => {
+      try {
+        let res = await this.$service.category.update(this.$route.params.id, this.input)
+
         this.$notify({
           title: 'SUCCESS',
           message: res.data.message,
@@ -119,20 +131,11 @@ export default {
         })
 
         this.$router.push({ name: 'admin-category' })
-      }).catch(err => {
-        if (err.response) {
-          this.error = true
-          this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
-        }
-      })
-    }
-  },
-  created () {
-    if (this.$route.params.id) {
-      this.edit = true
-      this.title = 'Edit Category'
+      } catch (err) {
+        this.__handleError(this, err, true)
+      }
 
-      this.getCategory()
+      this.__stopLoading()
     }
   }
 }

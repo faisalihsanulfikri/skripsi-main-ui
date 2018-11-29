@@ -64,23 +64,25 @@
                     <div class="uk-margin-small">
                       <h5 class="uk-margin-remove">
                         <font-awesome-icon icon="credit-card"></font-awesome-icon>
-                        <span class="uk-margin-small-left">Konfirmasi Pembayaran</span>
+                        <span class="uk-margin-small-left">Pembayaran</span>
                       </h5>
                       <table class="uk-table uk-table-small uk-text-small uk-margin-small">
                           <thead>
                             <tr>
                               <th>Tanggal</th>
-                              <th>Bank</th>
+                              <th>Channel</th>
                               <th class="uk-text-right" width="250">Jumlah</th>
                               <th class="uk-text-center" width="150">Status</th>
                             </tr>
                           </thead>
                           <tbody>
-                            <tr v-for="(confirmation, key) in order.payment_confirmations" :key="key">
-                              <td>{{ new Date(confirmation.date).toLocaleDateString('id-ID') }}</td>
-                              <td>{{ confirmation.bank }}</td>
-                              <td class="uk-text-right">{{ confirmation.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
-                              <td class="uk-text-center">{{ confirmation.status }}</td>
+                            <tr v-for="(payment, key) in order.payment_confirmations" :key="key">
+                              <td>{{ new Date(payment.date).toLocaleDateString('id-ID') }}</td>
+                              <td>{{ payment.channel }}</td>
+                              <td class="uk-text-right">
+                                {{ payment.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }} {{ payment.currency }}
+                              </td>
+                              <td class="uk-text-center">{{ payment.status }}</td>
                             </tr>
                           </tbody>
                       </table>
@@ -224,7 +226,7 @@ export default {
       this.__startLoading()
 
       try {
-        let res = await this.$service.getOrders({
+        let res = await this.$service.order.get({
 
         })
 

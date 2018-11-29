@@ -326,7 +326,7 @@ export default {
       this.__startLoading()
 
       try {
-        let res = await this.$service.getOrders({
+        let res = await this.$service.order.get({
           search: this.filter.search
         })
 
@@ -353,7 +353,7 @@ export default {
       this.__startLoading()
 
       try {
-        let res = await this.$service.updateItemStatus(orderCode, itemId, {
+        let res = await this.$service.order.updateItemStatus(orderCode, itemId, {
           status: status
         })
 

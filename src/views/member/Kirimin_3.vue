@@ -395,6 +395,7 @@ export default {
         insurance: 0,
         consolidate: 0,
         note: '',
+        paymentMethod: '',
         items: [],
         address: '',
         item: {
@@ -480,7 +481,7 @@ export default {
     await this.fetchWarehouses()
     await this.fetchAddresses()
 
-    this.fetchCategories()
+    await this.fetchCategories()
 
     this.__stopLoading()
   },
@@ -539,8 +540,8 @@ export default {
         }
       })
     },
-    fetchCategories () {
-      this.$authHttp.get('/categories/list').then(res => {
+    async fetchCategories () {
+      await this.$authHttp.get('/categories/list').then(res => {
         this.master.categories = res.data
         this.options.category = res.data.map(item => {
           let $item = {
@@ -663,24 +664,31 @@ export default {
 
       this.__stopLoading()
     },
-    async order () {
+    async order (paymentMethod) {
       if (this.application.loading) return
 
       this.__startLoading()
 
-      await this.$authHttp.post('/orders/kirimin', this.input).then(res => {
-        if (res.data.success) {
-          this.$notify({
-            title: 'SUCCESS',
-            message: res.data.message,
-            type: 'success'
-          })
-        }
+      this.input.paymentMethod = paymentMethod
 
-        this.$router.push({ name: 'member-order' })
-      }).catch(err => {
+      try {
+        let res = await this.$service.order.createKirimin(this.input)
+
+        this.$notify({
+          title: 'SUCCESS',
+          message: res.data.message,
+          type: 'success'
+        })
+
+        this.$router.push({
+          name: 'member-invoice-show',
+          params: {
+            code: res.data.data.code
+          }
+        })
+      } catch (err) {
         this.__handleError(this, err, true)
-      })
+      }
 
       this.__stopLoading()
     }

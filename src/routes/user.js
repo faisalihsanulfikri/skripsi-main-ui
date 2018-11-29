@@ -7,6 +7,7 @@ import UserPassword from '../views/member/UserChangePassword'
 import UserFile from '../views/member/UserFile'
 import Kirimin from '../views/member/Kirimin_3'
 import Beliin from '../views/member/Beliin'
+import InvoiceShow from '../views/member/InvoiceShow'
 import Order from '../views/member/Order'
 import OrderHistory from '../views/member/OrderHistory'
 import Calculator from '../views/member/Calculator'
@@ -81,6 +82,15 @@ export default {
       path: 'beliin',
       name: 'member-beliin',
       component: Beliin,
+      meta: {
+        auth: true,
+        level: [REGULAR, PREMIUM]
+      }
+    },
+    {
+      path: 'invoices/:code',
+      name: 'member-invoice-show',
+      component: InvoiceShow,
       meta: {
         auth: true,
         level: [REGULAR, PREMIUM]

@@ -141,7 +141,7 @@ export default {
       this.__startLoading()
 
       try {
-        let res = await this.$service.getInvoices()
+        let res = await this.$service.invoice.get()
 
         this.invoices = res.data.data.map(invoice => {
           invoice['collapse'] = true
@@ -158,7 +158,7 @@ export default {
       this.__startLoading()
 
       try {
-        let res = await this.$service.updatePaymentStatus(paymentId, {
+        let res = await this.$service.payment.updateStatus(paymentId, {
           status: status
         })
 
