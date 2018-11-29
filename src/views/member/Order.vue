@@ -178,7 +178,12 @@
                         class="uk-button uk-button-default">
                         Histori Pesanan
                       </router-link>
-                      <button v-if="parseInt(order.invoice.paid) === 0" class="uk-margin-small-left uk-button uk-button-primary" @click="showPaymentDialog(index)">Konfirmasi Pembayaran</button>
+                      <router-link
+                        v-if="parseInt(order.invoice.paid) === 0"
+                        class="uk-margin-small-left uk-button uk-button-primary"
+                        :to="{ name: 'member-invoice-show', params: { code: order.code } }">
+                        Pembayaran
+                      </router-link>
                     </div>
                   </td>
                 </tr>
@@ -188,34 +193,18 @@
         </div>
       </div>
     </div>
-
-    <dialog-payment-confirmation
-      :visible="dialogPayment.visible"
-      :data="dialogPayment.data"
-      @close="closePaymentDialog"
-      @confirm="confirmPaymentDialog">
-    </dialog-payment-confirmation>
   </div>
 </template>
 
 <script>
 import CalculatorResult from '../../components/CalculatorResult'
-import DialogPaymentConfirmation from '../../components/DialogPaymentConfirmation'
 
 export default {
   components: {
-    CalculatorResult,
-    DialogPaymentConfirmation
+    CalculatorResult
   },
   data () {
     return {
-      dialogPaymentCreate: {
-        id: 'dialog-payment-create'
-      },
-      dialogPayment: {
-        visible: false,
-        data: {}
-      },
       orders: [],
       selected: '',
       amount: ''
@@ -246,19 +235,6 @@ export default {
     },
     collapseToggle (index) {
       this.orders[index].collapse = !this.orders[index].collapse
-    },
-    showPaymentDialog (index) {
-      this.dialogPayment.visible = true
-      this.dialogPayment.data = this.orders[index]
-    },
-    closePaymentDialog () {
-      this.dialogPayment.visible = false
-      this.dialogPayment.data = {}
-    },
-    confirmPaymentDialog () {
-      this.closePaymentDialog()
-
-      this.fetchOrders()
     }
   },
   created () {
