@@ -27,6 +27,11 @@ const category = {
       params: params
     })
   },
+  all (params = {}) {
+    return Vue.http().get('/categories/list', {
+      params: params
+    })
+  },
   find (id) {
     return Vue.authHttp().get(`/categories/${id}`)
   },

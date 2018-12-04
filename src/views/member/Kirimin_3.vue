@@ -211,8 +211,8 @@
               <div class="uk-grid-small" uk-grid>
                 <div class="uk-width-1-2">
                   <div class="el-form-item" :class="{ 'is-error': errors.has('price') }">
-                    <el-input v-model="input.item.currencyPrice" class="input-with-select" type="number" min="1" @input="convertToIdr">
-                      <el-select v-model="input.item.currency" slot="append" style="width: 100px" @change="convertToIdr">
+                    <el-input v-model="input.item.currencyPrice" class="input-with-select" type="number" min="1" @input="onTypingCurrency">
+                      <el-select v-model="input.item.currency" slot="append" style="width: 100px" @change="onCurrencyChanged">
                         <el-option value="idr_rate" label="IDR"></el-option>
                         <el-option value="dollar_rate" label="USD"></el-option>
                         <el-option value="cny_rate" label="CNY"></el-option>
@@ -385,6 +385,8 @@
 </template>
 
 <script>
+import _ from 'lodash'
+
 import CalculatorResult from '../../components/CalculatorResult'
 import DialogInputAddress from '../../components/DialogInputAddress'
 import DialogOrderConfirmation from '../../components/DialogOrderConfirmation'
@@ -527,8 +529,15 @@ export default {
     closeConfirmationDialog () {
       this.dialogOrderConfimation.visible = false
     },
-    convertToIdr () {
+    onTypingCurrency: _.debounce(function () {
+      this.onCurrencyChanged()
+    }, 500),
+    onCurrencyChanged () {
       this.input.item.price = this.input.item.currencyPrice * this.$store.state.kirimin.formula[this.input.item.currency]
+
+      if (this.input.items.length > 0 && !this.input.consolidate) {
+        this.check()
+      }
     },
     async fetchWarehouses () {
       await this.__fetchWarehouses().then(res => {
@@ -564,7 +573,9 @@ export default {
       })
     },
     async fetchCategories () {
-      await this.$authHttp.get('/categories/list').then(res => {
+      try {
+        let res = await this.$service.category.all()
+
         this.master.categories = res.data
         this.options.category = res.data.map(item => {
           let $item = {
@@ -576,7 +587,9 @@ export default {
         })
         this.input.item.category = res.data[0].id
         this.input.item.categoryName = res.data[0].name
-      })
+      } catch (err) {
+        this.__handleError(this, err, true)
+      }
     },
     onWarehouseChanged () {
       if (this.input.items.length > 0) {
