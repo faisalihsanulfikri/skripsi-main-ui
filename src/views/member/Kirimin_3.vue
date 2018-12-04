@@ -51,11 +51,11 @@
               </label>
               <div class="uk-child-width-auto" uk-grid>
                 <label>
-                  <input v-model="input.insurance" type="radio" value="1" @change="onInsuranceChanged">
+                  <input v-model="input.insurance" class="uk-radio" type="radio" value="1" @click="onInsuranceChanged">
                   <span class="uk-margin-small-left">Ya</span>
                 </label>
                 <label>
-                  <input v-model="input.insurance" type="radio" value="0" @change="onInsuranceChanged">
+                  <input v-model="input.insurance" class="uk-radio" type="radio" value="0" @click="onInsuranceChanged">
                   <span class="uk-margin-small-left">Tidak</span>
                 </label>
               </div>
@@ -69,11 +69,11 @@
               </label>
               <div class="uk-child-width-auto" uk-grid>
                 <label>
-                  <input v-model="input.consolidate" type="radio" value="1" :disabled="$root.user.level != 3">
+                  <input v-model="input.consolidate" class="uk-radio" type="radio" value="1" :disabled="$root.user.level != 3" @click="onConsolidateChanged">
                   <span class="uk-margin-small-left">Ya</span>
                 </label>
                 <label>
-                  <input v-model="input.consolidate" type="radio" value="0" :disabled="$root.user.level != 3">
+                  <input v-model="input.consolidate" class="uk-radio" type="radio" value="0" :disabled="$root.user.level != 3" @click="onConsolidateChanged">
                   <span class="uk-margin-small-left">Tidak</span>
                 </label>
               </div>
@@ -495,10 +495,6 @@ export default {
     }
   },
 
-  watch: {
-    'input.consolidate': 'onConsolidateChanged'
-  },
-
   async created () {
     this.__startLoading()
 
@@ -603,9 +599,15 @@ export default {
         this.check()
       }
     },
-    onConsolidateChanged (newVal, oldVal) {
-      this.input.items = []
-      this.cost = this.$options.data().cost
+    onConsolidateChanged () {
+      this.$confirm('Paket dan barang yang anda input akan hilang, anda yakin?', 'Peringatan', {
+        type: 'warning'
+      }).then(() => {
+        this.input.items = []
+        this.cost = this.$options.data().cost
+      }).catch(() => {
+        this.input.consolidate = parseInt(this.input.consolidate) === 0 ? 1 : 0
+      })
     },
     onNpwpChanged (val) {
       this.input.npwp = val === true ? 1 : 0
