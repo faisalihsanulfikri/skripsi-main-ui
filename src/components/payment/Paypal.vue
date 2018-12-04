@@ -8,7 +8,7 @@ import paypal from 'paypal-checkout'
 export default {
   props: {
     code: {
-      required:true
+      required: true
     },
     amount: {
       required: true,
@@ -45,15 +45,15 @@ export default {
         return actions.payment.execute().then(payload => {
           let transaction = payload.transactions[0]
           this.createPayment({
-              date: new Date(payload.create_time).toLocaleString('id-ID').replace(/(\d{2})\/(\d{2})\/(\d{4})(.*)/, '$3-$2-$1'),
-              gateaway: 'Paypal',
-              channel: payload.payer.payment_method,
-              trx: payload.id,
-              amount: transaction.amount.total,
-              currency: transaction.amount.currency,
-              status: payload.state
-            })
-        }).catch(err => {
+            date: new Date(payload.create_time).toLocaleString('id-ID').replace(/(\d{2})\/(\d{2})\/(\d{4})(.*)/, '$3-$2-$1'),
+            gateaway: 'Paypal',
+            channel: payload.payer.payment_method,
+            trx: payload.id,
+            amount: transaction.amount.total,
+            currency: transaction.amount.currency,
+            status: payload.state
+          })
+        }).catch(() => {
           this.$notify({
             title: 'ERROR',
             message: 'Payment failed.',
@@ -79,7 +79,7 @@ export default {
 
         this.$router.push({ name: 'member-order' })
       } catch (err) {
-        this.__handleERror(this, err,true)
+        this.__handleERror(this, err, true)
       }
 
       this.__stopLoading()

@@ -203,17 +203,39 @@
             </div>
             <div class="uk-margin-small">
               <label class="uk-form-label">
-                <span class="uk-margin-small-right">Total Harga Barang dalam Paket (IDR)</span>
+                <span class="uk-margin-small-right">Total Harga Barang dalam Paket</span>
                 <el-tooltip class="item" effect="dark" content="Total harga barang dalam paket." placement="top">
                   <font-awesome-icon icon="info-circle"></font-awesome-icon>
                 </el-tooltip>
               </label>
-              <input
-                v-model="input.item.price"
-                v-validate="rules.item.price"
-                name="price"
-                class="uk-input"
-                :class="{ 'uk-form-danger': errors.has('price') }" />
+              <div class="uk-grid-small" uk-grid>
+                <div class="uk-width-1-2">
+                  <div class="el-form-item" :class="{ 'is-error': errors.has('price') }">
+                    <el-input v-model="input.item.currencyPrice" class="input-with-select" type="number" min="1" @input="convertToIdr">
+                      <el-select v-model="input.item.currency" slot="append" style="width: 100px" @change="convertToIdr">
+                        <el-option value="idr_rate" label="IDR"></el-option>
+                        <el-option value="dollar_rate" label="USD"></el-option>
+                        <el-option value="cny_rate" label="CNY"></el-option>
+                        <el-option value="krw_rate" label="WON"></el-option>
+                        <el-option value="sgd_rate" label="SGD"></el-option>
+                      </el-select>
+                    </el-input>
+                  </div>
+                </div>
+                <div class="uk-width-1-2">
+                  <div class="el-form-item" :class="{ 'is-error': errors.has('price') }">
+                    <el-input
+                      v-model="input.item.price"
+                      v-validate="rules.item.price"
+                      name="price"
+                      type="number"
+                      class="input-with-select"
+                      readonly>
+                      <span slot="append">IDR</span>
+                    </el-input>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="uk-margin-small uk-hidden">
               <label class="uk-form-label">Jumlah Barang</label>
@@ -404,6 +426,8 @@ export default {
           name: 'Paket',
           reference: '',
           price: '',
+          currency: 'idr_rate',
+          currencyPrice: '',
           quantity: 1,
           weight: '',
           length: '',
@@ -506,6 +530,9 @@ export default {
     },
     closeConfirmationDialog () {
       this.dialogOrderConfimation.visible = false
+    },
+    convertToIdr () {
+      this.input.item.price = this.input.item.currencyPrice * this.$store.state.kirimin.formula[this.input.item.currency]
     },
     async fetchWarehouses () {
       await this.__fetchWarehouses().then(res => {
