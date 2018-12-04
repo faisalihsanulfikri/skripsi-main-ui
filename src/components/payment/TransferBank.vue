@@ -78,6 +78,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   props: {
     data: {
@@ -92,7 +94,7 @@ export default {
       },
       input: {
         code: '',
-        date: new Date().toLocaleString('id-ID').replace(/(\d{2})\/(\d{2})\/(\d{4})(.*)/, '$3-$2-$1'),
+        date: '',
         amount: '',
         bank: ''
       },
@@ -114,7 +116,10 @@ export default {
     this.fetchBankAccounts()
 
     this.input.code = this.data.code
+    this.input.date = moment().format('YYYY-MM-DD')
     this.input.amount = parseInt(this.data.amount)
+
+    console.log(this.input.date)
   },
 
   methods: {
