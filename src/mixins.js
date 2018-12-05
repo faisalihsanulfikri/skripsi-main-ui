@@ -47,6 +47,20 @@ Vue.mixin({
         }
       }
     },
+    __roundHalf (value) {
+      let splitedValue = parseInt(value).toFixed(1).split('.')
+      let x = parseInt(splitedValue[0])
+      let y = parseInt(splitedValue[0])
+
+      if (y <= 5) {
+        y = 5
+      } else if (y > 5) {
+        x += 1
+        y = 0
+      }
+
+      return parseFloat(`${x}.${y}`)
+    },
     __focusElement (elementId) {
       document.getElementById(elementId).scrollIntoView({
         behavior: 'smooth'

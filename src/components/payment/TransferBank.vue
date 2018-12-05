@@ -18,7 +18,8 @@
             v-model="input.date"
             type="date"
             format="dd-MM-yyyy"
-            value-format="yyyy-MM-dd">
+            value-format="yyyy-MM-dd"
+            :picker-options="pickerOptions">
           </el-date-picker>
         </div>
         <p v-if="errors.first('date')" class="uk-margin-small uk-text-danger">
@@ -105,6 +106,11 @@ export default {
         amount: 'required|numeric',
         file: 'required'
       },
+      pickerOptions: {
+        disabledDate (time) {
+          return time.getTime() > Date.now()
+        }
+      },
       bankAccounts: [],
       error: false,
       errorMessage: '',
@@ -116,10 +122,8 @@ export default {
     this.fetchBankAccounts()
 
     this.input.code = this.data.code
-    this.input.date = moment().format('YYYY-MM-DD')
+    this.input.date = moment(new Date()).format('YYYY-MM-DD')
     this.input.amount = parseInt(this.data.amount)
-
-    console.log(this.input.date)
   },
 
   methods: {

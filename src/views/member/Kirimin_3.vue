@@ -208,34 +208,41 @@
                   <font-awesome-icon icon="info-circle"></font-awesome-icon>
                 </el-tooltip>
               </label>
-              <div class="uk-grid-small" uk-grid>
-                <div class="uk-width-1-2">
-                  <div class="el-form-item" :class="{ 'is-error': errors.has('price') }">
-                    <el-input v-model="input.item.currencyPrice" class="input-with-select" type="number" min="1" @input="onTypingCurrency">
-                      <el-select v-model="input.item.currency" slot="append" style="width: 100px" @change="onCurrencyChanged">
-                        <el-option value="idr_rate" label="IDR"></el-option>
-                        <el-option value="dollar_rate" label="USD"></el-option>
-                        <el-option value="cny_rate" label="CNY"></el-option>
-                        <el-option value="krw_rate" label="WON"></el-option>
-                        <el-option value="sgd_rate" label="SGD"></el-option>
-                      </el-select>
-                    </el-input>
-                  </div>
-                </div>
-                <div class="uk-width-1-2">
-                  <div class="el-form-item" :class="{ 'is-error': errors.has('price') }">
-                    <el-input
-                      v-model="input.item.price"
-                      v-validate="rules.item.price"
-                      name="price"
-                      type="number"
-                      class="input-with-select"
-                      readonly>
-                      <span slot="append">IDR</span>
-                    </el-input>
-                  </div>
-                </div>
-              </div>
+              <el-input-select-mask
+                v-model="input.item.currencyPrice"
+                :options="markOptions.numeral"
+                :error="errors.has('price')"
+                @input="onTypingCurrency"
+                @blur="onTypingCurrency">
+                <el-select v-model="input.item.currency" slot="append" style="width: 100px" @change="onCurrencyChanged">
+                  <el-option value="idr_rate" label="IDR"></el-option>
+                  <el-option value="dollar_rate" label="USD"></el-option>
+                  <el-option value="cny_rate" label="CNY"></el-option>
+                  <el-option value="krw_rate" label="WON"></el-option>
+                  <el-option value="sgd_rate" label="SGD"></el-option>
+                </el-select>
+                <input
+                  slot="input"
+                  v-model="input.item.price"
+                  v-validate="rules.item.price"
+                  name="price"
+                  type="hidden">
+              </el-input-select-mask>
+            </div>
+            <div class="uk-margin-small">
+              <el-input-append-mask
+                :value="input.item.price"
+                :options="markOptions.numeral"
+                :error="errors.has('price')"
+                :readonly="true">
+                <span slot="append">IDR</span>
+                <input
+                  slot="input"
+                  v-model="input.item.price"
+                  v-validate="rules.item.price"
+                  name="price"
+                  type="hidden">
+              </el-input-append-mask>
             </div>
             <div class="uk-margin-small uk-hidden">
               <label class="uk-form-label">Jumlah Barang</label>
@@ -253,47 +260,72 @@
                   <font-awesome-icon icon="info-circle"></font-awesome-icon>
                 </el-tooltip>
               </label>
-              <input
+              <el-input-mask
                 v-model="input.item.weight"
-                v-validate="rules.item.weight"
-                name="weight"
-                class="uk-input"
-                :class="{ 'uk-form-danger': errors.has('weight') }" />
+                :options="markOptions.numeral"
+                :error="errors.has('weight')"
+                @input="val => input.item.weight = val"
+                @blur="val => input.item.weight = val">
+                <input
+                  slot="input"
+                  v-model="input.item.weight"
+                  v-validate="rules.item.weight"
+                  name="weight"
+                  type="hidden">
+              </el-input-mask>
             </div>
             <div class="uk-margin-small">
               <label class="uk-form-label">
-                <span class="uk-margin-small-right">Dimensi ({{ config.volumeUnits }})</span>
+                <span class="uk-margin-small-right">Dimensi (P x L x T {{ config.volumeUnits }})</span>
                 <el-tooltip class="item" effect="dark" content="Volume paket." placement="top">
                   <font-awesome-icon icon="info-circle"></font-awesome-icon>
                 </el-tooltip>
               </label>
               <div class="uk-grid-small" uk-grid>
                 <div class="uk-width-1-3">
-                  <input
+                  <el-input-mask
                     v-model="input.item.length"
-                    v-validate="rules.item.length"
-                    name="length"
-                    class="uk-input"
-                    :class="{ 'uk-form-danger': errors.has('length') }"
-                    placeholder="Panjang" />
+                    :options="markOptions.numeral"
+                    :error="errors.has('length')"
+                    @input="val => input.item.length = val"
+                    @blur="val => input.item.length = val">
+                    <input
+                      slot="input"
+                      v-model="input.item.length"
+                      v-validate="rules.item.length"
+                      name="length"
+                      type="hidden">
+                  </el-input-mask>
                 </div>
                 <div class="uk-width-1-3">
-                  <input
+                  <el-input-mask
                     v-model="input.item.width"
-                    v-validate="rules.item.width"
-                    name="width"
-                    class="uk-input"
-                    :class="{ 'uk-form-danger': errors.has('width') }"
-                    placeholder="Lebar">
+                    :options="markOptions.numeral"
+                    :error="errors.has('width')"
+                    @input="val => input.item.width = val"
+                    @blur="val => input.item.width = val">
+                    <input
+                      slot="input"
+                      v-model="input.item.width"
+                      v-validate="rules.item.width"
+                      name="width"
+                      type="hidden">
+                  </el-input-mask>
                 </div>
                 <div class="uk-width-1-3">
-                  <input
+                  <el-input-mask
                     v-model="input.item.height"
-                    v-validate="rules.item.height"
-                    name="height"
-                    class="uk-input"
-                    :class="{ 'uk-form-danger': errors.has('height') }"
-                    placeholder="Tinggi">
+                    :options="markOptions.numeral"
+                    :error="errors.has('height')"
+                    @input="val => input.item.height = val"
+                    @blur="val => input.item.height = val">
+                    <input
+                      slot="input"
+                      v-model="input.item.height"
+                      v-validate="rules.item.height"
+                      name="height"
+                      type="hidden">
+                  </el-input-mask>
                 </div>
               </div>
             </div>
@@ -391,11 +423,18 @@ import CalculatorResult from '../../components/CalculatorResult'
 import DialogInputAddress from '../../components/DialogInputAddress'
 import DialogOrderConfirmation from '../../components/DialogOrderConfirmation'
 
+import ElInputMask from '../../components/ElInputMask'
+import ElInputAppendMask from '../../components/ElInputAppendMask'
+import ElInputSelectMask from '../../components/ElInputSelectMask'
+
 export default {
   components: {
     CalculatorResult,
     DialogInputAddress,
-    DialogOrderConfirmation
+    DialogOrderConfirmation,
+    ElInputMask,
+    ElInputAppendMask,
+    ElInputSelectMask
   },
 
   data () {
@@ -459,6 +498,14 @@ export default {
             quantity: 'required|numeric',
             unit: 'required'
           }
+        }
+      },
+      markOptions: {
+        numeral: {
+          numeral: true,
+          numertalThousandGroupStyle: 'thousand',
+          numeralDecimalMark: ',',
+          delimiter: '.'
         }
       },
       master: {
@@ -529,7 +576,8 @@ export default {
     closeConfirmationDialog () {
       this.dialogOrderConfimation.visible = false
     },
-    onTypingCurrency: _.debounce(function () {
+    onTypingCurrency: _.debounce(function (val) {
+      this.input.item.currencyPrice = val
       this.onCurrencyChanged()
     }, 500),
     onCurrencyChanged () {
@@ -666,6 +714,10 @@ export default {
         return
       }
 
+      this.input.item.weight = this.__roundHalf(this.input.item.weight)
+      this.input.item.length = this.__roundHalf(this.input.item.length)
+      this.input.item.width = this.__roundHalf(this.input.item.width)
+      this.input.item.height = this.__roundHalf(this.input.item.height)
       this.input.items = []
       this.input.items.push(this.input.item)
 
