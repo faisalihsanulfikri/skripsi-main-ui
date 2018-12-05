@@ -48,13 +48,13 @@ Vue.mixin({
       }
     },
     __roundHalf (value) {
-      let splitedValue = parseInt(value).toFixed(1).split('.')
+      let splitedValue = parseFloat(value).toFixed(1).split('.')
       let x = parseInt(splitedValue[0])
-      let y = parseInt(splitedValue[0])
+      let y = parseInt(splitedValue[1])
 
-      if (y <= 5) {
+      if (y > 0 && y <= 5) {
         y = 5
-      } else if (y > 5) {
+      } else if (y > 5 && y <= 9) {
         x += 1
         y = 0
       }
