@@ -225,7 +225,7 @@ export default {
       this.input.packet.length = this.order.detail.metaInfo.length
       this.input.packet.width = this.order.detail.metaInfo.width
       this.input.packet.height = this.order.detail.metaInfo.height
-      
+
       this.input.savedAddress = this.master.addresses[0].id
 
       this.onSavedAddressChange()
