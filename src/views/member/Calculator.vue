@@ -389,6 +389,8 @@ export default {
       try {
         let res = await this.$service.calculator.check(this.input)
 
+        this.cost = res.data.result.cost
+
         this.$notify({
           title: 'SUCCESS',
           message: 'Calculator complete.',
