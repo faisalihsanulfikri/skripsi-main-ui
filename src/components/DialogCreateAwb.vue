@@ -23,65 +23,125 @@
           <h5>Shipper Data</h5>
           <div class="uk-margin">
             <label class="uk-form-label">Name</label>
-            <el-input v-model="input.name"></el-input>
+            <el-input v-model="input.name" readonly></el-input>
           </div>
           <div class="uk-margin">
             <label class="uk-form-label">Phone</label>
-            <el-input v-model="input.phone"></el-input>
+            <el-input v-model="input.phone" readonly></el-input>
           </div>
           <div class="uk-margin">
             <label class="uk-form-label">Province</label>
-            <el-input v-model="input.province"></el-input>
+            <el-input v-model="input.province" readonly></el-input>
           </div>
           <div class="uk-margin">
             <label class="uk-form-label">City</label>
-            <el-input v-model="input.city"></el-input>
+            <el-input v-model="input.city" readonly></el-input>
           </div>
           <div class="uk-margin">
             <label class="uk-form-label">Sub District</label>
-            <el-input v-model="input.subDistrict"></el-input>
+            <el-input v-model="input.subDistrict" readonly></el-input>
           </div>
           <div class="uk-margin">
             <label class="uk-form-label">Address</label>
-            <el-input v-model="input.address"></el-input>
+            <el-input v-model="input.address" readonly></el-input>
           </div>
           <div class="uk-margin">
             <label class="uk-form-label">Zip Code</label>
-            <el-input v-model="input.zipCode"></el-input>
+            <el-input v-model="input.zipCode" readonly></el-input>
           </div>
         </div>
         <div>
           <div class="uk-margin">
             <label class="uk-form-label">Packet Price</label>
-            <el-input v-model="input.packet.price"></el-input>
+            <el-input-mask
+              v-model="input.packet.price"
+              :options="markOptions.numeral"
+              :error="errors.has('price')"
+              @input="val => input.packet.price = val"
+              @blur="val => input.packet.price = val">
+              <input
+                slot="input"
+                v-model="input.packet.price"
+                v-validate="rules.price"
+                name="price"
+                type="hidden">
+            </el-input-mask>
           </div>
           <div class="uk-margin">
             <label class="uk-form-label">
               Packet Weight
               <template v-if="order.detail">({{ order.detail.formula.weight_unit }})</template>
             </label>
-            <el-input v-model="input.packet.weight"></el-input>
+            <el-input-mask
+              v-model="input.packet.weight"
+              :options="markOptions.numeral"
+              :error="errors.has('weight')"
+              @input="val => input.packet.weight = val"
+              @blur="val => input.packet.weight = val">
+              <input
+                slot="input"
+                v-model="input.packet.weight"
+                v-validate="rules.weight"
+                name="weight"
+                type="hidden">
+            </el-input-mask>
           </div>
           <div class="uk-margin">
             <label class="uk-form-label">
               Packet Length
               <template v-if="order.detail">({{ order.detail.formula.volume_unit }})</template>
             </label>
-            <el-input v-model="input.packet.length"></el-input>
+            <el-input-mask
+              v-model="input.packet.length"
+              :options="markOptions.numeral"
+              :error="errors.has('length')"
+              @input="val => input.packet.length = val"
+              @blur="val => input.packet.length = val">
+              <input
+                slot="input"
+                v-model="input.packet.length"
+                v-validate="rules.length"
+                name="length"
+                type="hidden">
+            </el-input-mask>
           </div>
           <div class="uk-margin">
             <label class="uk-form-label">
               Packet Width
               <template v-if="order.detail">({{ order.detail.formula.volume_unit }})</template>
             </label>
-            <el-input v-model="input.packet.width"></el-input>
+            <el-input-mask
+              v-model="input.packet.width"
+              :options="markOptions.numeral"
+              :error="errors.has('width')"
+              @input="val => input.packet.width = val"
+              @blur="val => input.packet.width = val">
+              <input
+                slot="input"
+                v-model="input.packet.width"
+                v-validate="rules.width"
+                name="width"
+                type="hidden">
+            </el-input-mask>
           </div>
           <div class="uk-margin">
             <label class="uk-form-label">
               Packet Height
               <template v-if="order.detail">({{ order.detail.formula.volume_unit }})</template>
             </label>
-            <el-input v-model="input.packet.height"></el-input>
+            <el-input-mask
+              v-model="input.packet.height"
+              :options="markOptions.numeral"
+              :error="errors.has('height')"
+              @input="val => input.packet.height = val"
+              @blur="val => input.packet.height = val">
+              <input
+                slot="input"
+                v-model="input.packet.height"
+                v-validate="rules.height"
+                name="height"
+                type="hidden">
+            </el-input-mask>
           </div>
         </div>
       </div>
@@ -93,7 +153,13 @@
 </template>
 
 <script>
+import ElInputMask from './ElInputMask'
+
 export default {
+  components: {
+    ElInputMask
+  },
+
   props: {
     visible: {
       required: true,
@@ -126,6 +192,21 @@ export default {
           height: ''
         }
       },
+      rules: {
+        price: 'required|decimal:2',
+        weight: 'required|decimal:2',
+        length: 'required|decimal:2',
+        width: 'required|decimal:2',
+        height: 'required|decimal:2'
+      },
+      markOptions: {
+        numeral: {
+          numeral: true,
+          numertalThousandGroupStyle: 'thousand',
+          numeralDecimalMark: ',',
+          delimiter: '.'
+        }
+      },
       master: {
         addresses: []
       },
@@ -144,6 +225,10 @@ export default {
       this.input.packet.length = this.order.detail.metaInfo.length
       this.input.packet.width = this.order.detail.metaInfo.width
       this.input.packet.height = this.order.detail.metaInfo.height
+      
+      this.input.savedAddress = this.master.addresses[0].id
+
+      this.onSavedAddressChange()
     },
     onDialogClose () {
       this.input = this.$options.data().input
@@ -169,6 +254,8 @@ export default {
       }).catch(() => {})
     },
     async createAwb () {
+      if (!(await this.$validator.validate())) return
+
       this.__startLoading()
 
       this.error = false
