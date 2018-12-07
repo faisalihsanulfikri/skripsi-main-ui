@@ -21,6 +21,12 @@ const awb = {
   }
 }
 
+const calculator = {
+  check (data = {}) {
+    return Vue.http().post('/calculator', data)
+  }
+}
+
 const category = {
   get (params = {}) {
     return Vue.http().get('/categories', {
@@ -112,6 +118,7 @@ const services = {
   config,
   auth,
   awb,
+  calculator,
   category,
   invoice,
   order,

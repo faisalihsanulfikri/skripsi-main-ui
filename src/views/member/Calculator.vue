@@ -78,54 +78,85 @@
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">Berat ({{ config.weightUnits }})</label>
-              <input
+              <el-input-mask
                 v-model="input.items[0].weight"
-                v-validate="rules.item.weight"
-                class="uk-input"
-                name="weight"
-                :class="{ 'uk-form-danger': errors.has('weight') }"
-                placeholder="Berat" />
+                :options="markOptions.numeral"
+                :error="errors.has('weight')"
+                @input="val => input.items[0].weight = val"
+                @blur="val => input.items[0].weight = val">
+                <input
+                  slot="input"
+                  v-model="input.items[0].weight"
+                  v-validate="rules.item.weight"
+                  name="weight"
+                  type="hidden">
+              </el-input-mask>
             </div>
             <div class="uk-margin">
-              <label class="uk-form-label">Dimensi ({{ config.volumeUnits }})</label>
+              <label class="uk-form-label">Dimensi (P x L x T {{ config.volumeUnits }})</label>
               <div class="uk-grid-small" uk-grid>
                 <div class="uk-width-1-3">
-                  <input
+                  <el-input-mask
                     v-model="input.items[0].length"
-                    v-validate="rules.item.length"
-                    name="length"
-                    class="uk-input"
-                    :class="{ 'uk-form-danger': errors.has('length') }"
-                    placeholder="Panjang" />
+                    :options="markOptions.numeral"
+                    :error="errors.has('length')"
+                    @input="val => input.items[0].length = val"
+                    @blur="val => input.items[0].length = val">
+                    <input
+                      slot="input"
+                      v-model="input.items[0].length"
+                      v-validate="rules.item.length"
+                      name="length"
+                      type="hidden">
+                  </el-input-mask>
                 </div>
                 <div class="uk-width-1-3">
-                  <input
-                    v-model="input.items[0].width"
-                    v-validate="rules.item.width"
-                    name="width"
-                    class="uk-input"
-                    :class="{ 'uk-form-danger': errors.has('width') }"
-                    placeholder="Lebar" />
+                    <el-input-mask
+                      v-model="input.items[0].width"
+                      :options="markOptions.numeral"
+                      :error="errors.has('width')"
+                      @input="val => input.items[0].width = val"
+                      @blur="val => input.items[0].width = val">
+                      <input
+                        slot="input"
+                        v-model="input.items[0].width"
+                        v-validate="rules.item.width"
+                        name="width"
+                        type="hidden">
+                    </el-input-mask>
                 </div>
                 <div class="uk-width-1-3">
-                  <input
+                  <el-input-mask
                     v-model="input.items[0].height"
-                    v-validate="rules.item.height"
-                    class="uk-input"
-                    name="height"
-                    :class="{ 'uk-form-danger': errors.has('height') }"
-                    placeholder="Tinggi" />
+                    :options="markOptions.numeral"
+                    :error="errors.has('height')"
+                    @input="val => input.items[0].height = val"
+                    @blur="val => input.items[0].height = val">
+                    <input
+                      slot="input"
+                      v-model="input.items[0].height"
+                      v-validate="rules.item.height"
+                      name="height"
+                      type="hidden">
+                  </el-input-mask>
                 </div>
               </div>
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">Harga Barang</label>
-              <input
+              <el-input-mask
                 v-model="input.items[0].price"
-                v-validate="rules.item.price"
-                name="price"
-                class="uk-input"
-                :class="{ 'uk-form-danger': errors.has('price') }" />
+                :options="markOptions.numeral"
+                :error="errors.has('price')"
+                @input="val => input.items[0].price = val"
+                @blur="val => input.items[0].price = val">
+                <input
+                  slot="input"
+                  v-model="input.items[0].price"
+                  v-validate="rules.item.price"
+                  name="price"
+                  type="hidden">
+              </el-input-mask>
             </div>
             <div class="uk-margin uk-hidden">
               <label class="uk-form-label">Jumlah Barang</label>
@@ -161,10 +192,12 @@
 
 <script>
 import CalculatorResult from '../../components/CalculatorResult'
+import ElInputMask from '../../components/ElInputMask'
 
 export default {
   components: {
-    CalculatorResult
+    CalculatorResult,
+    ElInputMask
   },
   data () {
     return {
@@ -205,6 +238,14 @@ export default {
           length: 'required|decimal:2',
           width: 'required|decimal:2',
           height: 'required|decimal:2'
+        }
+      },
+      markOptions: {
+        numeral: {
+          numeral: true,
+          numertalThousandGroupStyle: 'thousand',
+          numeralDecimalMark: ',',
+          delimiter: '.'
         }
       },
       options: {
@@ -340,33 +381,22 @@ export default {
 
       this.$validator.errors.clear()
 
-      await this.$authHttp.post('/calculator', this.input).then(res => {
-        this.cost = res.data.result.cost
+      this.input.items[0].weight = this.__roundHalf(this.input.items[0].weight)
+      this.input.items[0].length = this.__roundHalf(this.input.items[0].length)
+      this.input.items[0].width = this.__roundHalf(this.input.items[0].width)
+      this.input.items[0].height = this.__roundHalf(this.input.items[0].height)
+
+      try {
+        let res = await this.$service.calculator.check(this.input)
 
         this.$notify({
           title: 'SUCCESS',
           message: 'Calculator complete.',
           type: 'success'
         })
-      }).catch(err => {
-        if (err.response) {
-          this.error = true
-          this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
-
-          this.$validator.errors.clear()
-
-          if (err.response.data.errorValidation) {
-            this.validationErrors = err.response.data.errors
-
-            Object.keys(this.validationErrors).forEach(key => {
-              this.$validator.errors.add({
-                field: key,
-                msg: this.validationErrors[key][0]
-              })
-            })
-          }
-        }
-      })
+      } catch (err) {
+        this.__handleError(this, err, true)
+      }
 
       this.__stopLoading()
     }

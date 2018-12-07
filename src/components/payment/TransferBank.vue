@@ -39,11 +39,19 @@
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Jumlah Bayar <b>(Rp. {{ data.amount | currency('', 0, { thousandsSeparator: '.', decimalSeparator: ',' })}})</b></label>
-        <input
+        <el-input-mask
           v-model="input.amount"
-          v-validate="rules.amount"
-          name="amount"
-          class="uk-input" />
+          :options="markOptions.numeral"
+          :error="errors.has('weight')"
+          @input="val => input.amount = val"
+          @blur="val => input.amount = val">
+          <input
+            slot="input"
+            v-model="input.amount"
+            v-validate="rules.amount"
+            name="weight"
+            type="hidden">
+        </el-input-mask>
         <p v-if="errors.first('amount')" class="uk-margin-small uk-text-danger">
           {{ errors.first('amount') }}
         </p>
@@ -81,7 +89,13 @@
 <script>
 import moment from 'moment'
 
+import ElInputMask from '../ElInputMask'
+
 export default {
+  components: {
+    ElInputMask
+  },
+
   props: {
     data: {
       required: true
@@ -109,6 +123,14 @@ export default {
       pickerOptions: {
         disabledDate (time) {
           return time.getTime() > Date.now()
+        }
+      },
+      markOptions: {
+        numeral: {
+          numeral: true,
+          numertalThousandGroupStyle: 'thousand',
+          numeralDecimalMark: ',',
+          delimiter: '.'
         }
       },
       bankAccounts: [],
