@@ -49,7 +49,20 @@
       <hr>
 
       <div v-if="awb.items" class="uk-margin">
-        <h5 class="uk-margin-remove uk-text-bold">GOODS</h5>
+        <div class="uk-grid-small" uk-grid>
+          <div class="uk-width-expand">
+            <h5 class="uk-margin-remove uk-text-bold">GOODS</h5>
+          </div>
+          <div class="uk-width-auto uk-text-right">
+            <template v-if="awb.detail && awb.detail.packet_info">
+              <span class="uk-margin-small-right">{{ `IDR ${awb.detail.packet_info.stringPrice}` }}</span>
+              <span class="uk-margin-small-right">{{ `${awb.detail.packet_info.stringWeight} ${awb.detail.packet_info.weight_unit}` }}</span>
+              <span>
+                {{ `${awb.detail.packet_info.stringLength} x ${awb.detail.packet_info.stringWidth} x ${awb.detail.packet_info.stringHeight} ${awb.detail.packet_info.volume_unit}` }}
+              </span>
+            </template>
+          </div>
+        </div>
         <div class="uk-padding-small">
           <ul class="uk-list uk-list uk-margin-remove">
             <li v-for="(item, index) in awb.items" :key="index">
@@ -98,6 +111,11 @@ export default {
         this.awb = res.data
 
         this.$util.orderItem.stringCurrency(this.awb.items)
+        this.awb.detail.packet_info['stringPrice'] = this.$options.filters.currency(this.awb.detail.packet_info.price, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
+        this.awb.detail.packet_info['stringWeight'] = this.$options.filters.currency(this.awb.detail.packet_info.weight, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
+        this.awb.detail.packet_info['stringLength'] = this.$options.filters.currency(this.awb.detail.packet_info.length, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
+        this.awb.detail.packet_info['stringWidth'] = this.$options.filters.currency(this.awb.detail.packet_info.width, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
+        this.awb.detail.packet_info['stringHeight'] = this.$options.filters.currency(this.awb.detail.packet_info.height, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
       } catch (err) {
         this.__handleError(this, err, true)
       }
