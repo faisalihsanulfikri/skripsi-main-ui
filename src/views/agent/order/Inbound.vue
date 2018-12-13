@@ -34,6 +34,7 @@
             <tr>
               <th></th>
               <th width="150">Code</th>
+              <th width="150">Date</th>
               <th>Customer</th>
               <th class="uk-text-center" width="150">Status</th>
             </tr>
@@ -48,8 +49,10 @@
                   </a>
                 </td>
                 <td>{{ order.code }}</td>
+                <td>{{ order.created_at }}</td>
                 <td>{{ order.user.name }}</td>
                 <td class="uk-text-center">{{ order.status }}</td>
+                
               </tr>
               <tr v-show="!order.collapse" :key="`${orderIndex}_info`">
                 <td></td>

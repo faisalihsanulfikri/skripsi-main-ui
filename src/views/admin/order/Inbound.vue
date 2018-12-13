@@ -34,6 +34,7 @@
             <tr>
               <th></th>
               <th width="150">Code</th>
+              <th width="150">Date</th>
               <th>Customer</th>
               <th class="uk-text-right" width="200">Amount (IDR)</th>
               <th class="uk-text-center" width="150">Status</th>
@@ -49,6 +50,7 @@
                   </a>
                 </td>
                 <td>{{ order.code }}</td>
+                <td>{{ order.created_at }}</td>
                 <td>{{ order.user.name }}</td>
                 <td class="uk-text-right">
                   {{ order.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
