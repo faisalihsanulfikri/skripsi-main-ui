@@ -147,7 +147,12 @@
       </div>
     </div>
     <div slot="footer">
-      <el-button type="primary" @click="createAwb">CREATE AWB</el-button>
+      <el-button
+        type="primary"
+        :disabled="$store.state.app.loading"
+        @click="createAwb">
+        CREATE AWB
+      </el-button>
     </div>
   </el-dialog>
 </template>
