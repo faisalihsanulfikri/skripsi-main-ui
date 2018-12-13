@@ -4,44 +4,57 @@
       <div class="uk-width-1-2">
         <div class="uk-card uk-card-default uk-card-small">
           <div class="uk-card-header">
-            <h3 class="uk-card-title">Pengiriman</h3>
+            <h3 class="uk-card-title">Shpping Info</h3>
           </div>
           <div class="uk-card-body">
+            <h5 class="uk-heading-line"><span>Shipper</span></h5>
             <div class="uk-margin-small">
-              <label class="uk-form-label">Gudang Kirimin</label>
-              <select v-model="input.warehouse" class="uk-select" @change="onWarehouseChanged">
-                <option
-                  v-for="item in options.warehouse"
-                  :key="item.value"
-                  :value="item.value">
-                    {{ item.label }}
-                  </option>
-              </select>
+              <label class="uk-form-label">Warehouse</label>
+              <div>
+                <el-select v-model="input.warehouse" class="uk-width-1-1" @change="onWarehouseChanged">
+                  <el-option
+                    v-for="item in options.warehouse"
+                    :key="item.value"
+                    :value="item.value"
+                    :label="item.label">
+                    </el-option>
+                </el-select>
+              </div>
+            </div>
+            <h5 class="uk-heading-line"><span>Receiver</span></h5>
+            <div class="uk-margin-small">
+              <label class="uk-form-label">Customer</label>
+              <div>
+                <el-autocomplete
+                  v-model="input.customerString"
+                  :fetch-suggestions="fetchUsers"
+                  :trigger-on-focus="false"
+                  class="uk-width-1-1"
+                  @select="onUserSelected"
+                  clearable>
+                </el-autocomplete>
+              </div>
             </div>
             <div class="uk-margin-small">
               <label class="uk-form-label">Alamat Penerima</label>
-              <div class="uk-grid-small" uk-grid>
-                <div class="uk-width-expand">
-                  <select
-                    v-model="input.address"
-                    v-validate="rules.address"
-                    name="address"
-                    class="uk-select"
-                    :class="{ 'uk-form-danger': errors.has('address') }"
-                    @change="onAddressChanged">
-                    <option
-                      v-for="(item, key) in options.address"
-                      :key="key"
-                      :value="item.value">
-                        {{ item.label }}
-                      </option>
-                  </select>
-                </div>
-                <div class="uk-width-auto">
-                  <button class="uk-button uk-button-default" @click="openNewAddressDialog">Tambah Alamat</button>
-                </div>
+              <div>
+                <select
+                  v-model="input.address"
+                  v-validate="rules.address"
+                  name="address"
+                  class="uk-select"
+                  :class="{ 'uk-form-danger': errors.has('address') }"
+                  @change="onUserAddressChanged">
+                  <option
+                    v-for="(item, key) in options.address"
+                    :key="key"
+                    :value="item.value">
+                      {{ item.label }}
+                    </option>
+                </select>
               </div>
             </div>
+            <h5 class="uk-heading-line"><span>Extra</span></h5>
             <div class="uk-margin-small">
               <label class="uk-form-label">
                 Asuransi
@@ -69,11 +82,11 @@
               </label>
               <div class="uk-child-width-auto" uk-grid>
                 <label>
-                  <input v-model="input.consolidate" class="uk-radio" type="radio" value="1" :disabled="$root.user.level != 3" @click="onConsolidateChanged">
+                  <input v-model="input.consolidate" class="uk-radio" type="radio" value="1" @click="onConsolidateChanged">
                   <span class="uk-margin-small-left">Ya</span>
                 </label>
                 <label>
-                  <input v-model="input.consolidate" class="uk-radio" type="radio" value="0" :disabled="$root.user.level != 3" @click="onConsolidateChanged">
+                  <input v-model="input.consolidate" class="uk-radio" type="radio" value="0" @click="onConsolidateChanged">
                   <span class="uk-margin-small-left">Tidak</span>
                 </label>
               </div>
@@ -88,7 +101,7 @@
       <div class="uk-width-1-2">
         <div class="uk-card uk-card-default uk-card-small">
           <div class="uk-card-header">
-            <h3 class="uk-card-title">Paket</h3>
+            <h3 class="uk-card-title">Packet</h3>
           </div>
           <div class="uk-card-body">
             <div class="uk-margin-small">
@@ -341,9 +354,9 @@
         </div>
       </div>
     </div>
-    <div v-if="input.items.length > 0" id="card-consolidate" class="uk-card uk-card-default uk-card-small uk-margin">
+    <div v-if="input.items.length > 0" id="card-item" class="uk-card uk-card-default uk-card-small uk-margin">
       <div class="uk-card-header">
-        <h3 class="uk-card-title">Daftar Paket</h3>
+        <h3 class="uk-card-title">Packet List</h3>
       </div>
       <div class="uk-card-body">
         <div class="uk-overflow-auto">
@@ -381,31 +394,15 @@
           </table>
         </div>
       </div>
-    </div>
-
-    <div id="card-cost" class="uk-card uk-card-default uk-card-small uk-margin">
-      <div class="uk-card-header">
-        <h3 class="uk-card-title">Estimasi Biaya</h3>
-      </div>
-      <div class="uk-card-body">
-        <calculator-result :cost="cost" @npwp-change="onNpwpChanged"></calculator-result>
-      </div>
       <div class="uk-card-footer uk-text-right">
         <button
-          class="uk-button uk-button-primary uk-margin-small-left"
+          class="uk-button uk-button-primary"
           :disabled="input.items.length < 1"
           @click="openConfirmationDialog">
-          Lanjut
+            Next
         </button>
       </div>
     </div>
-
-    <dialog-input-address
-      title="Tambah Alamat"
-      :visible.sync="dialogNewAddress.visible"
-      @close="closeNewAddressDialog"
-      @saved="onAddressSaved">
-    </dialog-input-address>
 
     <dialog-order-confirmation
       :visible="dialogOrderConfimation.visible"
@@ -419,18 +416,16 @@
 <script>
 import _ from 'lodash'
 
-import CalculatorResult from '../../components/CalculatorResult'
-import DialogInputAddress from '../../components/DialogInputAddress'
-import DialogOrderConfirmation from '../../components/DialogOrderConfirmation'
+import DialogOrderConfirmation from '../../../components/DialogOrderConfirmation'
 
-import ElInputMask from '../../components/ElInputMask'
-import ElInputAppendMask from '../../components/ElInputAppendMask'
-import ElInputSelectMask from '../../components/ElInputSelectMask'
+import ElInputMask from '../../../components/ElInputMask'
+import ElInputAppendMask from '../../../components/ElInputAppendMask'
+import ElInputSelectMask from '../../../components/ElInputSelectMask'
+
+import { REGULAR, PREMIUM } from '../../../config/level'
 
 export default {
   components: {
-    CalculatorResult,
-    DialogInputAddress,
     DialogOrderConfirmation,
     ElInputMask,
     ElInputAppendMask,
@@ -439,9 +434,6 @@ export default {
 
   data () {
     return {
-      dialogNewAddress: {
-        visible: false
-      },
       dialogOrderConfimation: {
         visible: false,
         data: {}
@@ -452,6 +444,9 @@ export default {
         volumeUnits: 'cm'
       },
       input: {
+        customer: '',
+        customerString: '',
+        customerAddress: '',
         warehouse: '',
         destination: '',
         npwp: 0,
@@ -464,7 +459,7 @@ export default {
         item: {
           category: '',
           categoryName: '',
-          name: 'Paket',
+          name: 'Packet',
           reference: '',
           price: '',
           currency: 'idr_rate',
@@ -548,38 +543,22 @@ export default {
     this.__startLoading()
 
     await this.fetchWarehouses()
-    await this.fetchAddresses()
-
     await this.fetchCategories()
 
     this.__stopLoading()
   },
 
   methods: {
-    openNewAddressDialog () {
-      this.dialogNewAddress.visible = true
+    onConsolidateChanged () {
+      this.$confirm('Paket dan barang yang anda input akan hilang, anda yakin?', 'Peringatan', {
+        type: 'warning'
+      }).then(() => {
+        this.input.items = []
+        this.cost = this.$options.data().cost
+      }).catch(() => {
+        this.input.consolidate = parseInt(this.input.consolidate) === 0 ? 1 : 0
+      })
     },
-    closeNewAddressDialog () {
-      this.dialogNewAddress.visible = false
-    },
-    async onAddressSaved (address) {
-      await this.fetchAddresses()
-
-      this.input.address = address.id
-
-      this.onAddressChanged()
-      this.closeNewAddressDialog()
-    },
-    openConfirmationDialog () {
-      this.dialogOrderConfimation.visible = true
-    },
-    closeConfirmationDialog () {
-      this.dialogOrderConfimation.visible = false
-    },
-    onTypingCurrency: _.debounce(function (val) {
-      this.input.item.currencyPrice = val
-      this.onCurrencyChanged()
-    }, 500),
     onCurrencyChanged () {
       this.input.item.price = this.input.item.currencyPrice * this.$store.state.kirimin.formula[this.input.item.currency]
 
@@ -587,28 +566,27 @@ export default {
         this.check()
       }
     },
-    async fetchWarehouses () {
-      try {
-        let res = await this.$service.warehouse.all()
-
-        this.master.warehouses = res.data
-        this.input.warehouse = res.data[0].code
-
-        this.options.warehouse = res.data.map(item => {
-          let $item = {
-            value: item.code,
-            label: item.name
-          }
-
-          return $item
-        })
-      } catch (err) {
-        this.__handleError(this, err, true)
+    onInsuranceChanged () {
+      if (this.input.items.length > 0) {
+        this.check()
       }
     },
-    async fetchAddresses () {
+    onTypingCurrency: _.debounce(function (val) {
+      this.input.item.currencyPrice = val
+      this.onCurrencyChanged()
+    }, 500),
+    onUserAddressChanged () {
+      let address = this.master.addresses.find(address => {
+        return address.id === this.input.address
+      })
+
+      this.input.destination = address.code
+    },
+    async onUserSelected (user) {
+      this.input.customer = user.id
+
       try {
-        let res = await this.$service.user.getAddresses()
+        let res = await this.$service.user.getAddressesById(user.id)
 
         this.master.addresses = res.data
         this.options.address = res.data.map(item => {
@@ -624,6 +602,56 @@ export default {
           this.input.address = res.data[0].id
           this.input.destination = res.data[0].code
         }
+      } catch (err) {
+        this.__handleError(this, err, true)
+      }
+    },
+    onWarehouseChanged () {
+      if (this.input.items.length > 0) {
+        this.check()
+      }
+    },
+    openConfirmationDialog () {
+      this.dialogOrderConfimation.visible = true
+    },
+    closeConfirmationDialog () {
+      this.dialogOrderConfimation.visible = false
+    },
+    async fetchUsers (queryString, cb) {
+      try {
+        let res = await this.$service.user.get({
+          active: [ 1 ],
+          level: [ REGULAR, PREMIUM ],
+          search: queryString
+        })
+
+        let items = res.data.data.map(item => {
+          return {
+            value: `${item.code} - ${item.name}`,
+            id: item.id
+          }
+        })
+
+        cb(items)
+      } catch (err) {
+        this.__handleError(this, err, true)
+      }
+    },
+    async fetchWarehouses () {
+      try {
+        let res = await this.$service.agent.getWarehouses()
+
+        this.master.warehouses = res.data
+        this.input.warehouse = res.data[0].code
+
+        this.options.warehouse = res.data.map(item => {
+          let $item = {
+            value: item.code,
+            label: item.name
+          }
+
+          return $item
+        })
       } catch (err) {
         this.__handleError(this, err, true)
       }
@@ -646,37 +674,6 @@ export default {
       } catch (err) {
         this.__handleError(this, err, true)
       }
-    },
-    onWarehouseChanged () {
-      if (this.input.items.length > 0) {
-        this.check()
-      }
-    },
-    onAddressChanged () {
-      let address = this.master.addresses.find(address => {
-        return address.id === this.input.address
-      })
-
-      this.input.destination = address.code
-
-      if (this.input.items.length > 0) {
-        this.check()
-      }
-    },
-    onInsuranceChanged () {
-      if (this.input.items.length > 0) {
-        this.check()
-      }
-    },
-    onConsolidateChanged () {
-      this.$confirm('Paket dan barang yang anda input akan hilang, anda yakin?', 'Peringatan', {
-        type: 'warning'
-      }).then(() => {
-        this.input.items = []
-        this.cost = this.$options.data().cost
-      }).catch(() => {
-        this.input.consolidate = parseInt(this.input.consolidate) === 0 ? 1 : 0
-      })
     },
     onNpwpChanged (val) {
       this.input.npwp = val === true ? 1 : 0
@@ -761,7 +758,7 @@ export default {
 
         this.cost = res.data.result.cost
 
-        this.__focusElement('card-cost')
+        this.__focusElement('card-item')
       } catch (err) {
         this.__handleError(this, err, true)
       }
@@ -776,7 +773,7 @@ export default {
       this.input.paymentMethod = paymentMethod
 
       try {
-        let res = await this.$service.order.createKirimin(this.input)
+        let res = await this.$service.order.createKiriminFromAgent(this.input)
 
         this.$notify({
           title: 'SUCCESS',
@@ -785,7 +782,7 @@ export default {
         })
 
         this.$router.push({
-          name: 'member-invoice-show',
+          name: 'agent-inbound',
           params: {
             code: res.data.data.code
           }

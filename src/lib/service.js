@@ -1,8 +1,11 @@
 import Vue from 'vue'
 
-const config = {
-  getBankAccounts () {
-    return Vue.authHttp().get('/configs/bank_accounts')
+const agent = {
+  getAddresses () {
+    return Vue.authHttp().get('/agent/addresses/list')
+  },
+  getWarehouses () {
+    return Vue.authHttp().get('/agent/warehouses/list')
   }
 }
 
@@ -52,6 +55,12 @@ const category = {
   }
 }
 
+const config = {
+  getBankAccounts () {
+    return Vue.authHttp().get('/configs/bank_accounts')
+  }
+}
+
 const invoice = {
   get (params = {}) {
     return Vue.authHttp().get('/invoices', {
@@ -81,6 +90,9 @@ const order = {
   createKirimin (data = {}) {
     return Vue.authHttp().post('/orders/kirimin', data)
   },
+  createKiriminFromAgent (data = {}) {
+    return Vue.authHttp().post('/agent/orders/kirimin', data)
+  },
   updateItemStatus (orderCode = null, itemId = null, data = {}) {
     return Vue.authHttp().put(`/orders/${orderCode}/items/${itemId}/status`, data)
   }
@@ -99,6 +111,17 @@ const payment = {
 }
 
 const user = {
+  get (params = {}) {
+    return Vue.authHttp().get(`/users`, {
+      params: params
+    })
+  },
+  getAddresses () {
+    return Vue.authHttp().get('/user/addresses/list')
+  },
+  getAddressesById (id) {
+    return Vue.authHttp().get(`/users/${id}/addresses/list`)
+  },
   getByLevel (level = null, params = {}) {
     return Vue.authHttp().get(`/users/${level}`, {
       params: params
@@ -115,11 +138,12 @@ const warehouse = {
 }
 
 const services = {
-  config,
+  agent,
   auth,
   awb,
   calculator,
   category,
+  config,
   invoice,
   order,
   orderAirWaybill,
