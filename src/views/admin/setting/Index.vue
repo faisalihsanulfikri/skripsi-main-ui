@@ -63,7 +63,7 @@ export default {
     this.__startLoading()
 
     await this.fetchConfigs()
-    
+
     this.__stopLoading()
   },
 
