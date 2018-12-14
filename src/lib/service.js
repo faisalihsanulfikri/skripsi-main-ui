@@ -21,6 +21,9 @@ const auth = {
 const awb = {
   create (data = {}) {
     return Vue.authHttp().post('/awb', data)
+  },
+  find (code) {
+    return Vue.authHttp().get(`/awb/${code}`)
   }
 }
 

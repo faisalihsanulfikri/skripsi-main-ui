@@ -1,4 +1,6 @@
 import Main from '../views/admin/Main'
+
+import AwbShow from '../views/agent/awb/Show'
 import Dashboard from '../views/admin/Dashboard'
 import Invoice from '../views/admin/invoice/Index'
 import Inbound from '../views/admin/order/Inbound'
@@ -23,6 +25,15 @@ export default {
       path: '/',
       name: 'admin-main',
       component: Dashboard,
+      meta: {
+        auth: true,
+        level: [ADMIN, SUPER_ADMIN]
+      }
+    },
+    {
+      path: 'air-waybills/:code',
+      name: 'admin-awb-show',
+      component: AwbShow,
       meta: {
         auth: true,
         level: [ADMIN, SUPER_ADMIN]

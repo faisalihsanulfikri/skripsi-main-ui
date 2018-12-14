@@ -59,7 +59,7 @@
               </tr>
               <tr v-show="!order.collapse" :key="`${orderIndex}_info`">
                 <td></td>
-                <td colspan="4">
+                <td colspan="5">
                   <div class="uk-grid-small" uk-grid>
                     <div class="uk-width-2-5">
                       <h5 class="uk-margin-small">
@@ -119,7 +119,7 @@
                                   </tr>
                                   <tr v-for="(item, itemIndex) in items" :key="itemIndex">
                                     <td>{{ item.name }}</td>
-                                    <td width="100">{{ item.quantity }} {{ item.unit }}</td>
+                                    <td width="100">{{ item.stringQuantity }} {{ item.unit }}</td>
                                     <td class="uk-text-center" width="100">{{ item.status }}</td>
                                   </tr>
                                 </table>
@@ -134,7 +134,32 @@
                   <hr>
 
                   <div class="uk-margin">
-
+                    <h5 class="uk-margin-remove">
+                      <font-awesome-icon icon="shipping-fast"></font-awesome-icon>
+                      <span class="uk-margin-small-left">Air Waybills</span>
+                    </h5>
+                    <div>
+                      <table class="uk-table uk-table-small uk-table-divider uk-text-small">
+                        <thead>
+                          <tr>
+                            <th>AWB Number</th>
+                            <th width="150">Created At</th>
+                            <th width="150">Created By</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="(awb, index) in order.air_waybills" :key="index">
+                            <td>
+                              <router-link :to="{ name: 'admin-awb-show', params: { code: awb.awb } }">
+                                {{ awb.awb }}
+                              </router-link>
+                            </td>
+                            <td>{{ awb.created_at }}</td>
+                            <td>{{ awb.created_by }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </td>
               </tr>

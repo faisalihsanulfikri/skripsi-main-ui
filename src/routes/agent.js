@@ -1,4 +1,5 @@
 import Main from '../views/agent/Main'
+import AwbShow from '../views/agent/awb/Show'
 import Dashboard from '../views/agent/Dashboard'
 import OrderCreate from '../views/agent/order/Entry'
 import OrderInbound from '../views/agent/order/Inbound'
@@ -32,6 +33,15 @@ export default {
       path: 'inbound',
       name: 'agent-inbound',
       component: OrderInbound,
+      meta: {
+        auth: true,
+        level: [AGENT]
+      }
+    },
+    {
+      path: 'air-waybills/:code',
+      name: 'agent-awb-show',
+      component: AwbShow,
       meta: {
         auth: true,
         level: [AGENT]

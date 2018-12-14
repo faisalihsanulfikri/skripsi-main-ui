@@ -52,7 +52,6 @@
                 <td>{{ order.created_at }}</td>
                 <td>{{ order.user.name }}</td>
                 <td class="uk-text-center">{{ order.status }}</td>
-                
               </tr>
               <tr v-show="!order.collapse" :key="`${orderIndex}_info`">
                 <td></td>
@@ -84,8 +83,9 @@
                   <div class="uk-margin-small">
                     <h5 class="uk-margin-remove">
                       <font-awesome-icon icon="cubes"></font-awesome-icon>
-                      <span class="uk-margin-small-left">Packets</span>
-                      <el-badge :value="order.item_groups.length"></el-badge>
+                      <span class="uk-margin-small-left">{{ order.item_groups.length }}</span>
+                      <span class="uk-margin-small-left">Packet`s</span>
+                      <el-tag v-if="order.consolidate === 1" class="uk-margin-small-left" type="success" size="mini">Consolidate</el-tag>
                     </h5>
                     <div class="uk-overflow-auto">
                       <table class="uk-table uk-table-small uk-table-divider uk-table-middle uk-text-small">
@@ -96,7 +96,7 @@
                                 <a href="#">{{ items[0].category.name }}</a>
                               </td>
                               <td class="uk-text-center" width="300">{{ `${items[0].stringWeight} ${order.detail.formula.weight_unit} - ${items[0].stringLength} x ${items[0].stringWidth} x ${items[0].stringLength} ${order.detail.formula.volume_unit}` }}</td>
-                              <td class="uk-text-right" width="200">Rp. {{ items[0].stringPrice }}</td>
+                              <td class="uk-text-right" width="200">IDR {{ items[0].stringPrice }}</td>
                             </tr>
                             <tr :key="`${groupIndex}_goods`">
                               <td colspan="3">
@@ -112,7 +112,7 @@
                                       <el-checkbox v-model="item.selected" :disabled="item.checkDisabled"></el-checkbox>
                                     </td>
                                     <td>{{ item.name }}</td>
-                                    <td width="100">{{ item.quantity }} {{ item.unit }}</td>
+                                    <td width="100">{{ item.stringQuantity }} {{ item.unit }}</td>
                                     <td class="uk-text-center" width="100">{{ item.status }}</td>
                                     <td class="uk-text-center" width="100">
                                       <el-button
@@ -169,10 +169,14 @@
                         </thead>
                         <tbody>
                           <tr v-for="(awb, index) in order.air_waybills" :key="index">
-                            <td>{{ awb.awb }}</td>
+                            <td>
+                              <router-link :to="{ name: 'agent-awb-show', params: { code: awb.awb } }">
+                                {{ awb.awb }}
+                              </router-link>
+                            </td>
                             <td>{{ awb.created_at }}</td>
                             <td class="uk-text-center">
-                              <el-button type="primary" size="small" @click="printAwb(awb.awb)">
+                              <el-button type="primary" size="mini" @click="printAwb(awb.awb)">
                                 <font-awesome-icon icon="print"></font-awesome-icon>
                               </el-button>
                             </td>

@@ -74,6 +74,9 @@ Vue.mixin({
         force: true
       })
     },
+    __internationalCurrency (value) {
+      return Vue.options.filters.currency(value, '', 2, { thousandsSeparator: ',', decimalSeparator: '.' })
+    },
     __fetchWarehouses () {
       return new Promise((resolve, reject) => {
         Vue.http().get('/warehouses/list')
