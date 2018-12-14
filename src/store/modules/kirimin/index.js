@@ -31,7 +31,7 @@ const actions = {
     }
   },
   async getFormula ({ commit }) {
-    let res = await Vue.http().get('/configs/formula')
+    let res = await Vue.http().get('/res/configs/formula')
 
     if (res.data) {
       commit(TYPES.SET_FORMULA, res.data.value)

@@ -139,7 +139,7 @@ export default {
     },
     async fetchBankAccounts () {
       try {
-        let res = await this.$authHttp('/configs/bank_accounts')
+        let res = await this.$authHttp('/res/configs/bank_accounts')
 
         this.bankAccounts = res.data.value
       } catch (err) {

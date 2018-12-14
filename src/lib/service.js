@@ -59,8 +59,16 @@ const category = {
 }
 
 const config = {
+  all () {
+    return Vue.authHttp().get('/configs/list')
+  },
   getBankAccounts () {
-    return Vue.authHttp().get('/configs/bank_accounts')
+    return Vue.authHttp().get('/res/configs/bank_accounts')
+  },
+  update (data = {}) {
+    return Vue.authHttp().put('/configs', {
+      configs: data
+    })
   }
 }
 

@@ -14,6 +14,7 @@ import Area from '../views/admin/area/Index'
 import AreaCity from '../views/admin/area/City'
 import AreaDistrict from '../views/admin/area/District'
 import User from '../views/admin/user/Index'
+import Setting from '../views/admin/setting/Index'
 
 import { ADMIN, SUPER_ADMIN } from '../config/level'
 
@@ -172,6 +173,15 @@ export default {
       meta: {
         auth: true,
         level: [ADMIN, SUPER_ADMIN]
+      }
+    },
+    {
+      path: 'settings',
+      name: 'admin-setting',
+      component: Setting,
+      meta: {
+        auth: true,
+        level: [SUPER_ADMIN]
       }
     }
   ]

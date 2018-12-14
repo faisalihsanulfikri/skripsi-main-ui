@@ -28,7 +28,7 @@
           <el-menu-item index="/admin/users/agent">Agent</el-menu-item>
           <el-menu-item index="/admin/users/admin">Admin</el-menu-item>
         </el-submenu>
-        <el-menu-item index="/admin">SETTINGS</el-menu-item>
+        <el-menu-item index="/admin/settings">SETTINGS</el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>
