@@ -21,13 +21,6 @@
             </h3>
           </div>
         </div>
-        <div class="uk-width-auto">
-          <div class="app--card-header__link">
-            <a href="#" @click.prevent="printAwb(awb.awb)">
-              <font-awesome-icon icon="print"></font-awesome-icon>
-            </a>
-          </div>
-        </div>
       </div>
     </div>
     <div class="uk-card-body uk-card-small">
@@ -50,10 +43,6 @@
           <div class="uk-margin-small">
             <div class="app--list-label">Created At</div>
             <div class="app--list-text">{{ awb.created_at }}</div>
-          </div>
-          <div class="uk-margin-small">
-            <div class="app--list-label">Created By</div>
-            <div class="app--list-text">{{ awb.created_by }}</div>
           </div>
         </div>
       </div>

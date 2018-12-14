@@ -92,13 +92,9 @@
 
                     <div class="uk-grid-small" uk-grid>
                       <div class="uk-width-2-5">
-                        <h5 class="uk-margin-remove">
+                        <h5 class="uk-margin-small">
                           <font-awesome-icon icon="globe-asia"></font-awesome-icon>
                           <span class="uk-margin-small-left">{{ order.detail.warehouse.name }}</span>
-                        </h5>
-                        <h5 class="uk-margin-small">
-                          <font-awesome-icon icon="shipping-fast"></font-awesome-icon>
-                          <span class="uk-text-primary uk-margin-small-left">{{ order.awb }}</span>
                         </h5>
                         <h5 class="uk-margin-remove">
                           <font-awesome-icon icon="truck"></font-awesome-icon>
@@ -164,6 +160,33 @@
                                 </td>
                               </tr>
                             </template>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="uk-margin">
+                      <h5 class="uk-margin-remove">
+                        <font-awesome-icon icon="shipping-fast"></font-awesome-icon>
+                        <span class="uk-margin-small-left">Air Waybills</span>
+                      </h5>
+                      <div>
+                        <table class="uk-table uk-table-small uk-table-divider uk-text-small">
+                          <thead>
+                            <tr>
+                              <th>AWB Number</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr v-for="(awb, index) in order.air_waybills" :key="index">
+                              <td>
+                                <router-link :to="{ name: 'member-awb-show', params: { code: awb.awb } }">
+                                  {{ awb.awb }}
+                                </router-link>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>

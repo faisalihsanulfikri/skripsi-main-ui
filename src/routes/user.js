@@ -1,5 +1,7 @@
 import Main from '../views/member/Main'
+
 import Address from '../views/member/Address'
+import AwbShow from '../views/member/awb/Show'
 import Account from '../views/member/Account'
 import UserProfile from '../views/member/UserProfile'
 import UserAddress from '../views/member/UserAddress'
@@ -22,6 +24,15 @@ export default {
       path: 'addresses',
       name: 'member-address',
       component: Address,
+      meta: {
+        auth: true,
+        level: [REGULAR, PREMIUM]
+      }
+    },
+    {
+      path: 'air-waybills/:code',
+      name: 'member-awb-show',
+      component: AwbShow,
       meta: {
         auth: true,
         level: [REGULAR, PREMIUM]
