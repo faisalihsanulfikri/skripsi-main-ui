@@ -1,9 +1,10 @@
 import Main from '../views/agent/Main'
+import AwbReport from '../views/agent/report/AirWaybill'
 import AwbShow from '../views/agent/awb/Show'
 import Dashboard from '../views/agent/Dashboard'
 import OrderCreate from '../views/agent/order/Entry'
 import OrderInbound from '../views/agent/order/Inbound'
-import AgentReport from '../views/agent/AgentReport'
+import OrderReport from '../views/agent/report/Order'
 
 import { AGENT } from '../config/level'
 
@@ -48,9 +49,18 @@ export default {
       }
     },
     {
-      path: 'report',
-      name: 'agent-report',
-      component: AgentReport,
+      path: 'reports/order',
+      name: 'agent-report-order',
+      component: OrderReport,
+      meta: {
+        auth: true,
+        level: [AGENT]
+      }
+    },
+    {
+      path: 'reports/air-waybill',
+      name: 'agent-report-air-waybill',
+      component: AwbReport,
       meta: {
         auth: true,
         level: [AGENT]

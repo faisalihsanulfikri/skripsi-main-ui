@@ -9,7 +9,13 @@
         <el-menu-item index="/agent">DASHBOARD</el-menu-item>
         <el-menu-item index="/agent/orders/create">ENTRY ORDER</el-menu-item>
         <el-menu-item index="/agent/inbound">INBOUND</el-menu-item>
-        <el-menu-item index="/agent/report">REPORT</el-menu-item>
+        <el-submenu index="/agent/report">
+          <template slot="title">
+            <span>REPORT</span>
+          </template>
+          <el-menu-item index="/agent/reports/order">ORDER</el-menu-item>
+          <el-menu-item index="/agent/reports/air-waybill">AIR WAYBILL</el-menu-item>
+        </el-submenu>
       </el-menu>
     </el-aside>
     <el-container>

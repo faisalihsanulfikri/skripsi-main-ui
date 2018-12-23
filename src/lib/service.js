@@ -36,12 +36,12 @@ const calculator = {
 const category = {
   get (params = {}) {
     return Vue.http().get('/categories', {
-      params: params
+      params
     })
   },
   all (params = {}) {
     return Vue.http().get('/categories/list', {
-      params: params
+      params
     })
   },
   find (id) {
@@ -75,7 +75,7 @@ const config = {
 const invoice = {
   get (params = {}) {
     return Vue.authHttp().get('/invoices', {
-      params: params
+      params
     })
   },
   find (code) {
@@ -92,7 +92,7 @@ const invoice = {
 const order = {
   get (params = {}) {
     return Vue.authHttp().get('/orders', {
-      params: params
+      params
     })
   },
   find (code) {
@@ -121,10 +121,35 @@ const payment = {
   }
 }
 
+const report = {
+  airWaybill (params= {}) {
+    return Vue.authHttp().get('/reports/air-waybill', {
+      params
+    })
+  },
+  airWaybillExport (params= {}) {
+    return Vue.authHttp().get('/reports/air-waybill/export', {
+      params,
+      responseType: 'blob'
+    })
+  },
+  order (params = {}) {
+    return Vue.authHttp().get('/reports/order', {
+      params
+    })
+  },
+  orderExport (params = {}) {
+    return Vue.authHttp().get('/reports/order/export', {
+      params,
+      responseType: 'blob'
+    })
+  }
+}
+
 const user = {
   get (params = {}) {
     return Vue.authHttp().get(`/users`, {
-      params: params
+      params
     })
   },
   getAddresses () {
@@ -135,7 +160,7 @@ const user = {
   },
   getByLevel (level = null, params = {}) {
     return Vue.authHttp().get(`/users/${level}`, {
-      params: params
+      params
     })
   }
 }
@@ -143,7 +168,7 @@ const user = {
 const warehouse = {
   all (params = {}) {
     return Vue.http().get('/warehouses/list', {
-      params: params
+      params
     })
   }
 }
@@ -159,6 +184,7 @@ const services = {
   order,
   orderAirWaybill,
   payment,
+  report,
   user,
   warehouse
 }
