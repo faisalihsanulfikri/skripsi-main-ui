@@ -68,6 +68,7 @@
 
 <script>
 import moment from 'moment'
+import saveAs from 'file-saver'
 
 export default {
   data () {
@@ -98,16 +99,9 @@ export default {
         let content = res.request.getResponseHeader('Content-Disposition')
         let regexResult = content.match('"(.*)"')
         let filename = regexResult[1]
-
         let blob = window.URL.createObjectURL(new Blob([res.data]))
-        let link = document.createElement('a')
 
-        link.style.cssText = 'visibility:hidden;'
-        link.href = blob
-
-        link.setAttribute('download', filename)
-        link.click()
-        link.remove()
+        saveAs(blob, filename)
       } catch (err) {
         this.__handleError(this, err, true)
       }

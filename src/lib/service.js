@@ -122,12 +122,12 @@ const payment = {
 }
 
 const report = {
-  airWaybill (params= {}) {
+  airWaybill (params = {}) {
     return Vue.authHttp().get('/reports/air-waybill', {
       params
     })
   },
-  airWaybillExport (params= {}) {
+  airWaybillExport (params = {}) {
     return Vue.authHttp().get('/reports/air-waybill/export', {
       params,
       responseType: 'blob'
