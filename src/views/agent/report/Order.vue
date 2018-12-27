@@ -103,9 +103,9 @@ export default {
         let res = await this.$service.report.orderExport(this.filter)
 
         let content = res.request.getResponseHeader('Content-Disposition')
-        let regexResult = content.match('"(.*)"')
-        let filename = regexResult[1]
-        let blob = window.URL.createObjectURL(new Blob([res.data]))
+        let regexResult = content.match('filename=(.*)')
+        let filename = regexResult[1].replace(new RegExp('"', 'g'), '')
+        let blob = new Blob([res.data])
 
         saveAs(blob, filename)
       } catch (err) {
