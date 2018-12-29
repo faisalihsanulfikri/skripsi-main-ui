@@ -25,6 +25,11 @@ Vue.use(util)
 
 Vue.config.productionTip = false
 
+Sentry.init({
+  dsn: process.env.VUE_APP_SENTRY_DSN,
+  integrations: [new Sentry.Integrations.Vue({ Vue })]
+})
+
 new Vue({
   router,
 
@@ -42,8 +47,3 @@ new Vue({
     this.user = await this.$auth.getUser()
   }
 }).$mount('#app')
-
-Sentry.init({
-  dsn: process.env.VUE_APP_SENTRY_DSN,
-  integrations: [new Sentry.Integrations.Vue({ Vue })]
-})
