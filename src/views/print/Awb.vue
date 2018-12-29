@@ -28,7 +28,7 @@
             <div v-if="awb.detail" class="uk-padding-small">
               <div>{{ `${awb.detail.receiver_name} - ${awb.detail.receiver_phone}` }}</div>
               <div>{{ `${awb.detail.receiver_address}, ${awb.detail.receiver_city} ${awb.detail.receiver_zip_code}` }}</div>
-              <div>{{ awb.detail.shipper_region }}</div>
+              <div>{{ awb.detail.receiver_region }}</div>
             </div>
           </div>
         </div>
