@@ -1,3 +1,4 @@
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script> -->
 <template>
   <div class="uk-card uk-card-default">
     <div class="uk-card-header app--card-header">
@@ -202,9 +203,21 @@
   </div>
 </template>
 
+
 <script>
 import CalculatorResult from '../../../components/CalculatorResult'
 import DialogCreateAwb from '../../../components/DialogCreateAwb'
+// import moment from '../../../assets/js/moment.min.js'
+
+Vue.filter('date', function (date) {
+    return moment(date).format('D MMM Y')
+})
+
+// Pretty much every browser
+// function formatCompat(date) {
+//   var ms = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+//   return date.getDate() + ' ' + ms[date.getMonth()] + ' ' + date.getFullYear();
+// }
 
 export default {
   components: {

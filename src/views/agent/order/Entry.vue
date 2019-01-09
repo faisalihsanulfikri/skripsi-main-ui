@@ -395,11 +395,18 @@
         </div>
       </div>
       <div class="uk-card-footer uk-text-right">
-        <button
+        <!-- <button
           class="uk-button uk-button-primary"
           :disabled="input.items.length < 1"
           @click="openConfirmationDialog">
             Next
+        </button> -->
+
+        <button
+          class="uk-button uk-button-primary"
+          :disabled="input.items.length < 1"
+          @click="order">
+            Pesan Sekarang
         </button>
       </div>
     </div>
@@ -453,7 +460,7 @@ export default {
         insurance: 0,
         consolidate: 0,
         note: '',
-        paymentMethod: '',
+        paymentMethod: 'Transfer Bank',
         items: [],
         address: '',
         item: {
@@ -765,12 +772,12 @@ export default {
 
       this.__stopLoading()
     },
-    async order (paymentMethod) {
+    async order () {
       if (this.application.loading) return
 
       this.__startLoading()
 
-      this.input.paymentMethod = paymentMethod
+      // this.input.paymentMethod = paymentMethod
 
       try {
         let res = await this.$service.order.createKiriminFromAgent(this.input)
