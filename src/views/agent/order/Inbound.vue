@@ -50,7 +50,7 @@
                   </a>
                 </td>
                 <td>{{ order.code }}</td>
-                <td>{{ order.created_at }}</td>
+                <td>{{ moment(order.created_at).format('MMMM Do YYYY, h:mm:ss a') }}</td>
                 <td>{{ order.user.name }}</td>
                 <td class="uk-text-center">{{ order.status }}</td>
               </tr>
@@ -203,21 +203,9 @@
   </div>
 </template>
 
-
 <script>
 import CalculatorResult from '../../../components/CalculatorResult'
 import DialogCreateAwb from '../../../components/DialogCreateAwb'
-// import moment from '../../../assets/js/moment.min.js'
-
-Vue.filter('date', function (date) {
-    return moment(date).format('D MMM Y')
-})
-
-// Pretty much every browser
-// function formatCompat(date) {
-//   var ms = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-//   return date.getDate() + ' ' + ms[date.getMonth()] + ' ' + date.getFullYear();
-// }
 
 export default {
   components: {

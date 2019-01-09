@@ -54,7 +54,7 @@
           </thead>
           <tbody>
             <tr v-for="(awb, index) in airWaybills" :key="index">
-              <td>{{ awb.created_at }}</td>
+              <td>{{ moment(awb.created_at).format('MMMM Do YYYY, h:mm:ss a') }}</td>
               <td>{{ awb.order_code }}</td>
               <td>{{ awb.awb }}</td>
               <td>{{ awb.item_count }}</td>

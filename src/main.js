@@ -17,7 +17,9 @@ import './plugins/element-ui'
 import './plugins/google-analytic'
 import './plugins/sentry'
 import './plugins/uikit'
+import moment from 'moment'
 
+Vue.prototype.moment = moment
 Vue.use(Vue2Filters)
 Vue.use(VeeValidate, {
   events: 'blur'

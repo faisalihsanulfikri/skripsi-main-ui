@@ -50,7 +50,7 @@
                   </a>
                 </td>
                 <td>{{ order.code }}</td>
-                <td>{{ order.created_at }}</td>
+                <td>{{ moment(order.created_at).format('MMMM Do YYYY, h:mm:ss a') }}</td>
                 <td>{{ order.user.name }}</td>
                 <td class="uk-text-right">
                   {{ order.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}

@@ -57,7 +57,7 @@
           </thead>
           <tbody>
             <tr v-for="(order, index) in orders" :key="index">
-              <td>{{ order.created_at }}</td>
+              <td>{{ moment(order.created_at).format('MMMM Do YYYY, h:mm:ss a') }}</td>
               <td>{{ order.code }}</td>
               <td>{{ order.user_name }}</td>
               <td>{{ order.string_consolidate }}</td>
