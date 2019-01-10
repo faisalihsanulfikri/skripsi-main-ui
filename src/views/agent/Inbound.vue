@@ -109,12 +109,12 @@
           <thead>
             <tr>
               <th>No</th>
-              <th>Nama</th>
-              <th>Berat</th>
-              <th>Harga</th>
-              <th>Panjang</th>
-              <th>Lebar</th>
-              <th>Tinggi</th>
+              <th>Name</th>
+              <th>Height</th>
+              <th>Price</th>
+              <th>Length</th>
+              <th>Width</th>
+              <th>Height</th>
             </tr>
           </thead>
           <tbody>
