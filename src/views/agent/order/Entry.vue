@@ -87,7 +87,7 @@
             <h3 class="uk-card-title">Package</h3>
           </div>
           <div class="uk-card-body">
-            <div class="uk-margin-small">
+            <!-- <div class="uk-margin-small">
               <label class="uk-form-label">Types of goods</label>
               <select v-model="input.item.category" v-validate="rules.item.category" name="category" class="uk-select"
                 :class="{ 'uk-form-danger': errors.has('category') }" @change="onCategoryChanged">
@@ -95,9 +95,9 @@
                   {{ item.label }}
                 </option>
               </select>
-            </div>
+            </div> 
 
-            <hr>
+            <hr> -->
 
             <div class="uk-margin-small">
               <div class="uk-grid-small" uk-grid>
@@ -109,7 +109,7 @@
                     </el-tooltip>
                   </label>
                   <input v-model="input.item.goods.name" name="item.goods.name" class="uk-input" :class="{ 'uk-form-danger': errors.has('item.goods.name') }"
-                    placeholder="Nama Barang" />
+                    placeholder="Name of goods" />
                 </div>
                 <div class="uk-width-expand">
                   <label class="uk-form-label">
@@ -119,7 +119,7 @@
                     </el-tooltip>
                   </label>
                   <input v-model="input.item.goods.quantity" name="item.goods.quantity" class="uk-input" :class="{ 'uk-form-danger': errors.has('item.goods.quantity') }"
-                    placeholder="Jumlah" />
+                    placeholder="Total" />
                 </div>
                 <div class="uk-width-expand">
                   <label class="uk-form-label">
@@ -129,7 +129,7 @@
                     </el-tooltip>
                   </label>
                   <input v-model="input.item.goods.unit" name="item.goods.unit" class="uk-input" :class="{ 'uk-form-danger': errors.has('item.goods.unit') }"
-                    placeholder="Satuan" />
+                    placeholder="Unit" />
                 </div>
                 <div class="uk-width-auto">
                   <label class="uk-form-label">&nbsp;</label>
@@ -248,9 +248,9 @@
           </div>
           <div class="uk-card-footer">
             <div class="uk-text-right">
-              <button v-if="parseInt(input.consolidate) === 1" class="uk-button uk-button-default" @click="multiCheck">Tambah</button>
+              <button v-if="parseInt(input.consolidate) === 1" class="uk-button uk-button-default" @click="multiCheck">Add</button>
               <template v-else>
-                <button class="uk-button uk-button-default" @click="singleCheck">Hitung</button>
+                <button class="uk-button uk-button-default" @click="singleCheck">Calculate</button>
               </template>
             </div>
           </div>
@@ -367,10 +367,10 @@
           item: {
             category: '',
             categoryName: '',
-            name: 'Packet',
+            name: 'goods.name',
             reference: '',
             price: '',
-            currency: 'idr_rate',
+            currency: '',
             currencyPrice: '',
             quantity: 1,
             weight: '',
@@ -456,7 +456,7 @@
 
     methods: {
       onConsolidateChanged() {
-        this.$confirm('Paket dan barang yang anda input akan hilang, anda yakin?', 'Peringatan', {
+        this.$confirm('The package and items you input will be lost, are you sure?', 'warning', {
           type: 'warning'
         }).then(() => {
           this.input.items = []
@@ -498,7 +498,8 @@
           this.options.address = res.data.map(item => {
             let $item = {
               value: item.id,
-              label: `${item.alias} - ${item.name} - ${item.phone}`
+              label: `${item.alias} - ${item.name} - ${item.phone} - ${item.country} - ${item.province} - ${item.city} -
+${item.sub_district} - ${item.address} - ${item.postal_code}`
             }
 
             return $item
@@ -575,8 +576,8 @@
 
             return $item
           })
-          this.input.item.category = res.data[0].id
-          this.input.item.categoryName = res.data[0].name
+          this.input.item.category = res.data[3].id
+          this.input.item.categoryName = res.data[3].name
         } catch (err) {
           this.__handleError(this, err, true)
         }
@@ -618,7 +619,7 @@
         if (this.input.item.goodsList.length < 1) {
           this.$notify({
             title: 'ERROR',
-            message: 'Tidak ada barang.',
+            message: 'There are no items.',
             type: 'error'
           })
 
@@ -640,7 +641,7 @@
         if (this.input.item.goodsList.length < 1) {
           this.$notify({
             title: 'ERROR',
-            message: 'Tidak ada barang.',
+            message: 'There are no items.',
             type: 'error'
           })
 
