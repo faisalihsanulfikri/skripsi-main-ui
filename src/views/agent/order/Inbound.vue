@@ -1,3 +1,4 @@
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script> -->
 <template>
   <div class="uk-card uk-card-default">
     <div class="uk-card-header app--card-header">
@@ -49,7 +50,7 @@
                   </a>
                 </td>
                 <td>{{ order.code }}</td>
-                <td>{{ order.created_at }}</td>
+                <td>{{ moment(order.created_at).format('MMMM Do YYYY, h:mm:ss a') }}</td>
                 <td>{{ order.user.name }}</td>
                 <td class="uk-text-center">{{ order.status }}</td>
               </tr>

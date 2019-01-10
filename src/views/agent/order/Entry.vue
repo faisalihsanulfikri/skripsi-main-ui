@@ -4,7 +4,7 @@
       <div class="uk-width-1-2">
         <div class="uk-card uk-card-default uk-card-small">
           <div class="uk-card-header">
-            <h3 class="uk-card-title">Shipping Info</h3>
+            <h3 class="uk-card-title">Shpping Info</h3>
           </div>
           <div class="uk-card-body">
             <h5 class="uk-heading-line"><span>Shipper</span></h5>
@@ -27,7 +27,7 @@
               </div>
             </div>
             <div class="uk-margin-small">
-              <label class="uk-form-label">Receiver Address</label>
+              <label class="uk-form-label">Alamat Penerima</label>
               <div>
                 <select v-model="input.address" v-validate="rules.address" name="address" class="uk-select" :class="{ 'uk-form-danger': errors.has('address') }"
                   @change="onUserAddressChanged">
@@ -38,7 +38,7 @@
               </div>
             </div>
             <h5 class="uk-heading-line"><span>Extra</span></h5>
-            <!-- <div class="uk-margin-small">
+            <div class="uk-margin-small">
               <label class="uk-form-label">
                 Asuransi
                 <el-tooltip class="item" effect="dark" content="Perlindungan pengiriman" placement="top">
@@ -73,9 +73,9 @@
                   <span class="uk-margin-small-left">Tidak</span>
                 </label>
               </div>
-            </div> -->
+            </div>
             <div class="uk-margin-small">
-              <label class="uk-form-label">Notes</label>
+              <label class="uk-form-label">Catatan</label>
               <textarea v-model="input.note" class="uk-textarea" rows="5"></textarea>
             </div>
           </div>
@@ -84,18 +84,18 @@
       <div class="uk-width-1-2">
         <div class="uk-card uk-card-default uk-card-small">
           <div class="uk-card-header">
-            <h3 class="uk-card-title">Package</h3>
+            <h3 class="uk-card-title">Packet</h3>
           </div>
           <div class="uk-card-body">
-            <!-- <div class="uk-margin-small">
-              <label class="uk-form-label">Types of Goods</label>
+            <div class="uk-margin-small">
+              <label class="uk-form-label">Jenis Barang</label>
               <select v-model="input.item.category" v-validate="rules.item.category" name="category" class="uk-select"
                 :class="{ 'uk-form-danger': errors.has('category') }" @change="onCategoryChanged">
                 <option v-for="(item, key) in options.category" :key="key" :value="item.value">
                   {{ item.label }}
                 </option>
               </select>
-            </div> -->
+            </div>
 
             <hr>
 
@@ -103,7 +103,7 @@
               <div class="uk-grid-small" uk-grid>
                 <div class="uk-width-expand">
                   <label class="uk-form-label">
-                    Name of Goods
+                    Nama Barang
                     <el-tooltip class="item" effect="dark" content="Barang" placement="top">
                       <font-awesome-icon icon="info-circle"></font-awesome-icon>
                     </el-tooltip>
@@ -113,7 +113,7 @@
                 </div>
                 <div class="uk-width-expand">
                   <label class="uk-form-label">
-                    Total
+                    Jumlah
                     <el-tooltip class="item" effect="dark" content="Jumlah barang" placement="top">
                       <font-awesome-icon icon="info-circle"></font-awesome-icon>
                     </el-tooltip>
@@ -123,7 +123,7 @@
                 </div>
                 <div class="uk-width-expand">
                   <label class="uk-form-label">
-                    Unit
+                    Satuan
                     <el-tooltip class="item" effect="dark" content="Unit / satuan barang" placement="top">
                       <font-awesome-icon icon="info-circle"></font-awesome-icon>
                     </el-tooltip>
@@ -143,7 +143,7 @@
             </div>
             <div class="uk-margin">
               <label class="uk-form-label">
-                Package Contents
+                Isi Paket
                 <el-tooltip class="item" effect="dark" content="Isi Paket" placement="top">
                   <font-awesome-icon icon="info-circle"></font-awesome-icon>
                 </el-tooltip>
@@ -162,12 +162,12 @@
                   </div>
                 </li>
               </ul>
-              <div v-else class="uk-text-center">There are no items.</div>
+              <div v-else class="uk-text-center">Tidak ada barang.</div>
             </div>
             <hr>
             <div class="uk-margin-small">
               <label class="uk-form-label">
-                Reference (ex. Invoice#, SO#)
+                Referensi (ex. Invoice#, SO#)
                 <el-tooltip class="item" effect="dark" content="Referensi" placement="top">
                   <font-awesome-icon icon="info-circle"></font-awesome-icon>
                 </el-tooltip>
@@ -176,7 +176,7 @@
             </div>
             <div class="uk-margin-small">
               <label class="uk-form-label">
-                <span class="uk-margin-small-right">Total Price of Goods in the Package</span>
+                <span class="uk-margin-small-right">Total Harga Barang dalam Paket</span>
                 <el-tooltip class="item" effect="dark" content="Total harga barang dalam paket." placement="top">
                   <font-awesome-icon icon="info-circle"></font-awesome-icon>
                 </el-tooltip>
@@ -201,13 +201,13 @@
               </el-input-append-mask>
             </div>
             <div class="uk-margin-small uk-hidden">
-              <label class="uk-form-label">The Amount of Goods</label>
+              <label class="uk-form-label">Jumlah Barang</label>
               <input v-model="input.item.quantity" v-validate="rules.item.quantity" name="quantity" class="uk-input"
                 :class="{ 'uk-form-danger': errors.has('quantity') }" />
             </div>
             <div class="uk-margin-small">
               <label class="uk-form-label">
-                <span class="uk-margin-small-right">Weight ({{ config.weightUnits }})</span>
+                <span class="uk-margin-small-right">Berat ({{ config.weightUnits }})</span>
                 <el-tooltip class="item" effect="dark" content="Berat paket." placement="top">
                   <font-awesome-icon icon="info-circle"></font-awesome-icon>
                 </el-tooltip>
@@ -219,7 +219,7 @@
             </div>
             <div class="uk-margin-small">
               <label class="uk-form-label">
-                <span class="uk-margin-small-right">Dimension (L x W x H {{ config.volumeUnits }})</span>
+                <span class="uk-margin-small-right">Dimensi (P x L x T {{ config.volumeUnits }})</span>
                 <el-tooltip class="item" effect="dark" content="Volume paket." placement="top">
                   <font-awesome-icon icon="info-circle"></font-awesome-icon>
                 </el-tooltip>
@@ -248,9 +248,9 @@
           </div>
           <div class="uk-card-footer">
             <div class="uk-text-right">
-              <button v-if="parseInt(input.consolidate) === 1" class="uk-button uk-button-default" @click="multiCheck">Add</button>
+              <button v-if="parseInt(input.consolidate) === 1" class="uk-button uk-button-default" @click="multiCheck">Tambah</button>
               <template v-else>
-                <button class="uk-button uk-button-default" @click="singleCheck">Calculate</button>
+                <button class="uk-button uk-button-default" @click="singleCheck">Hitung</button>
               </template>
             </div>
           </div>
@@ -259,19 +259,19 @@
     </div>
     <div v-if="input.items.length > 0" id="card-item" class="uk-card uk-card-default uk-card-small uk-margin">
       <div class="uk-card-header">
-        <h3 class="uk-card-title">Package List</h3>
+        <h3 class="uk-card-title">Packet List</h3>
       </div>
       <div class="uk-card-body">
         <div class="uk-overflow-auto">
           <table class="uk-table uk-table-divider uk-table-small uk-text-small">
             <thead>
-              <th>Types of Goods</th>
-              <th>Name of Goods</th>
-              <th>Reference</th>
-              <th class="uk-text-right">The Amount of Goods</th>
-              <th class="uk-text-right">Price of Goods (IDR)</th>
-              <th class="uk-text-center">Weight ({{ config.weightUnits }})</th>
-              <th class="uk-text-center">Dimension ({{ config.volumeUnits }})</th>
+              <th>Jenis Barang</th>
+              <th>Nama Paket</th>
+              <th>Referensi</th>
+              <th class="uk-text-right">Jumlah Paket</th>
+              <th class="uk-text-right">Harga Barang (IDR)</th>
+              <th class="uk-text-center">Berat ({{ config.weightUnits }})</th>
+              <th class="uk-text-center">Dimensi ({{ config.volumeUnits }})</th>
               <th width="50">Action</th>
             </thead>
             <tbody>
@@ -299,8 +299,15 @@
         </div>
       </div>
       <div class="uk-card-footer uk-text-right">
-        <button class="uk-button uk-button-primary" :disabled="input.items.length < 1" @click="openConfirmationDialog">
-          Next
+        <!-- <button
+          class="uk-button uk-button-primary"
+          :disabled="input.items.length < 1"
+          @click="openConfirmationDialog">
+            Next
+        </button> -->
+
+        <button class="uk-button uk-button-primary" :disabled="input.items.length < 1" @click="order">
+          Pesan Sekarang
         </button>
       </div>
     </div>
@@ -354,7 +361,7 @@
           insurance: 0,
           consolidate: 0,
           note: '',
-          paymentMethod: '',
+          paymentMethod: 'Transfer Bank',
           items: [],
           address: '',
           item: {
@@ -449,7 +456,7 @@
 
     methods: {
       onConsolidateChanged() {
-        this.$confirm('The package and items you input will be lost, are you sure?', 'Warning', {
+        this.$confirm('Paket dan barang yang anda input akan hilang, anda yakin?', 'Peringatan', {
           type: 'warning'
         }).then(() => {
           this.input.items = []
@@ -491,7 +498,7 @@
           this.options.address = res.data.map(item => {
             let $item = {
               value: item.id,
-              label: `${item.alias} - ${item.name} - ${item.phone} - ${item.province} - ${item.city} - ${item.sub_district} - ${item.address} - ${item.postal_code}`
+              label: `${item.alias} - ${item.name} - ${item.phone}`
             }
 
             return $item
@@ -568,9 +575,8 @@
 
             return $item
           })
-
-          this.input.item.category = res.data[3].id
-          this.input.item.categoryName = res.data[3].name
+          this.input.item.category = res.data[0].id
+          this.input.item.categoryName = res.data[0].name
         } catch (err) {
           this.__handleError(this, err, true)
         }
@@ -665,12 +671,12 @@
 
         this.__stopLoading()
       },
-      async order(paymentMethod) {
+      async order() {
         if (this.application.loading) return
 
         this.__startLoading()
 
-        this.input.paymentMethod = paymentMethod
+        // this.input.paymentMethod = paymentMethod
 
         try {
           let res = await this.$service.order.createKiriminFromAgent(this.input)

@@ -8,7 +8,7 @@
     <div>
       <div class="uk-child-width-1-2" uk-grid>
         <div>
-          <div class="uk-margin">
+          <!-- <div class="uk-margin">
             <label class="uk-form-label">Saved Addresses</label>
             <el-select v-model="input.savedAddress" class="uk-width-1-1" @change="onSavedAddressChange">
               <el-option
@@ -18,37 +18,62 @@
                 :value="address.id">
               </el-option>
             </el-select>
-          </div>
+          </div> -->
+          <h4>Shipper Data</h4>
           <hr>
-          <h5>Shipper Data</h5>
-          <div class="uk-margin">
-            <label class="uk-form-label">Name</label>
-            <el-input v-model="input.name" readonly></el-input>
-          </div>
-          <div class="uk-margin">
-            <label class="uk-form-label">Phone</label>
-            <el-input v-model="input.phone" readonly></el-input>
-          </div>
-          <div class="uk-margin">
-            <label class="uk-form-label">Province</label>
-            <el-input v-model="input.province" readonly></el-input>
-          </div>
-          <div class="uk-margin">
-            <label class="uk-form-label">City</label>
-            <el-input v-model="input.city" readonly></el-input>
-          </div>
-          <div class="uk-margin">
-            <label class="uk-form-label">Sub District</label>
-            <el-input v-model="input.subDistrict" readonly></el-input>
-          </div>
-          <div class="uk-margin">
-            <label class="uk-form-label">Address</label>
-            <el-input v-model="input.address" readonly></el-input>
-          </div>
-          <div class="uk-margin">
-            <label class="uk-form-label">Zip Code</label>
-            <el-input v-model="input.zipCode" readonly></el-input>
-          </div>
+                <table class="uk-table uk-table-small uk-table-responsive uk-table-divider uk-table-hover uk-text-emphasis">
+                  <tbody>
+                    <tr>
+                      <td>Name</td>
+                      <td>:</td>
+                      <td class="uk-text-right" width="150">
+                        {{ this.input.name }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Phone</td>
+                      <td>:</td>
+                      <td class="uk-text-right">
+                        {{ this.input.phone }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Province</td>
+                      <td>:</td>
+                      <td class="uk-text-right">
+                        {{ this.input.province }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>City</td>
+                      <td>:</td>
+                      <td class="uk-text-right">
+                        {{ this.input.city }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Sub District</td>
+                      <td>:</td>
+                      <td class="uk-text-right">
+                        {{ this.input.subDistrict }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Address</td>
+                      <td>:</td>
+                      <td class="uk-text-right">
+                        {{ this.input.address }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Zip Code</td>
+                      <td>:</td>
+                      <td class="uk-text-right">
+                        {{ this.input.zipCode }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
         </div>
         <div>
           <div class="uk-margin">
