@@ -1,11 +1,7 @@
 <template>
   <el-container>
     <el-aside>
-      <el-menu
-        background-color="#1565C0"
-        text-color="#FFF"
-        active-text-color="#FFF"
-        :router="true">
+      <el-menu background-color="#1565C0" text-color="#FFF" active-text-color="#FFF" :router="true">
         <el-menu-item index="/agent">DASHBOARD</el-menu-item>
         <el-menu-item index="/agent/orders/create">ENTRY ORDER</el-menu-item>
         <el-menu-item index="/agent/inbound">INBOUND</el-menu-item>
@@ -25,13 +21,13 @@
             <ul class="uk-navbar-nav">
               <li>
                 <a href="#">
-                  <font-awesome-icon icon="user"/>
-                  <span class="uk-margin-small-left" >{{ $root.user.name }}</span>
+                  <font-awesome-icon icon="user" />
+                  <span class="uk-margin-small-left">{{ $root.user.name }}</span>
                 </a>
                 <div class="uk-navbar-dropdown">
                   <ul class="uk-nav uk-navbar-dropdown-nav">
                     <li>
-                      <a href="#" @click.prevent="__logout">Keluar</a>
+                      <a href="#" @click.prevent="__logout">Logout</a>
                     </li>
                   </ul>
                 </div>
@@ -48,12 +44,12 @@
 </template>
 
 <style lang="scss" scoped>
-.el-header {
-  background-color: #FFF;
-  height: 80px !important;
-}
+  .el-header {
+    background-color: #FFF;
+    height: 80px !important;
+  }
 
-.el-menu {
-  min-height: 100%;
-}
+  .el-menu {
+    min-height: 100%;
+  }
 </style>

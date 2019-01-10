@@ -22,14 +22,8 @@
       <div class="uk-margin">
         <div class="uk-grid-small" uk-grid>
           <div class="uk-width-auto">
-            <el-date-picker
-              v-model="filter.time"
-              type="daterange"
-              format="yyyy-MM-dd"
-              value-format="yyyy-MM-dd"
-              range-separator="To"
-              start-placeholder="Start date"
-              end-placeholder="End date">
+            <el-date-picker v-model="filter.time" type="daterange" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+              range-separator="To" start-placeholder="Start date" end-placeholder="End date">
             </el-date-picker>
           </div>
           <div class="uk-width-auto">
@@ -50,7 +44,7 @@
               <th>Code</th>
               <th>Customer</th>
               <th>Consolidate</th>
-              <th>Total Packet`s</th>
+              <th>Total Packages</th>
               <th>Total Item`s</th>
               <th>Status</th>
             </tr>
@@ -73,60 +67,60 @@
 </template>
 
 <script>
-import moment from 'moment'
-import saveAs from 'file-saver'
+  import moment from 'moment'
+  import saveAs from 'file-saver'
 
-export default {
-  data () {
-    return {
-      orders: [],
-      filter: {
-        time: []
+  export default {
+    data() {
+      return {
+        orders: [],
+        filter: {
+          time: []
+        }
       }
-    }
-  },
-
-  created () {
-    this.filter.time = [
-      moment().startOf('month').format('YYYY-MM-DD'),
-      moment().endOf('month').format('YYYY-MM-DD')
-    ]
-
-    this.fetchOrderReport()
-  },
-
-  methods: {
-    async exportReport () {
-      this.__startLoading()
-
-      try {
-        let res = await this.$service.report.orderExport(this.filter)
-
-        let content = res.request.getResponseHeader('Content-Disposition')
-        let regexResult = content.match('filename=(.*)')
-        let filename = regexResult[1].replace(new RegExp('"', 'g'), '')
-        let blob = new Blob([res.data])
-
-        saveAs(blob, filename)
-      } catch (err) {
-        this.__handleError(this, err, true)
-      }
-
-      this.__stopLoading()
     },
-    async fetchOrderReport () {
-      this.__startLoading()
 
-      try {
-        let res = await this.$service.report.order(this.filter)
+    created() {
+      this.filter.time = [
+        moment().startOf('month').format('YYYY-MM-DD'),
+        moment().endOf('month').format('YYYY-MM-DD')
+      ]
 
-        this.orders = res.data
-      } catch (err) {
-        this.__handleError(this, err, true)
+      this.fetchOrderReport()
+    },
+
+    methods: {
+      async exportReport() {
+        this.__startLoading()
+
+        try {
+          let res = await this.$service.report.orderExport(this.filter)
+
+          let content = res.request.getResponseHeader('Content-Disposition')
+          let regexResult = content.match('filename=(.*)')
+          let filename = regexResult[1].replace(new RegExp('"', 'g'), '')
+          let blob = new Blob([res.data])
+
+          saveAs(blob, filename)
+        } catch (err) {
+          this.__handleError(this, err, true)
+        }
+
+        this.__stopLoading()
+      },
+      async fetchOrderReport() {
+        this.__startLoading()
+
+        try {
+          let res = await this.$service.report.order(this.filter)
+
+          this.orders = res.data
+        } catch (err) {
+          this.__handleError(this, err, true)
+        }
+
+        this.__stopLoading()
       }
-
-      this.__stopLoading()
     }
   }
-}
 </script>

@@ -248,7 +248,7 @@
           </div>
           <div class="uk-card-footer">
             <div class="uk-text-right">
-              <button v-if="parseInt(input.consolidate) === 1" class="uk-button uk-button-default" @click="multiCheck">Tambah</button>
+              <button v-if="parseInt(input.consolidate) === 1" class="uk-button uk-button-default" @click="multiCheck">Add</button>
               <template v-else>
                 <button class="uk-button uk-button-default" @click="singleCheck">Calculate</button>
               </template>
