@@ -265,8 +265,8 @@
         <div class="uk-overflow-auto">
           <table class="uk-table uk-table-divider uk-table-small uk-text-small">
             <thead>
-              <th>Types of goods</th>
-              <th>Name of goods</th>
+              <th>Types</th>
+              <th class="uk-text-center">Goods Detail</th>
               <th>Reference</th>
               <th class="uk-text-right">The amount of goods</th>
               <th class="uk-text-right">Price of goods (IDR)</th>
@@ -275,10 +275,23 @@
               <th width="50">Action</th>
             </thead>
             <tbody>
-
               <tr v-for="(item, index) in input.items" :key="index">
                 <td>{{ item.categoryName }}</td>
-                <td>{{ item.name }}</td>
+                <!-- <td>{{ item.name }}</td> -->
+                <table>
+                  <thead>
+                    <th>Name</th>
+                    <th>Total</th>
+                    <th>Unit</th>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(goods, index) in input.item.goodsList" :key="index">
+                      <td>{{ goods.name }}</td>
+                      <td>{{ goods.quantity }}</td>
+                      <td>{{ goods.unit }}</td>
+                    </tr>
+                  </tbody>
+                </table>
                 <td>{{ item.reference }}</td>
                 <td class="uk-text-right">{{ item.quantity }}</td>
                 <td class="uk-text-right">{{ item.price | currency('', 2, { thousandsSeparator: '.', decimalSeparator:
@@ -368,7 +381,7 @@
           item: {
             category: '',
             categoryName: '',
-            name: 'item.name',
+            name: 'Package',
             reference: '',
             price: '',
             currency: 'idr_rate',
