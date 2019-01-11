@@ -1,11 +1,7 @@
 <template>
   <el-container>
     <el-aside>
-      <el-menu
-        background-color="#1565C0"
-        text-color="#FFF"
-        active-text-color="#FFF"
-        :router="true">
+      <el-menu background-color="#1565C0" text-color="#FFF" active-text-color="#FFF" :router="true">
         <el-menu-item index="/admin">DASHBOARD</el-menu-item>
         <el-menu-item index="/admin/inbound">INBOUND</el-menu-item>
         <el-menu-item index="/admin/invoices">INVOICES</el-menu-item>
@@ -27,6 +23,7 @@
           <el-menu-item index="/admin/users/premium">Premium</el-menu-item>
           <el-menu-item index="/admin/users/agent">Agent</el-menu-item>
           <el-menu-item index="/admin/users/admin">Admin</el-menu-item>
+          <el-menu-item index="/admin/UserCreate">Add User</el-menu-item>
         </el-submenu>
         <el-menu-item index="/admin/settings">SETTINGS</el-menu-item>
       </el-menu>
@@ -38,13 +35,13 @@
             <ul class="uk-navbar-nav">
               <li>
                 <a href="#">
-                  <font-awesome-icon icon="user"/>
-                  <span class="uk-margin-small-left" >{{ $root.user.name }}</span>
+                  <font-awesome-icon icon="user" />
+                  <span class="uk-margin-small-left">{{ $root.user.name }}</span>
                 </a>
                 <div class="uk-navbar-dropdown">
                   <ul class="uk-nav uk-navbar-dropdown-nav">
                     <li>
-                      <a href="#" @click.prevent="__logout">Keluar</a>
+                      <a href="#" @click.prevent="__logout">Logout</a>
                     </li>
                   </ul>
                 </div>
@@ -61,12 +58,12 @@
 </template>
 
 <style lang="scss" scoped>
-.el-header {
-  background-color: #FFF;
-  height: 80px !important;
-}
+  .el-header {
+    background-color: #FFF;
+    height: 80px !important;
+  }
 
-.el-menu {
-  min-height: 100%;
-}
+  .el-menu {
+    min-height: 100%;
+  }
 </style>

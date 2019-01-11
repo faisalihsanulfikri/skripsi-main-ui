@@ -275,6 +275,7 @@
               <th width="50">Action</th>
             </thead>
             <tbody>
+
               <tr v-for="(item, index) in input.items" :key="index">
                 <td>{{ item.categoryName }}</td>
                 <td>{{ item.name }}</td>
@@ -367,10 +368,10 @@
           item: {
             category: '',
             categoryName: '',
-            name: 'goods.name',
+            name: 'item.name',
             reference: '',
             price: '',
-            currency: '',
+            currency: 'idr_rate',
             currencyPrice: '',
             quantity: 1,
             weight: '',
@@ -388,7 +389,7 @@
         rules: {
           address: 'required',
           item: {
-            category: 'required',
+            // category: 'required',
             name: 'required',
             price: 'required|decimal:2',
             quantity: 'required|numeric',
@@ -498,7 +499,7 @@
           this.options.address = res.data.map(item => {
             let $item = {
               value: item.id,
-              label: `${item.alias} - ${item.name} - ${item.phone} - ${item.country} - ${item.province} - ${item.city} -
+              label: `${item.alias} - ${item.name} - ${item.phone} - ${item.province} - ${item.city} -
 ${item.sub_district} - ${item.address} - ${item.postal_code}`
             }
 

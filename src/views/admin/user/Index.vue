@@ -22,11 +22,7 @@
         <div class="uk-grid-small" uk-grid>
           <div class="uk-width-1-3">
             <el-select v-model="filter.verified" class="uk-width-1-1" multiple>
-              <el-option
-                v-for="(item, index) in options.verified"
-                :key="index"
-                :value="item.value"
-                :label="item.label">
+              <el-option v-for="(item, index) in options.verified" :key="index" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
           </div>
@@ -36,6 +32,11 @@
           <div class="uk-width-auto">
             <el-button type="primary" @click="fetchUsers">Filter</el-button>
           </div>
+          <div class="uk-width-auto">
+            <router-link :to="{ name: 'admin-user-create' }">
+              <el-button type="primary">Add</el-button>
+            </router-link>
+          </div>
         </div>
       </div>
       <div class="uk-overflow-auto">
@@ -43,35 +44,19 @@
           <thead>
             <tr>
               <th>
-                <column-sort
-                  title="Name"
-                  field="name"
-                  :active-field="filter.sortField"
-                  @change="onSortChange">
+                <column-sort title="Name" field="name" :active-field="filter.sortField" @change="onSortChange">
                 </column-sort>
               </th>
               <th>
-                <column-sort
-                  title="Email"
-                  field="email"
-                  :active-field="filter.sortField"
-                  @change="onSortChange">
+                <column-sort title="Email" field="email" :active-field="filter.sortField" @change="onSortChange">
                 </column-sort>
               </th>
               <th>
-                <column-sort
-                  title="Mobile"
-                  field="phone"
-                  :active-field="filter.sortField"
-                  @change="onSortChange">
+                <column-sort title="Mobile" field="phone" :active-field="filter.sortField" @change="onSortChange">
                 </column-sort>
               </th>
               <th class="uk-text-center">
-                <column-sort
-                  title="Verified"
-                  field="active"
-                  :active-field="filter.sortField"
-                  @change="onSortChange">
+                <column-sort title="Verified" field="active" :active-field="filter.sortField" @change="onSortChange">
                 </column-sort>
               </th>
             </tr>
@@ -91,109 +76,104 @@
       </div>
     </div>
     <div class="uk-card-footer uk-text-center">
-      <el-pagination
-        layout="prev, pager, next"
-        :page-size="pagination.per_page"
-        :page-count="pagination.last_page"
-        :total="pagination.total"
-        @current-change="onChangePage">
+      <el-pagination layout="prev, pager, next" :page-size="pagination.per_page" :page-count="pagination.last_page"
+        :total="pagination.total" @current-change="onChangePage">
       </el-pagination>
     </div>
   </div>
 </template>
 
 <script>
-import ColumnSort from '../../../components/ColumnSort'
+  import ColumnSort from '../../../components/ColumnSort'
 
-export default {
-  components: {
-    ColumnSort
-  },
+  export default {
+    components: {
+      ColumnSort
+    },
 
-  data () {
-    return {
-      users: [],
-      pagination: {
-        current_page: 1,
-        per_page: 25,
-        total: 0
-      },
-      filter: {
-        keyword: '',
-        verified: [1, 0],
-        sortField: 'active',
-        sortOrder: 'desc'
-      },
-      options: {
-        verified: [
-          {
-            value: 1,
-            label: 'Verified'
-          },
-          {
-            value: 0,
-            label: 'Unverified'
-          }
-        ]
+    data() {
+      return {
+        users: [],
+        pagination: {
+          current_page: 1,
+          per_page: 25,
+          total: 0
+        },
+        filter: {
+          keyword: '',
+          verified: [1, 0],
+          sortField: 'active',
+          sortOrder: 'desc'
+        },
+        options: {
+          verified: [{
+              value: 1,
+              label: 'Verified'
+            },
+            {
+              value: 0,
+              label: 'Unverified'
+            }
+          ]
+        }
       }
-    }
-  },
+    },
 
-  watch: {
-    $route: {
-      handler: 'fetchUsers'
-    }
-  },
+    watch: {
+      $route: {
+        handler: 'fetchUsers'
+      }
+    },
 
-  async created () {
-    this.__startLoading()
-
-    await this.fetchUsers()
-
-    this.__stopLoading()
-  },
-
-  methods: {
-    async onChangePage (page) {
-      this.pagination.current_page = page
-
+    async created() {
       this.__startLoading()
 
       await this.fetchUsers()
 
       this.__stopLoading()
     },
-    async onSortChange (payload) {
-      this.filter.sortField = payload.field
-      this.filter.sortOrder = payload.order
 
-      this.__startLoading()
+    methods: {
+      async onChangePage(page) {
+        this.pagination.current_page = page
 
-      await this.fetchUsers()
+        this.__startLoading()
 
-      this.__stopLoading()
-    },
-    async fetchUsers () {
-      try {
-        let res = await this.$service.user.getByLevel(this.$route.params.level, {
-          page: this.pagination.current_page,
-          sort: [
-            this.filter.sortField,
-            this.filter.sortOrder
-          ],
-          active: this.filter.verified,
-          search: this.filter.keyword
-        })
+        await this.fetchUsers()
 
-        this.users = res.data.data
-        this.pagination = res.data
+        this.__stopLoading()
+      },
+      async onSortChange(payload) {
+        this.filter.sortField = payload.field
+        this.filter.sortOrder = payload.order
 
-        delete this.pagination.data
-        delete this.pagination.filter
-      } catch (err) {
-        this.__handleError(this, err, true)
+        this.__startLoading()
+
+        await this.fetchUsers()
+
+        this.__stopLoading()
+      },
+      async fetchUsers() {
+        try {
+          let res = await this.$service.user.getByLevel(this.$route.params.level, {
+            page: this.pagination.current_page,
+            sort: [
+              this.filter.sortField,
+              this.filter.sortOrder
+            ],
+            active: this.filter.verified,
+            search: this.filter.keyword
+          })
+
+          this.users = res.data.data
+          this.pagination = res.data
+
+          delete this.pagination.data
+          delete this.pagination.filter
+        } catch (err) {
+          this.__handleError(this, err, true)
+        }
       }
     }
   }
-}
 </script>

@@ -14,15 +14,18 @@ import Area from '../views/admin/area/Index'
 import AreaCity from '../views/admin/area/City'
 import AreaDistrict from '../views/admin/area/District'
 import User from '../views/admin/user/Index'
+import UserCreate from '../views/admin/UserCreate'
 import Setting from '../views/admin/setting/Index'
 
-import { ADMIN, SUPER_ADMIN } from '../config/level'
+import {
+  ADMIN,
+  SUPER_ADMIN
+} from '../config/level'
 
 export default {
   path: '/admin',
   component: Main,
-  children: [
-    {
+  children: [{
       path: '/',
       name: 'admin-main',
       component: Dashboard,
@@ -85,6 +88,17 @@ export default {
         level: [ADMIN, SUPER_ADMIN]
       }
     },
+
+    {
+      path: 'UserCreate',
+      name: 'admin-user-create',
+      component: UserCreate,
+      meta: {
+        auth: true,
+        level: [ADMIN, SUPER_ADMIN]
+      }
+    },
+
     {
       path: 'master/categories/:id/edit',
       name: 'admin-category-edit',
@@ -175,6 +189,7 @@ export default {
         level: [ADMIN, SUPER_ADMIN]
       }
     },
+
     {
       path: 'settings',
       name: 'admin-setting',
