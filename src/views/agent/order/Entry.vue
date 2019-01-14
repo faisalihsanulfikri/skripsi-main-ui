@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="uk-grid-small uk-grid-match uk-margin" uk-grid>
-      <div class="uk-width-1-2">
+      <div class="uk-width-2-5">
         <div class="uk-card uk-card-default uk-card-small">
           <div class="uk-card-header">
             <h3 class="uk-card-title">Shipping Info</h3>
@@ -81,7 +81,7 @@
           </div>
         </div>
       </div>
-      <div class="uk-width-1-2">
+      <div class="uk-width-3-5">
         <div class="uk-card uk-card-default uk-card-small">
           <div class="uk-card-header">
             <h3 class="uk-card-title">Package</h3>
@@ -259,39 +259,26 @@
     </div>
     <div v-if="input.items.length > 0" id="card-item" class="uk-card uk-card-default uk-card-small uk-margin">
       <div class="uk-card-header">
-        <h3 class="uk-card-title">Package List</h3>
+        <h2 class="uk-card-title">Package List</h2>
       </div>
       <div class="uk-card-body">
         <div class="uk-overflow-auto">
           <table class="uk-table uk-table-divider uk-table-small uk-text-small">
             <thead>
-              <th>Types</th>
-              <th class="uk-text-center">Goods Detail</th>
-              <th>Reference</th>
-              <th class="uk-text-right">The amount of goods</th>
-              <th class="uk-text-right">Price of goods (IDR)</th>
-              <th class="uk-text-center">Weight ({{ config.weightUnits }})</th>
-              <th class="uk-text-center">Dimension ({{ config.volumeUnits }})</th>
-              <th width="50">Action</th>
+              <tr>
+                <th>Types</th>
+                <th>Reference</th>
+                <th class="uk-text-right">The amount of goods</th>
+                <th class="uk-text-right">Price of goods (IDR)</th>
+                <th class="uk-text-center">Weight ({{ config.weightUnits }})</th>
+                <th class="uk-text-center">Dimension ({{ config.volumeUnits }})</th>
+                <th width="50">Action</th>
+              </tr>
             </thead>
             <tbody>
               <tr v-for="(item, index) in input.items" :key="index">
                 <td>{{ item.categoryName }}</td>
                 <!-- <td>{{ item.name }}</td> -->
-                <table>
-                  <thead>
-                    <th>Name</th>
-                    <th>Total</th>
-                    <th>Unit</th>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(goods, index) in input.item.goodsList" :key="index">
-                      <td>{{ goods.name }}</td>
-                      <td>{{ goods.quantity }}</td>
-                      <td>{{ goods.unit }}</td>
-                    </tr>
-                  </tbody>
-                </table>
                 <td>{{ item.reference }}</td>
                 <td class="uk-text-right">{{ item.quantity }}</td>
                 <td class="uk-text-right">{{ item.price | currency('', 2, { thousandsSeparator: '.', decimalSeparator:
@@ -310,8 +297,36 @@
               </tr>
             </tbody>
           </table>
+          <hr>
         </div>
       </div>
+
+      <div class="uk-card-header">
+        <h4 class="">Goods Detail</h4>
+      </div>
+      <div class="uk-card-body">
+        <div class="uk-overflow-auto">
+          <table class="uk-table uk-table-divider uk-table-small uk-text-small">
+            <div>
+              <thead>
+                <tr>
+                  <th class="uk-text-left">Name</th>
+                  <th class="uk-text-right">Total</th>
+                  <th class="uk-text-left">Unit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(goods, index) in input.item.goodsList" :key="index">
+                  <td class="uk-text-left">{{ goods.name }}</td>
+                  <td class="uk-text-right">{{ goods.quantity }}</td>
+                  <td class="uk-text-left">{{ goods.unit }}</td>
+                </tr>
+              </tbody>
+            </div>
+          </table>
+        </div>
+      </div>
+
       <div class="uk-card-footer uk-text-right">
         <!-- <button
           class="uk-button uk-button-primary"
@@ -512,8 +527,7 @@
           this.options.address = res.data.map(item => {
             let $item = {
               value: item.id,
-              label: `${item.alias} - ${item.name} - ${item.phone} - ${item.province} - ${item.city} -
-${item.sub_district} - ${item.address} - ${item.postal_code}`
+              label: `${item.address} - ${item.province} - ${item.city} - ${item.sub_district} `
             }
 
             return $item
