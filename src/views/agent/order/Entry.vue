@@ -7,7 +7,7 @@
             <h3 class="uk-card-title">Shipping Info</h3>
           </div>
           <div class="uk-card-body">
-            <h5 class="uk-heading-line"><span>Shipper</span></h5>
+            <!-- <h5 class="uk-heading-line"><span>Shipper</span></h5>
             <div class="uk-margin-small">
               <label class="uk-form-label">Warehouse</label>
               <div>
@@ -16,7 +16,7 @@
                   </el-option>
                 </el-select>
               </div>
-            </div>
+            </div> -->
             <h5 class="uk-heading-line"><span>Receiver</span></h5>
             <div class="uk-margin-small">
               <label class="uk-form-label">Customer</label>
@@ -152,7 +152,7 @@
                 <li v-for="(goods, index) in input.item.goodsList" :key="index">
                   <div class="uk-grid-small" uk-grid>
                     <div class="uk-width-expand">
-                      {{ goods.name }} {{ goods.quantity }} {{ goods.unit }}
+                      {{ goods.name }} - {{ goods.quantity }} {{ goods.unit }}
                     </div>
                     <div class="uk-width-auto">
                       <a href="#" class="uk-text-danger" @click.prevent="removeGoods(index)">
@@ -399,7 +399,7 @@
             name: 'Package',
             reference: '',
             price: '',
-            currency: 'idr_rate',
+            currency: 'dollar_rate',
             currencyPrice: '',
             quantity: 1,
             weight: '',
@@ -568,6 +568,21 @@
           })
 
           cb(items)
+        } catch (err) {
+          this.__handleError(this, err, true)
+        }
+      },
+      async fetchUserCurrencies() {
+        try {
+          let res = await this.$service.user.getUserCurrency()
+
+          let items = res.data.data.map(item => {
+            return {
+              value: `${item.code} - ${item.name}`,
+              id: item.id
+            }
+          })
+
         } catch (err) {
           this.__handleError(this, err, true)
         }
