@@ -49,8 +49,8 @@
                     <font-awesome-icon v-else icon="angle-down"></font-awesome-icon>
                   </a>
                 </td>
-                <td>{{ order.code }}</td>
-                <td>{{ moment(order.created_at).format('MMMM Do YYYY, h:mm:ss a') }}</td>
+                <td class="app--table-column__collapse-toggle" @click.prevent="collapseToggle(orderIndex)"><a href="#">{{ order.code }}</a></td>
+                <td>{{ moment(order.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
                 <td>{{ order.user.name }}</td>
                 <td class="uk-text-right">
                   {{ order.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}

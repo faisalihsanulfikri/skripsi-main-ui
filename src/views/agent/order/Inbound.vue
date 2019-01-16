@@ -22,6 +22,13 @@
     </div>
     <div class="uk-card-body uk-card-small">
       <div class="uk-margin uk-grid-small" uk-grid>
+        <div class="uk-width-auto">
+          <el-date-picker v-model="filter.time" type="daterange" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+            range-separator="To" start-placeholder="Start date" end-placeholder="End date">
+          </el-date-picker>
+          <el-button slot="append" icon="el-icon-search" @click="fetchOrders">
+          </el-button>
+        </div>
         <div class="uk-width-1-3 uk-margin-auto-left">
           <el-input v-model="filter.search" placeholder="Search...">
             <el-button slot="append" icon="el-icon-search" @click="fetchOrders">
@@ -49,9 +56,9 @@
                     <font-awesome-icon v-else icon="angle-down"></font-awesome-icon>
                   </a>
                 </td>
-                <td>{{ order.code }}</td>
-                <td>{{ moment(order.created_at).format('MMMM Do YYYY, h:mm:ss a') }}</td>
-                <td>{{ order.user.name }}</td>
+                <td class="app--table-column__collapse-toggle" @click.prevent="collapseToggle(orderIndex)"><a href="#!" class="custom-link-black">{{ order.code }}</a></td>
+                <td>{{ moment(order.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
+                <td>{{ order.user.code }} - {{ order.user.name }}</td>
                 <td class="uk-text-center">{{ order.status }}</td>
               </tr>
               <tr v-show="!order.collapse" :key="`${orderIndex}_info`">
@@ -120,9 +127,10 @@
                                         v-if="item.showReceivedButton"
                                         type="success"
                                         size="mini"
-                                        @click="receivedItem(order.code, item.id)">
+                                        @click=" receivedItem(order.code, item.id)">
                                         <font-awesome-icon icon="check"></font-awesome-icon>
                                       </el-button>
+                                    <!-- -->
                                       <el-button
                                         v-if="item.showRejectButton"
                                         type="danger"
@@ -169,6 +177,7 @@
                           </tr>
                         </thead>
                         <tbody>
+                          <!-- {{order}} -->
                           <tr v-for="(awb, index) in order.air_waybills" :key="index">
                             <td>
                               <router-link :to="{ name: 'agent-awb-show', params: { code: awb.awb } }">
@@ -204,6 +213,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import CalculatorResult from '../../../components/CalculatorResult'
 import DialogCreateAwb from '../../../components/DialogCreateAwb'
 
@@ -225,12 +235,18 @@ export default {
         current_page: 1
       },
       filter: {
+        time: [],
         search: ''
       }
     }
   },
 
   created () {
+    this.filter.time = [
+      moment().startOf('month').format('YYYY-MM-DD'),
+      moment().endOf('month').format('YYYY-MM-DD')
+    ]
+
     this.fetchOrders()
   },
 
@@ -290,11 +306,13 @@ export default {
       return false
     },
     receivedItem (orderCode, itemId) {
+      // var ref = this
       this.$confirm('Are you sure to confirm this item?', 'Confirm', {
         type: 'warning'
       }).then(() => {
         this.updateItemStatus(orderCode, itemId, this.$store.state.kirimin.status.item_status.RECEIVED)
       }).catch(() => {})
+      // .then(ref.printAwb())
     },
     rejectItem (orderCode, itemId) {
       this.$confirm('Are you sure to reject this payment?', 'Confirm', {
@@ -335,7 +353,8 @@ export default {
 
       try {
         let res = await this.$service.order.get({
-          search: this.filter.search
+          search: this.filter.search,
+          time: this.filter.time
         })
 
         this.orders = res.data.data.map(order => {
