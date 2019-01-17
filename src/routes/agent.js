@@ -5,14 +5,16 @@ import Dashboard from '../views/agent/Dashboard'
 import OrderCreate from '../views/agent/order/Entry'
 import OrderInbound from '../views/agent/order/Inbound'
 import OrderReport from '../views/agent/report/Order'
+// import AgentCurrency from '../views/agent/orders/Currency'
 
-import { AGENT } from '../config/level'
+import {
+  AGENT
+} from '../config/level'
 
 export default {
   path: '/agent',
   component: Main,
-  children: [
-    {
+  children: [{
       path: '/',
       name: 'agent-main',
       component: Dashboard,
@@ -39,6 +41,15 @@ export default {
         level: [AGENT]
       }
     },
+    // {
+    //   path: 'currency',
+    //   name: 'agent-currency',
+    //   component: AgentCurrency,
+    //   meta: {
+    //     auth: true,
+    //     level: [AGENT]
+    //   }
+    // },
     {
       path: 'air-waybills/:code',
       name: 'agent-awb-show',

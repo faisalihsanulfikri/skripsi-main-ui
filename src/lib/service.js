@@ -168,9 +168,6 @@ const user = {
     return Vue.authHttp().get(`/users/${level}`, {
       params
     })
-  },
-  getUserCurrency() {
-    return Vue.authHttp().get('/user/currency')
   }
 }
 
