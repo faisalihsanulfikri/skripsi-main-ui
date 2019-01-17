@@ -183,17 +183,7 @@
               </label>
               <el-input-select-mask v-model="input.item.currencyPrice" :options="markOptions.numeral" :error="errors.has('price')"
                 @input="onTypingCurrency" @blur="onTypingCurrency">
-                <span slot="append" v-model="input.item.currency"></span>
-
-                <!-- <el-select v-model="input.item.currency" slot="append" style="width: 100px" @change="onCurrencyChanged">
-                  <el-option value="idr_rate" label="IDR"></el-option>
-                  <el-option value="dollar_rate" label="USD"></el-option>
-                  <el-option value="cny_rate" label="CNY"></el-option>
-                  <el-option value="krw_rate" label="WON"></el-option>
-                  <el-option value="sgd_rate" label="SGD"></el-option>
-                </el-select> -->
-
-
+                <span slot="append" v-model="input.item.currency">{{input.item.currency}}</span>
                 <input slot="input" v-model="input.item.price" v-validate="rules.item.price" name="price" type="hidden">
               </el-input-select-mask>
             </div>
@@ -403,7 +393,7 @@
             name: 'Package',
             reference: '',
             price: '',
-            currency: 'dollar_rate',
+            currency: '',
             currencyPrice: '',
             quantity: 1,
             weight: '',
@@ -483,14 +473,17 @@
 
       await this.fetchWarehouses()
       await this.fetchCategories()
-      await this.onCurrencyDefault()
 
       this.__stopLoading()
     },
 
+    async beforeMount() {
+      await this.onCurrencyDefault()
+    },
+
     methods: {
       onCurrencyDefault() {
-        this.input.item.currency = 'rates'
+        this.input.item.currency = this.$store.state.kirimin.currency.code
       },
       onConsolidateChanged() {
         this.$confirm('The package and items you input will be lost, are you sure?', 'warning', {
