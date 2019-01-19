@@ -95,7 +95,7 @@
                   {{ item.label }}
                 </option>
               </select>
-            </div> 
+            </div>
 
             <hr> -->
 
