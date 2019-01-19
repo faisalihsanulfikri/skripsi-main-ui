@@ -49,86 +49,82 @@
       </div>
     </div>
     <div class="uk-card-footer uk-text-center">
-      <el-pagination
-        layout="prev, pager, next"
-        :page-size="pagination.per_page"
-        :page-count="pagination.last_page"
-        :total="pagination.total"
-        @current-change="onChangePage">
+      <el-pagination layout="prev, pager, next" :page-size="pagination.per_page" :page-count="pagination.last_page"
+        :total="pagination.total" @current-change="onChangePage">
       </el-pagination>
     </div>
   </div>
 </template>
 
 <script>
-export default {
-  data () {
-    return {
-      categories: [],
-      pagination: {
-        current_page: 1,
-        per_page: 25,
-        total: 0
-      },
-      error: false,
-      errorMesssage: ''
-    }
-  },
+  export default {
+    data() {
+      return {
+        categories: [],
+        pagination: {
+          current_page: 1,
+          per_page: 25,
+          total: 0
+        },
+        error: false,
+        errorMesssage: ''
+      }
+    },
 
-  created () {
-    this.fetchCategories()
-  },
-
-  methods: {
-    async onChangePage (page) {
-      this.pagination.current_page = page
-
+    created() {
       this.fetchCategories()
     },
-    deleteConfirmation (id) {
-      this.$confirm('Are you sure to delete this?', 'Waning', {
-        type: 'warning',
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No'
-      }).then(() => {
-        this.delete(id)
-      }).catch(() => {})
-    },
-    async fetchCategories () {
-      this.__startLoading()
 
-      try {
-        let res = await this.$service.category.get()
-
-        this.categories = res.data.data
-        this.pagination = res.data
-
-        delete this.pagination.data
-        delete this.pagination.filter
-      } catch (err) {
-        this.__handleError(this, err, true)
-      }
-
-      this.__stopLoading()
-    },
-    async delete (id) {
-      this.error = false
-      this.errorMessage = ''
-
-      try {
-        let res = await this.$service.category.delete(id)
-
-        this.$notify({
-          title: 'SUCCESS',
-          message: res.data.message,
-          type: 'success'
-        })
+    methods: {
+      async onChangePage(page) {
+        this.pagination.current_page = page
 
         this.fetchCategories()
-      } catch (err) {
-        this.__handleError(this, err, true)
+      },
+      deleteConfirmation(id) {
+        this.$confirm('Are you sure to delete this?', 'Waning', {
+          type: 'warning',
+          confirmButtonText: 'Yes',
+          cancelButtonText: 'No'
+        }).then(() => {
+          this.delete(id)
+        }).catch(() => {})
+      },
+      async fetchCategories() {
+        this.__startLoading()
+
+        try {
+          let res = await this.$service.category.get()
+
+          this.categories = res.data.data
+          this.pagination = res.data
+
+          delete this.pagination.data
+          delete this.pagination.filter
+        } catch (err) {
+          this.__handleError(this, err, true)
+        }
+
+        this.__stopLoading()
+      },
+      async delete(id) {
+        this.error = false
+        this.errorMessage = ''
+
+        try {
+          let res = await this.$service.category.delete(id)
+
+          this.$notify({
+            title: 'SUCCESS',
+            message: res.data.message,
+            type: 'success'
+          })
+
+          this.fetchCategories()
+        } catch (err) {
+          this.__handleError(this, err, true)
+        }
       }
     }
   }
-}
 </script>

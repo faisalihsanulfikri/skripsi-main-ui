@@ -7,7 +7,7 @@
             <h3 class="uk-card-title">Shipping Info</h3>
           </div>
           <div class="uk-card-body">
-            <h5 class="uk-heading-line"><span>Shipper</span></h5>
+            <!-- <h5 class="uk-heading-line"><span>Shipper</span></h5>
             <div class="uk-margin-small">
               <label class="uk-form-label">Warehouse</label>
               <div>
@@ -16,7 +16,7 @@
                   </el-option>
                 </el-select>
               </div>
-            </div>
+            </div> -->
             <h5 class="uk-heading-line"><span>Receiver</span></h5>
             <div class="uk-margin-small">
               <label class="uk-form-label">Customer</label>
@@ -152,7 +152,7 @@
                 <li v-for="(goods, index) in input.item.goodsList" :key="index">
                   <div class="uk-grid-small" uk-grid>
                     <div class="uk-width-expand">
-                      {{ goods.name }} {{ goods.quantity }} {{ goods.unit }}
+                      {{ goods.name }} - {{ goods.quantity }} {{ goods.unit }}
                     </div>
                     <div class="uk-width-auto">
                       <a href="#" class="uk-text-danger" @click.prevent="removeGoods(index)">
@@ -183,13 +183,17 @@
               </label>
               <el-input-select-mask v-model="input.item.currencyPrice" :options="markOptions.numeral" :error="errors.has('price')"
                 @input="onTypingCurrency" @blur="onTypingCurrency">
-                <el-select v-model="input.item.currency" slot="append" style="width: 100px" @change="onCurrencyChanged">
+                <span slot="append" v-model="input.item.currency"></span>
+
+                <!-- <el-select v-model="input.item.currency" slot="append" style="width: 100px" @change="onCurrencyChanged">
                   <el-option value="idr_rate" label="IDR"></el-option>
                   <el-option value="dollar_rate" label="USD"></el-option>
                   <el-option value="cny_rate" label="CNY"></el-option>
                   <el-option value="krw_rate" label="WON"></el-option>
                   <el-option value="sgd_rate" label="SGD"></el-option>
-                </el-select>
+                </el-select> -->
+
+
                 <input slot="input" v-model="input.item.price" v-validate="rules.item.price" name="price" type="hidden">
               </el-input-select-mask>
             </div>
@@ -399,7 +403,7 @@
             name: 'Package',
             reference: '',
             price: '',
-            currency: 'idr_rate',
+            currency: 'dollar_rate',
             currencyPrice: '',
             quantity: 1,
             weight: '',
@@ -479,11 +483,15 @@
 
       await this.fetchWarehouses()
       await this.fetchCategories()
+      await this.onCurrencyDefault()
 
       this.__stopLoading()
     },
 
     methods: {
+      onCurrencyDefault() {
+        this.input.item.currency = 'rates'
+      },
       onConsolidateChanged() {
         this.$confirm('The package and items you input will be lost, are you sure?', 'warning', {
           type: 'warning'
@@ -495,7 +503,7 @@
         })
       },
       onCurrencyChanged() {
-        this.input.item.price = this.input.item.currencyPrice * this.$store.state.kirimin.formula[this.input.item.currency]
+        this.input.item.price = this.input.item.currencyPrice * this.$store.state.kirimin.currency.rates
 
         if (this.input.items.length > 0 && !this.input.consolidate) {
           this.check()

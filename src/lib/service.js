@@ -1,28 +1,34 @@
 import Vue from 'vue'
 
 const agent = {
-  getAddresses () {
+  getAddresses() {
     return Vue.authHttp().get('/agent/addresses/list')
   },
-  getWarehouses () {
+  getWarehouses() {
     return Vue.authHttp().get('/agent/warehouses/list')
   }
 }
 
+const currency = {
+  getCurrencies() {
+    return Vue.authHttp().get('/currencies/list')
+  }
+}
+
 const auth = {
-  register (data = {}) {
+  register(data = {}) {
     return Vue.http().post('/register', data)
   },
-  login (data = {}) {
+  login(data = {}) {
     return Vue.http().post('/login', data)
   }
 }
 
 const awb = {
-  create (data = {}) {
+  create(data = {}) {
     return Vue.authHttp().post('/awb', data)
   },
-  find (code) {
+  find(code) {
     return Vue.authHttp().get(`/awb/${code}`)
   },
   find_number (code) {
@@ -31,44 +37,44 @@ const awb = {
 }
 
 const calculator = {
-  check (data = {}) {
+  check(data = {}) {
     return Vue.http().post('/calculator', data)
   }
 }
 
 const category = {
-  get (params = {}) {
+  get(params = {}) {
     return Vue.http().get('/categories', {
       params
     })
   },
-  all (params = {}) {
+  all(params = {}) {
     return Vue.http().get('/categories/list', {
       params
     })
   },
-  find (id) {
+  find(id) {
     return Vue.authHttp().get(`/categories/${id}`)
   },
-  create (data = {}) {
+  create(data = {}) {
     return Vue.authHttp().post('/categories/', data)
   },
-  update (id = null, data = {}) {
+  update(id = null, data = {}) {
     return Vue.authHttp().put(`/categories/${id}`, data)
   },
-  delete (id) {
+  delete(id) {
     return Vue.authHttp().delete(`/categories/${id}`)
   }
 }
 
 const config = {
-  all () {
+  all() {
     return Vue.authHttp().get('/configs/list')
   },
-  getBankAccounts () {
+  getBankAccounts() {
     return Vue.authHttp().get('/res/configs/bank_accounts')
   },
-  update (data = {}) {
+  update(data = {}) {
     return Vue.authHttp().put('/configs', {
       configs: data
     })
@@ -76,72 +82,72 @@ const config = {
 }
 
 const invoice = {
-  get (params = {}) {
+  get(params = {}) {
     return Vue.authHttp().get('/invoices', {
       params
     })
   },
-  find (code) {
+  find(code) {
     return Vue.authHttp().get(`/invoices/${code}`)
   },
-  paymentConfirmation (code, data = {}) {
+  paymentConfirmation(code, data = {}) {
     return Vue.authHttp().post(`/invoices/${code}/payment-confirmation`, data)
   },
-  createPayment (code, data = {}) {
+  createPayment(code, data = {}) {
     return Vue.authHttp().post(`/invoices/${code}/payments`, data)
   }
 }
 
 const order = {
-  get (params = {}) {
+  get(params = {}) {
     return Vue.authHttp().get('/orders', {
       params
     })
   },
-  find (code) {
+  find(code) {
     return Vue.authHttp().get(`/orders/${code}`)
   },
-  createKirimin (data = {}) {
+  createKirimin(data = {}) {
     return Vue.authHttp().post('/orders/kirimin', data)
   },
-  createKiriminFromAgent (data = {}) {
+  createKiriminFromAgent(data = {}) {
     return Vue.authHttp().post('/agent/orders/kirimin', data)
   },
-  updateItemStatus (orderCode = null, itemId = null, data = {}) {
+  updateItemStatus(orderCode = null, itemId = null, data = {}) {
     return Vue.authHttp().put(`/orders/${orderCode}/items/${itemId}/status`, data)
   }
 }
 
 const orderAirWaybill = {
-  find (number) {
+  find(number) {
     return Vue.authHttp().get(`/awb/${number}`)
   }
 }
 
 const payment = {
-  updateStatus (id = null, data = {}) {
+  updateStatus(id = null, data = {}) {
     return Vue.authHttp().put(`/payments/${id}/status`, data)
   }
 }
 
 const report = {
-  airWaybill (params = {}) {
+  airWaybill(params = {}) {
     return Vue.authHttp().get('/reports/air-waybill', {
       params
     })
   },
-  airWaybillExport (params = {}) {
+  airWaybillExport(params = {}) {
     return Vue.authHttp().get('/reports/air-waybill/export', {
       params,
       responseType: 'blob'
     })
   },
-  order (params = {}) {
+  order(params = {}) {
     return Vue.authHttp().get('/reports/order', {
       params
     })
   },
-  orderExport (params = {}) {
+  orderExport(params = {}) {
     return Vue.authHttp().get('/reports/order/export', {
       params,
       responseType: 'blob'
@@ -150,18 +156,18 @@ const report = {
 }
 
 const user = {
-  get (params = {}) {
+  get(params = {}) {
     return Vue.authHttp().get(`/users`, {
       params
     })
   },
-  getAddresses () {
+  getAddresses() {
     return Vue.authHttp().get('/user/addresses/list')
   },
-  getAddressesById (id) {
+  getAddressesById(id) {
     return Vue.authHttp().get(`/users/${id}/addresses/list`)
   },
-  getByLevel (level = null, params = {}) {
+  getByLevel(level = null, params = {}) {
     return Vue.authHttp().get(`/users/${level}`, {
       params
     })
@@ -169,7 +175,7 @@ const user = {
 }
 
 const warehouse = {
-  all (params = {}) {
+  all(params = {}) {
     return Vue.http().get('/warehouses/list', {
       params
     })
@@ -194,6 +200,8 @@ const services = {
 
 Object.defineProperties(Vue.prototype, {
   $service: {
-    get () { return services }
+    get() {
+      return services
+    }
   }
 })
