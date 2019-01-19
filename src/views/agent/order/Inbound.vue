@@ -123,6 +123,7 @@
                                     <td width="100">{{ item.stringQuantity }} {{ item.unit }}</td>
                                     <td class="uk-text-center" width="100">{{ item.status }}</td>
                                     <td class="uk-text-center" width="100">
+                                      <!-- {{order.code}} -->
                                       <el-button
                                         v-if="item.showReceivedButton"
                                         type="success"
@@ -181,11 +182,12 @@
                           <tr v-for="(awb, index) in order.air_waybills" :key="index">
                             <td>
                               <router-link :to="{ name: 'agent-awb-show', params: { code: awb.awb } }">
-                                {{ awb.awb }}
+                                <!-- {{ awb.awb }} -->
                               </router-link>
                             </td>
                             <td>{{ awb.created_at }}</td>
                             <td class="uk-text-center">
+                              <!-- awb/find -->
                               <el-button type="primary" size="mini" @click="printAwb(awb.awb)">
                                 <font-awesome-icon icon="print"></font-awesome-icon>
                               </el-button>
@@ -230,6 +232,7 @@ export default {
         data: {}
       },
       orders: [],
+      awb: [],
       pagination: {
         total: 0,
         current_page: 1
@@ -306,13 +309,12 @@ export default {
       return false
     },
     receivedItem (orderCode, itemId) {
-      // var ref = this
       this.$confirm('Are you sure to confirm this item?', 'Confirm', {
         type: 'warning'
       }).then(() => {
         this.updateItemStatus(orderCode, itemId, this.$store.state.kirimin.status.item_status.RECEIVED)
       }).catch(() => {})
-      // .then(ref.printAwb())
+      // .then(console.log(orderCode))
     },
     rejectItem (orderCode, itemId) {
       this.$confirm('Are you sure to reject this payment?', 'Confirm', {
@@ -404,6 +406,26 @@ export default {
           }
 
           return order
+        })
+      } catch (err) {
+        this.__handleError(this, err, true)
+      }
+
+      this.__stopLoading()
+    },
+    async getAwb (orderCode) {
+      this.__startLoading()
+
+      try {
+        let res = await this.$service.awb.find_number(orderCode)
+        this.orders = res.data.data.map(awb => {
+          awb['collapse'] = true
+          awb.item_groups = awb.item_groups.map(items => {
+            return this.mappingItems(awb, items)
+          })
+          // awb.items = this.mappingItems(awb, order.items)
+          console.log(awb)
+          return awb
         })
       } catch (err) {
         this.__handleError(this, err, true)
