@@ -168,6 +168,25 @@
           height: '',
           vunits: ''
         },
+        input: {
+          savedAddress: '',
+          code: '',
+          name: '',
+          phone: '',
+          country: '',
+          province: '',
+          city: '',
+          subDistrict: '',
+          address: '',
+          zipCode: '',
+          packet: {
+            price: '',
+            weight: '',
+            length: '',
+            width: '',
+            height: ''
+          }
+        },
         orders: [],
         pagination: {
           current_page: 1,

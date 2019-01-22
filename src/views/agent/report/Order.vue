@@ -30,9 +30,15 @@
             <el-button type="default" @click="fetchOrderReport">Filter</el-button>
           </div>
           <div class="uk-width-auto">
-            <el-button type="default" @click="exportReport">
+
+            <el-button type="default" @click="exportReportXLSX">
               <font-awesome-icon icon="file-excel"></font-awesome-icon>
             </el-button>
+            XLSX
+            <el-button type="default" @click="exportReportCSV">
+              <font-awesome-icon icon="file-excel"></font-awesome-icon>
+            </el-button>
+            CSV
           </div>
         </div>
       </div>
@@ -90,11 +96,29 @@
     },
 
     methods: {
-      async exportReport() {
+      async exportReportCSV() {
         this.__startLoading()
 
         try {
-          let res = await this.$service.report.orderExport(this.filter)
+          let res = await this.$service.report.orderExportCSV(this.filter)
+
+          let content = res.request.getResponseHeader('Content-Disposition')
+          let regexResult = content.match('filename=(.*)')
+          let filename = regexResult[1].replace(new RegExp('"', 'g'), '')
+          let blob = new Blob([res.data])
+
+          saveAs(blob, filename)
+        } catch (err) {
+          this.__handleError(this, err, true)
+        }
+
+        this.__stopLoading()
+      },
+      async exportReportXLSX() {
+        this.__startLoading()
+
+        try {
+          let res = await this.$service.report.orderExportXLSX(this.filter)
 
           let content = res.request.getResponseHeader('Content-Disposition')
           let regexResult = content.match('filename=(.*)')

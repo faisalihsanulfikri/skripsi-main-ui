@@ -123,12 +123,11 @@
                                     <td width="100">{{ item.stringQuantity }} {{ item.unit }}</td>
                                     <td class="uk-text-center" width="100">{{ item.status }}</td>
                                     <td class="uk-text-center" width="100">
-                                      <!-- {{order.code}} -->
                                       <el-button
                                         v-if="item.showReceivedButton"
                                         type="success"
                                         size="mini"
-                                        @click=" receivedItem(order.code, item.id)">
+                                        @click=" receivedItem(order.code, item.id,orderIndex)">
                                         <font-awesome-icon icon="check"></font-awesome-icon>
                                       </el-button>
                                     <!-- -->
@@ -231,7 +230,9 @@ export default {
         visible: false,
         data: {}
       },
+      // datas:[],
       orders: [],
+      // order: [],
       awb: [],
       pagination: {
         total: 0,
@@ -240,8 +241,12 @@ export default {
       filter: {
         time: [],
         search: ''
+      },
+      master: {
+        addresses: []
       }
-    }
+      }
+
   },
 
   created () {
@@ -264,7 +269,7 @@ export default {
     },
     async onAwbCreated (res) {
       this.closeCreateAwbDialog()
-
+      // console.log(res.data.data.air_waybills[0].awb)
       this.orders = this.orders.map(order => {
         if (order.id === res.data.data.id) {
           let $order = res.data.data
@@ -280,6 +285,8 @@ export default {
 
         return order
       })
+      var lenght = res.data.data.air_waybills.length
+      this.printAwb(res.data.data.air_waybills[lenght-1].awb)
     },
     collapseToggle (index) {
       this.orders[index].collapse = !this.orders[index].collapse
@@ -314,8 +321,44 @@ export default {
       }).then(() => {
         this.updateItemStatus(orderCode, itemId, this.$store.state.kirimin.status.item_status.RECEIVED)
       }).catch(() => {})
-      // .then(console.log(orderCode))
     },
+    // receivedItem (orderCode, itemId, orderIndex) {
+    //   this.$confirm('Are you sure to confirm this item?', 'Confirm', {
+    //   type: 'warning'
+    //   }).then(() => {
+    //     this.updateItemStatus(orderCode, itemId, this.$store.state.kirimin.status.item_status.RECEIVED).then(
+    //       // console.log('test')
+    //       var datas = Object.assign({}, this.orders(orderIndex))
+    //
+    //       datas['orderCode'] = this.orders(orderIndex).code
+    //       datas['items'] = this.orders(orderIndex).item_groups.flat()
+    //         .filter(item => item.selected)
+    //         .map(item => {
+    //           return item.id
+    //         })
+    //         try {
+    //           let res = await this.$service.awb.create(datas)
+    //
+    //           // this.$notify({
+    //           //   title: 'SUCCESS',
+    //           //   message: res.data.message,
+    //           //   type: 'success'
+    //           // })
+    //
+    //           this.input = this.$options.data().input
+    //
+    //           this.$emit('done', res)
+    //         } catch (err) {
+    //           this.__handleError(this, err, true)
+    //         }
+    //     ).then(
+    //       var ref = this
+    //       var Awb = ref.getAwb(orderIndex)
+    //       printAwb(Awb)
+    //     )
+    //     )
+    //   }).catch(() => {})
+    // },
     rejectItem (orderCode, itemId) {
       this.$confirm('Are you sure to reject this payment?', 'Confirm', {
         type: 'warning'
@@ -329,6 +372,7 @@ export default {
         'Kirimin - Print AWB',
         'directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=0,resizable=0,width=800'
       )
+      // console.log(code)
     },
     mappingItems (order, items) {
       let $items = this.$util.orderItem.stringCurrency(items)
@@ -424,13 +468,26 @@ export default {
             return this.mappingItems(awb, items)
           })
           // awb.items = this.mappingItems(awb, order.items)
-          console.log(awb)
+          // console.log(awb)
           return awb
         })
       } catch (err) {
         this.__handleError(this, err, true)
       }
+      return awb
+      this.__stopLoading()
+    },
+    async createData(data,inputData){
+      this.__startLoading()
+      try {
+        console.log(data)
+        let res = await this.$service.awb.create(data)
+        inputData = this.$options.data().input
 
+        this.$emit('onAwbCreated', res)
+      } catch (err) {
+        this.__handleError(this, err, true)
+      }
       this.__stopLoading()
     }
   }
