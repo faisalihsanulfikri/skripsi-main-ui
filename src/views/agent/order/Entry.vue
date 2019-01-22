@@ -375,6 +375,7 @@
 
     data() {
       return {
+        user: {},
         dialogOrderConfimation: {
           visible: false,
           data: {}
@@ -481,30 +482,61 @@
       }
     },
 
-    // async beforeMount() {
-    //   await this.onUserLogin()
-    // },
-
 
     async created() {
       this.__startLoading()
 
-      // await this.onUserLogin()
+      this.user = await this.$auth.getUser()
+
+      await this.onUserLogin()
       await this.fetchWarehouses()
       await this.fetchCurrencies()
       await this.fetchCategories()
 
+
       this.__stopLoading()
     },
 
-    async mounted() {
-      await this.onUserLogin()
-    },
 
     methods: {
       onUserLogin() {
-        this.input.item.currencyId = this.$store.state.kirimin.user.currency_id
+        this.input.item.currencyId = this.user.currency_id
       },
+
+      onCurrencyChanged() {
+        this.input.item.price = this.input.item.currencyPrice * this.input.item.currency
+
+        if (this.input.items.length > 0 && !this.input.consolidate) {
+          this.check()
+        }
+      },
+
+      async fetchCurrencies() {
+        try {
+
+          let res = await this.$service.currency.all()
+
+          this.master.currencies = res.data
+          this.options.currency = res.data.map(item => {
+            let $item = {
+              id: item.id,
+              value: item.rates,
+              label: item.code,
+            }
+            return $item
+          })
+
+          for (let i = 0; i < res.data.length; i++) {
+            if (res.data[i].id == this.input.item.currencyId) {
+              this.input.item.currency = res.data[i].rates
+            }
+          }
+          return $res
+        } catch (err) {
+          this.__handleError(this, err, true)
+        }
+      },
+
 
       onConsolidateChanged() {
         this.$confirm('The package and items you input will be lost, are you sure?', 'warning', {
@@ -515,13 +547,6 @@
         }).catch(() => {
           this.input.consolidate = parseInt(this.input.consolidate) === 0 ? 1 : 0
         })
-      },
-      onCurrencyChanged() {
-        this.input.item.price = this.input.item.currencyPrice * this.input.item.currency
-
-        if (this.input.items.length > 0 && !this.input.consolidate) {
-          this.check()
-        }
       },
       onInsuranceChanged() {
         if (this.input.items.length > 0) {
@@ -619,34 +644,32 @@
           this.__handleError(this, err, true)
         }
       },
-      async fetchCurrencies() {
-        try {
+      // async fetchCurrencies() {
+      //   try {
 
-          let res = await this.$service.currency.all()
+      //     let res = await this.$service.currency.all()
 
-          this.master.currencies = res.data
-          this.options.currency = res.data.map(item => {
-            let $item = {
-              id: item.id,
-              value: item.rates,
-              label: item.code,
-            }
-            return $item
-          })
+      //     this.master.currencies = res.data
+      //     this.options.currency = res.data.map(item => {
+      //       let $item = {
+      //         id: item.id,
+      //         value: item.rates,
+      //         label: item.code,
+      //       }
+      //       return $item
+      //     })
 
-          for (let i = 0; i < res.data.length; i++) {
-            if (res.data[i].id == this.input.item.currencyId) {
-              this.input.item.currency = res.data[i].rates
-            }
-          }
+      //     for (let i = 0; i < res.data.length; i++) {
+      //       if (res.data[i].id == this.input.item.currencyId) {
+      //         this.input.item.currency = res.data[i].rates
+      //       }
+      //     }
 
-
-
-          return $res
-        } catch (err) {
-          this.__handleError(this, err, true)
-        }
-      },
+      //     return $res
+      //   } catch (err) {
+      //     this.__handleError(this, err, true)
+      //   }
+      // },
       async fetchCategories() {
         try {
           let res = await this.$service.category.all()

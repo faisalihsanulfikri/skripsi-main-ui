@@ -8,7 +8,6 @@ const state = {
   formula: {},
   currency: {},
   status: {},
-  user: {},
 }
 
 const mutations = {
@@ -20,9 +19,6 @@ const mutations = {
   },
   [TYPES.SET_CURRENCY](state, currency) {
     state.currency = currency
-  },
-  [TYPES.SET_USER](state, user) {
-    state.user = user
   }
 }
 
@@ -33,7 +29,6 @@ const actions = {
     dispatch('getFormula')
     dispatch('getStaticConfig')
     dispatch('getCurrency')
-    dispatch('getUser')
   },
   async getStaticConfig({
     commit
@@ -60,15 +55,6 @@ const actions = {
 
     if (res.data) {
       commit(TYPES.SET_CURRENCY, res.data)
-    }
-  },
-  async getUser({
-    commit
-  }) {
-    let res = await Vue.authHttp().get('/user')
-
-    if (res.data) {
-      commit(TYPES.SET_USER, res.data)
     }
   }
 }
