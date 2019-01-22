@@ -147,8 +147,14 @@ const report = {
       params
     })
   },
-  orderExport(params = {}) {
-    return Vue.authHttp().get('/reports/order/export', {
+  orderExportXLSX(params = {}) {
+    return Vue.authHttp().get('/reports/order/export/xlsx', {
+      params,
+      responseType: 'blob'
+    })
+  },
+  orderExportCSV(params = {}) {
+    return Vue.authHttp().get('/reports/order/export/csv', {
       params,
       responseType: 'blob'
     })

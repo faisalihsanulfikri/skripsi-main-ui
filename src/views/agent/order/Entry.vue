@@ -496,7 +496,7 @@
         })
       },
       onCurrencyChanged() {
-        this.input.item.price = this.input.item.currencyPrice * this.$store.state.kirimin.currency.rates
+        this.input.item.price = this.input.item.currencyPrice * 1
 
         if (this.input.items.length > 0 && !this.input.consolidate) {
           this.check()
