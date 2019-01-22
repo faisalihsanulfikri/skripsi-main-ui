@@ -9,12 +9,6 @@ const agent = {
   }
 }
 
-const currency = {
-  getCurrencies() {
-    return Vue.authHttp().get('/currencies/list')
-  }
-}
-
 const auth = {
   register(data = {}) {
     return Vue.http().post('/register', data)
@@ -64,6 +58,12 @@ const category = {
   },
   delete(id) {
     return Vue.authHttp().delete(`/categories/${id}`)
+  }
+}
+
+const currency = {
+  all() {
+    return Vue.http().get('/currencies/list')
   }
 }
 
@@ -170,6 +170,9 @@ const user = {
   getAddresses() {
     return Vue.authHttp().get('/user/addresses/list')
   },
+  getUserDetail() {
+    return Vue.authHttp().get('/user')
+  },
   getAddressesById(id) {
     return Vue.authHttp().get(`/users/${id}/addresses/list`)
   },
@@ -201,7 +204,8 @@ const services = {
   payment,
   report,
   user,
-  warehouse
+  warehouse,
+  currency
 }
 
 Object.defineProperties(Vue.prototype, {
