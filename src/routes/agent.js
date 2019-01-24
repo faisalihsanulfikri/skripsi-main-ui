@@ -36,7 +36,7 @@ export default {
     },
     {
       path: 'inbound/simplified',
-      name: 'simplified',
+      name: 'inbound-simplified',
       component: OrderInbound,
       meta: {
         auth: true,
@@ -45,7 +45,7 @@ export default {
     },
     {
       path: 'inbound/advanced',
-      name: 'advanced',
+      name: 'inbound-advanced',
       component: OrderAdvInbound,
       meta: {
         auth: true,
@@ -54,7 +54,7 @@ export default {
     },
     {
       path: 'inbound/import',
-      name: 'import',
+      name: 'inbound-import',
       component: OrderImportInbound,
       meta: {
         auth: true,

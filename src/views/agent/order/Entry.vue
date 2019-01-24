@@ -796,7 +796,7 @@
           })
 
           this.$router.push({
-            name: 'agent-inbound',
+            name: 'inbound-simplified',
             params: {
               code: res.data.data.code
             }

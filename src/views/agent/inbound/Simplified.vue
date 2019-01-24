@@ -93,7 +93,7 @@
                     <h5 class="uk-margin-remove">
                       <font-awesome-icon icon="cubes"></font-awesome-icon>
                       <span class="uk-margin-small-left">{{ order.item_groups.length }}</span>
-                      <span class="uk-margin-small-left">Packet`s</span>
+                      <span class="uk-margin-small-left">Package`s</span>
                       <el-tag v-if="order.consolidate === 1" class="uk-margin-small-left" type="success" size="mini">Consolidate</el-tag>
                     </h5>
                     <div class="uk-overflow-auto">

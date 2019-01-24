@@ -40,158 +40,68 @@
         <table class="uk-table uk-table-divider uk-table-small">
           <thead>
             <tr>
-              <th></th>
-              <th width="150">Code</th>
-              <th width="150">Date</th>
+              <th>Code</th>
+              <th>Date</th>
               <th>Customer</th>
-              <th class="uk-text-center" width="150">Status</th>
+              <th>Status</th>
+              <th class="uk-text-center">Goods Name</th>
+              <th class="uk-text-right">Total</th>
+              <th class="uk-text-right">Unit</th>
             </tr>
           </thead>
           <tbody>
             <template v-for="(order, orderIndex) in orders">
               <tr :key="orderIndex">
-                <td class="app--table-column__collapse-toggle" @click.prevent="collapseToggle(orderIndex)">
-                  <a href="#">
-                    <font-awesome-icon v-if="order.collapse" icon="angle-right"></font-awesome-icon>
-                    <font-awesome-icon v-else icon="angle-down"></font-awesome-icon>
-                  </a>
-                </td>
-                <td class="app--table-column__collapse-toggle" @click.prevent="collapseToggle(orderIndex)"><a href="#!"
-                    class="custom-link-black">{{ order.code }}</a></td>
+
+                <td>{{ order.code }}</td>
                 <td>{{ moment(order.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
-                <td>{{ order.user.code }} - {{ order.user.name }}</td>
-                <td class="uk-text-center">{{ order.status }}</td>
-              </tr>
-              <tr v-show="!order.collapse" :key="`${orderIndex}_info`">
-                <td></td>
-                <td colspan="4">
-                  <div class="uk-grid-small" uk-grid>
-                    <div class="uk-width-1-2">
-                      <h5 class="uk-margin-small">
-                        <font-awesome-icon icon="globe-asia"></font-awesome-icon>
-                        <span class="uk-margin-small-left">{{ order.detail.warehouse.name }}</span>
-                      </h5>
-                      <h5 class="uk-margin-remove">
-                        <font-awesome-icon icon="truck"></font-awesome-icon>
-                        <span class="uk-margin-small-left">Destination Address</span>
-                      </h5>
-                      <div class="uk-padding-small">
-                        <div class="app--list-text">{{ order.receiver.name }}</div>
-                        <div class="app--list-text">{{ order.receiver.address }}</div>
-                        <div class="app--list-text">
-                          {{ order.receiver.sub_district }}, {{ order.receiver.city }} {{ order.receiver.postal_code }}
-                        </div>
-                        <div class="app--list-text">{{ order.receiver.province }}</div>
-                        <div class="app--list-text">{{ order.receiver.phone }}</div>
-                      </div>
-                    </div>
-                  </div>
+                <td>{{ order.user.code }}</td>
+                <td>{{ order.status }}</td>
 
-                  <hr>
-
-                  <div class="uk-margin-small">
-                    <h5 class="uk-margin-remove">
-                      <font-awesome-icon icon="cubes"></font-awesome-icon>
-                      <span class="uk-margin-small-left">{{ order.item_groups.length }}</span>
-                      <span class="uk-margin-small-left">Packet`s</span>
-                      <el-tag v-if="order.consolidate === 1" class="uk-margin-small-left" type="success" size="mini">Consolidate</el-tag>
-                    </h5>
-                    <div class="uk-overflow-auto">
-                      <table class="uk-table uk-table-small uk-table-divider uk-table-middle uk-text-small">
-                        <tbody>
-                          <template v-for="(items, groupIndex) in order.item_groups">
-                            <tr :key="groupIndex">
-                              <td>
-                                <a href="#">{{ items[0].category.name }}</a>
-                              </td>
-                              <td class="uk-text-center" width="300">{{ `${items[0].stringWeight}
-                                ${order.detail.formula.weight_unit} - ${items[0].stringLength} x
-                                ${items[0].stringWidth} x ${items[0].stringLength} ${order.detail.formula.volume_unit}`
-                                }}</td>
-                              <td class="uk-text-right" width="200">IDR {{ items[0].stringPrice }}</td>
-                            </tr>
-                            <tr :key="`${groupIndex}_goods`">
-                              <td colspan="3">
-                                <table class="uk-table uk-table-small">
-                                  <tr>
-                                    <td colspan="5">
-                                      <div class="app--list-label">Reference</div>
-                                      <div class="app--list-text">{{ items[0].reference }}</div>
-                                    </td>
-                                  </tr>
-                                  <tr v-for="(item, itemIndex) in items" :key="itemIndex">
-                                    <td class="uk-text-center" width="20">
-                                      <el-checkbox v-model="item.selected" :disabled="item.checkDisabled"></el-checkbox>
-                                    </td>
-                                    <td>{{ item.name }}</td>
-                                    <td width="100">{{ item.stringQuantity }} {{ item.unit }}</td>
-                                    <td class="uk-text-center" width="100">{{ item.status }}</td>
-                                    <td class="uk-text-center" width="100">
-                                      <el-button v-if="item.showReceivedButton" type="success" size="mini" @click=" receivedItem(order.code, item.id,orderIndex)">
-                                        <font-awesome-icon icon="check"></font-awesome-icon>
-                                      </el-button>
-                                      <!-- -->
-                                      <el-button v-if="item.showRejectButton" type="danger" size="mini" @click="rejectItem(order.code, item.id)">
-                                        <font-awesome-icon icon="times"></font-awesome-icon>
-                                      </el-button>
-                                    </td>
-                                  </tr>
-                                </table>
-                              </td>
-                            </tr>
-                          </template>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-
-                  <hr>
-
-                  <div class="uk-grid-small" uk-grid>
-                    <div class="uk-width-auto">
-                      <el-button :disabled="!canCreateAwb(orderIndex)" @click="openCreateAwbDialog(orderIndex)">
-                        CREATE AWB | {{ countSelectedItems(orderIndex) }} item's</el-button>
-                    </div>
-                  </div>
-
-                  <hr>
-
-                  <div class="uk-margin">
-                    <h5 class="uk-margin-remove">
-                      <font-awesome-icon icon="shipping-fast"></font-awesome-icon>
-                      <span class="uk-margin-small-left">Air Waybills</span>
-                    </h5>
-                    <div>
-                      <table class="uk-table uk-table-small uk-table-divider uk-text-small">
-                        <thead>
-                          <tr>
-                            <th>AWB Number</th>
-                            <th width="150">Created At</th>
-                            <th width="50"></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <!-- {{order}} -->
-                          <tr v-for="(awb, index) in order.air_waybills" :key="index">
-                            <td>
-                              <router-link :to="{ name: 'agent-awb-show', params: { code: awb.awb } }">
-                                <!-- {{ awb.awb }} -->
-                              </router-link>
-                            </td>
-                            <td>{{ awb.created_at }}</td>
-                            <td class="uk-text-center">
-                              <!-- awb/find -->
-                              <el-button type="primary" size="mini" @click="printAwb(awb.awb)">
-                                <font-awesome-icon icon="print"></font-awesome-icon>
-                              </el-button>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
+                <td>
+                  <template v-for="(items, groupIndex) in order.item_groups">
+                    <table style="border-left: 1px solid #e5e5e5;">
+                      <tbody>
+                        <tr v-for="(item, itemIndex) in items" :key="itemIndex">
+                          <ul style="list-style: none;">
+                            <li>{{ item.name }}</li>
+                          </ul>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </template>
                 </td>
+
+                <td>
+                  <template v-for="(items, groupIndex) in order.item_groups">
+                    <table>
+                      <tbody>
+                        <tr v-for="(item, itemIndex) in items" :key="itemIndex">
+                          <ul style="list-style: none;">
+                            <li>{{ item.stringQuantity }}</li>
+                          </ul>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </template>
+                </td>
+
+                <td>
+                  <template v-for="(items, groupIndex) in order.item_groups">
+                    <table>
+                      <tbody>
+                        <tr v-for="(item, itemIndex) in items" :key="itemIndex">
+                          <ul style="list-style: none;">
+                            <li>{{ item.unit }}</li>
+                          </ul>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </template>
+                </td>
+
               </tr>
+              <br>
             </template>
           </tbody>
         </table>
