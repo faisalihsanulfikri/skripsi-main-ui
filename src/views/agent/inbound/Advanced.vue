@@ -39,69 +39,69 @@
       <div class="uk-overflow-auto">
         <table class="uk-table uk-table-divider uk-table-small">
           <thead>
-            <tr>
-              <th>Code</th>
-              <th>Date</th>
-              <th>Customer</th>
-              <th>Status</th>
-              <th class="uk-text-center">Goods Name</th>
-              <th class="uk-text-right">Total</th>
-              <th class="uk-text-right">Unit</th>
-            </tr>
+            <th style="vertical-align:inherit">Code</th>
+            <th style="vertical-align:inherit">Date</th>
+            <th style="vertical-align:inherit">Customer</th>
+            <th style="vertical-align:inherit">Status</th>
+
+            <th>
+              <table>
+                <tr>
+                  <th width="80%">Name Of Goods</th>
+                  <th width="25%">Total</th>
+                  <th width="25%">Unit</th>
+                </tr>
+              </table>
+            </th>
+
           </thead>
           <tbody>
             <template v-for="(order, orderIndex) in orders">
-              <tr :key="orderIndex">
+              <template v-for="(items, groupIndex) in order.item_groups">
+                <tr :key="orderIndex">
+                  <td style="vertical-align:inherit">{{ order.code }}</td>
+                  <td style="vertical-align:inherit">{{ moment(order.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
+                  <td style="vertical-align:inherit">{{ order.user.code }}</td>
+                  <td style="vertical-align:inherit">{{ order.status }}</td>
 
-                <td>{{ order.code }}</td>
-                <td>{{ moment(order.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
-                <td>{{ order.user.code }}</td>
-                <td>{{ order.status }}</td>
-
-                <td>
-                  <template v-for="(items, groupIndex) in order.item_groups">
+                  <td>
                     <table style="border-left: 1px solid #e5e5e5;">
+                      <!-- <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Total</th>
+                          <th>Unit</th>
+                        </tr>
+                      </thead> -->
                       <tbody>
-                        <tr v-for="(item, itemIndex) in items" :key="itemIndex">
-                          <ul style="list-style: none;">
-                            <li>{{ item.name }}</li>
-                          </ul>
+                        <tr v-for=" (item, itemIndex) in items" :key="itemIndex">
+                          <td width="80%">{{ item.name }}</td>
+                          <td width="25%">{{ item.stringQuantity }}</td>
+                          <td width="25%">{{ item.unit }}</td>
                         </tr>
                       </tbody>
                     </table>
-                  </template>
-                </td>
+                  </td>
 
-                <td>
-                  <template v-for="(items, groupIndex) in order.item_groups">
+                  <!-- <td>
                     <table>
-                      <tbody>
-                        <tr v-for="(item, itemIndex) in items" :key="itemIndex">
-                          <ul style="list-style: none;">
-                            <li>{{ item.stringQuantity }}</li>
-                          </ul>
-                        </tr>
-                      </tbody>
+                      <tr v-for=" (item, itemIndex) in items" :key="itemIndex">
+                        <td>{{ item.stringQuantity }}</td>
+                      </tr>
                     </table>
-                  </template>
-                </td>
+                  </td>
 
-                <td>
-                  <template v-for="(items, groupIndex) in order.item_groups">
+                  <td>
                     <table>
-                      <tbody>
-                        <tr v-for="(item, itemIndex) in items" :key="itemIndex">
-                          <ul style="list-style: none;">
-                            <li>{{ item.unit }}</li>
-                          </ul>
-                        </tr>
-                      </tbody>
+                      <tr v-for=" (item, itemIndex) in items" :key="itemIndex">
+                        <td>{{ item.unit }}</td>
+                      </tr>
                     </table>
-                  </template>
-                </td>
+                  </td> -->
 
-              </tr>
-              <br>
+                </tr>
+                <br>
+              </template>
             </template>
           </tbody>
         </table>

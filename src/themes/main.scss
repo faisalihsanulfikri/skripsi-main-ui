@@ -1,5 +1,6 @@
 $global-color: #333 !default;
-$global-font-family: "Poppins", sans-serif !default;
+$global-font-family: "Poppins",
+sans-serif !default;
 
 $app--primary-color: #0D47A1 !default;
 $app--secondary-color: #0c2f55 !default;
@@ -10,7 +11,9 @@ $app--secondary-color: #0c2f55 !default;
 @import "~animate.css/animate.css";
 @import "./loading-ripple.scss";
 
-body, #app, main {
+body,
+#app,
+main {
   min-height: 100vh;
 }
 
@@ -23,7 +26,9 @@ button.uk-button {
 }
 
 .app--dark {
-  a, p {
+
+  a,
+  p {
     color: #FFF;
   }
 }
@@ -235,9 +240,9 @@ button.uk-button {
 }
 
 .my-class {
-  margin-top : 4px;
+  margin-top: 4px;
 }
 
 .print-awb {
-  border:solid 1px #000;
+  border: solid 1px #000;
 }
