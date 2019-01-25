@@ -152,7 +152,7 @@
                 <li v-for="(goods, index) in input.item.goodsList" :key="index">
                   <div class="uk-grid-small" uk-grid>
                     <div class="uk-width-expand">
-                      {{ goods.name }} - {{ goods.quantity }} {{ goods.unit }}
+                      {{ goods.name }} ( {{ goods.quantity }} {{ goods.unit }} )
                     </div>
                     <div class="uk-width-auto">
                       <a href="#" class="uk-text-danger" @click.prevent="removeGoods(index)">
@@ -181,21 +181,21 @@
                   <font-awesome-icon icon="info-circle"></font-awesome-icon>
                 </el-tooltip>
               </label>
+
               <el-input-select-mask v-model="input.item.currencyPrice" :options="markOptions.numeral" :error="errors.has('price')"
                 @input="onTypingCurrency" @blur="onTypingCurrency">
-                <span slot="append" v-model="input.item.currency"></span>
+                <el-select v-model="input.item.currency" slot="append" style="width: 100px" @change="onCurrencyChanged">
 
-                <!-- <el-select v-model="input.item.currency" slot="append" style="width: 100px" @change="onCurrencyChanged">
-                  <el-option value="idr_rate" label="IDR"></el-option>
-                  <el-option value="dollar_rate" label="USD"></el-option>
-                  <el-option value="cny_rate" label="CNY"></el-option>
-                  <el-option value="krw_rate" label="WON"></el-option>
-                  <el-option value="sgd_rate" label="SGD"></el-option>
-                </el-select> -->
-
+                  <el-option v-for="item in options.currency" :key="item.id" :value="item.value" :label="item.label">
+                  </el-option>
+                </el-select>
 
                 <input slot="input" v-model="input.item.price" v-validate="rules.item.price" name="price" type="hidden">
               </el-input-select-mask>
+
+
+
+
             </div>
             <div class="uk-margin-small">
               <el-input-append-mask :value="input.item.price" :options="markOptions.numeral" :error="errors.has('price')"
@@ -375,6 +375,7 @@
 
     data() {
       return {
+        user: {},
         dialogOrderConfimation: {
           visible: false,
           data: {}
@@ -403,8 +404,9 @@
             name: 'Package',
             reference: '',
             price: '',
-            currency: 'dollar_rate',
+            currency: '',
             currencyPrice: '',
+            currencyId: '',
             quantity: 1,
             weight: '',
             length: '',
@@ -447,12 +449,14 @@
         master: {
           warehouses: [],
           addresses: [],
-          categories: []
+          categories: [],
+          currencies: []
         },
         options: {
           warehouse: [],
           address: [],
           category: [],
+          currency: [],
           courier: [{
             value: 'jne',
             label: 'JNE'
@@ -478,20 +482,62 @@
       }
     },
 
+
     async created() {
       this.__startLoading()
 
+      this.user = await this.$auth.getUser()
+
+      await this.onUserLogin()
       await this.fetchWarehouses()
+      await this.fetchCurrencies()
       await this.fetchCategories()
-      await this.onCurrencyDefault()
+
 
       this.__stopLoading()
     },
 
+
     methods: {
-      onCurrencyDefault() {
-        this.input.item.currency = 'rates'
+      onUserLogin() {
+        this.input.item.currencyId = this.user.currency_id
       },
+
+      onCurrencyChanged() {
+        this.input.item.price = this.input.item.currencyPrice * this.input.item.currency
+
+        if (this.input.items.length > 0 && !this.input.consolidate) {
+          this.check()
+        }
+      },
+
+      async fetchCurrencies() {
+        try {
+
+          let res = await this.$service.currency.all()
+
+          this.master.currencies = res.data
+          this.options.currency = res.data.map(item => {
+            let $item = {
+              id: item.id,
+              value: item.rates,
+              label: item.code,
+            }
+            return $item
+          })
+
+          for (let i = 0; i < res.data.length; i++) {
+            if (res.data[i].id == this.input.item.currencyId) {
+              this.input.item.currency = res.data[i].rates
+            }
+          }
+          return $res
+        } catch (err) {
+          this.__handleError(this, err, true)
+        }
+      },
+
+
       onConsolidateChanged() {
         this.$confirm('The package and items you input will be lost, are you sure?', 'warning', {
           type: 'warning'
@@ -502,13 +548,6 @@
           this.input.consolidate = parseInt(this.input.consolidate) === 0 ? 1 : 0
         })
       },
-      onCurrencyChanged() {
-        this.input.item.price = this.input.item.currencyPrice * 1
-
-        if (this.input.items.length > 0 && !this.input.consolidate) {
-          this.check()
-        }
-      },
       onInsuranceChanged() {
         if (this.input.items.length > 0) {
           this.check()
@@ -518,6 +557,7 @@
         this.input.item.currencyPrice = val
         this.onCurrencyChanged()
       }, 500),
+
       onUserAddressChanged() {
         let address = this.master.addresses.find(address => {
           return address.id === this.input.address
@@ -550,6 +590,11 @@
         }
       },
       onWarehouseChanged() {
+        if (this.input.items.length > 0) {
+          this.check()
+        }
+      },
+      onCurrenciesChanged() {
         if (this.input.items.length > 0) {
           this.check()
         }
@@ -599,6 +644,32 @@
           this.__handleError(this, err, true)
         }
       },
+      // async fetchCurrencies() {
+      //   try {
+
+      //     let res = await this.$service.currency.all()
+
+      //     this.master.currencies = res.data
+      //     this.options.currency = res.data.map(item => {
+      //       let $item = {
+      //         id: item.id,
+      //         value: item.rates,
+      //         label: item.code,
+      //       }
+      //       return $item
+      //     })
+
+      //     for (let i = 0; i < res.data.length; i++) {
+      //       if (res.data[i].id == this.input.item.currencyId) {
+      //         this.input.item.currency = res.data[i].rates
+      //       }
+      //     }
+
+      //     return $res
+      //   } catch (err) {
+      //     this.__handleError(this, err, true)
+      //   }
+      // },
       async fetchCategories() {
         try {
           let res = await this.$service.category.all()
@@ -725,7 +796,7 @@
           })
 
           this.$router.push({
-            name: 'agent-inbound',
+            name: 'inbound-simplified',
             params: {
               code: res.data.data.code
             }

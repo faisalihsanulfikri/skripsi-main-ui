@@ -3,7 +3,9 @@ import AwbReport from '../views/agent/report/AirWaybill'
 import AwbShow from '../views/agent/awb/Show'
 import Dashboard from '../views/agent/Dashboard'
 import OrderCreate from '../views/agent/order/Entry'
-import OrderInbound from '../views/agent/order/Inbound'
+import OrderInbound from '../views/agent/inbound/Simplified'
+import OrderAdvInbound from '../views/agent/inbound/Advanced'
+import OrderImportInbound from '../views/agent/inbound/Import'
 import OrderReport from '../views/agent/report/Order'
 // import AgentCurrency from '../views/agent/orders/Currency'
 
@@ -33,23 +35,32 @@ export default {
       }
     },
     {
-      path: 'inbound',
-      name: 'agent-inbound',
+      path: 'inbound/simplified',
+      name: 'inbound-simplified',
       component: OrderInbound,
       meta: {
         auth: true,
         level: [AGENT]
       }
     },
-    // {
-    //   path: 'currency',
-    //   name: 'agent-currency',
-    //   component: AgentCurrency,
-    //   meta: {
-    //     auth: true,
-    //     level: [AGENT]
-    //   }
-    // },
+    {
+      path: 'inbound/advanced',
+      name: 'inbound-advanced',
+      component: OrderAdvInbound,
+      meta: {
+        auth: true,
+        level: [AGENT]
+      }
+    },
+    {
+      path: 'inbound/import',
+      name: 'inbound-import',
+      component: OrderImportInbound,
+      meta: {
+        auth: true,
+        level: [AGENT]
+      }
+    },
     {
       path: 'air-waybills/:code',
       name: 'agent-awb-show',

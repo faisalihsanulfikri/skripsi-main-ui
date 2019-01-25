@@ -4,8 +4,18 @@
       <el-menu background-color="#1565C0" text-color="#FFF" active-text-color="#FFF" :router="true">
         <el-menu-item index="/agent">DASHBOARD</el-menu-item>
         <el-menu-item index="/agent/orders/create">ENTRY ORDER</el-menu-item>
-        <el-menu-item index="/agent/inbound">INBOUND</el-menu-item>
-        <!-- <el-menu-item index="/agent/currency">INBOUND</el-menu-item> -->
+
+        <!-- <el-menu-item index="/agent/inbound">INBOUND</el-menu-item> -->
+
+        <el-submenu index="/agent/orders">
+          <template slot="title">
+            <span>INBOUND</span>
+          </template>
+          <el-menu-item index="/agent/inbound/simplified">SIMPLIFIED</el-menu-item>
+          <el-menu-item index="/agent/inbound/advanced">ADVANCED</el-menu-item>
+          <el-menu-item index="/agent/inbound/import">IMPORT ORDER</el-menu-item>
+        </el-submenu>
+
         <el-submenu index="/agent/report">
           <template slot="title">
             <span>REPORT</span>
@@ -13,6 +23,7 @@
           <el-menu-item index="/agent/reports/order">ORDER</el-menu-item>
           <el-menu-item index="/agent/reports/air-waybill">AIR WAYBILL</el-menu-item>
         </el-submenu>
+
       </el-menu>
     </el-aside>
     <el-container>

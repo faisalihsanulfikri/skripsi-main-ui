@@ -5,7 +5,7 @@ import $store from './store'
 
 Vue.mixin({
   computed: {
-    application () {
+    application() {
       return {
         loading: $store.state.app.loading,
         loadingFullScreen: $store.state.app.loadingFullScreen
@@ -14,13 +14,13 @@ Vue.mixin({
   },
 
   methods: {
-    __startLoading (fullScreen = true) {
+    __startLoading(fullScreen = true) {
       $store.dispatch('app/startLoading', fullScreen)
     },
-    __stopLoading () {
+    __stopLoading() {
       $store.dispatch('app/stopLoading')
     },
-    __handleError (context, err, notify = false) {
+    __handleError(context, err, notify = false) {
       if (err.response) {
         context.error = true
         context.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
@@ -47,7 +47,7 @@ Vue.mixin({
         }
       }
     },
-    __roundHalf (value) {
+    __roundHalf(value) {
       let splitedValue = parseFloat(value).toFixed(1).split('.')
       let x = parseInt(splitedValue[0])
       let y = parseInt(splitedValue[1])
@@ -61,12 +61,12 @@ Vue.mixin({
 
       return parseFloat(`${x}.${y}`)
     },
-    __focusElement (elementId) {
+    __focusElement(elementId) {
       document.getElementById(elementId).scrollIntoView({
         behavior: 'smooth'
       })
     },
-    __logout () {
+    __logout() {
       Vue.auth.destroy()
 
       $router.push({
@@ -74,10 +74,13 @@ Vue.mixin({
         force: true
       })
     },
-    __internationalCurrency (value) {
-      return Vue.options.filters.currency(value, '', 2, { thousandsSeparator: ',', decimalSeparator: '.' })
+    __internationalCurrency(value) {
+      return Vue.options.filters.currency(value, '', 2, {
+        thousandsSeparator: ',',
+        decimalSeparator: '.'
+      })
     },
-    __fetchWarehouses () {
+    __fetchWarehouses() {
       return new Promise((resolve, reject) => {
         Vue.http().get('/warehouses/list')
           .then(res => {
@@ -88,7 +91,7 @@ Vue.mixin({
           })
       })
     },
-    __fetchProvinces () {
+    __fetchProvinces() {
       return new Promise((resolve, reject) => {
         Vue.http().get('/provinces')
           .then(res => {
@@ -99,7 +102,7 @@ Vue.mixin({
           })
       })
     },
-    __fetchCitiesByProvince (id) {
+    __fetchCitiesByProvince(id) {
       return new Promise((resolve, reject) => {
         Vue.http().get(`/provinces/${id}/cities`)
           .then(res => {
@@ -110,7 +113,7 @@ Vue.mixin({
           })
       })
     },
-    __fetchDistrictsByCity (id) {
+    __fetchDistrictsByCity(id) {
       return new Promise((resolve, reject) => {
         Vue.http().get(`/cities/${id}/sub-districts`)
           .then(res => {
@@ -121,7 +124,7 @@ Vue.mixin({
           })
       })
     },
-    __fetchUserAddresses () {
+    __fetchUserAddresses() {
       return new Promise((resolve, reject) => {
         Vue.authHttp().get('/user/addresses/list')
           .then(res => {
@@ -132,7 +135,7 @@ Vue.mixin({
           })
       })
     },
-    __fetchAgentAddresses () {
+    __fetchAgentAddresses() {
       return new Promise((resolve, reject) => {
         Vue.authHttp().get('/agent/addresses/list')
           .then(res => {
@@ -143,7 +146,7 @@ Vue.mixin({
           })
       })
     },
-    __getUsersByLevel (level, params) {
+    __getUsersByLevel(level, params) {
       return Vue.authHttp().get(`/users/${level}`, {
         params
       })

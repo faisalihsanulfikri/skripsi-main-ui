@@ -51,7 +51,7 @@ const actions = {
   async getCurrency({
     commit
   }) {
-    let res = await Vue.authHttp().get('/user/currency')
+    let res = await Vue.authHttp().get('/currencies/list')
 
     if (res.data) {
       commit(TYPES.SET_CURRENCY, res.data)
