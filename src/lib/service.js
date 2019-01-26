@@ -111,6 +111,7 @@ const order = {
     return Vue.authHttp().post('/orders/kirimin', data)
   },
   createKiriminFromAgent(data = {}) {
+    // console.log(data)
     return Vue.authHttp().post('/agent/orders/kirimin', data)
   },
   updateItemStatus(orderCode = null, itemId = null, data = {}) {
