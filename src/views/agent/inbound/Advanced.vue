@@ -66,13 +66,6 @@
 
                   <td>
                     <table style="border-left: 1px solid #e5e5e5;">
-                      <!-- <thead>
-                        <tr>
-                          <th>Name</th>
-                          <th>Total</th>
-                          <th>Unit</th>
-                        </tr>
-                      </thead> -->
                       <tbody>
                         <tr v-for=" (item, itemIndex) in items" :key="itemIndex">
                           <td width="80%">{{ item.name }}</td>
@@ -82,22 +75,6 @@
                       </tbody>
                     </table>
                   </td>
-
-                  <!-- <td>
-                    <table>
-                      <tr v-for=" (item, itemIndex) in items" :key="itemIndex">
-                        <td>{{ item.stringQuantity }}</td>
-                      </tr>
-                    </table>
-                  </td>
-
-                  <td>
-                    <table>
-                      <tr v-for=" (item, itemIndex) in items" :key="itemIndex">
-                        <td>{{ item.unit }}</td>
-                      </tr>
-                    </table>
-                  </td> -->
 
                 </tr>
                 <br>
