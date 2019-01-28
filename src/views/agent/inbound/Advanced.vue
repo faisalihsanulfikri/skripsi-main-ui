@@ -65,7 +65,7 @@
                   <td style="vertical-align:inherit">{{ order.status }}</td>
 
                   <td>
-                    <table style="border-left: 1px solid #e5e5e5;">
+                    <table style="border-left: 1px solid #b8b8b8;">
                       <tbody>
                         <tr v-for=" (item, itemIndex) in items" :key="itemIndex">
                           <td width="80%">{{ item.name }}</td>

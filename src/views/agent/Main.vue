@@ -5,8 +5,6 @@
         <el-menu-item index="/agent">DASHBOARD</el-menu-item>
         <el-menu-item index="/agent/orders/create">ENTRY ORDER</el-menu-item>
 
-        <!-- <el-menu-item index="/agent/inbound">INBOUND</el-menu-item> -->
-
         <el-submenu index="/agent/orders">
           <template slot="title">
             <span>INBOUND</span>
