@@ -101,7 +101,7 @@
 
             <div class="uk-margin-small">
               <div class="uk-grid-small" uk-grid>
-                <div class="uk-width-expand">
+                <div style="width:50%">
                   <label class="uk-form-label">
                     Name of goods
                     <el-tooltip class="item" effect="dark" content="Barang" placement="top">
@@ -111,7 +111,7 @@
                   <input v-model="input.item.goods.name" name="item.goods.name" class="uk-input" :class="{ 'uk-form-danger': errors.has('item.goods.name') }"
                     placeholder="Name of goods" />
                 </div>
-                <div class="uk-width-expand">
+                <div style="width:13%">
                   <label class="uk-form-label">
                     Total
                     <el-tooltip class="item" effect="dark" content="Jumlah barang" placement="top">
@@ -121,7 +121,7 @@
                   <input v-model="input.item.goods.quantity" name="item.goods.quantity" class="uk-input" :class="{ 'uk-form-danger': errors.has('item.goods.quantity') }"
                     placeholder="Total" />
                 </div>
-                <div class="uk-width-expand">
+                <div style="width:13%">
                   <label class="uk-form-label">
                     Unit
                     <el-tooltip class="item" effect="dark" content="Unit / satuan barang" placement="top">
@@ -131,10 +131,10 @@
                   <input v-model="input.item.goods.unit" name="item.goods.unit" class="uk-input" :class="{ 'uk-form-danger': errors.has('item.goods.unit') }"
                     placeholder="Unit" />
                 </div>
-                <div class="uk-width-auto">
+                <div style="width:10%">
                   <label class="uk-form-label">&nbsp;</label>
                   <div>
-                    <button class="uk-button uk-button-default" @click="addGoods">
+                    <button class="uk-button uk-button-default" @click="addGoods" style="padding-left:20px; padding-right:20px">
                       <font-awesome-icon icon="plus"></font-awesome-icon>
                     </button>
                   </div>
