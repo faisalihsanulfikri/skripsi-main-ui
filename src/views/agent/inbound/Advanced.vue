@@ -36,53 +36,161 @@
           </el-input>
         </div>
       </div>
-      <div class="uk-overflow-auto">
-        <table class="uk-table uk-table-divider uk-table-small">
-          <thead>
-            <th style="vertical-align:inherit">Code</th>
-            <th style="vertical-align:inherit">Date</th>
-            <th style="vertical-align:inherit">Customer</th>
-            <th style="vertical-align:inherit">Status</th>
 
-            <th>
-              <table>
+      <br><br>
+
+      <div>
+        <template v-for="(order, orderIndex) in orders">
+          <template v-for="(items, groupIndex) in order.item_groups">
+            <template v-for="(items, groupIndex) in order.item_groups">
+              <table border="0" cellpadding="10" cellspacing="0" style="width: 100%;">
                 <tr>
-                  <th width="80%">Name Of Goods</th>
-                  <th width="25%">Total</th>
-                  <th width="25%">Unit</th>
-                </tr>
-              </table>
-            </th>
-
-          </thead>
-          <tbody>
-            <template v-for="(order, orderIndex) in orders">
-              <template v-for="(items, groupIndex) in order.item_groups">
-                <tr :key="orderIndex">
-                  <td style="vertical-align:inherit">{{ order.code }}</td>
-                  <td style="vertical-align:inherit">{{ moment(order.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
-                  <td style="vertical-align:inherit">{{ order.user.code }}</td>
-                  <td style="vertical-align:inherit">{{ order.status }}</td>
-
-                  <td>
-                    <table style="border-left: 1px solid #e5e5e5;">
-                      <tbody>
-                        <tr v-for=" (item, itemIndex) in items" :key="itemIndex">
-                          <td width="80%">{{ item.name }}</td>
-                          <td width="25%">{{ item.stringQuantity }}</td>
-                          <td width="25%">{{ item.unit }}</td>
-                        </tr>
-                      </tbody>
+                  <td valign="top" style="width: 40%;">
+                    <table border="1" cellpadding="10" cellspacing="0" style="width: 100%; ">
+                      <tr>
+                        <th>CODE</th>
+                        <td :key="orderIndex">{{ order.code }}</td>
+                      </tr>
+                      <tr>
+                        <th>DATE</th>
+                        <td :key="orderIndex">{{ moment(order.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
+                      </tr>
+                      <tr>
+                        <th>CUSTOMER</th>
+                        <td :key="orderIndex">{{ order.user.code }}</td>
+                      </tr>
+                      <tr>
+                        <th>PACKAGES DIMENTION</th>
+                        <td :key="groupIndex">{{ `${items[0].stringWeight}
+                          ${order.detail.formula.weight_unit} - ${items[0].stringLength} x
+                          ${items[0].stringWidth} x ${items[0].stringLength} ${order.detail.formula.volume_unit}`
+                          }}</td>
+                      </tr>
+                      <tr>
+                        <td>PRICE</td>
+                        <td :key="groupIndex">IDR {{ items[0].stringPrice }}</td>
+                      </tr>
+                      <tr>
+                        <td>ADDRESS</td>
+                        <td :key="orderIndex">
+                          <div class="uk-grid-small" uk-grid>
+                            <div>
+                              <h5 class="uk-margin-small">
+                                <font-awesome-icon icon="globe-asia"></font-awesome-icon>
+                                <span class="uk-margin-small-left">{{ order.detail.warehouse.name }}</span>
+                              </h5>
+                              <h5 class="uk-margin-remove">
+                                <font-awesome-icon icon="truck"></font-awesome-icon>
+                                <span class="uk-margin-small-left">Destination Address</span>
+                              </h5>
+                              <div class="uk-padding-small">
+                                <div class="app--list-text">{{ order.receiver.name }}</div>
+                                <div class="app--list-text">{{ order.receiver.address }}</div>
+                                <div class="app--list-text">
+                                  {{ order.receiver.sub_district }}, {{ order.receiver.city }} {{
+                                  order.receiver.postal_code }}
+                                </div>
+                                <div class="app--list-text">{{ order.receiver.province }}</div>
+                                <div class="app--list-text">{{ order.receiver.phone }}</div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
                     </table>
                   </td>
+                  <td valign="top" style="width: 60%;">
+                    <table border="1" cellpadding="10" cellspacing="0" style="width: 100%;">
+                      <tr>
+                        <th colspan="6">ITEM INFO</th>
+                      </tr>
+                      <tr>
+                        <th colspan="2">ITEM</th>
+                        <th>TOTAL</th>
+                        <th>UNIT</th>
+                        <th>STATUS</th>
+                        <th>ACTION</th>
+                      </tr>
+                      <tr v-for=" (item, itemIndex) in items" :key="itemIndex">
+                        <td class="uk-text-center" width="20">
+                          <el-checkbox v-model="item.selected" :disabled="item.checkDisabled"></el-checkbox>
+                        </td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.stringQuantity }}</td>
+                        <td>{{ item.unit }}</td>
+                        <td>{{ item.status }}</td>
+                        <td class="uk-text-center">
+                          <el-button v-if="item.showReceivedButton" type="success" size="mini" @click=" receivedItem(order.code, item.id,orderIndex)">
+                            <font-awesome-icon icon="check"></font-awesome-icon>
+                          </el-button>
+                          <el-button v-if="item.showRejectButton" type="danger" size="mini" @click="rejectItem(order.code, item.id)">
+                            <font-awesome-icon icon="times"></font-awesome-icon>
+                          </el-button>
+                        </td>
+                      </tr>
 
+                    </table>
+                    <br>
+                    <div class="uk-grid-small" uk-grid>
+                      <div class="uk-width-auto">
+                        <el-button :disabled="!canCreateAwb(orderIndex)" @click="openCreateAwbDialog(orderIndex)">
+                          CREATE AWB | {{ countSelectedItems(orderIndex) }} item's</el-button>
+                      </div>
+                    </div>
+                  </td>
                 </tr>
-                <br>
-              </template>
+                <tr>
+                  <td>&nbsp;</td>
+                  <td valign="top">
+                    <h4>
+                      <font-awesome-icon icon="shipping-fast"></font-awesome-icon>
+                      <span class="uk-margin-small-left">Air Waybills</span>
+                    </h4>
+                    <table border="1" cellpadding="10" cellspacing="0" style="width:100%">
+                      <tr>
+                        <th>AWB Number</th>
+                        <th>created at</th>
+                        <th>action</th>
+                      </tr>
+                      <tr v-for="(awb, index) in order.air_waybills" :key="index">
+                        <td>
+                          <router-link :to="{ name: 'agent-awb-show', params: { code: awb.awb } }">
+                            {{ awb.awb }}
+                          </router-link>
+                        </td>
+                        <td>{{ awb.created_at }}</td>
+                        <td class="uk-text-center">
+                          <!-- awb/find -->
+                          <el-button type="primary" size="mini" @click="printAwb(awb.awb)">
+                            <font-awesome-icon icon="print"></font-awesome-icon>
+                          </el-button>
+                        </td>
+                      </tr>
+
+                    </table>
+                  </td>
+                </tr>
+
+
+                <tr bgcolor="#e5e5e5">
+                  <td>
+                  <td>&nbsp;</td>
+                  </td>
+                </tr>
+                <br><br><br>
+              </table>
+
             </template>
-          </tbody>
-        </table>
+          </template>
+        </template>
+
+
       </div>
+
+
+
+      <br><br><br><br><br>
+
     </div>
 
     <dialog-create-awb :visible="dialogCreateAwb.visible" :order="dialogCreateAwb.data" @close="closeCreateAwbDialog"
