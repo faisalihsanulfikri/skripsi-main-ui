@@ -130,18 +130,13 @@
                     </el-tooltip>
                   </label>
 
-                  <div>
-                    <select v-model="input.item.goods.unitId" name="unit" class="uk-select" :class="{ 'uk-form-danger': errors.has('unit') }"
-                      @change="onUnitChanged">
-                      <option v-for="(item, key) in options.unit" :key="key" :value="item.value">
-                        {{ item.label }}
-                      </option>
-                    </select>
-                  </div>
-
-
-                  <!-- <input v-model="input.item.goods.unit" name="item.goods.unit" class="uk-input" :class="{ 'uk-form-danger': errors.has('item.goods.unit') }"
-                    placeholder="Unit" /> -->
+                  <select v-model="input.item.goods.unitId" name="unit" class="uk-select" :class="{ 'uk-form-danger': errors.has('unit') }"
+                    @change="onUnitChanged">
+                    <!-- <option value="" disabled selected>Unit</option> -->
+                    <option v-for="(item, key) in options.unit" :key="key" :value="item.value" :label="item.label">
+                      {{ item.label }}
+                    </option>
+                  </select>
 
                 </div>
 
@@ -713,12 +708,13 @@
 
         this.input.item.categoryName = category.name
       },
+
       onUnitChanged() {
         let unit = this.master.units.find(unit => {
-          return unit.id === this.input.item.unit
+          return unit.id === this.input.item.goods.unitId
         })
 
-        this.input.item.unitName = unit.name
+        this.input.item.goods.unit = unit.name
       },
       async addGoods() {
         this.input.item.goodsList.push(Object.assign({}, this.input.item.goods))
