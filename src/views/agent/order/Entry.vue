@@ -121,6 +121,7 @@
                   <input v-model="input.item.goods.quantity" name="item.goods.quantity" class="uk-input" :class="{ 'uk-form-danger': errors.has('item.goods.quantity') }"
                     placeholder="Total" />
                 </div>
+
                 <div style="width:13%">
                   <label class="uk-form-label">
                     Unit
@@ -128,9 +129,22 @@
                       <font-awesome-icon icon="info-circle"></font-awesome-icon>
                     </el-tooltip>
                   </label>
-                  <input v-model="input.item.goods.unit" name="item.goods.unit" class="uk-input" :class="{ 'uk-form-danger': errors.has('item.goods.unit') }"
-                    placeholder="Unit" />
+
+                  <div>
+                    <select v-model="input.item.goods.unitId" name="unit" class="uk-select" :class="{ 'uk-form-danger': errors.has('unit') }"
+                      @change="onUnitChanged">
+                      <option v-for="(item, key) in options.unit" :key="key" :value="item.value">
+                        {{ item.label }}
+                      </option>
+                    </select>
+                  </div>
+
+
+                  <!-- <input v-model="input.item.goods.unit" name="item.goods.unit" class="uk-input" :class="{ 'uk-form-danger': errors.has('item.goods.unit') }"
+                    placeholder="Unit" /> -->
+
                 </div>
+
                 <div style="width:10%">
                   <label class="uk-form-label">&nbsp;</label>
                   <div>
@@ -415,7 +429,8 @@
             goods: {
               name: '',
               quantity: '',
-              unit: ''
+              unit: '',
+              unitId: ''
             },
             goodsList: []
           }
@@ -450,13 +465,15 @@
           warehouses: [],
           addresses: [],
           categories: [],
-          currencies: []
+          currencies: [],
+          units: []
         },
         options: {
           warehouse: [],
           address: [],
           category: [],
           currency: [],
+          unit: [],
           courier: [{
             value: 'jne',
             label: 'JNE'
@@ -492,6 +509,7 @@
       await this.fetchWarehouses()
       await this.fetchCurrencies()
       await this.fetchCategories()
+      await this.fetchUnits()
 
 
       this.__stopLoading()
@@ -644,32 +662,6 @@
           this.__handleError(this, err, true)
         }
       },
-      // async fetchCurrencies() {
-      //   try {
-
-      //     let res = await this.$service.currency.all()
-
-      //     this.master.currencies = res.data
-      //     this.options.currency = res.data.map(item => {
-      //       let $item = {
-      //         id: item.id,
-      //         value: item.rates,
-      //         label: item.code,
-      //       }
-      //       return $item
-      //     })
-
-      //     for (let i = 0; i < res.data.length; i++) {
-      //       if (res.data[i].id == this.input.item.currencyId) {
-      //         this.input.item.currency = res.data[i].rates
-      //       }
-      //     }
-
-      //     return $res
-      //   } catch (err) {
-      //     this.__handleError(this, err, true)
-      //   }
-      // },
       async fetchCategories() {
         try {
           let res = await this.$service.category.all()
@@ -689,6 +681,26 @@
           this.__handleError(this, err, true)
         }
       },
+
+      async fetchUnits() {
+        try {
+          let res = await this.$service.unit.all()
+
+          this.master.units = res.data
+          this.options.unit = res.data.map(item => {
+            let $item = {
+              value: item.id,
+              label: item.name
+            }
+
+            return $item
+          })
+          this.input.item.goods.unitId = res.data[0].id
+          this.input.item.goods.unit = res.data[0].name
+        } catch (err) {
+          this.__handleError(this, err, true)
+        }
+      },
       onNpwpChanged(val) {
         this.input.npwp = val === true ? 1 : 0
 
@@ -700,6 +712,13 @@
         })
 
         this.input.item.categoryName = category.name
+      },
+      onUnitChanged() {
+        let unit = this.master.units.find(unit => {
+          return unit.id === this.input.item.unit
+        })
+
+        this.input.item.unitName = unit.name
       },
       async addGoods() {
         this.input.item.goodsList.push(Object.assign({}, this.input.item.goods))
