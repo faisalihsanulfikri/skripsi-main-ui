@@ -23,18 +23,19 @@
     <div class="uk-card-body uk-card-small">
       <div class="uk-margin uk-grid-small" uk-grid>
         <div class="uk-width-auto">
+          <el-input v-model="filter.search" placeholder="Search By Customer ID" @keyup.enter.native="fetchOrders">
+            <el-button slot="append" icon="el-icon-search" @click="fetchOrders">
+            </el-button>
+          </el-input>
+        </div>
+        <div class="uk-width-auto uk-margin-auto-left">
           <el-date-picker v-model="filter.time" type="daterange" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
             range-separator="To" start-placeholder="Start date" end-placeholder="End date">
           </el-date-picker>
           <el-button slot="append" icon="el-icon-search" @click="fetchOrders">
           </el-button>
         </div>
-        <div class="uk-width-1-3 uk-margin-auto-left">
-          <el-input v-model="filter.search" placeholder="Search...">
-            <el-button slot="append" icon="el-icon-search" @click="fetchOrders">
-            </el-button>
-          </el-input>
-        </div>
+
       </div>
 
       <br><br>
@@ -43,145 +44,120 @@
         <template v-for="(order, orderIndex) in orders">
           <template v-for="(items, groupIndex) in order.item_groups">
             <template v-for="(items, groupIndex) in order.item_groups">
-              <table border="0" cellpadding="10" cellspacing="0" style="width: 100%;">
-                <tr>
-                  <td valign="top" style="width: 40%;">
-                    <table border="1" cellpadding="10" cellspacing="0" style="width: 100%; ">
-                      <tr>
-                        <th>CODE</th>
-                        <td :key="orderIndex">{{ order.code }}</td>
-                      </tr>
-                      <tr>
-                        <th>DATE</th>
-                        <td :key="orderIndex">{{ moment(order.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
-                      </tr>
-                      <tr>
-                        <th>CUSTOMER</th>
-                        <td :key="orderIndex">{{ order.user.code }}</td>
-                      </tr>
-                      <tr>
-                        <th>PACKAGES DIMENTION</th>
-                        <td :key="groupIndex">{{ `${items[0].stringWeight}
-                          ${order.detail.formula.weight_unit} - ${items[0].stringLength} x
-                          ${items[0].stringWidth} x ${items[0].stringLength} ${order.detail.formula.volume_unit}`
-                          }}</td>
-                      </tr>
-                      <tr>
-                        <td>PRICE</td>
-                        <td :key="groupIndex">IDR {{ items[0].stringPrice }}</td>
-                      </tr>
-                      <tr>
-                        <td>ADDRESS</td>
-                        <td :key="orderIndex">
-                          <div class="uk-grid-small" uk-grid>
-                            <div>
-                              <h5 class="uk-margin-small">
-                                <font-awesome-icon icon="globe-asia"></font-awesome-icon>
-                                <span class="uk-margin-small-left">{{ order.detail.warehouse.name }}</span>
-                              </h5>
-                              <h5 class="uk-margin-remove">
-                                <font-awesome-icon icon="truck"></font-awesome-icon>
-                                <span class="uk-margin-small-left">Destination Address</span>
-                              </h5>
-                              <div class="uk-padding-small">
-                                <div class="app--list-text">{{ order.receiver.name }}</div>
-                                <div class="app--list-text">{{ order.receiver.address }}</div>
-                                <div class="app--list-text">
-                                  {{ order.receiver.sub_district }}, {{ order.receiver.city }} {{
-                                  order.receiver.postal_code }}
-                                </div>
-                                <div class="app--list-text">{{ order.receiver.province }}</div>
-                                <div class="app--list-text">{{ order.receiver.phone }}</div>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                  <td valign="top" style="width: 60%;">
-                    <table border="1" cellpadding="10" cellspacing="0" style="width: 100%;">
-                      <tr>
-                        <th colspan="6">ITEM INFO</th>
-                      </tr>
-                      <tr>
-                        <th colspan="2">ITEM</th>
-                        <th>TOTAL</th>
-                        <th>UNIT</th>
-                        <th>STATUS</th>
-                        <th>ACTION</th>
-                      </tr>
-                      <tr v-for=" (item, itemIndex) in items" :key="itemIndex">
-                        <td class="uk-text-center" width="20">
-                          <el-checkbox v-model="item.selected" :disabled="item.checkDisabled"></el-checkbox>
-                        </td>
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.stringQuantity }}</td>
-                        <td>{{ item.unit }}</td>
-                        <td>{{ item.status }}</td>
-                        <td class="uk-text-center">
-                          <el-button v-if="item.showReceivedButton" type="success" size="mini" @click=" receivedItem(order.code, item.id,orderIndex)">
-                            <font-awesome-icon icon="check"></font-awesome-icon>
-                          </el-button>
-                          <el-button v-if="item.showRejectButton" type="danger" size="mini" @click="rejectItem(order.code, item.id)">
-                            <font-awesome-icon icon="times"></font-awesome-icon>
-                          </el-button>
-                        </td>
-                      </tr>
 
-                    </table>
-                    <br>
-                    <div class="uk-grid-small" uk-grid>
-                      <div class="uk-width-auto">
-                        <el-button :disabled="!canCreateAwb(orderIndex)" @click="openCreateAwbDialog(orderIndex)">
-                          CREATE AWB | {{ countSelectedItems(orderIndex) }} item's</el-button>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>&nbsp;</td>
-                  <td valign="top">
-                    <h4>
-                      <font-awesome-icon icon="shipping-fast"></font-awesome-icon>
-                      <span class="uk-margin-small-left">Air Waybills</span>
-                    </h4>
-                    <table border="1" cellpadding="10" cellspacing="0" style="width:100%">
-                      <tr>
-                        <th>AWB Number</th>
-                        <th>created at</th>
-                        <th>action</th>
-                      </tr>
-                      <tr v-for="(awb, index) in order.air_waybills" :key="index">
-                        <td>
-                          <router-link :to="{ name: 'agent-awb-show', params: { code: awb.awb } }">
-                            {{ awb.awb }}
-                          </router-link>
-                        </td>
-                        <td>{{ awb.created_at }}</td>
-                        <td class="uk-text-center">
-                          <!-- awb/find -->
-                          <el-button type="primary" size="mini" @click="printAwb(awb.awb)">
-                            <font-awesome-icon icon="print"></font-awesome-icon>
-                          </el-button>
-                        </td>
-                      </tr>
+              <!-- General Info -->
+              <table class="uk-table uk-table-divider uk-table-small">
+                <thead>
+                  <tr>
+                    <th>CODE</th>
+                    <th>DATE</th>
+                    <th>CUSTOMER</th>
+                    <th>PACKAGES DIMENTION</th>
+                    <th>PRICE</th>
+                    <th>ADDRESS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td :key="
+                orderIndex">{{ order.code }}</td>
+                    <td :key="orderIndex">{{ moment(order.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
+                    <td :key="orderIndex">{{ order.user.code }}</td>
+                    <td width="200px" :key="groupIndex">{{ `${items[0].stringWeight}
+                      ${order.detail.formula.weight_unit} - ${items[0].stringLength} x
+                      ${items[0].stringWidth} x ${items[0].stringLength} ${order.detail.formula.volume_unit}`
+                      }}</td>
+                    <td width="150px" :key="groupIndex">IDR {{ items[0].stringPrice }}</td>
+                    <td width="300px" :key="orderIndex">
 
-                    </table>
-                  </td>
-                </tr>
+                      <div class="app--list-text">{{ order.receiver.name }}</div>
+                      <div class="app--list-text">{{ order.receiver.address }}, {{ order.receiver.sub_district }}, {{
+                        order.receiver.city }} {{order.receiver.postal_code }} {{ order.receiver.province }}, {{
+                        order.receiver.phone }}</div>
 
-                <tr bgcolor="#e5e5e5">
-                  <td>
-                  <td>&nbsp;</td>
-                  </td>
-                </tr>
-                <br><br><br>
+                    </td>
+                  </tr>
+                </tbody>
               </table>
+              <hr>
+
+              <!-- Items Info -->
+              <h4>
+                <font-awesome-icon class="fas fa-shopping-bag"></font-awesome-icon>
+                <!-- <i class="fas fa-shopping-bag"></i> -->
+                <span class="uk-margin-small-left">Item Info</span>
+              </h4>
+              <table class="uk-table uk-table-divider uk-table-small">
+                <tr>
+                  <th colspan="2">ITEM</th>
+                  <th>TOTAL</th>
+                  <th>UNIT</th>
+                  <th>STATUS</th>
+                  <th class="uk-text-center">ACTION</th>
+                </tr>
+                <tr v-for=" (item, itemIndex) in items" :key="itemIndex">
+                  <td class="uk-text-center" width="5%">
+                    <el-checkbox v-model="item.selected" :disabled="item.checkDisabled"></el-checkbox>
+                  </td>
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.stringQuantity }}</td>
+                  <td>{{ item.unit }}</td>
+                  <td>{{ item.status }}</td>
+                  <td class="uk-text-center">
+                    <el-button v-if="item.showReceivedButton" type="success" size="mini" @click=" receivedItem(order.code, item.id,orderIndex)">
+                      <font-awesome-icon icon="check"></font-awesome-icon>
+                    </el-button>
+                    <el-button v-if="item.showRejectButton" type="danger" size="mini" @click="rejectItem(order.code, item.id)">
+                      <font-awesome-icon icon="times"></font-awesome-icon>
+                    </el-button>
+                  </td>
+                </tr>
+
+              </table>
+              <hr>
+              <br>
+              <div class="uk-grid-small" uk-grid>
+                <div class="uk-width-auto">
+                  <el-button :disabled="!canCreateAwb(orderIndex)" @click="openCreateAwbDialog(orderIndex)">
+                    CREATE AWB | {{ countSelectedItems(orderIndex) }} item's</el-button>
+                </div>
+              </div>
+              <br>
+
+              <!-- AWB -->
+              <h4>
+                <font-awesome-icon icon="shipping-fast"></font-awesome-icon>
+                <span class="uk-margin-small-left">Air Waybills</span>
+              </h4>
+              <table class="uk-table uk-table-divider uk-table-small">
+                <tr>
+                  <th>AWB Number</th>
+                  <th>created at</th>
+                  <th>action</th>
+                </tr>
+                <tr v-for="(awb, index) in order.air_waybills" :key="index">
+                  <td width="5%">
+                    <router-link :to="{ name: 'agent-awb-show', params: { code: awb.awb } }">
+                      {{ awb.awb }}
+                    </router-link>
+                  </td>
+                  <td width="15%">{{ awb.created_at }}</td>
+                  <td width="60%">
+                    <!-- awb/find -->
+                    <el-button type="primary" size="mini" @click="printAwb(awb.awb)">
+                      <font-awesome-icon icon="print"></font-awesome-icon>
+                    </el-button>
+                  </td>
+                </tr>
+
+              </table>
+              <hr>
+
+              <br><br><br>
+              <hr>
             </template>
           </template>
         </template>
-
 
       </div>
 
@@ -239,8 +215,17 @@
         moment().endOf('month').format('YYYY-MM-DD')
       ]
 
-      this.fetchOrders()
+      //this.fetchOrders()
     },
+
+    // mounted() {
+    //   window.addEventListener('keyup', event => {
+    //     if (event.keyCode === 13) {
+
+    //       this.fetchOrders()
+    //     }
+    //   })
+    // },
 
     methods: {
       openCreateAwbDialog(index) {
@@ -478,7 +463,8 @@
           this.__handleError(this, err, true)
         }
         this.__stopLoading()
-      }
+      },
+
     }
   }
 </script>

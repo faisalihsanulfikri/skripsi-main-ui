@@ -130,13 +130,23 @@
                     </el-tooltip>
                   </label>
 
-                  <select v-model="input.item.goods.unitId" name="unit" class="uk-select" :class="{ 'uk-form-danger': errors.has('unit') }"
+                  <!-- <select v-model="input.item.goods.unitId" name="unit" class="uk-select" :class="{ 'uk-form-danger': errors.has('unit') }"
                     @change="onUnitChanged">
-                    <!-- <option value="" disabled selected>Unit</option> -->
+                    <option value="" disabled selected>Unit</option>
                     <option v-for="(item, key) in options.unit" :key="key" :value="item.value" :label="item.label">
                       {{ item.label }}
                     </option>
-                  </select>
+                  </select> -->
+
+                  <!-- v2 -->
+
+                  <el-select v-model="input.item.goods.unitId" name="unit" slot="append" :class="{ 'uk-form-danger': errors.has('unit') }"
+                    @change="onUnitChanged">
+                    <el-option value="" disabled selected>Unit</el-option>
+                    <el-option v-for="(item, key) in options.unit" :key="key" :value="item.value" :label="item.label">
+                    </el-option>
+                  </el-select>
+
 
                 </div>
 
@@ -190,21 +200,14 @@
                   <font-awesome-icon icon="info-circle"></font-awesome-icon>
                 </el-tooltip>
               </label>
-
               <el-input-select-mask v-model="input.item.currencyPrice" :options="markOptions.numeral" :error="errors.has('price')"
                 @input="onTypingCurrency" @blur="onTypingCurrency">
                 <el-select v-model="input.item.currency" slot="append" style="width: 100px" @change="onCurrencyChanged">
-
                   <el-option v-for="item in options.currency" :key="item.id" :value="item.value" :label="item.label">
                   </el-option>
                 </el-select>
-
                 <input slot="input" v-model="input.item.price" v-validate="rules.item.price" name="price" type="hidden">
               </el-input-select-mask>
-
-
-
-
             </div>
             <div class="uk-margin-small">
               <el-input-append-mask :value="input.item.price" :options="markOptions.numeral" :error="errors.has('price')"

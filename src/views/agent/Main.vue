@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-aside>
+    <el-aside style="width:15%">
       <el-menu background-color="#1565C0" text-color="#FFF" active-text-color="#FFF" :router="true">
         <el-menu-item index="/agent">DASHBOARD</el-menu-item>
         <el-menu-item index="/agent/orders/create">ENTRY ORDER</el-menu-item>
