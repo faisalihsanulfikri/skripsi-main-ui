@@ -108,7 +108,7 @@
                       <font-awesome-icon icon="info-circle"></font-awesome-icon>
                     </el-tooltip>
                   </label>
-                  <input v-model="input.item.goods.name" name="item.goods.name" class="uk-input" :class="{ 'uk-form-danger': errors.has('item.goods.name') }"
+                  <input v-model="input.item.goods.name" v-validate="rules.item.goods.name" name="item.goods.name" class="uk-input" :class="{ 'uk-form-danger': errors.has('item.goods.name') }"
                     placeholder="Name of goods" />
                 </div>
                 <div style="width:13%">
@@ -118,7 +118,7 @@
                       <font-awesome-icon icon="info-circle"></font-awesome-icon>
                     </el-tooltip>
                   </label>
-                  <input v-model="input.item.goods.quantity" name="item.goods.quantity" class="uk-input" :class="{ 'uk-form-danger': errors.has('item.goods.quantity') }"
+                  <input v-model="input.item.goods.quantity" v-validate="rules.item.goods.quantity" name="item.goods.quantity" class="uk-input" :class="{ 'uk-form-danger': errors.has('item.goods.quantity') }"
                     placeholder="Total" />
                 </div>
 
@@ -130,7 +130,8 @@
                     </el-tooltip>
                   </label>
 
-                  <!-- <select v-model="input.item.goods.unitId" name="unit" class="uk-select" :class="{ 'uk-form-danger': errors.has('unit') }"
+                  <!-- v1 -->
+                  <!-- <select v-model="input.item.goods.unitId" v-validate="rules.item.goods.unit" name="unit" class="uk-select" :class="{ 'uk-form-danger': errors.has('unit') }"
                     @change="onUnitChanged">
                     <option value="" disabled selected>Unit</option>
                     <option v-for="(item, key) in options.unit" :key="key" :value="item.value" :label="item.label">
@@ -140,7 +141,7 @@
 
                   <!-- v2 -->
 
-                  <el-select v-model="input.item.goods.unitId" name="unit" slot="append" :class="{ 'uk-form-danger': errors.has('unit') }"
+                  <el-select v-model="input.item.goods.unitId" v-validate="rules.item.goods.unit" name="unit" slot="append" :class="{ 'uk-form-danger': errors.has('unit') }"
                     @change="onUnitChanged">
                     <el-option value="" disabled selected>Unit</el-option>
                     <el-option v-for="(item, key) in options.unit" :key="key" :value="item.value" :label="item.label">
