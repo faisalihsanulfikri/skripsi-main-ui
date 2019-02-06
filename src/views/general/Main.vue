@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="app--navbar-default">
+    <!-- <div class="app--navbar-default">
       <div class="uk-container">
         <nav uk-navbar>
           <div class="uk-navbar-left">
@@ -72,13 +72,13 @@
           </div>
         </nav>
       </div>
-    </div>
+    </div> -->
     <main>
       <div class="uk-container">
-        <router-view/>
+        <router-view />
       </div>
     </main>
-    <footer class="app--footer app--dark">
+    <!-- <footer class="app--footer app--dark">
       <div class="uk-container">
         <div class="uk-grid-small" uk-grid>
           <div class="uk-width-1-3">
@@ -123,6 +123,6 @@
           </p>
         </div>
       </div>
-    </footer>
+    </footer> -->
   </div>
 </template>
