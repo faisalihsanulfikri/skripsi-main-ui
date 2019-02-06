@@ -23,8 +23,8 @@
     <div class="uk-card-body uk-card-small">
       <div class="uk-margin uk-grid-small" uk-grid>
         <div class="uk-width-auto">
-          <el-input v-model="filter.search" placeholder="Search By Customer ID" @keyup.enter.native="fetchOrders">
-            <el-button slot="append" icon="el-icon-search" @click="fetchOrders">
+          <el-input v-model="filter.search" placeholder="Search By Customer ID" @keyup.enter="fetchOrders">
+            <el-button slot="append" icon="el-icon-search" @click="onSearchclick">
             </el-button>
           </el-input>
         </div>
@@ -218,16 +218,39 @@
       //this.fetchOrders()
     },
 
-    // mounted() {
-    //   window.addEventListener('keyup', event => {
-    //     if (event.keyCode === 13) {
-
-    //       this.fetchOrders()
-    //     }
-    //   })
-    // },
+    mounted() {
+     this.onSearchEnter();
+    },
 
     methods: {
+      onSearchEnter(){
+        window.addEventListener('keyup', event => {
+        if (event.keyCode === 13) {          
+          if (this.filter.search === '') {
+            this.$notify({
+            title: 'Filter',
+            message: 'Search by customer ID cannot be empty',
+            type: 'warning'
+          })
+          }else{
+            this.fetchOrders()
+          }          
+        }
+      })
+      },
+
+      onSearchclick(){
+        if (this.filter.search === '') {
+          this.$notify({
+            title: 'Filter',
+            message: 'Search by customer ID cannot be empty',
+            type: 'warning'
+          })
+        }else{
+          this.fetchOrders()
+        }   
+      },
+
       openCreateAwbDialog(index) {
         this.dialogCreateAwb.data = this.orders[index]
         this.dialogCreateAwb.visible = true
