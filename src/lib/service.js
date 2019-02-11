@@ -25,7 +25,7 @@ const awb = {
   find(code) {
     return Vue.authHttp().get(`/awb/${code}`)
   },
-  find_number (code) {
+  find_number(code) {
     return Vue.authHttp().get(`/awb_number/${code}`)
   }
 }
@@ -58,6 +58,12 @@ const category = {
   },
   delete(id) {
     return Vue.authHttp().delete(`/categories/${id}`)
+  }
+}
+
+const unit = {
+  all() {
+    return Vue.http().get('/units/list')
   }
 }
 
@@ -213,6 +219,7 @@ const services = {
   user,
   warehouse,
   currency,
+  unit
   importExcel
 }
 

@@ -1,5 +1,5 @@
 import Main from '../views/general/Main'
-import Home from '../views/Home'
+// import Home from '../views/Home'
 import Faq from '../views/general/Faq'
 import Aboutus from '../views/general/Aboutus'
 import Contactus from '../views/general/Contactus'
@@ -18,11 +18,11 @@ export default {
   path: '/',
   component: Main,
   children: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
+    // {
+    //   path: '/',
+    //   name: 'home',
+    //   component: Home
+    // },
     {
       path: 'login',
       name: 'login',

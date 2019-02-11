@@ -70,7 +70,7 @@ Vue.mixin({
       Vue.auth.destroy()
 
       $router.push({
-        path: '/',
+        path: '/login',
         force: true
       })
     },

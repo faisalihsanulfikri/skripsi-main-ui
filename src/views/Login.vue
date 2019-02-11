@@ -2,7 +2,13 @@
   <div class="uk-margin-top uk-margin-bottom">
     <div class="uk-card uk-card-default">
       <div class="uk-card-header uk-text-center">
-        <h3 class="uk-card-title">Masuk</h3>
+        <nav uk-navbar>
+          <div class="uk-navbar">
+            <router-link to="/">
+              <img class="app--navbar-logo" style="width:150px" src="../assets/logo-kirimin.jpg" />
+            </router-link>
+          </div>
+        </nav>
       </div>
       <div class="uk-card-body">
         <div uk-grid>
@@ -34,11 +40,11 @@
                   <font-awesome-icon v-else icon="spinner" spin></font-awesome-icon>
                 </button>
               </div>
-              <div class="uk-margin">
+              <!-- <div class="uk-margin">
                 <button class="uk-button uk-button-default uk-width-1-1" :disabled="application.loading" @click="$router.push({ name: 'register'})">
                   Daftar
                 </button>
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="uk-width-1-2"></div>
@@ -56,7 +62,8 @@
       return {
         input: {
           email: '',
-          password: ''
+          password: '',
+          origin: 'cms'
         },
         rules: {
           email: 'required|email',
