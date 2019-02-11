@@ -219,7 +219,7 @@ const services = {
   user,
   warehouse,
   currency,
-  unit
+  unit,
   importExcel
 }
 
