@@ -192,6 +192,12 @@ const warehouse = {
   }
 }
 
+const importExcel = {
+  store(data ={}) {
+    return Vue.authHttp().post('importOrder/excel/kirimin',data)
+  }
+}
+
 const services = {
   agent,
   auth,
@@ -206,7 +212,8 @@ const services = {
   report,
   user,
   warehouse,
-  currency
+  currency,
+  importExcel
 }
 
 Object.defineProperties(Vue.prototype, {
