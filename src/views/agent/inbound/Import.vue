@@ -71,6 +71,7 @@ export default {
             }
           }
           data.append("excel", this.excel),
+          data.append("description", '.xlsx'),
           // console.log(data.excel),
           await this.$authHttp.post('/importOrder/excel/kirimin', data, config).then(res => {
             this.$notify({
