@@ -108,7 +108,11 @@
                       <font-awesome-icon icon="info-circle"></font-awesome-icon>
                     </el-tooltip>
                   </label>
-                  <input v-model="input.item.goods.name" name="item.goods.name" class="uk-input" placeholder="Name of goods" />
+                  <el-input-mask v-model="input.item.goods.name" :error="errors.has('name')" placeholder="Name of goods">
+                    <input v-model="input.item.goods.name" name="item.goods.name" class="uk-input" />
+                  </el-input-mask>
+
+
                 </div>
                 <div style="width:13%">
                   <label class="uk-form-label">
@@ -117,7 +121,12 @@
                       <font-awesome-icon icon="info-circle"></font-awesome-icon>
                     </el-tooltip>
                   </label>
-                  <input v-model="input.item.goods.quantity" name="item.goods.quantity" class="uk-input" placeholder="Total" />
+
+
+                  <el-input-mask v-model="input.item.goods.quantity" :options="markOptions.numeral" :error="errors.has('quantity')"
+                    placeholder="Total">
+                    <input v-model="input.item.goods.quantity" name="item.goods.quantity" class="uk-input" />
+                  </el-input-mask>
                 </div>
 
                 <div style="width:13%">
