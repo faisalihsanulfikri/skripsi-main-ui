@@ -107,12 +107,9 @@
                     <el-tooltip class="item" effect="dark" content="Barang" placement="top">
                       <font-awesome-icon icon="info-circle"></font-awesome-icon>
                     </el-tooltip>
-                  </label>
-                  <el-input-mask v-model="input.item.goods.name" :error="errors.has('name')" placeholder="Name of goods">
-                    <input v-model="input.item.goods.name" name="item.goods.name" class="uk-input" />
-                  </el-input-mask>
-
-
+                  </label>                  
+                  <input v-model="input.item.goods.name" name="item.goods.name" class="uk-input" :class="{ 'uk-form-danger': errors.has('item.goods.name') }"
+                    placeholder="Name of goods" />
                 </div>
                 <div style="width:13%">
                   <label class="uk-form-label">
@@ -137,25 +134,12 @@
                     </el-tooltip>
                   </label>
 
-                  <!-- v1 -->
-                  <!-- <select v-model="input.item.goods.unitId" v-validate="rules.item.goods.unit" name="unit" class="uk-select" :class="{ 'uk-form-danger': errors.has('unit') }"
-                    @change="onUnitChanged">
-                    <option value="" disabled selected>Unit</option>
-                    <option v-for="(item, key) in options.unit" :key="key" :value="item.value" :label="item.label">
-                      {{ item.label }}
-                    </option>
-                  </select> -->
-
-                  <!-- v2 -->
-
                   <el-select v-model="input.item.goods.unitId" name="unit" slot="append" :class="{ 'uk-form-danger': errors.has('unit') }"
                     @change="onUnitChanged">
                     <el-option value="" disabled selected>Unit</el-option>
                     <el-option v-for="(item, key) in options.unit" :key="key" :value="item.value" :label="item.label">
                     </el-option>
                   </el-select>
-
-
                 </div>
 
                 <div style="width:10%">

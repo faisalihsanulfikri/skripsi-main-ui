@@ -52,7 +52,7 @@
                     <th>CODE</th>
                     <th>DATE</th>
                     <th>CUSTOMER</th>
-                    <th>PACKAGES DIMENTION</th>
+                    <th>PACKAGES DIMENSION</th>
                     <th>PRICE</th>
                     <th>ADDRESS</th>
                   </tr>
