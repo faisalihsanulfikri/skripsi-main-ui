@@ -23,6 +23,11 @@
         <div v-if="!excel">
           <h2>Select Excel</h2>
           <input type="file" @change="onFileChange">
+          <a :href="item">Download</a>
+          <!-- <a href="" target="_blank">Download</a> -->
+          <!-- <form>
+            <input type="button" value="Download" onClick="window.location.href='../../../assets/file/excel.xlsx'">
+          </form> -->
         </div>
         <div v-else>
           <button @click="removeexcel">Remove Excel</button>
@@ -34,10 +39,13 @@
 </template>
 
 <script>
+import csvFile from "../../../assets/file/excel.xlsx"
 export default {
+  name: "Template",
   data() {
     return{
-      excel: ''
+      excel: '',
+      item: csvFile
       }
     },
 

@@ -40,11 +40,11 @@
                   <font-awesome-icon v-else icon="spinner" spin></font-awesome-icon>
                 </button>
               </div>
-              <!-- <div class="uk-margin">
-                <button class="uk-button uk-button-default uk-width-1-1" :disabled="application.loading" @click="$router.push({ name: 'register'})">
-                  Daftar
+              <div class="uk-margin">
+                <button class="uk-button uk-button-default uk-width-1-1" :disabled="application.loading" @click="$router.push({ name: 'forgot'})">
+                  Forgot Password
                 </button>
-              </div> -->
+              </div>
             </div>
           </div>
           <div class="uk-width-1-2"></div>

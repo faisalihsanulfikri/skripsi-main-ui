@@ -12,6 +12,7 @@ import FiturKirimin from '../views/general/FeatureKirimin'
 import Calculator from '../views/member/Calculator'
 
 import Register from '../views/Register'
+import Forgot from '../views/Forgot'
 import Login from '../views/Login'
 
 export default {
@@ -32,6 +33,11 @@ export default {
       path: 'register',
       name: 'register',
       component: Register
+    },
+    {
+      path: 'forgot',
+      name: 'forgot',
+      component: Forgot
     },
     {
       path: 'faq',
