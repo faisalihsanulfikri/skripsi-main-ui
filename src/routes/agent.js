@@ -17,76 +17,76 @@ export default {
   path: '/agent',
   component: Main,
   children: [{
-      path: '/',
-      name: 'agent-main',
-      component: Dashboard,
-      meta: {
-        auth: true,
-        level: [AGENT]
-      }
-    },
-    {
-      path: 'orders/create',
-      name: 'agent-order-create',
-      component: OrderCreate,
-      meta: {
-        auth: true,
-        level: [AGENT]
-      }
-    },
-    {
-      path: 'inbound/simplified',
-      name: 'inbound-simplified',
-      component: OrderInbound,
-      meta: {
-        auth: true,
-        level: [AGENT]
-      }
-    },
-    {
-      path: 'inbound/advanced',
-      name: 'inbound-advanced',
-      component: OrderAdvInbound,
-      meta: {
-        auth: true,
-        level: [AGENT]
-      }
-    },
-    {
-      path: 'inbound/import',
-      name: 'inbound-import',
-      component: OrderImportInbound,
-      meta: {
-        auth: true,
-        level: [AGENT]
-      }
-    },
-    {
-      path: 'air-waybills/:code',
-      name: 'agent-awb-show',
-      component: AwbShow,
-      meta: {
-        auth: true,
-        level: [AGENT]
-      }
-    },
-    {
-      path: 'reports/order',
-      name: 'agent-report-order',
-      component: OrderReport,
-      meta: {
-        auth: true,
-        level: [AGENT]
-      }
-    },
-    {
-      path: 'reports/air-waybill',
-      name: 'agent-report-air-waybill',
-      component: AwbReport,
-      meta: {
-        auth: true,
-        level: [AGENT]
-      }
+    path: '/',
+    name: 'agent-main',
+    component: Dashboard,
+    meta: {
+      auth: true,
+      level: [AGENT]
     }
+  },
+  {
+    path: 'orders/create',
+    name: 'agent-order-create',
+    component: OrderCreate,
+    meta: {
+      auth: true,
+      level: [AGENT]
+    }
+  },
+  {
+    path: 'inbound/simplified',
+    name: 'inbound-simplified',
+    component: OrderInbound,
+    meta: {
+      auth: true,
+      level: [AGENT]
+    }
+  },
+  {
+    path: 'inbound/advanced',
+    name: 'inbound-advanced',
+    component: OrderAdvInbound,
+    meta: {
+      auth: true,
+      level: [AGENT]
+    }
+  },
+  {
+    path: 'inbound/import',
+    name: 'inbound-import',
+    component: OrderImportInbound,
+    meta: {
+      auth: true,
+      level: [AGENT]
+    }
+  },
+  {
+    path: 'air-waybills/:code',
+    name: 'agent-awb-show',
+    component: AwbShow,
+    meta: {
+      auth: true,
+      level: [AGENT]
+    }
+  },
+  {
+    path: 'reports/order',
+    name: 'agent-report-order',
+    component: OrderReport,
+    meta: {
+      auth: true,
+      level: [AGENT]
+    }
+  },
+  {
+    path: 'reports/air-waybill',
+    name: 'agent-report-air-waybill',
+    component: AwbReport,
+    meta: {
+      auth: true,
+      level: [AGENT]
+    }
+  }
   ]
 }

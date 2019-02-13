@@ -26,178 +26,178 @@ export default {
   path: '/admin',
   component: Main,
   children: [{
-      path: '/',
-      name: 'admin-main',
-      component: Dashboard,
-      meta: {
-        auth: true,
-        level: [ADMIN, SUPER_ADMIN]
-      }
-    },
-    {
-      path: 'air-waybills/:code',
-      name: 'admin-awb-show',
-      component: AwbShow,
-      meta: {
-        auth: true,
-        level: [ADMIN, SUPER_ADMIN]
-      }
-    },
-    {
-      path: 'invoices',
-      name: 'admin-invoice',
-      component: Invoice,
-      meta: {
-        auth: true,
-        level: [ADMIN, SUPER_ADMIN]
-      }
-    },
-    {
-      path: 'orders',
-      name: 'admin-order',
-      component: Inbound,
-      meta: {
-        auth: true,
-        level: [ADMIN, SUPER_ADMIN]
-      }
-    },
-    {
-      path: 'inbound',
-      name: 'admin-inbound',
-      component: Inbound,
-      meta: {
-        auth: true,
-        level: [ADMIN, SUPER_ADMIN]
-      }
-    },
-    {
-      path: 'master/categories',
-      name: 'admin-category',
-      component: Category,
-      meta: {
-        auth: true,
-        level: [ADMIN, SUPER_ADMIN]
-      }
-    },
-    {
-      path: 'master/categories/create',
-      name: 'admin-category-create',
-      component: CategoryCreate,
-      meta: {
-        auth: true,
-        level: [ADMIN, SUPER_ADMIN]
-      }
-    },
-
-    {
-      path: 'UserCreate',
-      name: 'admin-user-create',
-      component: UserCreate,
-      meta: {
-        auth: true,
-        level: [ADMIN, SUPER_ADMIN]
-      }
-    },
-
-    {
-      path: 'master/categories/:id/edit',
-      name: 'admin-category-edit',
-      component: CategoryCreate,
-      meta: {
-        auth: true,
-        level: [ADMIN, SUPER_ADMIN]
-      }
-    },
-    {
-      path: 'master/warehouses',
-      name: 'admin-warehouse',
-      component: Warehouse,
-      meta: {
-        auth: true,
-        level: [ADMIN, SUPER_ADMIN]
-      }
-    },
-    {
-      path: 'master/warehouses/create',
-      name: 'admin-warehouse-create',
-      component: WarehouseCreate,
-      meta: {
-        auth: true,
-        level: [ADMIN, SUPER_ADMIN]
-      }
-    },
-    {
-      path: 'master/warehouses/:id/edit',
-      name: 'admin-warehouse-edit',
-      component: WarehouseCreate,
-      meta: {
-        auth: true,
-        level: [ADMIN, SUPER_ADMIN]
-      }
-    },
-    {
-      path: 'master/exchange-rates',
-      name: 'admin-exchange-rate',
-      component: Exchange,
-      meta: {
-        auth: true,
-        level: [ADMIN, SUPER_ADMIN]
-      }
-    },
-    {
-      path: 'master/exchange-rates/:id/edit',
-      name: 'admin-exchange-rate-edit',
-      component: ExchangeCreate,
-      meta: {
-        auth: true,
-        level: [ADMIN, SUPER_ADMIN]
-      }
-    },
-    {
-      path: 'master/area',
-      name: 'admin-area',
-      component: Area,
-      meta: {
-        auth: true,
-        level: [ADMIN, SUPER_ADMIN]
-      }
-    },
-    {
-      path: 'master/area/provinces/:provinceId/cities',
-      name: 'admin-area-province-city',
-      component: AreaCity,
-      meta: {
-        auth: true,
-        level: [ADMIN, SUPER_ADMIN]
-      }
-    },
-    {
-      path: 'master/area/provinces/:provinceId/cities/:cityId/district',
-      name: 'admin-area-province-city-district',
-      component: AreaDistrict,
-      meta: {
-        auth: true,
-        level: [ADMIN, SUPER_ADMIN]
-      }
-    },
-    {
-      path: 'users/:level',
-      name: 'admin-user',
-      component: User,
-      meta: {
-        auth: true,
-        level: [ADMIN, SUPER_ADMIN]
-      }
-    },
-
-    {
-      path: 'settings',
-      name: 'admin-setting',
-      component: Setting,
-      meta: {
-        auth: true,
-        level: [SUPER_ADMIN]
-      }
+    path: '/',
+    name: 'admin-main',
+    component: Dashboard,
+    meta: {
+      auth: true,
+      level: [ADMIN, SUPER_ADMIN]
     }
+  },
+  {
+    path: 'air-waybills/:code',
+    name: 'admin-awb-show',
+    component: AwbShow,
+    meta: {
+      auth: true,
+      level: [ADMIN, SUPER_ADMIN]
+    }
+  },
+  {
+    path: 'invoices',
+    name: 'admin-invoice',
+    component: Invoice,
+    meta: {
+      auth: true,
+      level: [ADMIN, SUPER_ADMIN]
+    }
+  },
+  {
+    path: 'orders',
+    name: 'admin-order',
+    component: Inbound,
+    meta: {
+      auth: true,
+      level: [ADMIN, SUPER_ADMIN]
+    }
+  },
+  {
+    path: 'inbound',
+    name: 'admin-inbound',
+    component: Inbound,
+    meta: {
+      auth: true,
+      level: [ADMIN, SUPER_ADMIN]
+    }
+  },
+  {
+    path: 'master/categories',
+    name: 'admin-category',
+    component: Category,
+    meta: {
+      auth: true,
+      level: [ADMIN, SUPER_ADMIN]
+    }
+  },
+  {
+    path: 'master/categories/create',
+    name: 'admin-category-create',
+    component: CategoryCreate,
+    meta: {
+      auth: true,
+      level: [ADMIN, SUPER_ADMIN]
+    }
+  },
+
+  {
+    path: 'UserCreate',
+    name: 'admin-user-create',
+    component: UserCreate,
+    meta: {
+      auth: true,
+      level: [ADMIN, SUPER_ADMIN]
+    }
+  },
+
+  {
+    path: 'master/categories/:id/edit',
+    name: 'admin-category-edit',
+    component: CategoryCreate,
+    meta: {
+      auth: true,
+      level: [ADMIN, SUPER_ADMIN]
+    }
+  },
+  {
+    path: 'master/warehouses',
+    name: 'admin-warehouse',
+    component: Warehouse,
+    meta: {
+      auth: true,
+      level: [ADMIN, SUPER_ADMIN]
+    }
+  },
+  {
+    path: 'master/warehouses/create',
+    name: 'admin-warehouse-create',
+    component: WarehouseCreate,
+    meta: {
+      auth: true,
+      level: [ADMIN, SUPER_ADMIN]
+    }
+  },
+  {
+    path: 'master/warehouses/:id/edit',
+    name: 'admin-warehouse-edit',
+    component: WarehouseCreate,
+    meta: {
+      auth: true,
+      level: [ADMIN, SUPER_ADMIN]
+    }
+  },
+  {
+    path: 'master/exchange-rates',
+    name: 'admin-exchange-rate',
+    component: Exchange,
+    meta: {
+      auth: true,
+      level: [ADMIN, SUPER_ADMIN]
+    }
+  },
+  {
+    path: 'master/exchange-rates/:id/edit',
+    name: 'admin-exchange-rate-edit',
+    component: ExchangeCreate,
+    meta: {
+      auth: true,
+      level: [ADMIN, SUPER_ADMIN]
+    }
+  },
+  {
+    path: 'master/area',
+    name: 'admin-area',
+    component: Area,
+    meta: {
+      auth: true,
+      level: [ADMIN, SUPER_ADMIN]
+    }
+  },
+  {
+    path: 'master/area/provinces/:provinceId/cities',
+    name: 'admin-area-province-city',
+    component: AreaCity,
+    meta: {
+      auth: true,
+      level: [ADMIN, SUPER_ADMIN]
+    }
+  },
+  {
+    path: 'master/area/provinces/:provinceId/cities/:cityId/district',
+    name: 'admin-area-province-city-district',
+    component: AreaDistrict,
+    meta: {
+      auth: true,
+      level: [ADMIN, SUPER_ADMIN]
+    }
+  },
+  {
+    path: 'users/:level',
+    name: 'admin-user',
+    component: User,
+    meta: {
+      auth: true,
+      level: [ADMIN, SUPER_ADMIN]
+    }
+  },
+
+  {
+    path: 'settings',
+    name: 'admin-setting',
+    component: Setting,
+    meta: {
+      auth: true,
+      level: [SUPER_ADMIN]
+    }
+  }
   ]
 }

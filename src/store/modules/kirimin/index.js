@@ -7,30 +7,30 @@ const namespaced = true
 const state = {
   formula: {},
   currency: {},
-  status: {},
+  status: {}
 }
 
 const mutations = {
-  [TYPES.SET_STATUS](state, status) {
+  [TYPES.SET_STATUS] (state, status) {
     state.status = status
   },
-  [TYPES.SET_FORMULA](state, formula) {
+  [TYPES.SET_FORMULA] (state, formula) {
     state.formula = formula
   },
-  [TYPES.SET_CURRENCY](state, currency) {
+  [TYPES.SET_CURRENCY] (state, currency) {
     state.currency = currency
   }
 }
 
 const actions = {
-  initialize({
+  initialize ({
     dispatch
   }) {
     dispatch('getFormula')
     dispatch('getStaticConfig')
     dispatch('getCurrency')
   },
-  async getStaticConfig({
+  async getStaticConfig ({
     commit
   }) {
     let res = await Vue.http().get('/static-configs')
@@ -39,7 +39,7 @@ const actions = {
       commit(TYPES.SET_STATUS, res.data)
     }
   },
-  async getFormula({
+  async getFormula ({
     commit
   }) {
     let res = await Vue.http().get('/res/configs/formula')
@@ -48,7 +48,7 @@ const actions = {
       commit(TYPES.SET_FORMULA, res.data.value)
     }
   },
-  async getCurrency({
+  async getCurrency ({
     commit
   }) {
     let res = await Vue.authHttp().get('/currencies/list')
