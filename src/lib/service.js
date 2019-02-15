@@ -204,12 +204,6 @@ const importExcel = {
   }
 }
 
-const forgotPass = {
-  sendEmail (params = {}) {
-    return Vue.http().post('forgot-password', data) 
-  }
-}
-
 const services = {
   agent,
   auth,
@@ -226,8 +220,7 @@ const services = {
   warehouse,
   currency,
   unit,
-  importExcel,
-  forgotPass
+  importExcel
 }
 
 Object.defineProperties(Vue.prototype, {
