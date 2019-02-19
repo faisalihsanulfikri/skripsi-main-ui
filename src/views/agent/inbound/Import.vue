@@ -20,9 +20,14 @@
     </div>
     <div class="uk-card-body uk-card-small">
       <div class="uk-margin uk-grid-small" uk-grid>
-        <div v-if="!excel">
+        <div v-if="!files">
           <h2>Select Excel</h2>
-          <input type="file" @change="onFileChange">
+          <input type="file" id="files" ref="files" @change="onFileChange($event)">
+          <a :href="item">Download</a>
+          <!-- <a href="" target="_blank">Download</a> -->
+          <!-- <form>
+            <input type="button" value="Download" onClick="window.location.href='../../../assets/file/excel.xlsx'">
+          </form> -->
         </div>
         <div v-else>
           <button @click="removeexcel">Remove Excel</button>
@@ -34,19 +39,25 @@
 </template>
 
 <script>
+import csvFile from "../../../assets/file/excel.xlsx"
 export default {
+  name: "Template",
   data() {
     return{
-      excel: ''
+      files: '',
+      item: csvFile
       }
     },
 
     methods: {
       onFileChange(e) {
+        // console.log(e.target.files[0])
       var files = e.target.files || e.dataTransfer.files;
       if (!files.length)
         return;
-      this.createexcel(files[0]);
+        this.files = e.target.files[0];
+        // this.files = this.$refs.files.files;
+      // this.createexcel(files[0]);
 
       },
       createexcel(file) {
@@ -54,12 +65,12 @@ export default {
         var vm = this;
 
         reader.onload = (e) => {
-          vm.excel = e.target.result;
+          vm.files = e.target.result;
         };
-        reader.readAsDataURL(file);
+        // reader.readAsDataURL(file);
       },
       removeexcel: function (e) {
-        this.excel = '';
+        this.files = '';
       },
       async exports() {
         this.__startLoading()
@@ -70,19 +81,20 @@ export default {
               'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             }
           }
-          data.append("excel", this.excel),
+          data.append("excel", this.files, this.files.name),
           data.append("description", '.xlsx'),
-          // console.log(data.excel),
+          // console.log(this.files),
           await this.$authHttp.post('/importOrder/excel/kirimin', data, config).then(res => {
+
             this.$notify({
               title: 'SUCCESS',
               message: res.data.message,
               type: 'success'
             })
-
+            console.log(res)
           }).catch(err => {
-            this.$refs.upload.clearFiles()
-
+            // this.$refs.upload.clearFiles()
+            console.log(err)
             if (err.response) {
               let message = err.response.data.message ? err.response.data.message : err.response.statusText
 
