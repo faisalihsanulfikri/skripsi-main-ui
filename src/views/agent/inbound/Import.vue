@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import csvFile from "../../../assets/file/excel.xlsx"
+import csvFile from "../../../assets/file/example-import-file.xlsx"
 export default {
   name: "Template",
   data() {
