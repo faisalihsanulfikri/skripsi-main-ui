@@ -204,12 +204,19 @@ const importExcel = {
   }
 }
 
+const chart = {
+  get () {
+    return Vue.authHttp().get('/chart')
+  }
+}
+
 const services = {
   agent,
   auth,
   awb,
   calculator,
   category,
+  chart,
   config,
   invoice,
   order,

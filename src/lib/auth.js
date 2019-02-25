@@ -34,14 +34,12 @@ Vue.auth = {
 
     if (auth === null) {
       localStorage.clear()
-
+    }
+    if(window.location.pathname == '/'){
       router.push({
         name: 'login'
       })
-
-      return
     }
-
     return auth.access_token
   },
   destroy () {

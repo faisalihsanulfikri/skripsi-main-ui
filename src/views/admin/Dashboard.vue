@@ -27,8 +27,28 @@
 import BaseChart from '../../components/BaseChart'
 
 export default {
+  data () {
+    return {
+      data: {}
+    }
+  },
   components: {
     BaseChart
+  },
+  created () {
+    this.chart()
+    console.log(this.data)
+  },
+  methods:{
+    async chart () {
+      try {
+        let res = await this.$service.chart.get()
+        this.data = res.data.data.data
+
+      } catch (e) {
+        this.__handleError(this, err, true)
+      }
+    }
   }
 }
 </script>
