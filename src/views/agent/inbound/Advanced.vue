@@ -225,7 +225,7 @@
     methods: {
       onSearchEnter(){
         window.addEventListener('keyup', event => {
-        if (event.keyCode === 13) {          
+        if (event.keyCode === 13) {
           if (this.filter.search === '') {
             this.$notify({
               title: 'Notification',
@@ -234,7 +234,7 @@
             })
           }else{
             this.fetchOrders()
-          }          
+          }
         }
       })
       },
@@ -248,7 +248,7 @@
             })
         }else{
           this.fetchOrders()
-        }   
+        }
       },
 
       openCreateAwbDialog(index) {
@@ -362,7 +362,7 @@
       },
       printAwb(code) {
         window.open(
-          `#/print-awb/${code}`,
+          `/print-awb/${code}`,
           'Kirimin - Print AWB',
           'directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=0,resizable=0,width=800'
         )

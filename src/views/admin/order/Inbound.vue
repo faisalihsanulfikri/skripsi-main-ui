@@ -202,7 +202,7 @@ export default {
     },
     printAwb (code) {
       window.open(
-        `#/print-awb/${code}`,
+        `/print-awb/${code}`,
         'Kirimin - Print AWB',
         'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=800'
       )

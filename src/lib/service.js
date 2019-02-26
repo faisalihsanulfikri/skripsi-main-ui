@@ -206,7 +206,7 @@ const importExcel = {
 
 const chart = {
   get () {
-    return Vue.authHttp().get('/chart')
+    return Vue.authHttp().post('/chart')
   }
 }
 
