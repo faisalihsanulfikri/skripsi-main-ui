@@ -5,16 +5,17 @@ export default {
   extends: Bar,
   props: {
     labels: {
-      default: ['1-Oct', '2-Oct', '3-Oct']
+      default: ()=>(['1-Oct', '2-Oct', '3-Oct'])
     },
     title: {
       default: 'Order'
     },
     graphdata: {
-      default: [10, 10, 10]
+      default: ()=>([10, 10, 10])
     }
   },
   mounted () {
+    console.log("test"+this.labels)
     this.renderChart({
       labels: this.labels,
       datasets: [
