@@ -15,7 +15,7 @@ export default {
     }
   },
   mounted () {
-    console.log("test"+this.labels)
+    console.log("mounted"+this.graphdata)
     this.renderChart({
       labels: this.labels,
       datasets: [
@@ -26,6 +26,9 @@ export default {
         }
       ]
     })
+  },
+  computed:{
+
   }
 }
 </script>
