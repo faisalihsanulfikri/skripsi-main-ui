@@ -14,21 +14,21 @@ export default {
       default: ()=>([10, 10, 10])
     }
   },
-  mounted () {
-    console.log("mounted"+this.graphdata)
-    this.renderChart({
-      labels: this.labels,
-      datasets: [
-        {
-          label: this.title,
-          backgroundColor: '#f87979',
-          data: this.graphdata
-        }
-      ]
-    })
-  },
-  computed:{
-
+  watch:{
+    graphdata: function(newOption, oldOption) {
+      // console.log('graph'+newOption+oldOption)
+      this.renderChart({
+        labels: this.labels,
+        datasets: [
+            {
+              label: this.title,
+              backgroundColor: '#f87979',
+              data: this.graphdata
+            }
+          ]
+        },
+        { responsive: true, maintainAspectRatio: false })
+    }
   }
 }
 </script>
