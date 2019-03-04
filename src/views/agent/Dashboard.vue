@@ -3,14 +3,14 @@
     <h1>Dashboard Agent</h1>
     <div class="uk-grid">
       <base-chart
-        :title="'Order Masuk'"
-        :labels="['1-Oct', '2-Oct', '3-Oct','4-Oct','5-Oct','6-Oct']"
-        :graphdata='[76, 66, 56, 54, 55, 55]'>
+        :title="'Order masuk'"
+        :labels="dates"
+        :graphdata="total">
       </base-chart>
       <base-chart
-        :title="'Order Keluar'"
-        :labels="['1-Oct', '2-Oct', '3-Oct','4-Oct','5-Oct','6-Oct']"
-        :graphdata='[50, 51, 52, 39, 30, 52]'>
+        :title="'Payment'"
+        :labels="dates"
+        :graphdata="amount">
       </base-chart>
     </div>
   </div>
@@ -18,10 +18,44 @@
 
 <script>
 import BaseChart from '../../components/BaseChart'
-
+import moment from 'moment'
 export default {
+  data () {
+    return {
+      data: [],
+      amount: [],
+      dates: [],
+      total: []
+    }
+  },
   components: {
     BaseChart
+  },
+  beforeMount () {
+    this.chart().then((res) => {
+      this.dates = res.map(function (item1,index1){
+        return moment(item1['date']).format('DD-MMM')
+      })
+      this.total = res.map(function (item2,index2){
+        return (item2['total'])
+      })
+      this.amount = res.map(function (item2,index2){
+        return (item2['amount'])
+      })
+    })
+  },
+  methods:{
+    async chart () {
+      this.__startLoading()
+      try {
+        let res = await this.$service.chart.get()
+        this.data = res.data.data
+      } catch (e) {
+        this.__handleError(this, err, true)
+      }
+      this.__stopLoading()
+      return this.data
+    }
   }
 }
 </script>

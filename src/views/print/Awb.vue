@@ -53,22 +53,29 @@
           <div class="uk-width-expand">
             <h5 class="uk-margin-remove uk-text-bold">GOODS</h5>
           </div>
-          <div class="uk-width-auto uk-text-right">
-            <template v-if="awb.detail && awb.detail.packet_info">
-              <span class="uk-margin-small-right">{{ `IDR ${awb.detail.packet_info.stringPrice}` }}</span>
-              <span class="uk-margin-small-right">{{ `${awb.detail.packet_info.stringWeight} ${awb.detail.packet_info.weight_unit}` }}</span>
-              <span>
-                {{ `${awb.detail.packet_info.stringLength} x ${awb.detail.packet_info.stringWidth} x ${awb.detail.packet_info.stringHeight} ${awb.detail.packet_info.volume_unit}` }}
-              </span>
-            </template>
+          <div class="uk-width-expand">
+            <h5 class="uk-margin-remove uk-text-bold">COST WEIGHT DIMENSION</h5>
           </div>
         </div>
         <div class="uk-padding-small">
-          <ul class="uk-list uk-list uk-margin-remove">
-            <li v-for="(item, index) in awb.items" :key="index">
-              {{ `${item.name} ${item.quantity} ${item.unit}` }}
-            </li>
-          </ul>
+          <div class="uk-grid-small" uk-grid>
+            <div class="uk-width-1-2">
+              <ul class="uk-list uk-list uk-margin-remove">
+                <li v-for="(item, index) in awb.items" :key="index">
+                  <font size="2">{{ `${item.name} ${item.quantity} ${item.unit}` }}</font>
+                </li>
+              </ul>
+            </div>
+            <div class="uk-width-1-2">
+                <template v-if="awb.detail && awb.detail.packet_info">
+                  <span class="uk-margin-small-right" style="font-size:10px">{{ `IDR ${awb.detail.packet_info.stringPrice}` }}</span>
+                  <span class="uk-margin-small-right" style="font-size:10px">{{ `${awb.detail.packet_info.stringWeight} ${awb.detail.packet_info.weight_unit}` }}</span>
+                  <span style="font-size:10px">
+                    {{ `${awb.detail.packet_info.stringLength} x ${awb.detail.packet_info.stringWidth} x ${awb.detail.packet_info.stringHeight} ${awb.detail.packet_info.volume_unit}` }}
+                  </span>
+                </template>
+            </div>
+        </div>
         </div>
       </div>
     </div>

@@ -5,26 +5,30 @@ export default {
   extends: Bar,
   props: {
     labels: {
-      default: ['1-Oct', '2-Oct', '3-Oct']
+      default: ()=>(['1-Oct', '2-Oct', '3-Oct'])
     },
     title: {
       default: 'Order'
     },
     graphdata: {
-      default: [10, 10, 10]
+      default: ()=>([10, 10, 10])
     }
   },
-  mounted () {
-    this.renderChart({
-      labels: this.labels,
-      datasets: [
-        {
-          label: this.title,
-          backgroundColor: '#f87979',
-          data: this.graphdata
-        }
-      ]
-    })
+  watch:{
+    graphdata: function(newOption, oldOption) {
+      // console.log('graph'+newOption+oldOption)
+      this.renderChart({
+        labels: this.labels,
+        datasets: [
+            {
+              label: this.title,
+              backgroundColor: '#f87979',
+              data: this.graphdata
+            }
+          ]
+        },
+        { responsive: true, maintainAspectRatio: false })
+    }
   }
 }
 </script>
