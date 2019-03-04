@@ -2,11 +2,13 @@ import Main from '../views/agent/Main'
 import AwbReport from '../views/agent/report/AirWaybill'
 import AwbShow from '../views/agent/awb/Show'
 import Dashboard from '../views/agent/Dashboard'
+import Manifest from '../views/agent/report/Manifest'
 import OrderCreate from '../views/agent/order/Entry'
 import OrderInbound from '../views/agent/inbound/Simplified'
 import OrderAdvInbound from '../views/agent/inbound/Advanced'
 import OrderImportInbound from '../views/agent/inbound/Import'
 import OrderReport from '../views/agent/report/Order'
+import ScanAwb from '../views/agent/outbound/ScanAwb'
 // import AgentCurrency from '../views/agent/orders/Currency'
 
 import {
@@ -62,6 +64,15 @@ export default {
     }
   },
   {
+    path: 'outbound/scan-awb',
+    name: 'outbound/scan-awb',
+    component: ScanAwb,
+    meta: {
+      auth: true,
+      level: [AGENT]
+    }
+  },
+  {
     path: 'air-waybills/:code',
     name: 'agent-awb-show',
     component: AwbShow,
@@ -83,6 +94,15 @@ export default {
     path: 'reports/air-waybill',
     name: 'agent-report-air-waybill',
     component: AwbReport,
+    meta: {
+      auth: true,
+      level: [AGENT]
+    }
+  },
+  {
+    path: 'reports/manifest',
+    name: 'agent-report-manifest',
+    component: Manifest,
     meta: {
       auth: true,
       level: [AGENT]

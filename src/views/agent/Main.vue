@@ -14,12 +14,20 @@
           <el-menu-item index="/agent/inbound/import">IMPORT ORDER</el-menu-item>
         </el-submenu>
 
+        <el-submenu index="/agent/order">
+          <template slot="title">
+            <span>OUTBOUND</span>
+          </template>
+          <el-menu-item index="/agent/outbound/scan-awb">SCAN AWB</el-menu-item>
+        </el-submenu>
+
         <el-submenu index="/agent/report">
           <template slot="title">
             <span>REPORT</span>
           </template>
           <el-menu-item index="/agent/reports/order">ORDER</el-menu-item>
           <el-menu-item index="/agent/reports/air-waybill">AIR WAYBILL</el-menu-item>
+          <el-menu-item index="/agent/reports/manifest">MANIFEST</el-menu-item>
         </el-submenu>
 
       </el-menu>
