@@ -24,6 +24,16 @@
           <input type="text" ref="search" @keyup.enter="">
           <button type="button" @click="">scan</button>
       </div>
+      <div>
+        <input type="checkbox" id="jack" value="Jack" v-model="checkedManifest">
+        <label for="jack">Jack</label>
+        <input type="checkbox" id="john" value="John" v-model="checkedManifest">
+        <label for="john">John</label>
+        <input type="checkbox" id="mike" value="Mike" v-model="checkedManifest">
+        <label for="mike">Mike</label>
+        <br>
+        <span>Checked names: {{ checkedManifest }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -32,7 +42,7 @@
 export default {
   data() {
     return {
-
+      checkedManifest: []
     }
   },
   mounted() {

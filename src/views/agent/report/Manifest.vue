@@ -20,7 +20,7 @@
     </div>
     <div class="uk-card-body uk-card-small">
       <div class="uk-margin uk-grid-small" uk-grid>
-
+        
       </div>
     </div>
   </div>
@@ -34,7 +34,7 @@ export default {
     }
   },
   mounted() {
-    
+
   }
 }
 </script>
