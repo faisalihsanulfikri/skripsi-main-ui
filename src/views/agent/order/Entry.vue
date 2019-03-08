@@ -941,7 +941,7 @@ export default {
 
       try {
         let res = await this.$service.order.createKiriminFromAgent(this.input);
-        console.log(res.data.req);
+        // console.log(res.data.req);
         this.$notify({
           title: "SUCCESS",
           message: res.data.message,

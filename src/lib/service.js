@@ -27,6 +27,10 @@ const awb = {
   },
   find_number (code) {
     return Vue.authHttp().get(`/awb_number/${code}`)
+  },
+  scan (code) {
+    // console.log(code)
+    return Vue.authHttp().get(`/scan/${code}`)
   }
 }
 
