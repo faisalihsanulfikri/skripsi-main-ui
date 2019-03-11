@@ -108,6 +108,12 @@ const invoice = {
   }
 }
 
+const manifest = {
+  create (data = {}) {
+    return Vue.authHttp().post('/manifest/', data)
+  }
+}
+
 const order = {
   get (params = {}) {
     return Vue.authHttp().get('/orders', {
@@ -223,6 +229,7 @@ const services = {
   chart,
   config,
   invoice,
+  manifest,
   order,
   orderAirWaybill,
   payment,
