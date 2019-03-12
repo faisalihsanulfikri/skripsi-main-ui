@@ -30,8 +30,9 @@
           </form> -->
         </div>
         <div v-else>
+          {{files.name}}
           <button @click="removeexcel">Remove Excel</button>
-          <button @click="exports">Export</button>
+          <button @click="exports">Import</button>
         </div>
       </div>
     </div>
@@ -72,7 +73,7 @@ export default {
       removeexcel: function (e) {
         this.files = '';
       },
-      async exports() {
+      async exports () {
         this.__startLoading()
         // try {
           let data = new FormData()
@@ -91,10 +92,8 @@ export default {
               message: res.data.message,
               type: 'success'
             })
-            console.log(res)
           }).catch(err => {
             // this.$refs.upload.clearFiles()
-            console.log(err)
             if (err.response) {
               let message = err.response.data.message ? err.response.data.message : err.response.statusText
 

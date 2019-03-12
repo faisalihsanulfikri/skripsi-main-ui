@@ -21,12 +21,12 @@
     <div class="uk-card-body uk-card-small">
       <div class="uk-margin uk-grid-small" uk-grid>
           scan awb
-          <input type="text" ref="search" @keyup.enter="" v-model = "code">
+          <input type="text" ref="search" @keyup.enter="scan" v-model = "code">
           <button type="button" @click="scan">scan</button>
       </div>
       <div>
         <span v-for="(format,index) in formats" :key="index">
-          <input type="checkbox" v-bind:value="format.code" v-model="format.checked" v-bind:checked=true> {{ format.code +' - '+ format.name+' - '+format.address }}
+          <input type="checkbox" v-bind:value="format.awb" v-model="format.checked" v-bind:checked=true> {{ format.awb +' - '+ format.name+' - '+format.address }}
           <br>
         </span>
         <!-- {{checkedNames}} -->
@@ -52,7 +52,7 @@ export default {
       input: [],
       code: "",
       data: {
-        code:"",
+        awb:"",
         name:"",
         address:""
       },
@@ -95,7 +95,7 @@ export default {
       try {
         await this.$service.awb.scan(this.code).then(res => {
           if(res.data.data.length>0){
-            this.formats.push({ code: res.data.data[0].order_code, name: res.data.data[0].detail.receiver_name, address:res.data.data[0].detail.receiver_address, checked:true })
+            this.formats.push({ awb: res.data.data[0].awb, name: res.data.data[0].detail.receiver_name, address:res.data.data[0].detail.receiver_address, checked:true })
           }
         })
       } catch (e) {
@@ -109,13 +109,13 @@ export default {
       try {
         this.input = this.formats.filter(function(obj) {
           return obj.checked
-        }).map(function(obj) { return {code:obj.code,name:obj.name,address:obj.address} })
+        }).map(function(obj) { return {awb:obj.awb,name:obj.name,address:obj.address} })
 
         let res = await this.$service.manifest.create(this.input)
-
+        console.log(res)
         this.$notify({
           title: "SUCCESS",
-          message: res.message,
+          message: res.data.message,
           type: "success"
         })
         this.formats=""
