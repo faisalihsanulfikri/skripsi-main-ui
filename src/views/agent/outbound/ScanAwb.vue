@@ -21,18 +21,16 @@
     <div class="uk-card-body uk-card-small">
       <div class="uk-margin uk-grid-small" uk-grid>
           scan awb
-          <input type="text" ref="search" @keyup.enter="" v-model = "input.code">
+          <input type="text" ref="search" @keyup.enter="" v-model = "code">
           <button type="button" @click="scan">scan</button>
       </div>
-      <div v-if="">
-        <ul>
-          <span v-for="(format,index) in formats" :key="index">
-            <input type="checkbox" v-bind:value="format.code" v-model="checked" v-bind:checked=true> {{ format.code +' - '+ format.name+' - '+format.address }}
-            <br>
-          </span>
-          {{checked}}
-          <button type="button">Create Manifest</button>
-        </ul>
+      <div>
+        <span v-for="(format,index) in formats" :key="index">
+          <input type="checkbox" v-bind:value="format.code" v-model="format.checked" v-bind:checked=true> {{ format.code +' - '+ format.name+' - '+format.address }}
+          <br>
+        </span>
+        <!-- {{checkedNames}} -->
+        <button type="button" @click="create">Create Manifest</button>
         <!-- <input type="checkbox" id="jack" value="Jack" v-model="checkedManifest">
         <label for="jack">Jack</label>
         <input type="checkbox" id="john" value="John" v-model="checkedManifest">
@@ -51,9 +49,8 @@ export default {
   data() {
     return {
       checkedManifest: [],
-      input: {
-        code: ""
-      },
+      input: [],
+      code: "",
       data: {
         code:"",
         name:"",
@@ -61,26 +58,32 @@ export default {
       },
       bol: true,
       checked: [],
-      formats: [{
-        code:"",
-        name:"",
-        address:""
-      }]
-      // format: {code:"", name:"", address:""}
+      formats: [],
+      selected: []
     }
   },
   mounted() {
     this.setFocus()
   },
   computed: {
-    selected: {
-      get: function () {
+    checkedNames () {
+        return this.formats
+     }
 
-      },
-      set: function () {
-
-      }
-    }
+    // checked: {
+    //   get: function () {
+    //     return true
+    //   }
+      // set: function (value) {
+      //   var selected = [];
+      //   if (value) {
+      //       this.users.forEach(function (user) {
+      //           selected.push(user.id);
+      //       });
+      //   }
+      //   his.selected = selected;
+      // }
+    // }
   },
   methods: {
     setFocus: function()
@@ -90,23 +93,36 @@ export default {
      async scan () {
       this.__startLoading()
       try {
-        await this.$service.awb.scan(this.input.code).then(res => {
+        await this.$service.awb.scan(this.code).then(res => {
           if(res.data.data.length>0){
-            // console.log(res.data.data[0].order_code,res.data.data[0].detail.receiver_name,res.data.data[0].detail.receiver_address)
-            this.formats.push({ code: res.data.data[0].order_code, name: res.data.data[0].detail.receiver_name, address:res.data.data[0].detail.receiver_address })
+            this.formats.push({ code: res.data.data[0].order_code, name: res.data.data[0].detail.receiver_name, address:res.data.data[0].detail.receiver_address, checked:true })
           }
         })
-        // this.data = res.data
-        // this.users.push({ code: this.data[0].order_code, name: this.data[0].detail.receiver_name, address:this.data[0].detail.receiver_address })
-        // console.log(this.data.data[0].order_code)
       } catch (e) {
         this.__handleError(this, err, true)
       }
       this.__stopLoading()
 
     },
-    search (){
-      // this.users.push({ code: this.data.name, name: this.user.age, address:this.data })
+    async create () {
+      this.__startLoading()
+      try {
+        this.input = this.formats.filter(function(obj) {
+          return obj.checked
+        }).map(function(obj) { return {code:obj.code,name:obj.name,address:obj.address} })
+
+        let res = await this.$service.manifest.create(this.input)
+
+        this.$notify({
+          title: "SUCCESS",
+          message: res.message,
+          type: "success"
+        })
+        this.formats=""
+      } catch (e) {
+        his.__handleError(this, err, true);
+      }
+      this.__stopLoading()
     }
   }
 }
