@@ -111,6 +111,9 @@ const invoice = {
 const manifest = {
   create (data = {}) {
     return Vue.authHttp().post('/manifest/', data)
+  },
+  get () {
+    return Vue.authHttp().get('/manifest')
   }
 }
 

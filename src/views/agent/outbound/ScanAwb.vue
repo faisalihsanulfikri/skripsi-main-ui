@@ -56,7 +56,7 @@ export default {
         name:"",
         address:""
       },
-      bol: true,
+      test: [],
       checked: [],
       formats: [],
       selected: []
@@ -93,13 +93,19 @@ export default {
      async scan () {
       this.__startLoading()
       try {
-        await this.$service.awb.scan(this.code).then(res => {
-          if(res.data.data.length>0){
+        return this.$service.awb.scan(this.code)
+        .then(res => {
+          var count = this.formats.filter(el=>{
+            return el.awb == this.code
+          })
+          if(res.data.data.length>0 && count==0){
             this.formats.push({ awb: res.data.data[0].awb, name: res.data.data[0].detail.receiver_name, address:res.data.data[0].detail.receiver_address, checked:true })
           }
+          this.__stopLoading()
         })
       } catch (e) {
         this.__handleError(this, err, true)
+        this.__stopLoading()
       }
       this.__stopLoading()
 
