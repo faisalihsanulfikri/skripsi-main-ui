@@ -175,7 +175,7 @@
                           <tr v-for="(awb, index) in order.air_waybills" :key="index">
                             <td>
                               <router-link :to="{ name: 'agent-awb-show', params: { code: awb.awb } }">
-                                <!-- {{ awb.awb }} -->
+                                {{ awb.awb }}
                               </router-link>
                             </td>
                             <td>{{ awb.created_at }}</td>
