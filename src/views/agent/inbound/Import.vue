@@ -22,8 +22,8 @@
       <div class="uk-margin uk-grid-small" uk-grid>
         <div v-if="!files">
           <h2>Select Excel</h2>
-          <input type="file" id="files" ref="files" @change="onFileChange($event)">
-          <a :href="item">Download</a>
+          <input type="file" id="files" ref="files" @change="onFileChange($event)" class="space">
+
           <!-- <a href="" target="_blank">Download</a> -->
           <!-- <form>
             <input type="button" value="Download" onClick="window.location.href='../../../assets/file/excel.xlsx'">
@@ -31,9 +31,24 @@
         </div>
         <div v-else>
           {{files.name}}
-          <button @click="removeexcel">Remove Excel</button>
-          <button @click="exports">Import</button>
+          <a v-on:click="removeexcel" style="padding-left:10px">
+            <font-awesome-icon icon="trash-alt" style="color:grey"></font-awesome-icon>
+          </a>
+          <br>
+          <el-button type="primary" size="mini" @click="exports">
+            Import
+          </el-button>
         </div>
+      </div>
+
+      <div class="uk-margin uk-grid-small" uk-grid>
+        <label style="margin-left:5px;">Download Excel File Template</label>
+        <!-- <a :href="item">Download</a> -->
+      </div>
+      <div style="">
+        <a :href="item" class="el-button el-button--primary el-button--mini decore" size="mini">
+          Download
+        </a>
       </div>
     </div>
   </div>
@@ -123,3 +138,12 @@ export default {
 
 
 </script>
+
+<style lang="scss" scoped>
+.decore {
+  text-decoration: none;
+}
+.space {
+  margin-bottom: 30px;
+}
+</style>

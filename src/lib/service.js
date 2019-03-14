@@ -114,6 +114,9 @@ const manifest = {
   },
   get () {
     return Vue.authHttp().get('/manifest')
+  },
+  find (number) {
+    return Vue.authHttp().get(`/manifest/${number}`)
   }
 }
 

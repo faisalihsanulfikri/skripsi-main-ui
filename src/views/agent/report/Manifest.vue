@@ -49,6 +49,7 @@
               <th></th>
               <th>Manifest Number</th>
               <th>Date</th>
+              <td></td>
             </tr>
           </thead>
           <tbody>
@@ -63,17 +64,24 @@
                 <td @click.prevent="collapseToggle(index)"><a href="#!"
                     class="custom-link-black">{{ manifest.manifest_no }}</a></td>
                 <td>{{ moment(manifest.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
+                <td>
+                  <el-button type="primary" size="mini" @click="printManifest(manifest.manifest_no)">
+                    <font-awesome-icon icon="print"></font-awesome-icon>
+                  </el-button>
+                </td>
                 <!-- <td>{{ awb.awb }}</td>
                 <td>{{ awb.item_count }}</td> -->
               </tr>
               <tr v-show="!manifest.collapse" :key="`${index}_info`">
-                <td colspan="2">
-                  <table>
-                    <tr v-for="(awb , index) in manifest.order_awb">
-                      <td><h5 class="uk-margin-small">AWB {{awb.awb}}</h5></td>
-                      <td><h5 class="uk-margin-small">Receiver {{awb.detail.receiver_name}}</h5></td>
-                      <td><h5 class="uk-margin-small">Address {{awb.detail.receiver_address}}</h5></td>
-                    </tr>
+                <td colspan="3">
+                  <table style="width : 100%">
+                    <template  v-for="(awb , index) in manifest.order_awb">
+                      <tr>
+                        <td><h5 class="uk-margin-small">AWB {{awb.awb}}</h5></td>
+                        <td><h5 class="uk-margin-small">Receiver {{awb.detail.receiver_name}}</h5></td>
+                        <td><h5 class="uk-margin-small">Address {{awb.detail.receiver_address}}</h5></td>
+                      </tr>
+                    </template>
                   </table>
                 </td>
               </tr>
@@ -124,6 +132,13 @@ export default {
     collapseToggle(index) {
       this.manifests[index].collapse = !this.manifests[index].collapse
     },
+    printManifest(code) {
+      window.open(
+        `/print-manifest/${code}`,
+        'Kirimin - Print Manifest',
+        'directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=0,resizable=0,width=800'
+      )
+    }
   }
 }
 </script>
