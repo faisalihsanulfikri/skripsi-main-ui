@@ -58,6 +58,7 @@
                         <p>No payment confirmed.</p>
                       </div>
                     </div>
+                    <!-- 25 -->
                     <table v-else class="uk-table uk-table-small uk-text-small uk-margin-small">
                         <thead>
                           <tr>
@@ -65,15 +66,26 @@
                             <th>Bank</th>
                             <th class="uk-text-right" width="200">Amount (IDR)</th>
                             <th class="uk-text-center" width="150">Status</th>
+                            <th>Payment Receipt</th>
                             <th class="uk-text-center" width="200">Actions</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr v-for="(payment, index) in invoice.payments" :key="index">
                             <td>{{ payment.date }}</td>
-                            <td>{{ payment.bank }}</td>
+                            <td>{{ payment.channel }}</td>
                             <td class="uk-text-right">{{ payment.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
                             <td class="uk-text-center">{{ payment.status }}</td>
+                            <td>
+                              <a
+                                :href="linkdownload+'/receipt/'+payment.id+'/'+payment.filename+'/download'"
+                                class="link"
+                                :data-id="payment.id"
+                                :data-filename="payment.filename"
+                              >
+                              {{ payment.filename }}
+                              </a>
+                            </td>
                             <td class="uk-text-center">
                               <el-button
                                 v-if="payment.status === 'new' || payment.status === 'reject'"
@@ -111,12 +123,14 @@
 export default {
   data () {
     return {
-      invoices: []
+      invoices: [],
+      linkdownload: ''
     }
   },
 
   async created () {
     await this.fetchInvoices()
+    this.linkdownload = process.env.VUE_APP_ROOT_API
   },
 
   methods: {
@@ -184,3 +198,12 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.link {
+  white-space: nowrap;
+  width: 136px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display:block;
+}
+</style>
