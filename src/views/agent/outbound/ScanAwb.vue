@@ -103,7 +103,7 @@ export default {
           }
           this.__stopLoading()
         })
-      } catch (e) {
+      } catch (err) {
         this.__handleError(this, err, true)
         this.__stopLoading()
       }
@@ -125,8 +125,8 @@ export default {
           type: "success"
         })
         this.formats=""
-      } catch (e) {
-        his.__handleError(this, err, true);
+      } catch (err) {
+        this.__handleError(this, err, true);
       }
       this.__stopLoading()
     }
