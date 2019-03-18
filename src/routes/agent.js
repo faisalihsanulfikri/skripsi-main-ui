@@ -7,6 +7,7 @@ import OrderCreate from '../views/agent/order/Entry'
 import OrderInbound from '../views/agent/inbound/Simplified'
 import OrderAdvInbound from '../views/agent/inbound/Advanced'
 import OrderImportInbound from '../views/agent/inbound/Import'
+import OrderExportInbound from '../views/agent/inbound/Export'
 import OrderReport from '../views/agent/report/Order'
 import ScanAwb from '../views/agent/outbound/ScanAwb'
 // import AgentCurrency from '../views/agent/orders/Currency'
@@ -107,6 +108,15 @@ export default {
       auth: true,
       level: [AGENT]
     }
-  }
+  },
+  {
+    path: 'inbound/export',
+    name: 'inbound-export',
+    component: OrderExportInbound,
+    meta: {
+      auth: true,
+      level: [AGENT]
+    }
+  },
   ]
 }

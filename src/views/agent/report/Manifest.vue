@@ -68,6 +68,9 @@
                   <el-button type="primary" size="mini" @click="printManifest(manifest.manifest_no)">
                     <font-awesome-icon icon="print"></font-awesome-icon>
                   </el-button>
+                  <el-button type="default" size="mini" @click="manifestToExcel(manifest.manifest_no)">
+                    <font-awesome-icon icon="cloud-download-alt"></font-awesome-icon>
+                  </el-button>
                 </td>
                 <!-- <td>{{ awb.awb }}</td>
                 <td>{{ awb.item_count }}</td> -->
@@ -96,6 +99,7 @@
 
 <script>
 import moment from 'moment'
+import saveAs from 'file-saver'
 
 export default {
   data () {
@@ -123,6 +127,24 @@ export default {
             collapse : true
           }
         })
+      } catch (err) {
+        this.__handleError(this, err, true)
+      }
+
+      this.__stopLoading()
+    },
+    async manifestToExcel(code){
+      this.__startLoading()
+
+      try {
+        let res = await this.$service.manifest.toExcel(code)
+
+        let content = res.request.getResponseHeader('Content-Disposition')
+        let regexResult = content.match('filename=(.*)')
+        let filename = regexResult[1].replace(new RegExp('"', 'g'), '')
+        let blob = new Blob([res.data])
+        // console.log(res)
+        saveAs(blob, filename)
       } catch (err) {
         this.__handleError(this, err, true)
       }
