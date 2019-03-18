@@ -117,6 +117,12 @@ const manifest = {
   },
   find (number) {
     return Vue.authHttp().get(`/manifest/${number}`)
+  },
+  toExcel (code) {
+    return Vue.authHttp().get(`/manifest/${code}/toExcel`, {
+      code,
+      responseType: 'blob'
+    })
   }
 }
 

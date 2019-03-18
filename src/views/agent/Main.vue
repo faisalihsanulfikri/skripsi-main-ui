@@ -12,6 +12,7 @@
           <el-menu-item index="/agent/inbound/simplified">SIMPLIFIED</el-menu-item>
           <el-menu-item index="/agent/inbound/advanced">ADVANCED</el-menu-item>
           <el-menu-item index="/agent/inbound/import">IMPORT ORDER</el-menu-item>
+          <el-menu-item index="/agent/inbound/export">EXPORT ORDER</el-menu-item>
         </el-submenu>
 
         <el-submenu index="/agent/order">
