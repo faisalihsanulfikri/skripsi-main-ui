@@ -27,6 +27,10 @@ const awb = {
   },
   find_number (code) {
     return Vue.authHttp().get(`/awb_number/${code}`)
+  },
+  scan (code) {
+    // console.log(code)
+    return Vue.authHttp().get(`/scan/${code}`)
   }
 }
 
@@ -101,6 +105,24 @@ const invoice = {
   },
   createPayment (code, data = {}) {
     return Vue.authHttp().post(`/invoices/${code}/payments`, data)
+  }
+}
+
+const manifest = {
+  create (data = {}) {
+    return Vue.authHttp().post('/manifest/', data)
+  },
+  get () {
+    return Vue.authHttp().get('/manifest')
+  },
+  find (number) {
+    return Vue.authHttp().get(`/manifest/${number}`)
+  },
+  toExcel (code) {
+    return Vue.authHttp().get(`/manifest/${code}/toExcel`, {
+      code,
+      responseType: 'blob'
+    })
   }
 }
 
@@ -219,6 +241,7 @@ const services = {
   chart,
   config,
   invoice,
+  manifest,
   order,
   orderAirWaybill,
   payment,

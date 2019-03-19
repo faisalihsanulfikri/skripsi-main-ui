@@ -7,6 +7,7 @@ import AgentRoutes from './routes/agent'
 import UserRoutes from './routes/user'
 
 import { PrintAwb } from './routes/print'
+import { PrintManifest } from './routes/print'
 
 import navigationGuard from './lib/navigation-guard'
 
@@ -22,7 +23,7 @@ const router = new Router({
     AdminRoutes,
     AgentRoutes,
     UserRoutes,
-
+    PrintManifest,
     PrintAwb
   ]
 })
