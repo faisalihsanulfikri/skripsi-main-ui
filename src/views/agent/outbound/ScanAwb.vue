@@ -93,24 +93,15 @@ export default {
      async scan () {
       this.__startLoading()
       try {
-        return this.$service.awb.scan(this.code)
+        return await this.$service.awb.scan(this.code)
         .then(res => {
-            console.log(res);
-            if (res.error==1){
-                this.$notify({
-                    title: 'ERROR',
-                    message: res.message,
-                    type: 'error'
-                })
-            } else {
-              var count = this.formats.filter(el=>{
-                return el.awb == this.code
-              })
-              if(res.data.data.length>0 && count==0){
-                this.formats.push({ awb: res.data.data[0].awb, name: res.data.data[0].detail.receiver_name, address:res.data.data[0].detail.receiver_address, checked:true })
-              }
-              this.__stopLoading()
-            }
+          var count = this.formats.filter(el=>{
+            return el.awb == this.code
+          })
+          if(res.data.data.length>0 && count==0){
+            this.formats.push({ awb: res.data.data[0].awb, name: res.data.data[0].detail.receiver_name, address:res.data.data[0].detail.receiver_address, checked:true })
+          }
+          this.__stopLoading()
         })
       } catch (err) {
         this.__handleError(this, err, true)
