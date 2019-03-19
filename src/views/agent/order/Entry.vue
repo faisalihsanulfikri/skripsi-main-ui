@@ -721,10 +721,6 @@ export default {
       this.input.customerName = user.name;
       this.input.customerEmail = user.email;
 
-      // console.log(this.input.customer);
-      // console.log(user);
-      console.log(this.input.customerEmail);
-
       try {
         let res = await this.$service.user.getAddressesById(user.id);
 
