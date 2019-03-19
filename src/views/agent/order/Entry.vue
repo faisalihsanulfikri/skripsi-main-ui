@@ -527,7 +527,9 @@ export default {
       },
       input: {
         customer: "",
+        customerName: "",
         customerString: "",
+        customerEmail: "",
         customerAddress: "",
         warehouse: "",
         destination: "",
@@ -716,6 +718,8 @@ export default {
     },
     async onUserSelected(user) {
       this.input.customer = user.id;
+      this.input.customerName = user.name;
+      this.input.customerEmail = user.email;
 
       try {
         let res = await this.$service.user.getAddressesById(user.id);
@@ -767,11 +771,14 @@ export default {
         let items = res.data.data.map(item => {
           return {
             value: `${item.code} - ${item.name}`,
-            id: item.id
+            id: item.id,
+            email: item.email,
+            name: item.name
           };
         });
 
         cb(items);
+        // console.log(items[0].email);
       } catch (err) {
         this.__handleError(this, err, true);
       }

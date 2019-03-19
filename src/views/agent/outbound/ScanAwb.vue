@@ -93,7 +93,7 @@ export default {
      async scan () {
       this.__startLoading()
       try {
-        return this.$service.awb.scan(this.code)
+        return await this.$service.awb.scan(this.code)
         .then(res => {
           var count = this.formats.filter(el=>{
             return el.awb == this.code
