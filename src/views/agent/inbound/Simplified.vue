@@ -239,7 +239,12 @@
               </a>
             </li>
             <li v-for="(page, i) in totalPages" :key="i">
-              <a href="#" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+              <div v-if="current_page-1 == i">
+                <a href="#" style="color:red" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+              </div>
+              <div v-else>
+                <a href="#" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+              </div>
             </li>
             <li>
               <a href="#">
@@ -314,7 +319,7 @@ export default {
 
   methods: {
     onChangePagination(i) {
-      console.log("test", i + 1);
+      // console.log("test", i + 1);
       this.fetchOrders(i + 1);
     },
     onLoadDataPagination() {},
@@ -486,23 +491,10 @@ export default {
 
         this.pagination.last_page = res.data.last_page;
 
-        // console.log("resdata", res.data);
         this.totalPages = res.data.pages;
+        this.current_page = page;
 
-        // let page = this.pagination.last_page;
-
-        // for (let i = 0; i < page; i++) {
-        //   // pages.push(i.toString());
-        //   console.log("push", i + 1);
-        //   pages.push(i);
-        //   // pages[i] = i + 1;
-        // }
-
-        // console.log("pages", pages);
-
-        // console.log("last_page", this.pagination.last_page);
-        // console.log("resdata", res.data);
-        // console.log("resdata2", res.data.data);
+        console.log(this.current_page);
 
         this.orders = res.data.data.map(order => {
           order["collapse"] = true;
