@@ -29,16 +29,16 @@
           <div class="uk-width-auto">
             <el-button type="default" @click="fetchOrderReport">Filter</el-button>
           </div>
-          <div class="uk-width-auto">
+          <div class="uk-width-1-1" style="padding-top:10px">
 
             <el-button type="default" @click="exportReportXLSX">
               <font-awesome-icon icon="file-excel"></font-awesome-icon>
+              Download XLSX
             </el-button>
-            XLSX
             <el-button type="default" @click="exportReportCSV">
               <font-awesome-icon icon="file-excel"></font-awesome-icon>
+              Download CSV
             </el-button>
-            CSV
           </div>
         </div>
       </div>

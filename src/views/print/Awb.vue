@@ -134,7 +134,7 @@ export default {
 <style lang="scss" scoped>
 .print-wrapper {
   background-color: #FFF;
-  height: 100vh;
+  height: 100%;
   padding: 20px;
 
   .print-content {
