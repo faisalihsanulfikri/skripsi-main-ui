@@ -29,6 +29,12 @@
           <div class="uk-width-auto">
             <el-button type="default" @click="fetchOrderReport">Filter</el-button>
           </div>
+          <div class="uk-width-1-3 uk-margin-auto-left">
+            <el-input v-model="filter.search" placeholder="Search...">
+              <el-button slot="append" icon="el-icon-search" @click="fetchOrderReport">
+              </el-button>
+            </el-input>
+          </div>
           <div class="uk-width-1-1" style="padding-top:10px">
 
             <el-button type="default" @click="exportReportXLSX">
@@ -81,7 +87,8 @@
       return {
         orders: [],
         filter: {
-          time: []
+          time: [],
+          search: ''
         }
       }
     },
