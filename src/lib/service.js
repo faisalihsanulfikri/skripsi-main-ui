@@ -160,13 +160,8 @@ const payment = {
 }
 
 const report = {
-<<<<<<< HEAD
-  airWaybill(params = {}) {
-    return Vue.authHttp().get('/reports/air-waybill', {
-=======
   airWaybill(params = {}, page) {
     return Vue.authHttp().get('/reports/air-waybill?page=' + page, {
->>>>>>> fix-dev
       params
     })
   },
@@ -176,13 +171,8 @@ const report = {
       responseType: 'blob'
     })
   },
-<<<<<<< HEAD
-  order(params = {}) {
-    return Vue.authHttp().get('/reports/order', {
-=======
   order(params = {}, page) {
     return Vue.authHttp().get('/reports/order?page=' + page, {
->>>>>>> fix-dev
       params
     })
   },

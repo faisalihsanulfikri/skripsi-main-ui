@@ -34,15 +34,6 @@
           <div class="uk-width-auto">
             <el-button type="default" @click="fetchOrderReport">Filter</el-button>
           </div>
-<<<<<<< HEAD
-          <div class="uk-width-auto">
-            <el-button type="default" @click="exportReportXLSX">
-              <font-awesome-icon icon="file-excel"></font-awesome-icon>
-            </el-button>XLSX
-            <el-button type="default" @click="exportReportCSV">
-              <font-awesome-icon icon="file-excel"></font-awesome-icon>
-            </el-button>CSV
-=======
           <div class="uk-width-1-1" style="padding-top:10px">
             <el-button type="default" @click="exportReportXLSX">
               <font-awesome-icon icon="file-excel"></font-awesome-icon>Download XLSX
@@ -50,7 +41,6 @@
             <el-button type="default" @click="exportReportCSV">
               <font-awesome-icon icon="file-excel"></font-awesome-icon>Download CSV
             </el-button>
->>>>>>> fix-dev
           </div>
         </div>
       </div>
@@ -116,58 +106,6 @@ import saveAs from "file-saver";
 export default {
   data() {
     return {
-<<<<<<< HEAD
-      orders: [],
-      filter: {
-        time: []
-      }
-    };
-  },
-
-  created() {
-    this.filter.time = [
-      moment()
-        .startOf("month")
-        .format("YYYY-MM-DD"),
-      moment()
-        .endOf("month")
-        .format("YYYY-MM-DD")
-    ];
-
-    this.fetchOrderReport();
-  },
-
-  methods: {
-    async exportReportCSV() {
-      this.__startLoading();
-
-      try {
-        let res = await this.$service.report.orderExportCSV(this.filter);
-
-        let content = res.request.getResponseHeader("Content-Disposition");
-        let regexResult = content.match("filename=(.*)");
-        let filename = regexResult[1].replace(new RegExp('"', "g"), "");
-        let blob = new Blob([res.data]);
-
-        saveAs(blob, filename);
-      } catch (err) {
-        this.__handleError(this, err, true);
-      }
-
-      this.__stopLoading();
-    },
-    async exportReportXLSX() {
-      this.__startLoading();
-
-      try {
-        let res = await this.$service.report.orderExportXLSX(this.filter);
-
-        let content = res.request.getResponseHeader("Content-Disposition");
-        let regexResult = content.match("filename=(.*)");
-        let filename = regexResult[1].replace(new RegExp('"', "g"), "");
-        let blob = new Blob([res.data]);
-
-=======
       totalPages: ["1"],
       pagination: {
         total: 0,
@@ -229,23 +167,10 @@ export default {
         let filename = regexResult[1].replace(new RegExp('"', "g"), "");
         let blob = new Blob([res.data.data]);
 
->>>>>>> fix-dev
         saveAs(blob, filename);
       } catch (err) {
         this.__handleError(this, err, true);
       }
-<<<<<<< HEAD
-
-      this.__stopLoading();
-    },
-    async fetchOrderReport() {
-      this.__startLoading();
-
-      try {
-        let res = await this.$service.report.order(this.filter);
-
-        this.orders = res.data;
-=======
 
       this.__stopLoading();
     },
@@ -267,7 +192,6 @@ export default {
         console.log(this.current_page);
 
         this.orders = res.data.data;
->>>>>>> fix-dev
       } catch (err) {
         this.__handleError(this, err, true);
       }
