@@ -34,13 +34,18 @@
           <div class="uk-width-auto">
             <el-button type="default" @click="fetchOrderReport">Filter</el-button>
           </div>
-          <div class="uk-width-auto">
+          <div class="uk-width-1-3 uk-margin-auto-left">
+            <el-input v-model="filter.search" placeholder="Search...">
+              <el-button slot="append" icon="el-icon-search" @click="fetchOrderReport"></el-button>
+            </el-input>
+          </div>
+          <div class="uk-width-1-1" style="padding-top:10px">
             <el-button type="default" @click="exportReportXLSX">
-              <font-awesome-icon icon="file-excel"></font-awesome-icon>
-            </el-button>XLSX
+              <font-awesome-icon icon="file-excel"></font-awesome-icon>Download XLSX
+            </el-button>
             <el-button type="default" @click="exportReportCSV">
-              <font-awesome-icon icon="file-excel"></font-awesome-icon>
-            </el-button>CSV
+              <font-awesome-icon icon="file-excel"></font-awesome-icon>Download CSV
+            </el-button>
           </div>
         </div>
       </div>
@@ -83,7 +88,8 @@ export default {
     return {
       orders: [],
       filter: {
-        time: []
+        time: [],
+        search: ""
       }
     };
   },

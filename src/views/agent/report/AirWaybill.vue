@@ -40,6 +40,12 @@
               <font-awesome-icon icon="file-excel"></font-awesome-icon>
             </el-button>
           </div>
+          <div class="uk-width-1-3 uk-margin-auto-left">
+            <el-input v-model="filter.search" placeholder="Search...">
+              <el-button slot="append" icon="el-icon-search" @click="fetchAirWaybills">
+              </el-button>
+            </el-input>
+          </div>
         </div>
       </div>
       <div class="uk-overflow-auto">
@@ -75,7 +81,8 @@ export default {
     return {
       airWaybills: [],
       filter: {
-        time: []
+        time: [],
+        search: ''
       }
     }
   },
