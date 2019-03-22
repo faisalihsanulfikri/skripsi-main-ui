@@ -14,8 +14,7 @@
             </h3>
           </div>
         </div>
-        <div class="uk-width-auto">
-        </div>
+        <div class="uk-width-auto"></div>
       </div>
     </div>
     <div class="uk-card-body uk-card-small">
@@ -29,8 +28,8 @@
               value-format="yyyy-MM-dd"
               range-separator="To"
               start-placeholder="Start date"
-              end-placeholder="End date">
-            </el-date-picker>
+              end-placeholder="End date"
+            ></el-date-picker>
           </div>
           <div class="uk-width-auto">
             <el-button type="default" @click="fetchAirWaybills">Filter</el-button>
@@ -62,65 +61,116 @@
           </tbody>
         </table>
       </div>
+
+      <!-- pagination -->
+      <div>
+        <ul class="uk-pagination" uk-margin>
+          <li>
+            <a href="#">
+              <span uk-pagination-previous></span>
+            </a>
+          </li>
+          <li v-for="(page, i) in totalPages" :key="i">
+            <div v-if="current_page-1 == i">
+              <a href="#" style="color:red" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+            </div>
+            <div v-else>
+              <a href="#" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+            </div>
+          </li>
+          <li>
+            <a href="#">
+              <span uk-pagination-next></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- end pagination -->
     </div>
   </div>
 </template>
 
 <script>
-import moment from 'moment'
-import saveAs from 'file-saver'
+import moment from "moment";
+import saveAs from "file-saver";
 
 export default {
-  data () {
+  data() {
     return {
+      totalPages: ["1"],
+      pagination: {
+        total: 0,
+        current_page: 1,
+        last_page: 0,
+        page: 0
+      },
       airWaybills: [],
       filter: {
         time: []
       }
-    }
+    };
   },
 
-  created () {
+  created() {
     this.filter.time = [
-      moment().startOf('month').format('YYYY-MM-DD'),
-      moment().endOf('month').format('YYYY-MM-DD')
-    ]
+      moment()
+        .startOf("month")
+        .format("YYYY-MM-DD"),
+      moment()
+        .endOf("month")
+        .format("YYYY-MM-DD")
+    ];
 
-    this.fetchAirWaybills()
+    this.fetchAirWaybills(this.pagination.page);
   },
 
   methods: {
-    async exportReport () {
-      this.__startLoading()
-
-      try {
-        let res = await this.$service.report.airWaybillExport(this.filter)
-
-        let content = res.request.getResponseHeader('Content-Disposition')
-        let regexResult = content.match('filename=(.*)')
-        let filename = regexResult[1].replace(new RegExp('"', 'g'), '')
-        let blob = new Blob([res.data])
-
-        saveAs(blob, filename)
-      } catch (err) {
-        this.__handleError(this, err, true)
-      }
-
-      this.__stopLoading()
+    onChangePagination(i) {
+      // console.log("test", i + 1);
+      this.fetchAirWaybills(i + 1);
     },
-    async fetchAirWaybills () {
-      this.__startLoading()
+    async exportReport() {
+      this.__startLoading();
 
       try {
-        let res = await this.$service.report.airWaybill(this.filter)
+        let res = await this.$service.report.airWaybillExport(this.filter);
 
-        this.airWaybills = res.data
+        let content = res.request.getResponseHeader("Content-Disposition");
+        let regexResult = content.match("filename=(.*)");
+        let filename = regexResult[1].replace(new RegExp('"', "g"), "");
+        let blob = new Blob([res.data.data]);
+
+        saveAs(blob, filename);
       } catch (err) {
-        this.__handleError(this, err, true)
+        this.__handleError(this, err, true);
       }
 
-      this.__stopLoading()
+      this.__stopLoading();
+    },
+    async fetchAirWaybills(page) {
+      this.__startLoading();
+
+      this.pagination.page = page;
+
+      // console.log("page", this.pagination.page);
+
+      try {
+        let res = await this.$service.report.airWaybill(this.filter, page);
+
+        this.pagination.last_page = res.data.last_page;
+
+        this.totalPages = res.data.pages;
+        this.current_page = page;
+
+        console.log(this.current_page);
+
+        this.airWaybills = res.data.data;
+      } catch (err) {
+        this.__handleError(this, err, true);
+      }
+
+      this.__stopLoading();
     }
   }
-}
+};
 </script>
