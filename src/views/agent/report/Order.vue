@@ -70,31 +70,6 @@
           </tbody>
         </table>
       </div>
-
-      <!-- pagination -->
-      <div>
-        <ul class="uk-pagination" uk-margin>
-          <li>
-            <a href="#">
-              <span uk-pagination-previous></span>
-            </a>
-          </li>
-          <li v-for="(page, i) in totalPages" :key="i">
-            <div v-if="current_page-1 == i">
-              <a href="#" style="color:red" @click.prevent="onChangePagination(i)">{{i+1}}</a>
-            </div>
-            <div v-else>
-              <a href="#" @click.prevent="onChangePagination(i)">{{i+1}}</a>
-            </div>
-          </li>
-          <li>
-            <a href="#">
-              <span uk-pagination-next></span>
-            </a>
-          </li>
-        </ul>
-      </div>
-      <!-- end pagination -->
     </div>
   </div>
 </template>
