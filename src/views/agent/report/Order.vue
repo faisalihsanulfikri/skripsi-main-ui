@@ -34,6 +34,7 @@
           <div class="uk-width-auto">
             <el-button type="default" @click="fetchOrderReport">Filter</el-button>
           </div>
+<<<<<<< HEAD
           <div class="uk-width-auto">
             <el-button type="default" @click="exportReportXLSX">
               <font-awesome-icon icon="file-excel"></font-awesome-icon>
@@ -41,6 +42,15 @@
             <el-button type="default" @click="exportReportCSV">
               <font-awesome-icon icon="file-excel"></font-awesome-icon>
             </el-button>CSV
+=======
+          <div class="uk-width-1-1" style="padding-top:10px">
+            <el-button type="default" @click="exportReportXLSX">
+              <font-awesome-icon icon="file-excel"></font-awesome-icon>Download XLSX
+            </el-button>
+            <el-button type="default" @click="exportReportCSV">
+              <font-awesome-icon icon="file-excel"></font-awesome-icon>Download CSV
+            </el-button>
+>>>>>>> fix-dev
           </div>
         </div>
       </div>
@@ -70,6 +80,31 @@
           </tbody>
         </table>
       </div>
+
+      <!-- pagination -->
+      <div>
+        <ul class="uk-pagination" uk-margin>
+          <li>
+            <a href="#">
+              <span uk-pagination-previous></span>
+            </a>
+          </li>
+          <li v-for="(page, i) in totalPages" :key="i">
+            <div v-if="current_page-1 == i">
+              <a href="#" style="color:red" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+            </div>
+            <div v-else>
+              <a href="#" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+            </div>
+          </li>
+          <li>
+            <a href="#">
+              <span uk-pagination-next></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- end pagination -->
     </div>
   </div>
 </template>
@@ -81,6 +116,7 @@ import saveAs from "file-saver";
 export default {
   data() {
     return {
+<<<<<<< HEAD
       orders: [],
       filter: {
         time: []
@@ -131,10 +167,74 @@ export default {
         let filename = regexResult[1].replace(new RegExp('"', "g"), "");
         let blob = new Blob([res.data]);
 
+=======
+      totalPages: ["1"],
+      pagination: {
+        total: 0,
+        current_page: 1,
+        last_page: 0,
+        page: 0
+      },
+      orders: [],
+      filter: {
+        time: []
+      }
+    };
+  },
+
+  created() {
+    this.filter.time = [
+      moment()
+        .startOf("month")
+        .format("YYYY-MM-DD"),
+      moment()
+        .endOf("month")
+        .format("YYYY-MM-DD")
+    ];
+
+    this.fetchOrderReport(this.pagination.page);
+  },
+
+  methods: {
+    onChangePagination(i) {
+      // console.log("test", i + 1);
+      this.fetchOrderReport(i + 1);
+    },
+    async exportReportCSV() {
+      this.__startLoading();
+
+      try {
+        let res = await this.$service.report.orderExportCSV(this.filter);
+
+        let content = res.request.getResponseHeader("Content-Disposition");
+        let regexResult = content.match("filename=(.*)");
+        let filename = regexResult[1].replace(new RegExp('"', "g"), "");
+        let blob = new Blob([res.data.data]);
+
         saveAs(blob, filename);
       } catch (err) {
         this.__handleError(this, err, true);
       }
+
+      this.__stopLoading();
+    },
+    async exportReportXLSX() {
+      this.__startLoading();
+
+      try {
+        let res = await this.$service.report.orderExportXLSX(this.filter);
+
+        let content = res.request.getResponseHeader("Content-Disposition");
+        let regexResult = content.match("filename=(.*)");
+        let filename = regexResult[1].replace(new RegExp('"', "g"), "");
+        let blob = new Blob([res.data.data]);
+
+>>>>>>> fix-dev
+        saveAs(blob, filename);
+      } catch (err) {
+        this.__handleError(this, err, true);
+      }
+<<<<<<< HEAD
 
       this.__stopLoading();
     },
@@ -145,6 +245,29 @@ export default {
         let res = await this.$service.report.order(this.filter);
 
         this.orders = res.data;
+=======
+
+      this.__stopLoading();
+    },
+    async fetchOrderReport(page) {
+      this.__startLoading();
+
+      this.pagination.page = page;
+
+      // console.log("page", this.pagination.page);
+
+      try {
+        let res = await this.$service.report.order(this.filter, page);
+
+        this.pagination.last_page = res.data.last_page;
+
+        this.totalPages = res.data.pages;
+        this.current_page = page;
+
+        console.log(this.current_page);
+
+        this.orders = res.data.data;
+>>>>>>> fix-dev
       } catch (err) {
         this.__handleError(this, err, true);
       }

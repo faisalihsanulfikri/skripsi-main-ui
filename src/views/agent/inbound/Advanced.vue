@@ -180,11 +180,30 @@
         </template>
       </div>
 
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
+      <!-- pagination -->
+      <div>
+        <ul class="uk-pagination" uk-margin>
+          <li>
+            <a href="#">
+              <span uk-pagination-previous></span>
+            </a>
+          </li>
+          <li v-for="(page, i) in totalPages" :key="i">
+            <div v-if="current_page-1 == i">
+              <a href="#" style="color:red" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+            </div>
+            <div v-else>
+              <a href="#" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+            </div>
+          </li>
+          <li>
+            <a href="#">
+              <span uk-pagination-next></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- end pagination -->
     </div>
 
     <dialog-create-awb
@@ -217,9 +236,12 @@ export default {
       orders: [],
       // order: [],
       awb: [],
+      totalPages: ["1"],
       pagination: {
         total: 0,
-        current_page: 1
+        current_page: 1,
+        last_page: 0,
+        page: 0
       },
       filter: {
         time: [],
@@ -249,6 +271,10 @@ export default {
   },
 
   methods: {
+    onChangePagination(i) {
+      // console.log("test", i + 1);
+      this.fetchOrders(i + 1);
+    },
     onSearchEnter() {
       window.addEventListener("keyup", event => {
         if (event.keyCode === 13) {
@@ -259,7 +285,7 @@ export default {
             //   type: "warning"
             // });
           } else {
-            this.fetchOrders();
+            this.fetchOrders(this.pagination.page);
           }
         }
       });
@@ -273,7 +299,7 @@ export default {
           type: "warning"
         });
       } else {
-        this.fetchOrders();
+        this.fetchOrders(this.pagination.page);
       }
     },
 
@@ -427,14 +453,28 @@ export default {
 
       return $items;
     },
-    async fetchOrders() {
+    async fetchOrders(page) {
       this.__startLoading();
 
+      this.pagination.page = page;
+
+      // console.log("page", this.pagination.page);
+
       try {
-        let res = await this.$service.order.get({
-          search: this.filter.search,
-          time: this.filter.time
-        });
+        let res = await this.$service.order.get(
+          {
+            search: this.filter.search,
+            time: this.filter.time
+          },
+          page
+        );
+
+        this.pagination.last_page = res.data.last_page;
+
+        this.totalPages = res.data.pages;
+        this.current_page = page;
+
+        console.log(this.current_page);
 
         this.orders = res.data.data.map(order => {
           order["collapse"] = true;
