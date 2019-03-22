@@ -34,13 +34,13 @@
           <div class="uk-width-auto">
             <el-button type="default" @click="fetchOrderReport">Filter</el-button>
           </div>
-          <div class="uk-width-1-1" style="padding-top:10px">
+          <div class="uk-width-auto">
             <el-button type="default" @click="exportReportXLSX">
-              <font-awesome-icon icon="file-excel"></font-awesome-icon>Download XLSX
-            </el-button>
+              <font-awesome-icon icon="file-excel"></font-awesome-icon>
+            </el-button>XLSX
             <el-button type="default" @click="exportReportCSV">
-              <font-awesome-icon icon="file-excel"></font-awesome-icon>Download CSV
-            </el-button>
+              <font-awesome-icon icon="file-excel"></font-awesome-icon>
+            </el-button>CSV
           </div>
         </div>
       </div>
@@ -106,13 +106,6 @@ import saveAs from "file-saver";
 export default {
   data() {
     return {
-      totalPages: ["1"],
-      pagination: {
-        total: 0,
-        current_page: 1,
-        last_page: 0,
-        page: 0
-      },
       orders: [],
       filter: {
         time: []
@@ -130,14 +123,10 @@ export default {
         .format("YYYY-MM-DD")
     ];
 
-    this.fetchOrderReport(this.pagination.page);
+    this.fetchOrderReport();
   },
 
   methods: {
-    onChangePagination(i) {
-      // console.log("test", i + 1);
-      this.fetchOrderReport(i + 1);
-    },
     async exportReportCSV() {
       this.__startLoading();
 
@@ -147,7 +136,7 @@ export default {
         let content = res.request.getResponseHeader("Content-Disposition");
         let regexResult = content.match("filename=(.*)");
         let filename = regexResult[1].replace(new RegExp('"', "g"), "");
-        let blob = new Blob([res.data.data]);
+        let blob = new Blob([res.data]);
 
         saveAs(blob, filename);
       } catch (err) {
@@ -165,7 +154,7 @@ export default {
         let content = res.request.getResponseHeader("Content-Disposition");
         let regexResult = content.match("filename=(.*)");
         let filename = regexResult[1].replace(new RegExp('"', "g"), "");
-        let blob = new Blob([res.data.data]);
+        let blob = new Blob([res.data]);
 
         saveAs(blob, filename);
       } catch (err) {
@@ -174,24 +163,13 @@ export default {
 
       this.__stopLoading();
     },
-    async fetchOrderReport(page) {
+    async fetchOrderReport() {
       this.__startLoading();
 
-      this.pagination.page = page;
-
-      // console.log("page", this.pagination.page);
-
       try {
-        let res = await this.$service.report.order(this.filter, page);
+        let res = await this.$service.report.order(this.filter);
 
-        this.pagination.last_page = res.data.last_page;
-
-        this.totalPages = res.data.pages;
-        this.current_page = page;
-
-        console.log(this.current_page);
-
-        this.orders = res.data.data;
+        this.orders = res.data;
       } catch (err) {
         this.__handleError(this, err, true);
       }
