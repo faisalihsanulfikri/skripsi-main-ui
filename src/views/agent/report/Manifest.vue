@@ -205,7 +205,7 @@ export default {
         let content = res.request.getResponseHeader("Content-Disposition");
         let regexResult = content.match("filename=(.*)");
         let filename = regexResult[1].replace(new RegExp('"', "g"), "");
-        let blob = new Blob([res.data.data]);
+        let blob = new Blob([res.data]);
         // console.log(res)
         saveAs(blob, filename);
       } catch (err) {
