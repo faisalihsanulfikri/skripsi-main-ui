@@ -131,6 +131,10 @@ export default {
         let filename = regexResult[1].replace(new RegExp('"', "g"), "");
         let blob = new Blob([res.data]);
 
+        console.log("content", content);
+        console.log("regexResult", regexResult);
+        console.log("filename", filename);
+
         saveAs(blob, filename);
       } catch (err) {
         this.__handleError(this, err, true);
@@ -142,7 +146,17 @@ export default {
       this.__startLoading();
 
       try {
-        let res = await this.$service.report.order(this.filter);
+        let res = await this.$service.report.order(this.filter, page);
+
+        this.pagination.last_page = res.data.last_page;
+
+        this.totalPages = res.data.pages;
+        this.current_page = page;
+
+        console.log(res);
+        console.log(res.data);
+
+        console.log(this.current_page);
 
         this.orders = res.data;
       } catch (err) {

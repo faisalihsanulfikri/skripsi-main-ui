@@ -41,8 +41,7 @@
           </div>
           <div class="uk-width-1-3 uk-margin-auto-left">
             <el-input v-model="filter.search" placeholder="Search...">
-              <el-button slot="append" icon="el-icon-search" @click="fetchAirWaybills">
-              </el-button>
+              <el-button slot="append" icon="el-icon-search" @click="fetchAirWaybills"></el-button>
             </el-input>
           </div>
         </div>
@@ -113,7 +112,7 @@ export default {
       airWaybills: [],
       filter: {
         time: [],
-        search: ''
+        search: ""
       }
     };
   },
