@@ -181,7 +181,9 @@
       </div>
 
       <!-- pagination -->
-      <div>
+      <div v-if="this.totalPages.length < 2"></div>
+
+      <div v-else>
         <ul class="uk-pagination" uk-margin>
           <li>
             <a href="#">

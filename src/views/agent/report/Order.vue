@@ -70,6 +70,32 @@
           </tbody>
         </table>
       </div>
+      <!-- pagination -->
+      <div v-if="this.totalPages.length < 2"></div>
+
+      <div v-else>
+        <ul class="uk-pagination" uk-margin>
+          <li>
+            <a href="#">
+              <span uk-pagination-previous></span>
+            </a>
+          </li>
+          <li v-for="(page, i) in totalPages" :key="i">
+            <div v-if="current_page-1 == i">
+              <a href="#" style="color:red" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+            </div>
+            <div v-else>
+              <a href="#" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+            </div>
+          </li>
+          <li>
+            <a href="#">
+              <span uk-pagination-next></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- end pagination -->
     </div>
   </div>
 </template>
@@ -82,6 +108,13 @@ export default {
   data() {
     return {
       orders: [],
+      totalPages: ["1"],
+      pagination: {
+        total: 0,
+        current_page: 1,
+        last_page: 0,
+        page: 0
+      },
       filter: {
         time: []
       }
@@ -98,10 +131,14 @@ export default {
         .format("YYYY-MM-DD")
     ];
 
-    this.fetchOrderReport();
+    this.fetchOrderReport(this.pagination.page);
   },
 
   methods: {
+    onChangePagination(i) {
+      // console.log("test", i + 1);
+      this.fetchOrderReport(i + 1);
+    },
     async exportReportCSV() {
       this.__startLoading();
 
@@ -142,7 +179,7 @@ export default {
 
       this.__stopLoading();
     },
-    async fetchOrderReport() {
+    async fetchOrderReport(page) {
       this.__startLoading();
 
       try {
@@ -153,12 +190,9 @@ export default {
         this.totalPages = res.data.pages;
         this.current_page = page;
 
-        console.log(res);
-        console.log(res.data);
+        // console.log(this.totalPages.length);
 
-        console.log(this.current_page);
-
-        this.orders = res.data;
+        this.orders = res.data.data;
       } catch (err) {
         this.__handleError(this, err, true);
       }
