@@ -16,6 +16,24 @@
         </div>
       </div>
     </div>
+
+      <div class="uk-card-body uk-card-small">
+        <div class="uk-margin uk-grid-small" uk-grid>
+          <div class="uk-width-auto">
+            <el-date-picker v-model="filter.time" type="daterange" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+              range-separator="To" start-placeholder="Start date" end-placeholder="End date">
+            </el-date-picker>
+            <el-button slot="append" icon="el-icon-search" @click="fetchInvoices">
+            </el-button>
+          </div>
+          <div class="uk-width-1-3 uk-margin-auto-left">
+            <el-input v-model="filter.search" placeholder="Search...">
+              <el-button slot="append" icon="el-icon-search" @click="fetchInvoices">
+              </el-button>
+            </el-input>
+          </div>
+        </div>
+      </div>
     <div class="uk-card-body uk-card-small">
       <div class="uk-overflow-auto">
         <table class="uk-table uk-table-divider uk-table-small">
@@ -120,13 +138,19 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   data () {
     return {
       invoices: [],
-      linkdownload: ''
+      linkdownload: '',
+      filter: {
+        time: [],
+        search: ''
+      },
     }
-  },
+
+},
 
   async created () {
     await this.fetchInvoices()
@@ -155,7 +179,10 @@ export default {
       this.__startLoading()
 
       try {
-        let res = await this.$service.invoice.get()
+        let res = await this.$service.invoice.get({
+          search: this.filter.search,
+          time: this.filter.time
+        })
 
         this.invoices = res.data.data.map(invoice => {
           invoice['collapse'] = true
