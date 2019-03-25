@@ -15,16 +15,26 @@
             </h3>
           </div>
         </div>
-        <div class="uk-width-auto">
-        </div>
+        <div class="uk-width-auto"></div>
       </div>
     </div>
     <div class="uk-card-body uk-card-small">
       <div class="uk-margin uk-grid-small" uk-grid>
+        <div class="uk-width-auto">
+          <el-date-picker
+            v-model="filter.time"
+            type="daterange"
+            format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd"
+            range-separator="To"
+            start-placeholder="Start date"
+            end-placeholder="End date"
+          ></el-date-picker>
+          <el-button slot="append" icon="el-icon-search" @click="fetchOrders"></el-button>
+        </div>
         <div class="uk-width-1-3 uk-margin-auto-left">
           <el-input v-model="filter.search" placeholder="Search...">
-            <el-button slot="append" icon="el-icon-search" @click="fetchOrders">
-            </el-button>
+            <el-button slot="append" icon="el-icon-search" @click="fetchOrders"></el-button>
           </el-input>
         </div>
       </div>
@@ -43,18 +53,26 @@
           <tbody>
             <template v-for="(order, orderIndex) in orders">
               <tr :key="orderIndex">
-                <td class="app--table-column__collapse-toggle" @click.prevent="collapseToggle(orderIndex)">
+                <td
+                  class="app--table-column__collapse-toggle"
+                  @click.prevent="collapseToggle(orderIndex)"
+                >
                   <a href="#">
                     <font-awesome-icon v-if="order.collapse" icon="angle-right"></font-awesome-icon>
                     <font-awesome-icon v-else icon="angle-down"></font-awesome-icon>
                   </a>
                 </td>
-                <td class="app--table-column__collapse-toggle" @click.prevent="collapseToggle(orderIndex)"><a href="#">{{ order.code }}</a></td>
+                <td
+                  class="app--table-column__collapse-toggle"
+                  @click.prevent="collapseToggle(orderIndex)"
+                >
+                  <a href="#">{{ order.code }}</a>
+                </td>
                 <td>{{ moment(order.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
                 <td>{{ order.user.name }}</td>
-                <td class="uk-text-right">
-                  {{ order.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-                </td>
+                <td
+                  class="uk-text-right"
+                >{{ order.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
                 <td class="uk-text-center">{{ order.status }}</td>
               </tr>
               <tr v-show="!order.collapse" :key="`${orderIndex}_info`">
@@ -73,9 +91,9 @@
                       <div class="uk-padding-small">
                         <div class="app--list-text">{{ order.receiver.name }}</div>
                         <div class="app--list-text">{{ order.receiver.address }}</div>
-                        <div class="app--list-text">
-                          {{ order.receiver.sub_district }}, {{ order.receiver.city }} {{ order.receiver.postal_code }}
-                        </div>
+                        <div
+                          class="app--list-text"
+                        >{{ order.receiver.sub_district }}, {{ order.receiver.city }} {{ order.receiver.postal_code }}</div>
                         <div class="app--list-text">{{ order.receiver.province }}</div>
                         <div class="app--list-text">{{ order.receiver.phone }}</div>
                       </div>
@@ -98,14 +116,19 @@
                       <el-badge :value="order.item_groups.length"></el-badge>
                     </h5>
                     <div>
-                      <table class="uk-table uk-table-small uk-table-divider uk-table-middle uk-text-small">
+                      <table
+                        class="uk-table uk-table-small uk-table-divider uk-table-middle uk-text-small"
+                      >
                         <tbody>
                           <template v-for="(items, groupIndex) in order.item_groups">
                             <tr :key="groupIndex">
                               <td>
                                 <a href="#">{{ items[0].category.name }}</a>
                               </td>
-                              <td class="uk-text-center" width="300">{{ `${items[0].stringWeight} ${order.detail.formula.weight_unit} - ${items[0].stringLength} x ${items[0].stringWidth} x ${items[0].stringLength} ${order.detail.formula.volume_unit}` }}</td>
+                              <td
+                                class="uk-text-center"
+                                width="300"
+                              >{{ `${items[0].stringWeight} ${order.detail.formula.weight_unit} - ${items[0].stringLength} x ${items[0].stringWidth} x ${items[0].stringLength} ${order.detail.formula.volume_unit}` }}</td>
                               <td class="uk-text-right" width="200">Rp. {{ items[0].stringPrice }}</td>
                             </tr>
                             <tr :key="`${groupIndex}_goods`">
@@ -150,9 +173,9 @@
                         <tbody>
                           <tr v-for="(awb, index) in order.air_waybills" :key="index">
                             <td>
-                              <router-link :to="{ name: 'admin-awb-show', params: { code: awb.awb } }">
-                                {{ awb.awb }}
-                              </router-link>
+                              <router-link
+                                :to="{ name: 'admin-awb-show', params: { code: awb.awb } }"
+                              >{{ awb.awb }}</router-link>
                             </td>
                             <td>{{ awb.created_at }}</td>
                             <td>{{ awb.created_by }}</td>
@@ -167,78 +190,138 @@
           </tbody>
         </table>
       </div>
+
+      <!-- pagination -->
+      <div v-if="this.totalPages.length < 2"></div>
+
+      <div v-else>
+        <ul class="uk-pagination" uk-margin>
+          <li>
+            <a href="#">
+              <span uk-pagination-previous></span>
+            </a>
+          </li>
+          <li v-for="(page, i) in totalPages" :key="i">
+            <div v-if="current_page-1 == i">
+              <a href="#" style="color:red" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+            </div>
+            <div v-else>
+              <a href="#" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+            </div>
+          </li>
+          <li>
+            <a href="#">
+              <span uk-pagination-next></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- end pagination -->
     </div>
   </div>
 </template>
 
 <script>
-import CalculatorResult from '../../../components/CalculatorResult'
+import moment from "moment";
+import CalculatorResult from "../../../components/CalculatorResult";
 
 export default {
   components: {
     CalculatorResult
   },
 
-  data () {
+  data() {
     return {
       orders: [],
+      totalPages: ["1"],
       pagination: {
         total: 0,
-        current_page: 1
+        current_page: 1,
+        last_page: 0,
+        page: 0
       },
       filter: {
-        search: ''
+        time: [],
+        search: ""
       }
-    }
+    };
   },
 
-  created () {
-    this.fetchOrders()
+  created() {
+    this.filter.time = [
+      moment()
+        .startOf("month")
+        .format("YYYY-MM-DD"),
+      moment()
+        .endOf("month")
+        .format("YYYY-MM-DD")
+    ];
+
+    this.fetchOrders(this.pagination.page);
   },
 
   methods: {
-    collapseToggle (index) {
-      this.orders[index].collapse = !this.orders[index].collapse
+    onChangePagination(i) {
+      // console.log("test", i + 1);
+      this.fetchOrders(i + 1);
     },
-    printAwb (code) {
+    collapseToggle(index) {
+      this.orders[index].collapse = !this.orders[index].collapse;
+    },
+    printAwb(code) {
       window.open(
         `/print-awb/${code}`,
-        'Kirimin - Print AWB',
-        'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=800'
-      )
+        "Kirimin - Print AWB",
+        "directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=800"
+      );
     },
-    mappingItems (order, items) {
-      let $items = this.$util.orderItem.stringCurrency(items)
+    mappingItems(order, items) {
+      let $items = this.$util.orderItem.stringCurrency(items);
 
-      return $items
+      return $items;
     },
-    async fetchOrders () {
-      this.__startLoading()
+    async fetchOrders(page) {
+      this.__startLoading();
+
+      this.pagination.page = page;
+
+      // console.log("page", this.pagination.page);
 
       try {
-        let res = await this.$service.order.get({
-          search: this.filter.search
-        })
+        let res = await this.$service.order.get(
+          {
+            search: this.filter.search,
+            time: this.filter.time
+          },
+          page
+        );
+
+        this.pagination.last_page = res.data.last_page;
+
+        this.totalPages = res.data.pages;
+        this.current_page = page;
+
+        console.log(this.current_page);
 
         this.orders = res.data.data.map(order => {
-          order['collapse'] = true
+          order["collapse"] = true;
           order.item_groups = order.item_groups.map(items => {
-            return this.mappingItems(order, items)
-          })
-          order.items = this.mappingItems(order, order.items)
+            return this.mappingItems(order, items);
+          });
+          order.items = this.mappingItems(order, order.items);
 
-          return order
-        })
+          return order;
+        });
 
-        this.pagination = res.data
+        this.pagination = res.data;
 
-        delete this.pagination.data
+        delete this.pagination.data;
       } catch (err) {
-        this.__handleError(this, err, true)
+        this.__handleError(this, err, true);
       }
 
-      this.__stopLoading()
+      this.__stopLoading();
     }
   }
-}
+};
 </script>
