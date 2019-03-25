@@ -12,28 +12,31 @@
             <h3>Invoices</h3>
           </div>
         </div>
-        <div class="uk-width-auto">
-        </div>
+        <div class="uk-width-auto"></div>
       </div>
     </div>
 
-      <div class="uk-card-body uk-card-small">
-        <div class="uk-margin uk-grid-small" uk-grid>
-          <div class="uk-width-auto">
-            <el-date-picker v-model="filter.time" type="daterange" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
-              range-separator="To" start-placeholder="Start date" end-placeholder="End date">
-            </el-date-picker>
-            <el-button slot="append" icon="el-icon-search" @click="fetchInvoices">
-            </el-button>
-          </div>
-          <div class="uk-width-1-3 uk-margin-auto-left">
-            <el-input v-model="filter.search" placeholder="Search...">
-              <el-button slot="append" icon="el-icon-search" @click="fetchInvoices">
-              </el-button>
-            </el-input>
-          </div>
+    <div class="uk-card-body uk-card-small">
+      <div class="uk-margin uk-grid-small" uk-grid>
+        <div class="uk-width-auto">
+          <el-date-picker
+            v-model="filter.time"
+            type="daterange"
+            format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd"
+            range-separator="To"
+            start-placeholder="Start date"
+            end-placeholder="End date"
+          ></el-date-picker>
+          <el-button slot="append" icon="el-icon-search" @click="fetchInvoices"></el-button>
+        </div>
+        <div class="uk-width-1-3 uk-margin-auto-left">
+          <el-input v-model="filter.search" placeholder="Search...">
+            <el-button slot="append" icon="el-icon-search" @click="fetchInvoices"></el-button>
+          </el-input>
         </div>
       </div>
+    </div>
     <div class="uk-card-body uk-card-small">
       <div class="uk-overflow-auto">
         <table class="uk-table uk-table-divider uk-table-small">
@@ -49,7 +52,10 @@
           <tbody>
             <template v-for="(invoice, index) in invoices">
               <tr :key="index">
-                <td class="app--table-column__collapse-toggle" @click.prevent="collapseToggle(index)">
+                <td
+                  class="app--table-column__collapse-toggle"
+                  @click.prevent="collapseToggle(index)"
+                >
                   <a href="#">
                     <font-awesome-icon v-if="invoice.collapse" icon="angle-right"></font-awesome-icon>
                     <font-awesome-icon v-else icon="angle-down"></font-awesome-icon>
@@ -57,9 +63,9 @@
                 </td>
                 <td>{{ invoice.code }}</td>
                 <td>{{ invoice.user.name }}</td>
-                <td class="uk-text-right">
-                  {{ invoice.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}
-                </td>
+                <td
+                  class="uk-text-right"
+                >{{ invoice.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
                 <td class="uk-text-center">
                   <el-tag v-if="invoice.paid === 1" type="success" size="mini">Paid</el-tag>
                   <el-tag v-else type="danger" size="mini">Unpaid</el-tag>
@@ -78,50 +84,48 @@
                     </div>
                     <!-- 25 -->
                     <table v-else class="uk-table uk-table-small uk-text-small uk-margin-small">
-                        <thead>
-                          <tr>
-                            <th>Date</th>
-                            <th>Bank</th>
-                            <th class="uk-text-right" width="200">Amount (IDR)</th>
-                            <th class="uk-text-center" width="150">Status</th>
-                            <th>Payment Receipt</th>
-                            <th class="uk-text-center" width="200">Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr v-for="(payment, index) in invoice.payments" :key="index">
-                            <td>{{ payment.date }}</td>
-                            <td>{{ payment.channel }}</td>
-                            <td class="uk-text-right">{{ payment.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
-                            <td class="uk-text-center">{{ payment.status }}</td>
-                            <td>
-                              <a
-                                :href="linkdownload+'/receipt/'+payment.id+'/'+payment.filename+'/download'"
-                                class="link"
-                                :data-id="payment.id"
-                                :data-filename="payment.filename"
-                              >
-                              {{ payment.filename }}
-                              </a>
-                            </td>
-                            <td class="uk-text-center">
-                              <el-button
-                                v-if="payment.status === 'new' || payment.status === 'reject'"
-                                type="primary"
-                                size="mini"
-                                @click="confirmPayment(payment.id)">
-                                Confirm
-                              </el-button>
-                              <el-button
-                                v-if="payment.status === 'new' || payment.status === 'confirmed'"
-                                type="danger"
-                                size="mini"
-                                @click="rejectPayment(payment.id)">
-                                Reject
-                              </el-button>
-                            </td>
-                          </tr>
-                        </tbody>
+                      <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th>Bank</th>
+                          <th class="uk-text-right" width="200">Amount (IDR)</th>
+                          <th class="uk-text-center" width="150">Status</th>
+                          <th>Payment Receipt</th>
+                          <th class="uk-text-center" width="200">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="(payment, index) in invoice.payments" :key="index">
+                          <td>{{ payment.date }}</td>
+                          <td>{{ payment.channel }}</td>
+                          <td
+                            class="uk-text-right"
+                          >{{ payment.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
+                          <td class="uk-text-center">{{ payment.status }}</td>
+                          <td>
+                            <a
+                              :href="linkdownload+'/receipt/'+payment.id+'/'+payment.filename+'/download'"
+                              class="link"
+                              :data-id="payment.id"
+                              :data-filename="payment.filename"
+                            >{{ payment.filename }}</a>
+                          </td>
+                          <td class="uk-text-center">
+                            <el-button
+                              v-if="payment.status === 'new' || payment.status === 'reject'"
+                              type="primary"
+                              size="mini"
+                              @click="confirmPayment(payment.id)"
+                            >Confirm</el-button>
+                            <el-button
+                              v-if="payment.status === 'new' || payment.status === 'confirmed'"
+                              type="danger"
+                              size="mini"
+                              @click="rejectPayment(payment.id)"
+                            >Reject</el-button>
+                          </td>
+                        </tr>
+                      </tbody>
                     </table>
                   </div>
                 </td>
@@ -138,92 +142,95 @@
 </template>
 
 <script>
-import moment from 'moment'
+import moment from "moment";
 export default {
-  data () {
+  data() {
     return {
       invoices: [],
-      linkdownload: '',
+      linkdownload: "",
       filter: {
         time: [],
-        search: ''
-      },
-    }
+        search: ""
+      }
+    };
+  },
 
-},
-
-  async created () {
-    await this.fetchInvoices()
-    this.linkdownload = process.env.VUE_APP_ROOT_API
+  async created() {
+    await this.fetchInvoices();
+    this.linkdownload = process.env.VUE_APP_ROOT_API;
   },
 
   methods: {
-    collapseToggle (index) {
-      this.invoices[index].collapse = !this.invoices[index].collapse
+    collapseToggle(index) {
+      this.invoices[index].collapse = !this.invoices[index].collapse;
     },
-    confirmPayment (paymentId) {
-      this.$confirm('Are you sure to confirm this payment?', 'Confirm', {
-        type: 'warning'
-      }).then(() => {
-        this.updatePaymentStatus(paymentId, 'confirmed')
-      }).catch(() => {})
+    confirmPayment(paymentId) {
+      this.$confirm("Are you sure to confirm this payment?", "Confirm", {
+        type: "warning"
+      })
+        .then(() => {
+          this.updatePaymentStatus(paymentId, "confirmed");
+        })
+        .catch(() => {});
     },
-    rejectPayment (paymentId) {
-      this.$confirm('Are you sure to confirm this payment?', 'Confirm', {
-        type: 'warning'
-      }).then(() => {
-        this.updatePaymentStatus(paymentId, 'reject')
-      }).catch(() => {})
+    rejectPayment(paymentId) {
+      this.$confirm("Are you sure to confirm this payment?", "Confirm", {
+        type: "warning"
+      })
+        .then(() => {
+          this.updatePaymentStatus(paymentId, "reject");
+        })
+        .catch(() => {});
     },
-    async fetchInvoices () {
-      this.__startLoading()
+    async fetchInvoices() {
+      this.__startLoading();
 
       try {
         let res = await this.$service.invoice.get({
           search: this.filter.search,
           time: this.filter.time
-        })
+        });
 
         this.invoices = res.data.data.map(invoice => {
-          invoice['collapse'] = true
+          invoice["collapse"] = true;
 
-          return invoice
-        })
+          return invoice;
+        });
       } catch (err) {
-        this.__handleError(this, err, true)
+        this.__handleError(this, err, true);
       }
 
-      this.__stopLoading()
+      this.__stopLoading();
     },
-    async updatePaymentStatus (paymentId, status) {
-      this.__startLoading()
+    async updatePaymentStatus(paymentId, status) {
+      this.__startLoading();
 
       try {
         let res = await this.$service.payment.updateStatus(paymentId, {
           status: status
-        })
+        });
 
         this.$notify({
-          title: 'SUCCESS',
+          title: "SUCCESS",
           message: res.data.message,
-          type: 'success'
-        })
+          type: "success"
+        });
 
         this.invoices = this.invoices.map(invoice => {
           if (invoice.id === res.data.data.id) {
-            return res.data.data
+            return res.data.data;
           }
 
-          return invoice
-        })
+          return invoice;
+        });
       } catch (err) {
-        this.__handleError(this, err, true)
+        this.__handleError(this, err, true);
       }
 
-      this.__stopLoading()
+      this.__stopLoading();
     }
   }
-}
+};
 </script>
 <style lang="scss" scoped>
 .link {
@@ -231,6 +238,6 @@ export default {
   width: 136px;
   overflow: hidden;
   text-overflow: ellipsis;
-  display:block;
+  display: block;
 }
 </style>
