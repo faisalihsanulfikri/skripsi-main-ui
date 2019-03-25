@@ -178,7 +178,7 @@ export default {
         type: "warning"
       })
         .then(() => {
-          this.updatePaymentStatus(paymentId, "reject");
+          this.updatePaymentStatus(paymentId, "rejected");
         })
         .catch(() => {});
     },
