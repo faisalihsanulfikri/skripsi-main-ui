@@ -78,8 +78,10 @@ const currency = {
 };
 
 const exchangerates = {
-  get(page) {
-    return Vue.authHttp().get("/exchangerates?page=" + page);
+  get(params = {}, page) {
+    return Vue.authHttp().get("/exchangerates?page=" + page, {
+      params
+    });
   },
   find(code) {
     return Vue.authHttp().get(`/exchangerates/${code}`);

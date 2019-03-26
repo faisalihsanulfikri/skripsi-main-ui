@@ -15,6 +15,14 @@
       </div>
     </div>
     <div class="uk-card-body">
+      <div class="uk-margin uk-grid-small" uk-grid>
+        <div class="uk-width-1-3 uk-margin-auto-left">
+          <el-input v-model="filter.search" placeholder="Search...">
+            <el-button slot="append" icon="el-icon-search" @click="fetchExchangeRates"></el-button>
+          </el-input>
+        </div>
+      </div>
+
       <div class="uk-overflow-auto">
         <table class="uk-table uk-table-divider uk-table-small">
           <thead>
@@ -90,6 +98,9 @@ export default {
         current_page: 1,
         last_page: 0,
         page: 0
+      },
+      filter: {
+        search: ""
       }
     };
   },
@@ -112,7 +123,12 @@ export default {
       this.__startLoading();
 
       try {
-        let res = await this.$service.exchangerates.get(page);
+        let res = await this.$service.exchangerates.get(
+          {
+            search: this.filter.search
+          },
+          page
+        );
 
         this.pagination.last_page = res.data.last_page;
 
