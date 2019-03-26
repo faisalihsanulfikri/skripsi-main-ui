@@ -18,20 +18,14 @@
     </div>
     <div class="uk-card-body">
       <div class="uk-margin">
-        <label class="uk-form-label">Key</label>
-        <el-input v-model="input.key"></el-input>
+        <label class="uk-form-label">Code</label>
+        <el-input v-model="input.code"></el-input>
       </div>
       <div class="uk-margin">
-        <label class="uk-form-label">Value</label>
-        <el-input v-model="input.value"></el-input>
+        <label class="uk-form-label">Rates</label>
+        <el-input v-model="input.rates"></el-input>
       </div>
-      <el-alert
-          v-if="error"
-          title="ERROR"
-          type="error"
-          :description="errorMessage"
-          show-icon>
-        </el-alert>
+      <el-alert v-if="error" title="ERROR" type="error" :description="errorMessage" show-icon></el-alert>
     </div>
     <div class="uk-card-footer uk-text-right">
       <el-button type="primary" @click="save">SAVE</el-button>
@@ -41,94 +35,100 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       edit: false,
-      title: 'New Exchange Rate',
+      title: "New Exchange Rate",
       input: {
-        key: '',
-        value: ''
+        code: "",
+        rates: ""
       },
       error: false,
-      errorMessage: ''
-    }
+      errorMessage: ""
+    };
   },
+
+  created() {
+    if (this.$route.params.id) {
+      this.edit = true;
+      this.title = "Edit Exhange Rate";
+    }
+
+    this.fetchExchangeRates();
+    // console.log(this.$route.params.id);
+  },
+
   methods: {
-    getCategory () {
-      this.error = false
-      this.errorMessage = ''
+    async fetchExchangeRates() {
+      this.__startLoading();
 
-      this.$authHttp.get(`/v1/kurs/${this.$route.params.id}`).then(res => {
-        this.input.key = res.data[0].key
-        this.input.value = res.data[0].value
-      }).catch(err => {
-        if (err.response) {
-          this.error = true
-          this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
+      try {
+        let res = await this.$service.exchangerates.find(this.$route.params.id);
 
-          this.$notify({
-            title: 'ERROR',
-            message: this.errorMessage,
-            type: 'error'
-          })
+        this.input = res.data;
 
-          this.$router.push({ name: 'admin-exchange-rate' })
-        }
-      })
+        console.log(this.input);
+      } catch (err) {
+        this.__handleError(this, err, true);
+      }
+
+      this.__stopLoading();
     },
-    save () {
+    save() {
       if (this.edit) {
-        this.update()
+        this.update();
       } else {
-        this.store()
+        this.store();
       }
     },
-    store () {
-      this.error = false
-      this.errorMessage = ''
+    store() {
+      this.error = false;
+      this.errorMessage = "";
 
-      this.$authHttp.post('/v1/kurs', this.input).then(res => {
-        this.$notify({
-          title: 'SUCCESS',
-          message: res.data.message,
-          type: 'success'
+      this.$authHttp
+        .post("/v1/kurs", this.input)
+        .then(res => {
+          this.$notify({
+            title: "SUCCESS",
+            message: res.data.message,
+            type: "success"
+          });
+
+          this.$router.push({ name: "admin-exchange-rate" });
         })
-
-        this.$router.push({ name: 'admin-exchange-rate' })
-      }).catch(err => {
-        if (err.response) {
-          this.error = true
-          this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
-        }
-      })
+        .catch(err => {
+          if (err.response) {
+            this.error = true;
+            this.errorMessage = err.response.data.message
+              ? err.response.data.message
+              : err.response.statusText;
+          }
+        });
     },
-    update () {
-      this.error = false
-      this.errorMessage = ''
+    update() {
+      this.error = false;
+      this.errorMessage = "";
 
-      this.$authHttp.put(`/v1/kurs/${this.$route.params.id}`, this.input).then(res => {
-        this.$notify({
-          title: 'SUCCESS',
-          message: res.data.message,
-          type: 'success'
+      this.$authHttp
+        .put(`/v1/kurs/${this.$route.params.id}`, this.input)
+        .then(res => {
+          this.$notify({
+            title: "SUCCESS",
+            message: res.data.message,
+            type: "success"
+          });
+
+          this.$router.push({ name: "admin-exchange-rate" });
         })
-
-        this.$router.push({ name: 'admin-exchange-rate' })
-      }).catch(err => {
-        if (err.response) {
-          this.error = true
-          this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
-        }
-      })
-    }
-  },
-  created () {
-    if (this.$route.params.id) {
-      this.edit = true
-      this.title = 'Edit Exhange Rate'
-
-      this.getCategory()
+        .catch(err => {
+          if (err.response) {
+            this.error = true;
+            this.errorMessage = err.response.data.message
+              ? err.response.data.message
+              : err.response.statusText;
+          }
+        });
     }
   }
-}
+};
 </script>
