@@ -276,9 +276,4 @@ Object.defineProperties(Vue.prototype, {
       return services;
     }
   }
-<<<<<<<
-})
-
-=======
 });
->>>>>>>
