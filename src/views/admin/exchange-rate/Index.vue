@@ -36,6 +36,13 @@
                 <router-link :to="{ name: 'admin-exchange-rate-edit', params: { id: rate.id } }">
                   <font-awesome-icon icon="edit"></font-awesome-icon>
                 </router-link>
+                <a
+                  class="uk-margin-small-left uk-text-danger"
+                  href="#"
+                  @click.prevent="deleteConfirmation(rate.id)"
+                >
+                  <font-awesome-icon icon="trash-alt"></font-awesome-icon>
+                </a>
               </td>
             </tr>
           </tbody>
@@ -120,6 +127,48 @@ export default {
       }
 
       this.__stopLoading();
+    },
+    deleteConfirmation(id) {
+      this.$confirm("Are you sure to delete this?", "Waning", {
+        type: "warning",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No"
+      })
+        .then(() => {
+          this.delete(id);
+        })
+        .catch(() => {});
+    },
+
+    delete(id) {
+      this.error = false;
+      this.errorMessage = "";
+
+      this.$authHttp
+        .delete(`/exchangerate/${id}`)
+        .then(res => {
+          this.$notify({
+            title: "SUCCESS",
+            message: res.data.message,
+            type: "success"
+          });
+
+          this.fetchExchangeRates(this.pagination.page);
+        })
+        .catch(err => {
+          if (err.response) {
+            this.error = true;
+            this.errorMessage = err.response.data.message
+              ? err.response.data.message
+              : err.response.statusText;
+
+            this.$notify({
+              title: "ERROR",
+              message: this.errorMessage,
+              type: "error"
+            });
+          }
+        });
     }
   }
 };
