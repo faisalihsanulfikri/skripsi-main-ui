@@ -80,36 +80,38 @@ export default {
         this.store();
       }
     },
-    store() {
-      this.error = false;
-      this.errorMessage = "";
+    // store() {
+    //   this.error = false;
+    //   this.errorMessage = "";
 
-      this.$authHttp
-        .post("/v1/kurs", this.input)
-        .then(res => {
-          this.$notify({
-            title: "SUCCESS",
-            message: res.data.message,
-            type: "success"
-          });
+    //   this.$authHttp
+    //     .post("/v1/kurs", this.input)
+    //     .then(res => {
+    //       this.$notify({
+    //         title: "SUCCESS",
+    //         message: res.data.message,
+    //         type: "success"
+    //       });
 
-          this.$router.push({ name: "admin-exchange-rate" });
-        })
-        .catch(err => {
-          if (err.response) {
-            this.error = true;
-            this.errorMessage = err.response.data.message
-              ? err.response.data.message
-              : err.response.statusText;
-          }
-        });
-    },
+    //       this.$router.push({ name: "admin-exchange-rate" });
+    //     })
+    //     .catch(err => {
+    //       if (err.response) {
+    //         this.error = true;
+    //         this.errorMessage = err.response.data.message
+    //           ? err.response.data.message
+    //           : err.response.statusText;
+    //       }
+    //     });
+
+    //   console.log("test");
+    // },
     update() {
       this.error = false;
       this.errorMessage = "";
 
       this.$authHttp
-        .put(`/v1/kurs/${this.$route.params.id}`, this.input)
+        .put(`/exchangerate/${this.$route.params.id}`, this.input)
         .then(res => {
           this.$notify({
             title: "SUCCESS",
