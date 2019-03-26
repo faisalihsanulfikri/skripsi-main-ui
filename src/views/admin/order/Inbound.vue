@@ -194,7 +194,7 @@
       <!-- pagination -->
       <div v-if="this.totalPages.length < 2"></div>
 
-      <div v-else>
+      <div v-else class="uk-card-footer uk-text-center">
         <ul class="uk-pagination" uk-margin>
           <li>
             <a href="#">
@@ -262,7 +262,6 @@ export default {
 
   methods: {
     onChangePagination(i) {
-      // console.log("test", i + 1);
       this.fetchOrders(i + 1);
     },
     collapseToggle(index) {
@@ -285,8 +284,6 @@ export default {
 
       this.pagination.page = page;
 
-      // console.log("page", this.pagination.page);
-
       try {
         let res = await this.$service.order.get(
           {
@@ -300,8 +297,6 @@ export default {
 
         this.totalPages = res.data.pages;
         this.current_page = page;
-
-        console.log(this.current_page);
 
         this.orders = res.data.data.map(order => {
           order["collapse"] = true;

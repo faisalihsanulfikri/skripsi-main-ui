@@ -41,8 +41,8 @@ const calculator = {
 }
 
 const category = {
-  get(params = {}) {
-    return Vue.http().get('/categories', {
+  get(params = {}, page) {
+    return Vue.http().get('/categories?page=' + page, {
       params
     })
   },
