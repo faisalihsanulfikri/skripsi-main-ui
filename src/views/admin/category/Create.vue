@@ -26,16 +26,33 @@
         <el-input v-model="input.description" type="textarea" rows="10"></el-input>
       </div>
       <div class="uk-margin">
-        <label class="uk-form-label">Required Document (Yes | No)</label>
-        <el-input v-model="input.document" type="textarea" rows="10"></el-input>
+        <label class="uk-form-label">Required Document</label>
+
+        <div class="req-doc">
+          <label class="btn-r">
+            <input
+              v-model="input.document"
+              class="uk-radio"
+              type="radio"
+              value="yes"
+              @click="onDocumentChanged"
+            >
+            <span class="uk-margin-small-left">Yes</span>
+          </label>
+
+          <label class="btn-r">
+            <input
+              v-model="input.document"
+              class="uk-radio"
+              type="radio"
+              value="No"
+              @click="onDocumentChanged"
+            >
+            <span class="uk-margin-small-left">No</span>
+          </label>
+        </div>
       </div>
-      <el-alert
-          v-if="error"
-          title="ERROR"
-          type="error"
-          :description="errorMessage"
-          show-icon>
-        </el-alert>
+      <el-alert v-if="error" title="ERROR" type="error" :description="errorMessage" show-icon></el-alert>
     </div>
     <div class="uk-card-footer uk-text-right">
       <el-button type="primary" @click="save">SAVE</el-button>
@@ -45,98 +62,120 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       edit: false,
-      title: 'New Category',
+      title: "New Category",
       input: {
-        name: '',
-        description: '',
-        document: ''
+        name: "",
+        description: "",
+        document: ""
       },
       error: false,
-      errorMessage: ''
-    }
+      errorMessage: ""
+    };
   },
 
-  created () {
+  created() {
     if (this.$route.params.id) {
-      this.edit = true
-      this.title = 'Edit Category'
+      this.edit = true;
+      this.title = "Edit Category";
 
-      this.getCategory()
+      this.getCategory();
     }
   },
 
   methods: {
-    async getCategory () {
-      this.__startLoading()
+    onDocumentChanged() {
+      if (this.input.length > 0) {
+        this.input.document = "";
+      }
+    },
+    async getCategory() {
+      this.__startLoading();
 
-      this.error = false
-      this.errorMessage = ''
+      this.error = false;
+      this.errorMessage = "";
 
       try {
-        let res = await this.$service.category.find(this.$route.params.id)
+        let res = await this.$service.category.find(this.$route.params.id);
 
-        this.input.name = res.data.name
-        this.input.description = res.data.description
+        this.input.name = res.data.name;
+        this.input.description = res.data.description;
       } catch (err) {
-        this.__handleError(this, err, true)
+        this.__handleError(this, err, true);
       }
 
-      this.__stopLoading()
+      this.__stopLoading();
     },
-    save () {
+    save() {
       if (this.edit) {
-        this.update()
+        this.update();
       } else {
-        this.store()
+        this.store();
       }
     },
-    async store () {
-      this.__startLoading()
+    async store() {
+      this.__startLoading();
 
-      this.error = false
-      this.errorMessage = ''
+      this.error = false;
+      this.errorMessage = "";
+
+      console.log(this.input);
+      return this.__stopLoading();
 
       try {
-        let res = await this.$service.category.create(this.input)
+        let res = await this.$service.category.create(this.input);
 
         this.$notify({
-          title: 'SUCCESS',
+          title: "SUCCESS",
           message: res.data.message,
-          type: 'success'
-        })
+          type: "success"
+        });
 
-        this.$router.push({ name: 'admin-category' })
+        this.$router.push({ name: "admin-category" });
       } catch (err) {
-        this.__handleError(this, err, true)
+        this.__handleError(this, err, true);
       }
 
-      this.__stopLoading()
+      this.__stopLoading();
     },
-    async update () {
-      this.__startLoading()
+    async update() {
+      this.__startLoading();
 
-      this.error = false
-      this.errorMessage = ''
+      this.error = false;
+      this.errorMessage = "";
 
       try {
-        let res = await this.$service.category.update(this.$route.params.id, this.input)
+        let res = await this.$service.category.update(
+          this.$route.params.id,
+          this.input
+        );
 
         this.$notify({
-          title: 'SUCCESS',
+          title: "SUCCESS",
           message: res.data.message,
-          type: 'success'
-        })
+          type: "success"
+        });
 
-        this.$router.push({ name: 'admin-category' })
+        this.$router.push({ name: "admin-category" });
       } catch (err) {
-        this.__handleError(this, err, true)
+        this.__handleError(this, err, true);
       }
 
-      this.__stopLoading()
+      this.__stopLoading();
     }
   }
-}
+};
 </script>
+
+<style lang="scss" scoped>
+.req-doc {
+  padding-top: 10px;
+  .btn-r {
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+}
+</style>
+

@@ -73,7 +73,7 @@
       <!-- pagination -->
       <div v-if="this.totalPages.length < 2"></div>
 
-      <div v-else>
+      <div v-else class="uk-card-footer uk-text-center">
         <ul class="uk-pagination" uk-margin>
           <li>
             <a href="#">

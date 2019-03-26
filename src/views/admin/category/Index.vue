@@ -39,7 +39,11 @@
                 <router-link :to="{ name: 'admin-category-edit', params: { id: category.id } }">
                   <font-awesome-icon icon="edit"></font-awesome-icon>
                 </router-link>
-                <a class="uk-margin-small-left uk-text-danger" href="#" @click.prevent="deleteConfirmation(category.id)">
+                <a
+                  class="uk-margin-small-left uk-text-danger"
+                  href="#"
+                  @click.prevent="deleteConfirmation(category.id)"
+                >
                   <font-awesome-icon icon="trash-alt"></font-awesome-icon>
                 </a>
               </td>
@@ -48,83 +52,129 @@
         </table>
       </div>
     </div>
-    <div class="uk-card-footer uk-text-center">
-      <el-pagination layout="prev, pager, next" :page-size="pagination.per_page" :page-count="pagination.last_page"
-        :total="pagination.total" @current-change="onChangePage">
-      </el-pagination>
+    <!-- <div class="uk-card-footer uk-text-center">
+      <el-pagination
+        layout="prev, pager, next"
+        :page-size="pagination.per_page"
+        :page-count="pagination.last_page"
+        :total="pagination.total"
+        @current-change="onChangePage"
+      ></el-pagination>
+    </div>-->
+
+    <!-- pagination -->
+
+    <div v-if="this.totalPages.length < 2"></div>
+
+    <div v-else class="uk-card-footer uk-text-center">
+      <ul class="uk-pagination" uk-margin>
+        <li>
+          <a href="#">
+            <span uk-pagination-previous></span>
+          </a>
+        </li>
+        <li v-for="(page, i) in totalPages" :key="i">
+          <div v-if="current_page-1 == i">
+            <a href="#" style="color:red" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+          </div>
+          <div v-else>
+            <a href="#" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+          </div>
+        </li>
+        <li>
+          <a href="#">
+            <span uk-pagination-next></span>
+          </a>
+        </li>
+      </ul>
     </div>
+    <!-- end pagination -->
   </div>
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        categories: [],
-        pagination: {
-          current_page: 1,
-          per_page: 25,
-          total: 0
-        },
-        error: false,
-        errorMesssage: ''
+export default {
+  data() {
+    return {
+      categories: [],
+      totalPages: ["1"],
+      pagination: {
+        total: 0,
+        current_page: 1,
+        last_page: 0,
+        page: 0
+      },
+      error: false,
+      errorMesssage: ""
+    };
+  },
+
+  created() {
+    this.fetchCategories(this.pagination.page);
+  },
+
+  methods: {
+    // async onChangePage(page) {
+    //   this.pagination.current_page = page;
+
+    //   this.fetchCategories();
+    // },
+    onChangePagination(i) {
+      this.fetchCategories(i + 1);
+    },
+    deleteConfirmation(id) {
+      this.$confirm("Are you sure to delete this?", "Waning", {
+        type: "warning",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No"
+      })
+        .then(() => {
+          this.delete(id);
+        })
+        .catch(() => {});
+    },
+    async fetchCategories(page) {
+      this.__startLoading();
+
+      this.pagination.page = page;
+
+      try {
+        let res = await this.$service.category.get({}, page);
+
+        this.pagination.last_page = res.data.last_page;
+
+        this.totalPages = res.data.pages;
+        this.current_page = page;
+
+        this.categories = res.data.data;
+        this.pagination = res.data;
+
+        delete this.pagination.data;
+        delete this.pagination.filter;
+      } catch (err) {
+        this.__handleError(this, err, true);
       }
+
+      this.__stopLoading();
     },
+    async delete(id) {
+      this.error = false;
+      this.errorMessage = "";
 
-    created() {
-      this.fetchCategories()
-    },
+      try {
+        let res = await this.$service.category.delete(id);
 
-    methods: {
-      async onChangePage(page) {
-        this.pagination.current_page = page
+        this.$notify({
+          title: "SUCCESS",
+          message: res.data.message,
+          type: "success"
+        });
 
-        this.fetchCategories()
-      },
-      deleteConfirmation(id) {
-        this.$confirm('Are you sure to delete this?', 'Waning', {
-          type: 'warning',
-          confirmButtonText: 'Yes',
-          cancelButtonText: 'No'
-        }).then(() => {
-          this.delete(id)
-        }).catch(() => {})
-      },
-      async fetchCategories() {
-        this.__startLoading()
-
-        try {
-          let res = await this.$service.category.get()
-
-          this.categories = res.data.data
-          this.pagination = res.data
-
-          delete this.pagination.data
-          delete this.pagination.filter
-        } catch (err) {
-          this.__handleError(this, err, true)
-        }
-
-        this.__stopLoading()
-      },
-      async delete(id) {
-        this.error = false
-        this.errorMessage = ''
-
-        try {
-          let res = await this.$service.category.delete(id)
-
-          this.$notify({
-            title: 'SUCCESS',
-            message: res.data.message,
-            type: 'success'
-          })
-
-          this.fetchCategories()
-        } catch (err) {
-          this.__handleError(this, err, true)
-        }
+        this.fetchCategories();
+      } catch (err) {
+        this.__handleError(this, err, true);
       }
     }
   }
+};
 </script>
