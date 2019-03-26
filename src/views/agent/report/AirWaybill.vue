@@ -170,8 +170,6 @@ export default {
         this.totalPages = res.data.pages;
         this.current_page = page;
 
-        console.log(this.current_page);
-
         this.airWaybills = res.data.data;
       } catch (err) {
         this.__handleError(this, err, true);
