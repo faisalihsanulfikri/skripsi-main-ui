@@ -55,7 +55,6 @@ export default {
     }
 
     this.fetchExchangeRates();
-    // console.log(this.$route.params.id);
   },
 
   methods: {
