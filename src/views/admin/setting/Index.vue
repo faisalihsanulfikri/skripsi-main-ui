@@ -25,11 +25,18 @@
           <div v-for="(val, valIndex) in setting.value" :key="`val_${valIndex}`">
             <div v-for="(itemKey, itemIndex) in Object.keys(val)" :key="`item_${itemIndex}`">
               <div class="uk-margin-small">
-                <el-input v-model="settings[index].value[valIndex][itemKey]" size="small">
-                  <div slot="prepend" class="uk-width-medium">{{ itemKey }}</div>
-                </el-input>
+                <div v-if="itemKey == 'active_status'">
+                  <el-radio v-model="settings[index].value[valIndex][itemKey]" label="1">Active</el-radio>
+                  <el-radio v-model="settings[index].value[valIndex][itemKey]" label="2">Inactive</el-radio>
+                </div>
+                <div  v-else>
+                  <el-input v-model="settings[index].value[valIndex][itemKey]" size="small">
+                    <div slot="prepend" class="uk-width-medium">{{ itemKey }}</div>
+                  </el-input>
+                </div>
               </div>
             </div>
+            <br>
           </div>
         </div>
         <div v-if="setting.type === 'object'" class="uk-margin-small">
@@ -73,6 +80,7 @@ export default {
         let res = await this.$service.config.all()
 
         this.settings = res.data
+        console.log(this.settings)
       } catch (err) {
         this.__handleError(this, err, true)
       }
