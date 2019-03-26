@@ -92,8 +92,8 @@ const config = {
 };
 
 const invoice = {
-  get(params = {}) {
-    return Vue.authHttp().get("/invoices", {
+  get(params = {}, page) {
+    return Vue.authHttp().get("/invoices?page=" + page, {
       params
     });
   },

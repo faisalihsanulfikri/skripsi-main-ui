@@ -43,6 +43,7 @@
           <thead>
             <tr>
               <th></th>
+              <th>Date</th>
               <th width="150">Code</th>
               <th>Customer</th>
               <th class="uk-text-right" width="200">Amount (IDR)</th>
@@ -61,8 +62,9 @@
                     <font-awesome-icon v-else icon="angle-down"></font-awesome-icon>
                   </a>
                 </td>
+                <td>{{ moment(invoice.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
                 <td>{{ invoice.code }}</td>
-                <td>{{ invoice.user.name }}</td>
+                <td>{{ invoice.user.code }} - {{ invoice.user.name }}</td>
                 <td
                   class="uk-text-right"
                 >{{ invoice.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
@@ -137,6 +139,33 @@
       <div id="testPrint" class="uk-hidden">
         <h1>Test Print AWB</h1>
       </div>
+
+      <!-- pagination -->
+      <div v-if="this.totalPages.length < 2"></div>
+
+      <div v-else class="uk-card-footer uk-text-center">
+        <ul class="uk-pagination" uk-margin>
+          <li>
+            <a href="#">
+              <span uk-pagination-previous></span>
+            </a>
+          </li>
+          <li v-for="(page, i) in totalPages" :key="i">
+            <div v-if="current_page-1 == i">
+              <a href="#" style="color:red" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+            </div>
+            <div v-else>
+              <a href="#" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+            </div>
+          </li>
+          <li>
+            <a href="#">
+              <span uk-pagination-next></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- end pagination -->
     </div>
   </div>
 </template>
@@ -146,6 +175,13 @@ import moment from "moment";
 export default {
   data() {
     return {
+      totalPages: ["1"],
+      pagination: {
+        total: 0,
+        current_page: 1,
+        last_page: 0,
+        page: 0
+      },
       invoices: [],
       linkdownload: "",
       filter: {
@@ -156,11 +192,23 @@ export default {
   },
 
   async created() {
-    await this.fetchInvoices();
+    this.filter.time = [
+      moment()
+        .startOf("month")
+        .format("YYYY-MM-DD"),
+      moment()
+        .endOf("month")
+        .format("YYYY-MM-DD")
+    ];
+
+    await this.fetchInvoices(this.pagination.page);
     this.linkdownload = process.env.VUE_APP_ROOT_API;
   },
 
   methods: {
+    onChangePagination(i) {
+      this.fetchInvoices(i + 1);
+    },
     collapseToggle(index) {
       this.invoices[index].collapse = !this.invoices[index].collapse;
     },
@@ -182,14 +230,24 @@ export default {
         })
         .catch(() => {});
     },
-    async fetchInvoices() {
+    async fetchInvoices(page) {
       this.__startLoading();
 
+      this.pagination.page = page;
+
       try {
-        let res = await this.$service.invoice.get({
-          search: this.filter.search,
-          time: this.filter.time
-        });
+        let res = await this.$service.invoice.get(
+          {
+            search: this.filter.search,
+            time: this.filter.time
+          },
+          page
+        );
+
+        this.pagination.last_page = res.data.last_page;
+
+        this.totalPages = res.data.pages;
+        this.current_page = page;
 
         this.invoices = res.data.data.map(invoice => {
           invoice["collapse"] = true;

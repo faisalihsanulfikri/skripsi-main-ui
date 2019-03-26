@@ -69,7 +69,7 @@
                   <a href="#">{{ order.code }}</a>
                 </td>
                 <td>{{ moment(order.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
-                <td>{{ order.user.name }}</td>
+                <td>{{ order.user.code }} - {{ order.user.name }}</td>
                 <td
                   class="uk-text-right"
                 >{{ order.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
