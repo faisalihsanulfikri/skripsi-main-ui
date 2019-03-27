@@ -246,6 +246,14 @@ const area = {
   }
 };
 
+const location = {
+  get(params = {}, page) {
+    return Vue.authHttp().get("/locations?page=" + page, {
+      params
+    });
+  }
+};
+
 const importExcel = {
   store(data = {}) {
     return Vue.authHttp().post("importOrder/excel/kirimin", data);
@@ -278,7 +286,8 @@ const services = {
   unit,
   importExcel,
   exchangerates,
-  area
+  area,
+  location
 };
 
 Object.defineProperties(Vue.prototype, {
