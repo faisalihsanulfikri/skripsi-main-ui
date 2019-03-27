@@ -29,7 +29,7 @@
       <div class="uk-margin uk-grid-small" uk-grid>
         <div class="uk-width-1-3 uk-margin-auto-left">
           <el-input v-model="filter.search" placeholder="Search...">
-            <el-button slot="append" icon="el-icon-search" @click="fetch"></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="fetchLocation"></el-button>
           </el-input>
         </div>
       </div>
@@ -55,6 +55,34 @@
         </table>
         <!-- end -->
       </div>
+
+      <!-- pagination -->
+      <!-- <div v-if="this.totalPages.length < 2"></div>
+
+      <div v-else class="uk-card-footer uk-text-center">
+        <ul class="uk-pagination" uk-margin>
+          <li>
+            <a href="#">
+              <span uk-pagination-previous></span>
+            </a>
+          </li>
+          <li v-for="(page, i) in totalPages" :key="i">
+            <div v-if="current_page-1 == i">
+              <a href="#" style="color:red" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+            </div>
+
+            <div v-else>
+              <a href="#" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+            </div>
+          </li>
+          <li>
+            <a href="#">
+              <span uk-pagination-next></span>
+            </a>
+          </li>
+        </ul>
+      </div>-->
+      <!-- end pagination -->
     </div>
   </div>
 </template>
@@ -80,8 +108,13 @@ export default {
     this.fetchLocation(this.pagination.page);
   },
   methods: {
+    onChangePagination(i) {
+      this.fetchLocation(i + 1);
+    },
     async fetchLocation(page) {
       this.__startLoading();
+
+      this.pagination.page = page;
 
       try {
         let res = await this.$service.location.get(
@@ -90,6 +123,10 @@ export default {
           },
           page
         );
+
+        this.pagination.last_page = res.data.last_page;
+        this.totalPages = res.data.pages;
+        this.current_page = page;
 
         this.locations = res.data.data;
 
