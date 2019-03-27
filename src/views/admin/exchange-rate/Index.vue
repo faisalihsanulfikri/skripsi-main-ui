@@ -122,6 +122,8 @@ export default {
     async fetchExchangeRates(page) {
       this.__startLoading();
 
+      this.pagination.page = page;
+
       try {
         let res = await this.$service.exchangerates.get(
           {
@@ -131,13 +133,10 @@ export default {
         );
 
         this.pagination.last_page = res.data.last_page;
-
         this.totalPages = res.data.pages;
         this.current_page = page;
 
         this.rates = res.data.data;
-
-        console.log(this.rates);
       } catch (err) {
         this.__handleError(this, err, true);
       }

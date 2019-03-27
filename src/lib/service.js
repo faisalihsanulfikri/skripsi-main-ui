@@ -238,6 +238,14 @@ const warehouse = {
   }
 };
 
+const area = {
+  provinces(params = {}, page) {
+    return Vue.authHttp().get("/province/list?page=" + page, {
+      params
+    });
+  }
+};
+
 const importExcel = {
   store(data = {}) {
     return Vue.authHttp().post("importOrder/excel/kirimin", data);
@@ -269,7 +277,8 @@ const services = {
   currency,
   unit,
   importExcel,
-  exchangerates
+  exchangerates,
+  area
 };
 
 Object.defineProperties(Vue.prototype, {
