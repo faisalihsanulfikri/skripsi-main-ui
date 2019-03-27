@@ -117,7 +117,7 @@ export default {
       this.pagination.page = page;
 
       try {
-        let res = await this.$service.location.get(
+        let res = await this.$service.area.locations(
           {
             search: this.filter.search
           },

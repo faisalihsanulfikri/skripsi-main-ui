@@ -19,8 +19,8 @@
               <span>Aera</span>
             </template>
             <el-menu-item index="/admin/master/area">Provinces</el-menu-item>
-            <!-- <el-menu-item index="/admin/master/area">Cities</el-menu-item>
-            <el-menu-item index="/admin/master/area/subdistrict">Subdistricts</el-menu-item>-->
+            <el-menu-item index="/admin/master/area">Cities</el-menu-item>
+            <el-menu-item index="/admin/master/area/subdistrict">Subdistricts</el-menu-item>
             <el-menu-item index="/admin/master/area/code">Location Codes</el-menu-item>
           </el-submenu>
         </el-submenu>

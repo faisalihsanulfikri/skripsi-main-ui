@@ -83,6 +83,8 @@ export default {
 
       this.getCategory();
     }
+
+    console.log(this.$route.params.id);
   },
 
   methods: {

@@ -13,9 +13,10 @@ import ExchangeCreate from '../views/admin/exchange-rate/Create'
 import Area from '../views/admin/area/Index'
 import AreaCity from '../views/admin/area/City'
 import AreaDistrict from '../views/admin/area/District'
-import AreaSubDistrict from '../views/admin/area/Subdistrict'
-import AreaCode from '../views/admin/area/LocationCode'
-import AreaCodeCreate from '../views/admin/area/LocationCodeCreate'
+import AreaSubDistrict from '../views/admin/area/subdistrict/Index'
+import AreaSubDistrictEdit from '../views/admin/area/subdistrict/Create'
+import AreaCode from '../views/admin/area/location/Index'
+import AreaCodeCreate from '../views/admin/area/location/Create'
 import User from '../views/admin/user/Index'
 import UserCreate from '../views/admin/UserCreate'
 import Setting from '../views/admin/setting/Index'
@@ -185,8 +186,17 @@ export default {
     },
     {
       path: 'master/area/subdistrict',
-      name: 'admin-area-province-city-subdistrict',
+      name: 'admin-area-subdistrict',
       component: AreaSubDistrict,
+      meta: {
+        auth: true,
+        level: [ADMIN, SUPER_ADMIN]
+      }
+    },
+    {
+      path: 'master/area/subdistrict/edit',
+      name: 'admin-area-subdistrict-edit',
+      component: AreaSubDistrictEdit,
       meta: {
         auth: true,
         level: [ADMIN, SUPER_ADMIN]
