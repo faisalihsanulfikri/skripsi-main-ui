@@ -34,6 +34,37 @@
           <div class="uk-width-auto">
             <el-button type="default" @click="fetchOrderReport">Filter</el-button>
           </div>
+          <div class="uk-width-1-3 uk-margin-auto-left">
+            <el-input v-model="filter.search" placeholder="Search...">
+              <el-button slot="append" icon="el-icon-search" @click="fetchOrderReport"></el-button>
+            </el-input>
+          </div>
+          <div class="uk-width-1-1" style="padding-top:10px">
+            <el-button type="default" @click="exportReportXLSX">
+              <font-awesome-icon icon="file-excel"></font-awesome-icon>Download XLSX
+            </el-button>
+            <el-button type="default" @click="exportReportCSV">
+              <font-awesome-icon icon="file-excel"></font-awesome-icon>Download CSV
+            </el-button>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="uk-margin">
+        <div class="uk-grid-small" uk-grid>
+          <div class="uk-width-auto">
+            <el-date-picker
+              v-model="filter.time"
+              type="daterange"
+              format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd"
+              range-separator="To"
+              start-placeholder="Start date"
+              end-placeholder="End date"
+            ></el-date-picker>
+          </div>
+          <div class="uk-width-auto">
+            <el-button type="default" @click="fetchOrderReport">Filter</el-button>
+          </div>
           <div class="uk-width-auto">
             <el-button type="default" @click="exportReportXLSX">
               <font-awesome-icon icon="file-excel"></font-awesome-icon>
@@ -43,7 +74,7 @@
             </el-button>CSV
           </div>
         </div>
-      </div>
+      </div>-->
       <div class="uk-overflow-auto">
         <table class="uk-table uk-table-divider uk-table-small uk-text-small">
           <thead>
@@ -116,7 +147,8 @@ export default {
         page: 0
       },
       filter: {
-        time: []
+        time: [],
+        search: ""
       }
     };
   },

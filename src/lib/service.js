@@ -77,6 +77,18 @@ const currency = {
   }
 };
 
+const exchangerates = {
+  get(params = {}, page) {
+    return Vue.authHttp().get("/exchangerates?page=" + page, {
+      params
+    });
+  },
+  find(code) {
+    return Vue.authHttp().get(`/exchangerates/${code}`);
+  }
+
+};
+
 const config = {
   all() {
     return Vue.authHttp().get("/configs/list");
@@ -97,8 +109,8 @@ const invoice = {
       params
     });
   },
-  find(code) {
-    return Vue.authHttp().get(`/invoices/${code}`);
+  find(id) {
+    return Vue.authHttp().get(`/invoices/${id}`);
   },
   paymentConfirmation(code, data = {}) {
     return Vue.authHttp().post(`/invoices/${code}/payment-confirmation`, data);
@@ -256,7 +268,8 @@ const services = {
   warehouse,
   currency,
   unit,
-  importExcel
+  importExcel,
+  exchangerates
 };
 
 Object.defineProperties(Vue.prototype, {
@@ -265,4 +278,4 @@ Object.defineProperties(Vue.prototype, {
       return services;
     }
   }
-})
+});
