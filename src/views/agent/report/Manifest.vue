@@ -32,13 +32,14 @@
             ></el-date-picker>
           </div>
           <div class="uk-width-auto">
-            <el-button type="default" @click>Filter</el-button>
+            <el-button type="default" @click="getManifest">Filter</el-button>
           </div>
-          <div class="uk-width-auto">
-            <el-button type="default" @click>
-              <font-awesome-icon icon="file-excel"></font-awesome-icon>
-            </el-button>
+          <div class="uk-width-1-3 uk-margin-auto-left">
+            <el-input v-model="filter.search" placeholder="Search...">
+              <el-button slot="append" icon="el-icon-search" @click="getManifest"></el-button>
+            </el-input>
           </div>
+
         </div>
       </div>
       <div class="uk-overflow-auto">
@@ -152,7 +153,7 @@ export default {
         total: 0,
         current_page: 1,
         last_page: 0,
-        page: 0
+        page: 1
       },
       filter: {
         time: []
@@ -178,7 +179,7 @@ export default {
       // console.log("page", this.pagination.page);
 
       try {
-        let res = await this.$service.manifest.get(page);
+        let res = await this.$service.manifest.get(this.filter, page);
 
         this.pagination.last_page = res.data.data.last_page;
         this.totalPages = res.data.data.pages;

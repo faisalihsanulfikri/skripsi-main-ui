@@ -124,8 +124,10 @@ const manifest = {
   create(data = {}) {
     return Vue.authHttp().post("/manifest/", data);
   },
-  get(page) {
-    return Vue.authHttp().get("/manifest?page=" + page);
+  get(params = {}, page) {
+    return Vue.authHttp().get("/manifest?page=" + page, {
+      params
+    });
   },
   find(number) {
     return Vue.authHttp().get(`/manifest/${number}`);

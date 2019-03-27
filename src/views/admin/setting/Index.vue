@@ -27,7 +27,7 @@
               <div class="uk-margin-small">
                 <div v-if="itemKey == 'active_status'">
                   <el-radio v-model="settings[index].value[valIndex][itemKey]" label="1">Active</el-radio>
-                  <el-radio v-model="settings[index].value[valIndex][itemKey]" label="2">Inactive</el-radio>
+                  <el-radio v-model="settings[index].value[valIndex][itemKey]" label="0">Inactive</el-radio>
                 </div>
                 <div  v-else>
                   <el-input v-model="settings[index].value[valIndex][itemKey]" size="small">
@@ -36,6 +36,9 @@
                 </div>
               </div>
             </div>
+            <a v-on:click="delRow(index,valIndex)">
+              <font-awesome-icon icon="trash-alt" style="color:grey"></font-awesome-icon>
+            </a>
             <br>
           </div>
         </div>
@@ -48,6 +51,9 @@
             </div>
           </div>
         </div>
+          <div class="uk-text-right">
+            <el-button type="primary" @click="addRow(index)">Add Row</el-button>
+          </div>
       </div>
     </div>
     <div class="uk-card-footer">
@@ -101,6 +107,26 @@ export default {
       }
 
       this.__stopLoading()
+    },
+    addRow (test) {
+      switch (this.settings[test].name) {
+        case 'bank_accounts':
+          this.settings[test].value.push({"bank":"","account_number":"","name":"","active_status":"0"})
+          break;
+        case 'transfer_bank':
+          this.settings[test].value.push({"bank":"","account_number":"","name":"","active_status":"0"})
+          break;
+        case 'paypal':
+
+          break;
+        case 'credit_card':
+          break;
+      }
+    },
+    delRow (x,y) {
+      this.settings[x].value.splice(y,1)
+      console.log(this.settings);
+      // console.log(this.settings[x].value[y])
     }
   }
 }
