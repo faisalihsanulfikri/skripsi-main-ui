@@ -19,14 +19,21 @@
       </div>
     </div>
 
-    <!-- Body -->
+    <!-- Content -->
     <div class="uk-card-body uk-card-small">
       <el-form :model="page">
+        <!-- Page Title -->
         <el-form-item label="Title">
           <el-input v-model="page.title" placeholder="Page title..."></el-input>
         </el-form-item>
-        <el-form-item label="Body">
-          <el-input type="textarea" v-model="page.body">Page Content...</el-input>
+
+        <!-- Page body -->
+        <tinymce id="page_body" v-model="page.body" class="tinymce"></tinymce>
+
+        <!-- Buttons -->
+        <el-form-item>
+          <el-button type="primary" @click="onSave">Save</el-button>
+          <el-button @click="onReset">Reset</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -42,9 +49,21 @@ export default {
         body: ""
       }
     };
+  },
+  methods: {
+    onSave() {
+      console.log(this.page);
+    },
+    onReset() {
+      let page = this.page;
+      (page.title = ""), (page.body = "");
+    }
   }
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+.tinymce {
+  margin-bottom: 2rem;
+}
 </style>
