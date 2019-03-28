@@ -4,7 +4,7 @@
       <div uk-grid>
         <div class="uk-width-auto">
           <div class="app--card-header__back">
-            <router-link :to="{ name: 'admin-exchange-rate' }">
+            <router-link :to="{ name: 'admin-area-subdistrict' }">
               <font-awesome-icon icon="chevron-left"></font-awesome-icon>
             </router-link>
           </div>
@@ -18,12 +18,17 @@
     </div>
     <div class="uk-card-body">
       <div class="uk-margin">
-        <label class="uk-form-label">Code</label>
-        <el-input v-model="input.code"></el-input>
+        <label class="uk-form-label">Province</label>
+        <el-input v-model="input.province"></el-input>
+        <!-- <input type="text"> -->
       </div>
       <div class="uk-margin">
-        <label class="uk-form-label">Rates</label>
-        <el-input v-model="input.rates"></el-input>
+        <label class="uk-form-label">City</label>
+        <el-input v-model="input.city"></el-input>
+      </div>
+      <div class="uk-margin">
+        <label class="uk-form-label">Sub District</label>
+        <el-input v-model="input.subdistrict_name"></el-input>
       </div>
       <el-alert v-if="error" title="ERROR" type="error" :description="errorMessage" show-icon></el-alert>
     </div>
@@ -38,10 +43,11 @@ export default {
   data() {
     return {
       edit: false,
-      title: "New Exchange Rate",
+      title: "New Sub District",
       input: {
-        code: "",
-        rates: ""
+        city: "",
+        province: "",
+        subdistrict_name: ""
       },
       error: false,
       errorMessage: ""
@@ -51,28 +57,26 @@ export default {
   created() {
     if (this.$route.params.id) {
       this.edit = true;
-      this.title = "Edit Exhange Rate";
+      this.title = "Edit Sub District";
     }
 
-    this.fetchExchangeRates();
+    this.fetchSubDistricts();
 
-    console.log("ini id", this.$route.params.id);
+    console.log(this.$route.params.id);
   },
 
   methods: {
-    async fetchExchangeRates() {
+    async fetchSubDistricts() {
       this.__startLoading();
-
       try {
-        let res = await this.$service.exchangerates.find(this.$route.params.id);
-
+        let res = await this.$service.area.findSubdistrict(
+          this.$route.params.id
+        );
         this.input = res.data;
-
         console.log(this.input);
       } catch (err) {
         this.__handleError(this, err, true);
       }
-
       this.__stopLoading();
     },
     save() {
@@ -85,7 +89,6 @@ export default {
     // store() {
     //   this.error = false;
     //   this.errorMessage = "";
-
     //   this.$authHttp
     //     .post("/v1/kurs", this.input)
     //     .then(res => {
@@ -94,7 +97,6 @@ export default {
     //         message: res.data.message,
     //         type: "success"
     //       });
-
     //       this.$router.push({ name: "admin-exchange-rate" });
     //     })
     //     .catch(err => {
@@ -105,23 +107,23 @@ export default {
     //           : err.response.statusText;
     //       }
     //     });
-
     //   console.log("test");
     // },
     update() {
       this.error = false;
       this.errorMessage = "";
 
+      // console.log("1", this.$route.params.id);
+      // return console.log("2", this.input);
       this.$authHttp
-        .put(`/exchangerate/${this.$route.params.id}`, this.input)
+        .put(`/sub-districts/${this.$route.params.id}`, this.input)
         .then(res => {
           this.$notify({
             title: "SUCCESS",
             message: res.data.message,
             type: "success"
           });
-
-          this.$router.push({ name: "admin-exchange-rate" });
+          this.$router.push({ name: "admin-area-subdistrict" });
         })
         .catch(err => {
           if (err.response) {

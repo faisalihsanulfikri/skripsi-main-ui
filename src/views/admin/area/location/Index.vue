@@ -3,13 +3,24 @@
     <div class="uk-card-header app--card-header">
       <div uk-grid>
         <div class="uk-width-auto">
-          <div class="app--card-header__icon">
-            <font-awesome-icon icon="map"></font-awesome-icon>
+          <div class="app--card-header__back">
+            <!-- <router-link
+              :to="{ name: 'admin-area-province-city', params: { provinceId: $route.params.provinceId } }"
+            >-->
+            <font-awesome-icon icon="chevron-left"></font-awesome-icon>
+            <!-- </router-link> -->
           </div>
         </div>
         <div class="uk-width-expand">
           <div class="app--card-header_title">
-            <h3>Provinces</h3>
+            <h3>Location Codes</h3>
+          </div>
+        </div>
+        <div class="uk-width-auto">
+          <div class="app--card-header__link">
+            <router-link :to="{ name: 'admin-area-code-create' }">
+              <font-awesome-icon icon="plus"></font-awesome-icon>
+            </router-link>
           </div>
         </div>
       </div>
@@ -18,32 +29,35 @@
       <div class="uk-margin uk-grid-small" uk-grid>
         <div class="uk-width-1-3 uk-margin-auto-left">
           <el-input v-model="filter.search" placeholder="Search...">
-            <el-button slot="append" icon="el-icon-search" @click="fetchProvinces"></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="fetchLocation"></el-button>
           </el-input>
         </div>
       </div>
       <div class="uk-overflow-auto">
+        <!-- start -->
         <table class="uk-table uk-table-divider uk-table-small">
           <thead>
             <tr>
-              <th class="uk-text-right" width="50">Id</th>
-              <th>Name</th>
+              <th>Sub District</th>
+              <th>City</th>
+              <th>Province</th>
+              <th>City Code</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="province in provinces" :key="province.province_id">
-              <td class="uk-text-right">{{ province.id }}</td>
-              <td>
-                <router-link
-                  :to="{ name: 'admin-area-province-city', params: { provinceId: province.province_id } }"
-                >{{ province.province }}</router-link>
-              </td>
+            <tr v-for="loc in locations" :key="loc.id">
+              <td>{{loc.subdistrict_name}}</td>
+              <td>{{loc.district_name}}</td>
+              <td>{{loc.province_name}}</td>
+              <td>{{loc.city_code}}</td>
             </tr>
           </tbody>
         </table>
+        <!-- end -->
       </div>
+
       <!-- pagination -->
-      <div v-if="this.totalPages.length < 2"></div>
+      <!-- <div v-if="this.totalPages.length < 2"></div>
 
       <div v-else class="uk-card-footer uk-text-center">
         <ul class="uk-pagination" uk-margin>
@@ -67,7 +81,7 @@
             </a>
           </li>
         </ul>
-      </div>
+      </div>-->
       <!-- end pagination -->
     </div>
   </div>
@@ -77,7 +91,7 @@
 export default {
   data() {
     return {
-      provinces: [],
+      locations: {},
       totalPages: ["1"],
       pagination: {
         total: 0,
@@ -91,22 +105,19 @@ export default {
     };
   },
   created() {
-    this.fetchProvinces(this.pagination.page);
+    this.fetchLocation(this.pagination.page);
   },
   methods: {
     onChangePagination(i) {
-      this.fetchProvinces(i + 1);
+      this.fetchLocation(i + 1);
     },
-    async fetchProvinces(page) {
+    async fetchLocation(page) {
       this.__startLoading();
+
       this.pagination.page = page;
 
-      // console.log(this.filter.search);
-
-      // return this.__stopLoading();
-
       try {
-        let res = await this.$service.area.provinces(
+        let res = await this.$service.area.locations(
           {
             search: this.filter.search
           },
@@ -117,9 +128,9 @@ export default {
         this.totalPages = res.data.pages;
         this.current_page = page;
 
-        this.provinces = res.data.data;
+        this.locations = res.data.data;
 
-        console.log(this.filter.search);
+        console.log(this.data);
       } catch (err) {
         this.__handleError(this, err, true);
       }

@@ -78,13 +78,14 @@ const currency = {
 };
 
 const exchangerates = {
-  get(page) {
-    return Vue.authHttp().get("/exchangerates?page=" + page);
+  get(params = {}, page) {
+    return Vue.authHttp().get("/exchangerates?page=" + page, {
+      params
+    });
   },
   find(code) {
     return Vue.authHttp().get(`/exchangerates/${code}`);
   }
-
 };
 
 const config = {
@@ -122,8 +123,10 @@ const manifest = {
   create(data = {}) {
     return Vue.authHttp().post("/manifest/", data);
   },
-  get(page) {
-    return Vue.authHttp().get("/manifest?page=" + page);
+  get(params = {}, page) {
+    return Vue.authHttp().get("/manifest?page=" + page, {
+      params
+    });
   },
   find(number) {
     return Vue.authHttp().get(`/manifest/${number}`);
@@ -236,6 +239,28 @@ const warehouse = {
   }
 };
 
+const area = {
+  provinces(params = {}, page) {
+    return Vue.authHttp().get("/province/list?page=" + page, {
+      params
+    });
+  },
+  locations(params = {}, page) {
+    return Vue.authHttp().get("/locations?page=" + page, {
+      params
+    });
+  },
+  subdistricts(params = {}, page) {
+    return Vue.authHttp().get("/sub-districts?page=" + page, {
+      params
+    });
+  },
+  findSubdistrict(code) {
+    return Vue.authHttp().get(`/sub-districts/${code}`);
+  }
+};
+
+
 const importExcel = {
   store(data = {}) {
     return Vue.authHttp().post("importOrder/excel/kirimin", data);
@@ -267,7 +292,8 @@ const services = {
   currency,
   unit,
   importExcel,
-  exchangerates
+  exchangerates,
+  area
 };
 
 Object.defineProperties(Vue.prototype, {
@@ -276,4 +302,4 @@ Object.defineProperties(Vue.prototype, {
       return services;
     }
   }
-})
+});

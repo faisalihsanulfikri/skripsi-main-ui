@@ -36,7 +36,10 @@
           <tbody>
             <template v-for="(warehouse, index) in warehouses">
               <tr :key="index">
-                <td class="app--table-column__collapse-toggle" @click.prevent="collapseToggle(index)">
+                <td
+                  class="app--table-column__collapse-toggle"
+                  @click.prevent="collapseToggle(index)"
+                >
                   <a href="#">
                     <font-awesome-icon v-if="warehouse.collapse" icon="angle-right"></font-awesome-icon>
                     <font-awesome-icon v-else icon="angle-down"></font-awesome-icon>
@@ -49,9 +52,13 @@
                   <router-link :to="{ name: 'admin-warehouse-edit', params: { id: warehouse.id } }">
                     <font-awesome-icon icon="edit"></font-awesome-icon>
                   </router-link>
-                  <a class="uk-margin-small-left uk-text-danger" href="#" @click.prevent="deleteConfirmation(warehouse.id)">
-                  <font-awesome-icon icon="trash-alt"></font-awesome-icon>
-                </a>
+                  <a
+                    class="uk-margin-small-left uk-text-danger"
+                    href="#"
+                    @click.prevent="deleteConfirmation(warehouse.id)"
+                  >
+                    <font-awesome-icon icon="trash-alt"></font-awesome-icon>
+                  </a>
                 </td>
               </tr>
               <tr v-show="!warehouse.collapse" :key="`d${index}`">
@@ -73,61 +80,68 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       warehouses: []
-    }
+    };
   },
   methods: {
-    fetchWareHouses () {
+    fetchWareHouses() {
       this.$authHttp.get(`/warehouses`).then(res => {
         this.warehouses = res.data.data.map(warehouse => {
-          warehouse['collapse'] = true
+          warehouse["collapse"] = true;
 
-          return warehouse
-        })
-      })
+          return warehouse;
+        });
+      });
     },
-    delete (id) {
-      this.error = false
-      this.errorMessage = ''
+    delete(id) {
+      this.error = false;
+      this.errorMessage = "";
 
-      this.$authHttp.delete(`/v1/cfees/${id}`).then(res => {
-        this.$notify({
-          title: 'SUCCESS',
-          message: res.data.message,
-          type: 'success'
-        })
-
-        this.fetchWareHouses()
-      }).catch(err => {
-        if (err.response) {
-          this.error = true
-          this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
-
+      this.$authHttp
+        .delete(`/v1/cfees/${id}`)
+        .then(res => {
           this.$notify({
-            title: 'ERROR',
-            message: this.errorMessage,
-            type: 'error'
-          })
-        }
+            title: "SUCCESS",
+            message: res.data.message,
+            type: "success"
+          });
+
+          this.fetchWareHouses();
+        })
+        .catch(err => {
+          if (err.response) {
+            this.error = true;
+            this.errorMessage = err.response.data.message
+              ? err.response.data.message
+              : err.response.statusText;
+
+            this.$notify({
+              title: "ERROR",
+              message: this.errorMessage,
+              type: "error"
+            });
+          }
+        });
+    },
+    deleteConfirmation(id) {
+      this.$confirm("Are you sure to delete this?", "Waning", {
+        type: "warning",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No"
       })
+        .then(() => {
+          this.delete(id);
+        })
+        .catch(() => {});
     },
-    deleteConfirmation (id) {
-      this.$confirm('Are you sure to delete this?', 'Waning', {
-        type: 'warning',
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No'
-      }).then(() => {
-        this.delete(id)
-      }).catch(() => {})
-    },
-    collapseToggle (index) {
-      this.warehouses[index].collapse = !this.warehouses[index].collapse
+    collapseToggle(index) {
+      this.warehouses[index].collapse = !this.warehouses[index].collapse;
     }
   },
-  created () {
-    this.fetchWareHouses()
+  created() {
+    this.fetchWareHouses();
   }
-}
+};
 </script>

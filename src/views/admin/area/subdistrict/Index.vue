@@ -3,13 +3,25 @@
     <div class="uk-card-header app--card-header">
       <div uk-grid>
         <div class="uk-width-auto">
-          <div class="app--card-header__icon">
-            <font-awesome-icon icon="map"></font-awesome-icon>
+          <div class="app--card-header__back">
+            <!-- <router-link
+              :to="{ name: 'admin-area-province-city', params: { provinceId: $route.params.provinceId } }"
+            >-->
+            <font-awesome-icon icon="chevron-left"></font-awesome-icon>
+            <!-- </router-link> -->
           </div>
         </div>
         <div class="uk-width-expand">
           <div class="app--card-header_title">
-            <h3>Exchange Rates</h3>
+            <h3>Sub Districts</h3>
+          </div>
+        </div>
+        <div class="uk-width-auto">
+          <div class="app--card-header__link">
+            <!-- <router-link :to="{ name: 'admin-area-code-create' }">
+              <font-awesome-icon icon="plus"></font-awesome-icon>
+            </router-link>-->
+            <font-awesome-icon icon="plus"></font-awesome-icon>
           </div>
         </div>
       </div>
@@ -18,44 +30,40 @@
       <div class="uk-margin uk-grid-small" uk-grid>
         <div class="uk-width-1-3 uk-margin-auto-left">
           <el-input v-model="filter.search" placeholder="Search...">
-            <el-button slot="append" icon="el-icon-search" @click="fetchExchangeRates"></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="fetchSubDistricts"></el-button>
           </el-input>
         </div>
       </div>
-
       <div class="uk-overflow-auto">
+        <!-- start -->
         <table class="uk-table uk-table-divider uk-table-small">
           <thead>
             <tr>
-              <th class="uk-text-right" width="50">Code</th>
-              <th>Name</th>
-              <th class="uk-text-right">Rates (IDR)</th>
-              <th class="uk-text-center" width="100">Actions</th>
+              <th>Sub District</th>
+              <th>City</th>
+              <th>Province</th>
+              <th class="uk-text-center">Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="rate in rates" :key="rate.id">
-              <td class="uk-text-right">{{ rate.code }}</td>
-              <td>{{ rate.name }}</td>
-              <td
-                class="uk-text-right"
-              >{{ rate.rates | currency('', 0, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
+            <tr v-for="sub in subdistricts" :key="sub.subdistrict_id">
+              <td>{{sub.subdistrict_name}}</td>
+              <td>{{sub.city}}</td>
+              <td>{{sub.province}}</td>
+
               <td class="uk-text-center">
-                <router-link :to="{ name: 'admin-exchange-rate-edit', params: { id: rate.id } }">
+                <router-link
+                  :to="{ name: 'admin-area-subdistrict-edit', params: { id: sub.subdistrict_id } }"
+                >
                   <font-awesome-icon icon="edit"></font-awesome-icon>
                 </router-link>
-                <a
-                  class="uk-margin-small-left uk-text-danger"
-                  href="#"
-                  @click.prevent="deleteConfirmation(rate.id)"
-                >
-                  <font-awesome-icon icon="trash-alt"></font-awesome-icon>
-                </a>
               </td>
             </tr>
           </tbody>
         </table>
+        <!-- end -->
       </div>
+
       <!-- pagination -->
       <div v-if="this.totalPages.length < 2"></div>
 
@@ -91,7 +99,7 @@
 export default {
   data() {
     return {
-      rates: [],
+      subdistricts: {},
       totalPages: ["1"],
       pagination: {
         total: 0,
@@ -105,22 +113,19 @@ export default {
     };
   },
   created() {
-    // this.fetchProvinces()
-
-    this.fetchExchangeRates(this.pagination.page);
+    this.fetchSubDistricts(this.pagination.page);
   },
   methods: {
     onChangePagination(i) {
-      this.fetchExchangeRates(i + 1);
+      this.fetchSubDistricts(i + 1);
     },
-
-    async fetchExchangeRates(page) {
+    async fetchSubDistricts(page) {
       this.__startLoading();
 
       this.pagination.page = page;
 
       try {
-        let res = await this.$service.exchangerates.get(
+        let res = await this.$service.area.subdistricts(
           {
             search: this.filter.search
           },
@@ -131,54 +136,14 @@ export default {
         this.totalPages = res.data.pages;
         this.current_page = page;
 
-        this.rates = res.data.data;
+        this.subdistricts = res.data.data;
+
+        console.log(this.subdistricts);
       } catch (err) {
         this.__handleError(this, err, true);
       }
 
       this.__stopLoading();
-    },
-    deleteConfirmation(id) {
-      this.$confirm("Are you sure to delete this?", "Waning", {
-        type: "warning",
-        confirmButtonText: "Yes",
-        cancelButtonText: "No"
-      })
-        .then(() => {
-          this.delete(id);
-        })
-        .catch(() => {});
-    },
-
-    delete(id) {
-      this.error = false;
-      this.errorMessage = "";
-
-      this.$authHttp
-        .delete(`/exchangerate/${id}`)
-        .then(res => {
-          this.$notify({
-            title: "SUCCESS",
-            message: res.data.message,
-            type: "success"
-          });
-
-          this.fetchExchangeRates(this.pagination.page);
-        })
-        .catch(err => {
-          if (err.response) {
-            this.error = true;
-            this.errorMessage = err.response.data.message
-              ? err.response.data.message
-              : err.response.statusText;
-
-            this.$notify({
-              title: "ERROR",
-              message: this.errorMessage,
-              type: "error"
-            });
-          }
-        });
     }
   }
 };
