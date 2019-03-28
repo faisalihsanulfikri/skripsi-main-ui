@@ -10,7 +10,6 @@ import OrderImportInbound from '../views/agent/inbound/Import'
 import OrderExportInbound from '../views/agent/inbound/Export'
 import OrderReport from '../views/agent/report/Order'
 import ScanAwb from '../views/agent/outbound/ScanAwb'
-// import AgentCurrency from '../views/agent/orders/Currency'
 
 import {
   AGENT

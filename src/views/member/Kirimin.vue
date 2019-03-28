@@ -243,7 +243,6 @@ export default {
           })
         })
         .catch(() => {
-          //
         })
     },
     fetchWarehouses () {
@@ -259,7 +258,6 @@ export default {
           })
         })
         .catch(() => {
-          //
         })
     },
     fetchAddresses () {

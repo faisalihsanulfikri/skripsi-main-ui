@@ -139,7 +139,6 @@ export default {
   },
   mounted () {
     this.d = new Printd()
-    // Print dialog events (v0.0.9+)
     const { contentWindow } = this.d.getIFrame()
     contentWindow.addEventListener('beforeprint', () => console.log('before print event!'))
     contentWindow.addEventListener('afterprint', () => console.log('after print event!'))
@@ -151,10 +150,6 @@ export default {
 
         return likeGoodsName
       })
-
-      // users = users.filter(user => {
-      //  return this.filter.verified.indexOf(user.isVerified) !== -1
-      // })
 
       orders = _.sortBy(orders, order => {
         return order[this.filter.sort.field]

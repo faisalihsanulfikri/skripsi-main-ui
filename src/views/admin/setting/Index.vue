@@ -125,8 +125,6 @@ export default {
     },
     delRow (x,y) {
       this.settings[x].value.splice(y,1)
-      console.log(this.settings);
-      // console.log(this.settings[x].value[y])
     }
   }
 }

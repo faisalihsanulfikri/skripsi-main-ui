@@ -1,4 +1,4 @@
-import Main from '../views/admin/Main'
+import Main from "../views/admin/Main";
 
 import AwbShow from '../views/agent/awb/Show'
 import Dashboard from '../views/admin/Dashboard'
@@ -25,14 +25,14 @@ import Setting from '../views/admin/setting/Index'
 import {
   ADMIN,
   SUPER_ADMIN
-} from '../config/level'
+} from "../config/level";
 
 export default {
-  path: '/admin',
+  path: "/admin",
   component: Main,
   children: [{
-      path: '/',
-      name: 'admin-main',
+      path: "/",
+      name: "admin-main",
       component: Dashboard,
       meta: {
         auth: true,
@@ -40,8 +40,8 @@ export default {
       }
     },
     {
-      path: 'air-waybills/:code',
-      name: 'admin-awb-show',
+      path: "air-waybills/:code",
+      name: "admin-awb-show",
       component: AwbShow,
       meta: {
         auth: true,
@@ -49,8 +49,8 @@ export default {
       }
     },
     {
-      path: 'invoices',
-      name: 'admin-invoice',
+      path: "invoices",
+      name: "admin-invoice",
       component: Invoice,
       meta: {
         auth: true,
@@ -58,8 +58,8 @@ export default {
       }
     },
     {
-      path: 'orders',
-      name: 'admin-order',
+      path: "orders",
+      name: "admin-order",
       component: Inbound,
       meta: {
         auth: true,
@@ -67,8 +67,8 @@ export default {
       }
     },
     {
-      path: 'inbound',
-      name: 'admin-inbound',
+      path: "inbound",
+      name: "admin-inbound",
       component: Inbound,
       meta: {
         auth: true,
@@ -76,8 +76,8 @@ export default {
       }
     },
     {
-      path: 'master/categories',
-      name: 'admin-category',
+      path: "master/categories",
+      name: "admin-category",
       component: Category,
       meta: {
         auth: true,
@@ -85,8 +85,8 @@ export default {
       }
     },
     {
-      path: 'master/categories/create',
-      name: 'admin-category-create',
+      path: "master/categories/create",
+      name: "admin-category-create",
       component: CategoryCreate,
       meta: {
         auth: true,
@@ -95,8 +95,8 @@ export default {
     },
 
     {
-      path: 'UserCreate',
-      name: 'admin-user-create',
+      path: "UserCreate",
+      name: "admin-user-create",
       component: UserCreate,
       meta: {
         auth: true,
@@ -105,8 +105,8 @@ export default {
     },
 
     {
-      path: 'master/categories/:id/edit',
-      name: 'admin-category-edit',
+      path: "master/categories/:id/edit",
+      name: "admin-category-edit",
       component: CategoryCreate,
       meta: {
         auth: true,
@@ -114,8 +114,8 @@ export default {
       }
     },
     {
-      path: 'master/warehouses',
-      name: 'admin-warehouse',
+      path: "master/warehouses",
+      name: "admin-warehouse",
       component: Warehouse,
       meta: {
         auth: true,
@@ -123,8 +123,8 @@ export default {
       }
     },
     {
-      path: 'master/warehouses/create',
-      name: 'admin-warehouse-create',
+      path: "master/warehouses/create",
+      name: "admin-warehouse-create",
       component: WarehouseCreate,
       meta: {
         auth: true,
@@ -132,8 +132,8 @@ export default {
       }
     },
     {
-      path: 'master/warehouses/:id/edit',
-      name: 'admin-warehouse-edit',
+      path: "master/warehouses/:id/edit",
+      name: "admin-warehouse-edit",
       component: WarehouseCreate,
       meta: {
         auth: true,
@@ -141,8 +141,8 @@ export default {
       }
     },
     {
-      path: 'master/exchange-rates',
-      name: 'admin-exchange-rate',
+      path: "master/exchange-rates",
+      name: "admin-exchange-rate",
       component: Exchange,
       meta: {
         auth: true,
@@ -150,8 +150,8 @@ export default {
       }
     },
     {
-      path: 'master/exchange-rates/:id/edit',
-      name: 'admin-exchange-rate-edit',
+      path: "master/exchange-rates/:id/edit",
+      name: "admin-exchange-rate-edit",
       component: ExchangeCreate,
       meta: {
         auth: true,
@@ -159,8 +159,8 @@ export default {
       }
     },
     {
-      path: 'master/area',
-      name: 'admin-area',
+      path: "master/area",
+      name: "admin-area",
       component: Area,
       meta: {
         auth: true,
@@ -168,8 +168,8 @@ export default {
       }
     },
     {
-      path: 'master/area/provinces/:provinceId/cities',
-      name: 'admin-area-province-city',
+      path: "master/area/provinces/:provinceId/cities",
+      name: "admin-area-province-city",
       component: AreaCity,
       meta: {
         auth: true,
@@ -177,8 +177,8 @@ export default {
       }
     },
     {
-      path: 'master/area/provinces/:provinceId/cities/:cityId/district',
-      name: 'admin-area-province-city-district',
+      path: "master/area/provinces/:provinceId/cities/:cityId/district",
+      name: "admin-area-province-city-district",
       component: AreaDistrict,
       meta: {
         auth: true,
@@ -186,8 +186,8 @@ export default {
       }
     },
     {
-      path: 'master/area/subdistrict',
-      name: 'admin-area-subdistrict',
+      path: "master/area/subdistrict",
+      name: "admin-area-subdistrict",
       component: AreaSubDistrict,
       meta: {
         auth: true,
@@ -195,8 +195,8 @@ export default {
       }
     },
     {
-      path: 'master/area/subdistrict/edit',
-      name: 'admin-area-subdistrict-edit',
+      path: "master/area/subdistrict/edit",
+      name: "admin-area-subdistrict-edit",
       component: AreaSubDistrictEdit,
       meta: {
         auth: true,
@@ -222,8 +222,8 @@ export default {
       }
     },
     {
-      path: 'master/area/code/create',
-      name: 'admin-area-code-create',
+      path: "master/area/code/create",
+      name: "admin-area-code-create",
       component: AreaCodeCreate,
       meta: {
         auth: true,
@@ -231,8 +231,8 @@ export default {
       }
     },
     {
-      path: 'users/:level',
-      name: 'admin-user',
+      path: "users/:level",
+      name: "admin-user",
       component: User,
       meta: {
         auth: true,
@@ -241,13 +241,43 @@ export default {
     },
 
     {
-      path: 'settings',
-      name: 'admin-setting',
+      path: "settings",
+      name: "admin-setting",
       component: Setting,
+      meta: {
+        auth: true,
+        level: [SUPER_ADMIN]
+      }
+    },
+
+    {
+      path: "pages",
+      name: "admin-pages",
+      component: () => import("@/views/admin/pages/Index"),
+      meta: {
+        auth: true,
+        level: [SUPER_ADMIN]
+      }
+    },
+
+    {
+      path: "pages/add",
+      name: "admin-pages-new",
+      component: () => import("@/views/admin/pages/AddNewPage"),
+      meta: {
+        auth: true,
+        level: [SUPER_ADMIN]
+      }
+    },
+
+    {
+      path: "pages/:slug",
+      name: "admin-pages-single",
+      component: () => import("@/views/admin/pages/SinglePage"),
       meta: {
         auth: true,
         level: [SUPER_ADMIN]
       }
     }
   ]
-}
+};

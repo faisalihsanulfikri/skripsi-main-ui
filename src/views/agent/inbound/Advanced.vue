@@ -234,9 +234,7 @@ export default {
         visible: false,
         data: {}
       },
-      // datas:[],
       orders: [],
-      // order: [],
       awb: [],
       totalPages: ["1"],
       pagination: {
@@ -265,7 +263,6 @@ export default {
         .format("YYYY-MM-DD")
     ];
 
-    //this.fetchOrders()
   },
 
   mounted() {
@@ -274,18 +271,12 @@ export default {
 
   methods: {
     onChangePagination(i) {
-      // console.log("test", i + 1);
       this.fetchOrders(i + 1);
     },
     onSearchEnter() {
       window.addEventListener("keyup", event => {
         if (event.keyCode === 13) {
           if (this.filter.search === "") {
-            // this.$notify({
-            //   title: "Notification Enter",
-            //   message: "Search by customer ID cannot be empty",
-            //   type: "warning"
-            // });
           } else {
             this.fetchOrders(this.pagination.page);
           }
@@ -315,7 +306,6 @@ export default {
     },
     async onAwbCreated(res) {
       this.closeCreateAwbDialog();
-      // console.log(res.data.data.air_waybills[0].awb)
       this.orders = this.orders.map(order => {
         if (order.id === res.data.data.id) {
           let $order = res.data.data;
@@ -374,43 +364,7 @@ export default {
         })
         .catch(() => {});
     },
-    // receivedItem (orderCode, itemId, orderIndex) {
-    //   this.$confirm('Are you sure to confirm this item?', 'Confirm', {
-    //   type: 'warning'
-    //   }).then(() => {
-    //     this.updateItemStatus(orderCode, itemId, this.$store.state.kirimin.status.item_status.RECEIVED).then(
-    //       // console.log('test')
-    //       var datas = Object.assign({}, this.orders(orderIndex))
-    //
-    //       datas['orderCode'] = this.orders(orderIndex).code
-    //       datas['items'] = this.orders(orderIndex).item_groups.flat()
-    //         .filter(item => item.selected)
-    //         .map(item => {
-    //           return item.id
-    //         })
-    //         try {
-    //           let res = await this.$service.awb.create(datas)
-    //
-    //           // this.$notify({
-    //           //   title: 'SUCCESS',
-    //           //   message: res.data.message,
-    //           //   type: 'success'
-    //           // })
-    //
-    //           this.input = this.$options.data().input
-    //
-    //           this.$emit('done', res)
-    //         } catch (err) {
-    //           this.__handleError(this, err, true)
-    //         }
-    //     ).then(
-    //       var ref = this
-    //       var Awb = ref.getAwb(orderIndex)
-    //       printAwb(Awb)
-    //     )
-    //     )
-    //   }).catch(() => {})
-    // },
+
     rejectItem(orderCode, itemId) {
       this.$confirm("Are you sure to reject this payment?", "Confirm", {
         type: "warning"
@@ -430,7 +384,6 @@ export default {
         "Kirimin - Print AWB",
         "directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=0,resizable=0,width=800"
       );
-      // console.log(code)
     },
     mappingItems(order, items) {
       let $items = this.$util.orderItem.stringCurrency(items).map(item => {
@@ -460,7 +413,6 @@ export default {
 
       this.pagination.page = page;
 
-      // console.log("page", this.pagination.page);
 
       try {
         let res = await this.$service.order.get(
@@ -546,8 +498,6 @@ export default {
           awb.item_groups = awb.item_groups.map(items => {
             return this.mappingItems(awb, items);
           });
-          // awb.items = this.mappingItems(awb, order.items)
-          // console.log(awb)
           return awb;
         });
       } catch (err) {

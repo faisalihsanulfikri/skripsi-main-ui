@@ -8,17 +8,6 @@
     <div>
       <div class="uk-child-width-1-2" uk-grid>
         <div>
-          <!-- <div class="uk-margin">
-            <label class="uk-form-label">Saved Addresses</label>
-            <el-select v-model="input.savedAddress" class="uk-width-1-1" @change="onSavedAddressChange">
-              <el-option
-                v-for="(address, index) in master.addresses"
-                :key="index"
-                :label="address.alias"
-                :value="address.id">
-              </el-option>
-            </el-select>
-          </div> -->
           <h4>Shipper Data</h4>
           <hr>
                 <table class="uk-table uk-table-small uk-table-responsive uk-table-divider uk-table-hover uk-text-emphasis">
