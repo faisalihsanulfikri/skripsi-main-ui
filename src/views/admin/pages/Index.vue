@@ -21,61 +21,14 @@
 
     <!-- Content -->
     <div class="uk-card-body uk-card-small">
-      <el-form :model="page">
-        <!-- Page Title -->
-        <el-form-item label="Title">
-          <el-input v-model="page.title" placeholder="Page title..."></el-input>
-        </el-form-item>
-
-        <!-- Page body -->
-        <tinymce id="page_body" v-model="page.body" class="tinymce"></tinymce>
-
-        <!-- Buttons -->
-        <el-form-item>
-          <el-button type="primary" @click="onSave">Save</el-button>
-          <el-button @click="onReset">Reset</el-button>
-        </el-form-item>
-      </el-form>
+      <h4>Show all active pages here....</h4>
     </div>
   </div>
 </template>
 
 <script>
 import slugify from "slugify";
-export default {
-  data() {
-    return {
-      page: {
-        title: "",
-        body: "",
-        slug: ""
-      }
-    };
-  },
-  methods: {
-    createSlug(string) {
-      return slugify(string, {
-        replacement: "-",
-        remove: null, // regex to remove characters
-        lower: true
-      });
-    },
-    onSave() {
-      let payload = {
-        title: this.page.title,
-        body: this.page.body,
-        slug: this.createSlug(this.page.title)
-      };
-      console.log(this.page, payload);
-    },
-    onReset() {
-      let page = this.page;
-      page.title = "";
-      page.body = "";
-      page.slug = "";
-    }
-  }
-};
+export default {};
 </script>
 
 <style lang="scss" scoped>

@@ -20,7 +20,6 @@ import AreaCodeCreate from "../views/admin/area/location/Create";
 import User from "../views/admin/user/Index";
 import UserCreate from "../views/admin/UserCreate";
 import Setting from "../views/admin/setting/Index";
-import Pages from "../views/admin/pages/Index";
 
 import { ADMIN, SUPER_ADMIN } from "../config/level";
 
@@ -242,7 +241,17 @@ export default {
     {
       path: "pages",
       name: "admin-pages",
-      component: Pages,
+      component: () => import("@/views/admin/pages/Index"),
+      meta: {
+        auth: true,
+        level: [SUPER_ADMIN]
+      }
+    },
+
+    {
+      path: "pages/:slug",
+      name: "admin-pages-single",
+      component: () => import("@/views/admin/pages/SinglePage"),
       meta: {
         auth: true,
         level: [SUPER_ADMIN]
