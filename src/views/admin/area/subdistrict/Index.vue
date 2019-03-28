@@ -13,7 +13,7 @@
         </div>
         <div class="uk-width-expand">
           <div class="app--card-header_title">
-            <h3>Sub Districts</h3>
+            <h3>Subdistricts</h3>
           </div>
         </div>
         <div class="uk-width-auto">

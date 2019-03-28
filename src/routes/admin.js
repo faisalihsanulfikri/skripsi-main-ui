@@ -15,6 +15,7 @@ import AreaCity from '../views/admin/area/City'
 import AreaDistrict from '../views/admin/area/District'
 import AreaSubDistrict from '../views/admin/area/subdistrict/Index'
 import AreaSubDistrictEdit from '../views/admin/area/subdistrict/Create'
+import AreaIndexCity from '../views/admin/area/city/Index'
 import AreaCode from '../views/admin/area/location/Index'
 import AreaCodeCreate from '../views/admin/area/location/Create'
 import User from '../views/admin/user/Index'
@@ -197,6 +198,15 @@ export default {
       path: 'master/area/subdistrict/edit',
       name: 'admin-area-subdistrict-edit',
       component: AreaSubDistrictEdit,
+      meta: {
+        auth: true,
+        level: [ADMIN, SUPER_ADMIN]
+      }
+    },
+    {
+      path: 'master/area/city/',
+      name: 'admin-area-city',
+      component: AreaIndexCity,
       meta: {
         auth: true,
         level: [ADMIN, SUPER_ADMIN]

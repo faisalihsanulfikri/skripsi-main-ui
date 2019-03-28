@@ -123,9 +123,6 @@ export default {
       this.error = false;
       this.errorMessage = "";
 
-      console.log(this.input);
-      return this.__stopLoading();
-
       try {
         let res = await this.$service.category.create(this.input);
 

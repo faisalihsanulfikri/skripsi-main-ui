@@ -3,13 +3,13 @@
     <div class="uk-card-header app--card-header">
       <div uk-grid>
         <div class="uk-width-auto">
-          <div class="app--card-header__icon">
-            <font-awesome-icon icon="map"></font-awesome-icon>
+          <div class="app--card-header__back">
+            <font-awesome-icon icon="chevron-left"></font-awesome-icon>
           </div>
         </div>
         <div class="uk-width-expand">
           <div class="app--card-header_title">
-            <h3>Provinces</h3>
+            <h3>Cities</h3>
           </div>
         </div>
       </div>
@@ -18,7 +18,7 @@
       <div class="uk-margin uk-grid-small" uk-grid>
         <div class="uk-width-1-3 uk-margin-auto-left">
           <el-input v-model="filter.search" placeholder="Search...">
-            <el-button slot="append" icon="el-icon-search" @click="fetchProvinces"></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="fetchCities"></el-button>
           </el-input>
         </div>
       </div>
@@ -26,23 +26,23 @@
         <table class="uk-table uk-table-divider uk-table-small">
           <thead>
             <tr>
-              <th class="uk-text-right" width="50">Id</th>
-              <th>Name</th>
+              <th>City</th>
+              <th>Type</th>
+              <th>Postal Code</th>
+              <th>Province</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="province in provinces" :key="province.province_id">
-              <td class="uk-text-right">{{ province.province_id }}</td>
-              <td>
-                <!-- <router-link
-                  :to="{ name: 'admin-area-province-city', params: { provinceId: province.province_id } }"
-                >{{ province.province }}</router-link>-->
-                {{ province.province }}
-              </td>
+            <tr v-for="city in cities" :key="city.city_id">
+              <td>{{city.city_name}}</td>
+              <td>{{city.type}}</td>
+              <td>{{city.postal_code}}</td>
+              <td>{{city.province}}</td>
             </tr>
           </tbody>
         </table>
       </div>
+
       <!-- pagination -->
       <div v-if="this.totalPages.length < 2"></div>
 
@@ -78,7 +78,7 @@
 export default {
   data() {
     return {
-      provinces: [],
+      cities: {},
       totalPages: ["1"],
       pagination: {
         total: 0,
@@ -92,22 +92,19 @@ export default {
     };
   },
   created() {
-    this.fetchProvinces(this.pagination.page);
+    this.fetchCities(this.pagination.page);
   },
   methods: {
     onChangePagination(i) {
-      this.fetchProvinces(i + 1);
+      this.fetchCities(i + 1);
     },
-    async fetchProvinces(page) {
+    async fetchCities(page) {
       this.__startLoading();
+
       this.pagination.page = page;
 
-      // console.log(this.filter.search);
-
-      // return this.__stopLoading();
-
       try {
-        let res = await this.$service.area.provinces(
+        let res = await this.$service.area.cities(
           {
             search: this.filter.search
           },
@@ -118,9 +115,9 @@ export default {
         this.totalPages = res.data.pages;
         this.current_page = page;
 
-        this.provinces = res.data.data;
+        this.cities = res.data.data;
 
-        console.log(this.filter.search);
+        console.log(this.cities);
       } catch (err) {
         this.__handleError(this, err, true);
       }
