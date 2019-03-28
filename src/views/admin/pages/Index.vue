@@ -21,18 +21,9 @@
 
     <!-- Content -->
     <div class="uk-card-body uk-card-small">
-      <h4>Show all active pages here....</h4>
+      <el-row>
+        <el-button type="primary" plain @click="$router.push('/admin/pages/add')">Add New</el-button>
+      </el-row>
     </div>
   </div>
 </template>
-
-<script>
-import slugify from "slugify";
-export default {};
-</script>
-
-<style lang="scss" scoped>
-.tinymce {
-  margin-bottom: 2rem;
-}
-</style>

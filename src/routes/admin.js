@@ -249,6 +249,16 @@ export default {
     },
 
     {
+      path: "pages/add",
+      name: "admin-pages-new",
+      component: () => import("@/views/admin/pages/AddNewPage"),
+      meta: {
+        auth: true,
+        level: [SUPER_ADMIN]
+      }
+    },
+
+    {
       path: "pages/:slug",
       name: "admin-pages-single",
       component: () => import("@/views/admin/pages/SinglePage"),
