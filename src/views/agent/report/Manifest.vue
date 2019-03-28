@@ -151,7 +151,7 @@ export default {
         total: 0,
         current_page: 1,
         last_page: 0,
-        page: 0
+        page: 1
       },
       filter: {
         time: []

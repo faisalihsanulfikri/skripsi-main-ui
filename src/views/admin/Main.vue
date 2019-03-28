@@ -13,8 +13,18 @@
           <el-menu-item index="/admin/master/categories">Categories</el-menu-item>
           <el-menu-item index="/admin/master/warehouses">Warehouses</el-menu-item>
           <el-menu-item index="/admin/master/exchange-rates">Exchange Rates</el-menu-item>
-          <el-menu-item index="/admin/master/area">Area</el-menu-item>
+          <!-- <el-menu-item index="/admin/master/area">Area</el-menu-item> -->
+          <el-submenu index="/admin">
+            <template slot="title">
+              <span>Aera</span>
+            </template>
+            <el-menu-item index="/admin/master/area">Provinces</el-menu-item>
+            <!-- <el-menu-item index="/admin/master/area">Cities</el-menu-item> -->
+            <el-menu-item index="/admin/master/area/subdistrict">Subdistricts</el-menu-item>
+            <el-menu-item index="/admin/master/area/code">Location Codes</el-menu-item>
+          </el-submenu>
         </el-submenu>
+
         <el-submenu index="/admin/users">
           <template slot="title">
             <span>USERS</span>
@@ -35,7 +45,7 @@
             <ul class="uk-navbar-nav">
               <li>
                 <a href="#">
-                  <font-awesome-icon icon="user" />
+                  <font-awesome-icon icon="user"/>
                   <span class="uk-margin-small-left">{{ $root.user.name }}</span>
                 </a>
                 <div class="uk-navbar-dropdown">
@@ -58,12 +68,12 @@
 </template>
 
 <style lang="scss" scoped>
-  .el-header {
-    background-color: #FFF;
-    height: 80px !important;
-  }
+.el-header {
+  background-color: #fff;
+  height: 80px !important;
+}
 
-  .el-menu {
-    min-height: 100%;
-  }
+.el-menu {
+  min-height: 100%;
+}
 </style>

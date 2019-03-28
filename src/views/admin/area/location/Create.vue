@@ -4,14 +4,14 @@
       <div uk-grid>
         <div class="uk-width-auto">
           <div class="app--card-header__back">
-            <router-link :to="{ name: 'admin-category' }">
+            <router-link :to="{ name: 'admin-area-code' }">
               <font-awesome-icon icon="chevron-left"></font-awesome-icon>
             </router-link>
           </div>
         </div>
         <div class="uk-width-expand">
           <div class="app--card-header_title">
-            <h3>{{ title }}</h3>
+            <h3>{{title}}</h3>
           </div>
         </div>
       </div>
@@ -65,7 +65,7 @@ export default {
   data() {
     return {
       edit: false,
-      title: "New Category",
+      title: "New Location Code",
       input: {
         name: "",
         description: "",
@@ -83,8 +83,6 @@ export default {
 
       this.getCategory();
     }
-
-    console.log(this.$route.params.id);
   },
 
   methods: {
