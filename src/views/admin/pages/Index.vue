@@ -41,22 +41,38 @@
 </template>
 
 <script>
+import slugify from "slugify";
 export default {
   data() {
     return {
       page: {
         title: "",
-        body: ""
+        body: "",
+        slug: ""
       }
     };
   },
   methods: {
+    createSlug(string) {
+      return slugify(string, {
+        replacement: "-",
+        remove: null, // regex to remove characters
+        lower: true
+      });
+    },
     onSave() {
-      console.log(this.page);
+      let payload = {
+        title: this.page.title,
+        body: this.page.body,
+        slug: this.createSlug(this.page.title)
+      };
+      console.log(this.page, payload);
     },
     onReset() {
       let page = this.page;
-      (page.title = ""), (page.body = "");
+      page.title = "";
+      page.body = "";
+      page.slug = "";
     }
   }
 };
