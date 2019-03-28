@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       edit: false,
-      title: "New Sub District",
+      title: "New Subdistrict",
       input: {
         city: "",
         province: "",
@@ -57,7 +57,7 @@ export default {
   created() {
     if (this.$route.params.id) {
       this.edit = true;
-      this.title = "Edit Sub District";
+      this.title = "Edit Subdistrict";
     }
 
     this.fetchSubDistricts();

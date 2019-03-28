@@ -21,7 +21,6 @@
             <!-- <router-link :to="{ name: 'admin-area-code-create' }">
               <font-awesome-icon icon="plus"></font-awesome-icon>
             </router-link>-->
-            <font-awesome-icon icon="plus"></font-awesome-icon>
           </div>
         </div>
       </div>
