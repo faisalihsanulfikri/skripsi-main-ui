@@ -112,7 +112,6 @@ export default {
   },
   mounted () {
     this.d = new Printd()
-    // Print dialog events (v0.0.9+)
     const { contentWindow } = this.d.getIFrame()
     contentWindow.addEventListener('beforeprint', () => console.log('before print event!'))
     contentWindow.addEventListener('afterprint', () => console.log('after print event!'))
@@ -120,7 +119,6 @@ export default {
   methods: {
     fetchOrders () {
       this.$authHttp.get('/orders').then(res => {
-      //  this.$authHttp.get(`/v1/cfees`).then(res => {
         this.orders = res.data.data.map(order => {
           order['collapse'] = true
 
