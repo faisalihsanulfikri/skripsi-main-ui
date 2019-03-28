@@ -1,32 +1,33 @@
-import Vue from 'vue'
-import Vue2Filters from 'vue2-filters'
-import VeeValidate from 'vee-validate'
-import App from './App.vue'
-import router from './router'
-import store from './store/index'
-import util from './utils'
+import Vue from "vue";
+import Vue2Filters from "vue2-filters";
+import VeeValidate from "vee-validate";
+import App from "./App.vue";
+import router from "./router";
+import store from "./store/index";
+import util from "./utils";
 
-import './mixins'
+import "./mixins";
 
-import './lib/http'
-import './lib/auth'
-import './lib/service'
+import "./lib/http";
+import "./lib/auth";
+import "./lib/service";
 
-import './plugins/fontawesome'
-import './plugins/element-ui'
-import './plugins/google-analytic'
-import './plugins/sentry'
-import './plugins/uikit'
-import moment from 'moment'
+import "./plugins/fontawesome";
+import "./plugins/element-ui";
+import "./plugins/google-analytic";
+import "./plugins/sentry";
+import "./plugins/uikit";
+import "./plugins/vue-tinymce";
+import moment from "moment";
 
-Vue.prototype.moment = moment
-Vue.use(Vue2Filters)
+Vue.prototype.moment = moment;
+Vue.use(Vue2Filters);
 Vue.use(VeeValidate, {
-  events: 'blur'
-})
-Vue.use(util)
+  events: "blur"
+});
+Vue.use(util);
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 new Vue({
   router,
@@ -35,13 +36,13 @@ new Vue({
 
   render: h => h(App),
 
-  data () {
+  data() {
     return {
       user: {}
-    }
+    };
   },
 
-  async created () {
-    this.user = await this.$auth.getUser()
+  async created() {
+    this.user = await this.$auth.getUser();
   }
-}).$mount('#app')
+}).$mount("#app");
