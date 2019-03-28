@@ -1,4 +1,3 @@
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script> -->
 <template>
   <div class="uk-card uk-card-default">
     <div class="uk-card-header app--card-header">
@@ -157,7 +156,6 @@
                                       >
                                         <font-awesome-icon icon="check"></font-awesome-icon>
                                       </el-button>
-                                      <!-- -->
                                       <el-button
                                         v-if="item.showRejectButton"
                                         type="danger"
@@ -205,7 +203,6 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <!-- {{order}} -->
                           <tr v-for="(awb, index) in order.air_waybills" :key="index">
                             <td>
                               <router-link
@@ -214,7 +211,6 @@
                             </td>
                             <td>{{ awb.created_at }}</td>
                             <td class="uk-text-center">
-                              <!-- awb/find -->
                               <el-button type="primary" size="mini" @click="printAwb(awb.awb)">
                                 <font-awesome-icon icon="print"></font-awesome-icon>
                               </el-button>
@@ -285,9 +281,7 @@ export default {
         visible: false,
         data: {}
       },
-      // datas:[],
       orders: [],
-      // order: [],
       awb: [],
       totalPages: ["1"],
       pagination: {
@@ -299,9 +293,6 @@ export default {
       filter: {
         time: [],
         search: ""
-      },
-      master: {
-        addresses: []
       }
     };
   },
@@ -321,7 +312,6 @@ export default {
 
   methods: {
     onChangePagination(i) {
-      // console.log("test", i + 1);
       this.fetchOrders(i + 1);
     },
     onLoadDataPagination() {},
@@ -335,7 +325,6 @@ export default {
     },
     async onAwbCreated(res) {
       this.closeCreateAwbDialog();
-      // console.log(res.data.data.air_waybills[0].awb)
       this.orders = this.orders.map(order => {
         if (order.id === res.data.data.id) {
           let $order = res.data.data;
@@ -394,43 +383,6 @@ export default {
         })
         .catch(() => {});
     },
-    // receivedItem (orderCode, itemId, orderIndex) {
-    //   this.$confirm('Are you sure to confirm this item?', 'Confirm', {
-    //   type: 'warning'
-    //   }).then(() => {
-    //     this.updateItemStatus(orderCode, itemId, this.$store.state.kirimin.status.item_status.RECEIVED).then(
-    //       // console.log('test')
-    //       var datas = Object.assign({}, this.orders(orderIndex))
-    //
-    //       datas['orderCode'] = this.orders(orderIndex).code
-    //       datas['items'] = this.orders(orderIndex).item_groups.flat()
-    //         .filter(item => item.selected)
-    //         .map(item => {
-    //           return item.id
-    //         })
-    //         try {
-    //           let res = await this.$service.awb.create(datas)
-    //
-    //           // this.$notify({
-    //           //   title: 'SUCCESS',
-    //           //   message: res.data.message,
-    //           //   type: 'success'
-    //           // })
-    //
-    //           this.input = this.$options.data().input
-    //
-    //           this.$emit('done', res)
-    //         } catch (err) {
-    //           this.__handleError(this, err, true)
-    //         }
-    //     ).then(
-    //       var ref = this
-    //       var Awb = ref.getAwb(orderIndex)
-    //       printAwb(Awb)
-    //     )
-    //     )
-    //   }).catch(() => {})
-    // },
     rejectItem(orderCode, itemId) {
       this.$confirm("Are you sure to reject this payment?", "Confirm", {
         type: "warning"
@@ -450,7 +402,6 @@ export default {
         "Kirimin - Print AWB",
         "directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=0,resizable=0,width=800"
       );
-      // console.log(code)
     },
     mappingItems(order, items) {
       let $items = this.$util.orderItem.stringCurrency(items).map(item => {
@@ -479,8 +430,6 @@ export default {
       this.__startLoading();
 
       this.pagination.page = page;
-
-      // console.log("page", this.pagination.page);
 
       try {
         let res = await this.$service.order.get(
@@ -554,39 +503,6 @@ export default {
         this.__handleError(this, err, true);
       }
 
-      this.__stopLoading();
-    },
-    async getAwb(orderCode) {
-      this.__startLoading();
-
-      try {
-        let res = await this.$service.awb.find_number(orderCode);
-        this.orders = res.data.data.map(awb => {
-          awb["collapse"] = true;
-          awb.item_groups = awb.item_groups.map(items => {
-            return this.mappingItems(awb, items);
-          });
-          // awb.items = this.mappingItems(awb, order.items)
-          // console.log(awb)
-          return awb;
-        });
-      } catch (err) {
-        this.__handleError(this, err, true);
-      }
-      return awb;
-      this.__stopLoading();
-    },
-    async createData(data, inputData) {
-      this.__startLoading();
-      try {
-        console.log(data);
-        let res = await this.$service.awb.create(data);
-        inputData = this.$options.data().input;
-
-        this.$emit("onAwbCreated", res);
-      } catch (err) {
-        this.__handleError(this, err, true);
-      }
       this.__stopLoading();
     }
   }

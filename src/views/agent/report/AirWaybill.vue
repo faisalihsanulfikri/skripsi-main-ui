@@ -134,7 +134,6 @@ export default {
 
   methods: {
     onChangePagination(i) {
-      // console.log("test", i + 1);
       this.fetchAirWaybills(i + 1);
     },
     async exportReport() {
@@ -160,7 +159,6 @@ export default {
 
       this.pagination.page = page;
 
-      // console.log("page", this.pagination.page);
 
       try {
         let res = await this.$service.report.airWaybill(this.filter, page);

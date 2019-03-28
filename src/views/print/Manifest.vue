@@ -18,11 +18,6 @@
         </div>
 
 
-
-      <!-- <div v-if="awb.items" class="uk-margin">
-        <div class="uk-padding-small">
-        </div>
-      </div> -->
     </div>
   </div>
 </template>

@@ -16,7 +16,6 @@ export default {
   },
   watch:{
     graphdata: function(newOption, oldOption) {
-      // console.log('graph'+newOption+oldOption)
       this.renderChart({
         labels: this.labels,
         datasets: [

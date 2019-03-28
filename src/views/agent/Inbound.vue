@@ -236,7 +236,6 @@
           width: 10cm;
         }`
       this.d = new Printd()
-      // Print dialog events (v0.0.9+)
       const {
         contentWindow
       } = this.d.getIFrame()

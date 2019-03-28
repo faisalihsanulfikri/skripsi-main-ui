@@ -67,13 +67,10 @@ export default {
 
     methods: {
       onFileChange(e) {
-        // console.log(e.target.files[0])
       var files = e.target.files || e.dataTransfer.files;
       if (!files.length)
         return;
         this.files = e.target.files[0];
-        // this.files = this.$refs.files.files;
-      // this.createexcel(files[0]);
 
       },
       createexcel(file) {
@@ -83,14 +80,12 @@ export default {
         reader.onload = (e) => {
           vm.files = e.target.result;
         };
-        // reader.readAsDataURL(file);
       },
       removeexcel: function (e) {
         this.files = '';
       },
       async exports () {
         this.__startLoading()
-        // try {
           let data = new FormData()
           let config = {
             headers: {
@@ -99,7 +94,6 @@ export default {
           }
           data.append("excel", this.files, this.files.name),
           data.append("description", '.xlsx'),
-          // console.log(this.files),
           await this.$authHttp.post('/importOrder/excel/kirimin', data, config).then(res => {
 
             this.$notify({
@@ -108,7 +102,6 @@ export default {
               type: 'success'
             })
           }).catch(err => {
-            // this.$refs.upload.clearFiles()
             if (err.response) {
               let message = err.response.data.message ? err.response.data.message : err.response.statusText
 
@@ -119,20 +112,9 @@ export default {
               })
             }
           })
-          // let res = await this.$service.importExcel.store(this.excel);
-          // console.log(res);
-          // console.log(this.excel);
-          // this.$notify({
-          //   title: 'SUCCESS',
-          //   message: res.data.message,
-          //   type: 'success'
-          // });
-        // } catch (e) {
-        //   this.__handleError(this, err, true);
 
         this.__stopLoading()
         }
-        // this.$service.
       }
     }
 

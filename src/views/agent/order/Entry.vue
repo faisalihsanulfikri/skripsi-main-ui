@@ -7,16 +7,6 @@
             <h3 class="uk-card-title">Shipping Info</h3>
           </div>
           <div class="uk-card-body">
-            <!-- <h5 class="uk-heading-line"><span>Shipper</span></h5>
-            <div class="uk-margin-small">
-              <label class="uk-form-label">Warehouse</label>
-              <div>
-                <el-select v-model="input.warehouse" class="uk-width-1-1" @change="onWarehouseChanged">
-                  <el-option v-for="item in options.warehouse" :key="item.value" :value="item.value" :label="item.label">
-                  </el-option>
-                </el-select>
-              </div>
-            </div>-->
             <h5 class="uk-heading-line">
               <span>Receiver</span>
             </h5>
@@ -55,42 +45,6 @@
             <h5 class="uk-heading-line">
               <span>Extra</span>
             </h5>
-            <!-- <div class="uk-margin-small">
-              <label class="uk-form-label">
-                Asuransi
-                <el-tooltip class="item" effect="dark" content="Perlindungan pengiriman" placement="top">
-                  <font-awesome-icon icon="info-circle"></font-awesome-icon>
-                </el-tooltip>
-              </label>
-              <div class="uk-child-width-auto" uk-grid>
-                <label>
-                  <input v-model="input.insurance" class="uk-radio" type="radio" value="1" @click="onInsuranceChanged">
-                  <span class="uk-margin-small-left">Ya</span>
-                </label>
-                <label>
-                  <input v-model="input.insurance" class="uk-radio" type="radio" value="0" @click="onInsuranceChanged">
-                  <span class="uk-margin-small-left">Tidak</span>
-                </label>
-              </div>
-            </div>
-            <div class="uk-margin-small">
-              <label class="uk-form-label">
-                Consolidate
-                <el-tooltip class="item" effect="dark" content="Pengiriman lebih dari 1 paket" placement="top">
-                  <font-awesome-icon icon="info-circle"></font-awesome-icon>
-                </el-tooltip>
-              </label>
-              <div class="uk-child-width-auto" uk-grid>
-                <label>
-                  <input v-model="input.consolidate" class="uk-radio" type="radio" value="1" @click="onConsolidateChanged">
-                  <span class="uk-margin-small-left">Ya</span>
-                </label>
-                <label>
-                  <input v-model="input.consolidate" class="uk-radio" type="radio" value="0" @click="onConsolidateChanged">
-                  <span class="uk-margin-small-left">Tidak</span>
-                </label>
-              </div>
-            </div>-->
             <div class="uk-margin-small">
               <label class="uk-form-label">Notes</label>
               <textarea v-model="input.note" class="uk-textarea" rows="5"></textarea>
@@ -104,17 +58,6 @@
             <h3 class="uk-card-title">Package</h3>
           </div>
           <div class="uk-card-body">
-            <!-- <div class="uk-margin-small">
-              <label class="uk-form-label">Types of goods</label>
-              <select v-model="input.item.category" v-validate="rules.item.category" name="category" class="uk-select"
-                :class="{ 'uk-form-danger': errors.has('category') }" @change="onCategoryChanged">
-                <option v-for="(item, key) in options.category" :key="key" :value="item.value">
-                  {{ item.label }}
-                </option>
-              </select>
-            </div>
-
-            <hr>-->
             <div class="uk-margin-small">
               <div class="uk-grid-small" uk-grid>
                 <div style="width:50%">
@@ -419,7 +362,6 @@
             <tbody>
               <tr v-for="(item, index) in input.items" :key="index">
                 <td>{{ item.categoryName }}</td>
-                <!-- <td>{{ item.name }}</td> -->
                 <td>{{ item.reference }}</td>
                 <td class="uk-text-right">{{ item.quantity }}</td>
                 <td class="uk-text-right">
@@ -470,13 +412,7 @@
         </div>
       </div>
 
-      <div class="uk-card-footer uk-text-right">
-        <!-- <button
-          class="uk-button uk-button-primary"
-          :disabled="input.items.length < 1"
-          @click="openConfirmationDialog">
-            Next
-        </button>-->
+      <div class="uk-card-footer uk-text-right">\
         <button
           class="uk-button uk-button-primary"
           :disabled="input.items.length < 1"
@@ -566,7 +502,6 @@ export default {
       rules: {
         address: "required",
         item: {
-          // category: 'required',
           name: "required",
           price: "required|decimal:2",
           quantity: "required|numeric",
@@ -778,7 +713,6 @@ export default {
         });
 
         cb(items);
-        // console.log(items[0].email);
       } catch (err) {
         this.__handleError(this, err, true);
       }
@@ -944,11 +878,9 @@ export default {
 
       this.__startLoading();
 
-      // this.input.paymentMethod = paymentMethod
 
       try {
         let res = await this.$service.order.createKiriminFromAgent(this.input);
-        // console.log(res.data.req);
         this.$notify({
           title: "SUCCESS",
           message: res.data.message,

@@ -84,8 +84,6 @@
                     <font-awesome-icon icon="cloud-download-alt"></font-awesome-icon>
                   </el-button>
                 </td>
-                <!-- <td>{{ awb.awb }}</td>
-                <td>{{ awb.item_count }}</td>-->
               </tr>
               <tr v-show="!manifest.collapse" :key="`${index}_info`">
                 <td colspan="3">
@@ -168,7 +166,6 @@ export default {
 
   methods: {
     onChangePagination(i) {
-      // console.log("test", i + 1);
       this.getManifest(i + 1);
     },
     async getManifest(page) {
@@ -176,7 +173,6 @@ export default {
 
       this.pagination.page = page;
 
-      // console.log("page", this.pagination.page);
 
       try {
         let res = await this.$service.manifest.get(this.filter, page);
@@ -209,7 +205,6 @@ export default {
         let regexResult = content.match("filename=(.*)");
         let filename = regexResult[1].replace(new RegExp('"', "g"), "");
         let blob = new Blob([res.data]);
-        // console.log(res)
         saveAs(blob, filename);
       } catch (err) {
         this.__handleError(this, err, true);

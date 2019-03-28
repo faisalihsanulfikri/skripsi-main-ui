@@ -29,16 +29,7 @@
           <input type="checkbox" v-bind:value="format.awb" v-model="format.checked" v-bind:checked=true> {{ format.awb +' - '+ format.name+' - '+format.address }}
           <br>
         </span>
-        <!-- {{checkedNames}} -->
         <button type="button" @click="create">Create Manifest</button>
-        <!-- <input type="checkbox" id="jack" value="Jack" v-model="checkedManifest">
-        <label for="jack">Jack</label>
-        <input type="checkbox" id="john" value="John" v-model="checkedManifest">
-        <label for="john">John</label>
-        <input type="checkbox" id="mike" value="Mike" v-model="checkedManifest">
-        <label for="mike">Mike</label>
-        <br>
-        <span>Checked names: {{ checkedManifest }}</span> -->
       </div>
     </div>
   </div>
@@ -70,20 +61,6 @@ export default {
         return this.formats
      }
 
-    // checked: {
-    //   get: function () {
-    //     return true
-    //   }
-      // set: function (value) {
-      //   var selected = [];
-      //   if (value) {
-      //       this.users.forEach(function (user) {
-      //           selected.push(user.id);
-      //       });
-      //   }
-      //   his.selected = selected;
-      // }
-    // }
   },
   methods: {
     setFocus: function()

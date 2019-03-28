@@ -29,7 +29,6 @@ const awb = {
     return Vue.authHttp().get(`/awb_number/${code}`);
   },
   scan(code) {
-    // console.log(code)
     return Vue.authHttp().get(`/scan/${code}`);
   }
 };
@@ -153,7 +152,6 @@ const order = {
     return Vue.authHttp().post("/orders/kirimin", data);
   },
   createKiriminFromAgent(data = {}) {
-    // console.log(data)
     return Vue.authHttp().post("/agent/orders/kirimin", data);
   },
   updateItemStatus(orderCode = null, itemId = null, data = {}) {

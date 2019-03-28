@@ -52,17 +52,6 @@
         </table>
       </div>
     </div>
-    <!-- <div class="uk-card-footer uk-text-center">
-      <el-pagination
-        layout="prev, pager, next"
-        :page-size="pagination.per_page"
-        :page-count="pagination.last_page"
-        :total="pagination.total"
-        @current-change="onChangePage"
-      ></el-pagination>
-    </div>-->
-
-    <!-- pagination -->
 
     <div v-if="this.totalPages.length < 2"></div>
 
@@ -114,11 +103,6 @@ export default {
   },
 
   methods: {
-    // async onChangePage(page) {
-    //   this.pagination.current_page = page;
-
-    //   this.fetchCategories();
-    // },
     onChangePagination(i) {
       this.fetchCategories(i + 1);
     },
