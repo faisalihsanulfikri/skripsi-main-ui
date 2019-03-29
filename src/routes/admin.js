@@ -95,13 +95,8 @@ export default {
     },
 
     {
-<<<<<<< HEAD
-      path: "UserCreate",
-      name: "admin-user-create",
-=======
       path: 'user/create',
       name: 'admin-user-create',
->>>>>>> fix-dev
       component: UserCreate,
       meta: {
         auth: true,
