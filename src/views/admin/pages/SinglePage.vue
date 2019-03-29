@@ -11,7 +11,7 @@
         <div class="uk-width-expand">
           <div class="app--card-header_title">
             <h3>
-              <span>Single Page</span>
+              <span>Edit Page</span>
             </h3>
           </div>
         </div>
@@ -32,8 +32,8 @@
 
         <!-- Buttons -->
         <el-form-item>
-          <el-button type="primary" @click="onSave">Save</el-button>
-          <el-button @click="onReset">Reset</el-button>
+          <el-button type="primary" @click="onUpdate">Update</el-button>
+          <el-button @click="$router.push('/admin/pages')">Cancel</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -43,16 +43,32 @@
 <script>
 import slugify from "slugify";
 export default {
+  mounted() {
+    this.getSinglePage();
+  },
   data() {
     return {
-      page: {
-        title: "",
-        body: "",
-        slug: ""
-      }
+      page: {}
     };
   },
   methods: {
+    getSinglePage() {
+      this.__startLoading();
+      const endpoint = "/configs/pages/single";
+      const slug = this.$route.params.slug;
+      const payload = { slug };
+
+      return this.$authHttp
+        .post(endpoint, payload)
+        .then(res => {
+          this.page = res.data;
+          this.__stopLoading();
+        })
+        .catch(err => {
+          console.log(err);
+          this.__stopLoading();
+        });
+    },
     createSlug(string) {
       return slugify(string, {
         replacement: "-",
@@ -60,20 +76,36 @@ export default {
         lower: true
       });
     },
-    onSave() {
-      let payload = {
+    onUpdate() {
+      const payload = {
         title: this.page.title,
         body: this.page.body,
         slug: this.createSlug(this.page.title)
       };
+      const id = this.page.id;
+      const endpoint = `/configs/pages/${id}/update`;
 
-      console.log(payload); // Send this payload to server
-    },
-    onReset() {
-      let page = this.page;
-      page.title = "";
-      page.body = "";
-      page.slug = "";
+      this.$authHttp
+        .put(endpoint, payload)
+        .then(res => {
+          const resData = res.data;
+          console.log(resData);
+          const isSuccess = resData.success;
+          const message = resData.message;
+
+          if (isSuccess) {
+            this.$notify({
+              title: "SUCCESS",
+              message: message,
+              type: "success"
+            });
+            this.__fetchPages();
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          this.__stopLoading();
+        });
     }
   }
 };
