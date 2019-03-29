@@ -78,6 +78,24 @@
         </div>
         </div>
       </div>
+      <div v-if="awb.items" class="uk-margin">
+        <div class="uk-grid-small" uk-grid>
+          <div class="uk-width-expand">
+            <h5 class="uk-margin-remove uk-text-bold">Reference No.</h5>
+          </div>
+        </div>
+        <div class="uk-padding-small">
+          <div class="uk-grid-small" uk-grid>
+            <div class="uk-width-1-2">
+              <ul class="uk-list uk-list uk-margin-remove">
+                <li v-for="(item, index) in awb.items" :key="index">
+                  <font size="2">{{ `${item.reference}` }}</font>
+                </li>
+              </ul>
+            </div>
+        </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

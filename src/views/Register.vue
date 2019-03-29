@@ -1,4 +1,4 @@
-1x<template>
+<template>
   <div class="uk-margin-top uk-margin-bottom">
     <div class="uk-card uk-card-default">
       <div class="uk-card-header uk-text-center">

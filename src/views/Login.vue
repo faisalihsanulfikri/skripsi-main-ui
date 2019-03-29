@@ -41,7 +41,7 @@
                 </button>
               </div>
               <div class="uk-margin">
-                <button class="uk-button uk-button-default uk-width-1-1" :disabled="application.loading" @click="$router.push({ name: 'forgot'})">
+                <button class="uk-button uk-button-default uk-width-1-1" :disabled="application.loading" @click="$router.push({ name: 'forgot-password'})">
                   Forgot Password
                 </button>
               </div>

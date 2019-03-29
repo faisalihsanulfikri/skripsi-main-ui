@@ -9,6 +9,7 @@ import HowToKirimin from '../views/general/HowtoKirimin'
 import FiturBeliin from '../views/general/FeatureBeliin'
 import FiturKirimin from '../views/general/FeatureKirimin'
 import Calculator from '../views/member/Calculator'
+import ForgotPass from '../views/ForgotPass'
 
 import Register from '../views/Register'
 import Login from '../views/Login'
@@ -26,6 +27,11 @@ export default {
       path: 'register',
       name: 'register',
       component: Register
+    },
+    {
+      path: 'forgot-password',
+      name: 'forgot-password',
+      component: ForgotPass
     },
     {
       path: 'faq',
