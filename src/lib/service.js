@@ -101,6 +101,19 @@ const config = {
   }
 };
 
+const forgot = {
+  sendEmail(email = '', origin = "") {
+    // console.log(params)
+    return Vue.http().post('forgot-password', {
+      email,origin
+    })
+  },
+  changePassword(data = {}) {
+    // console.log(params)
+    return Vue.http().post('reset-password', data)
+  }
+}
+
 const invoice = {
   get(params = {}, page) {
     return Vue.authHttp().get("/invoices?page=" + page, {
@@ -291,6 +304,7 @@ const services = {
   category,
   chart,
   config,
+  forgot,
   invoice,
   manifest,
   order,
