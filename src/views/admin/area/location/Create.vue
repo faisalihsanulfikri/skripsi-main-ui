@@ -21,8 +21,8 @@
       <div class="uk-margin">
         <label class="uk-form-label">Province</label>
         <select
-          v-model="input.provinceId"
-          v-validate="rules.province"
+          v-model="input.province_name"
+          v-validate="rules.province_name"
           name="province"
           class="uk-select"
           @change="onProvinceChanged"
@@ -43,8 +43,8 @@
       <div class="uk-margin">
         <label class="uk-form-label">City</label>
         <select
-          v-model="input.cityId"
-          v-validate="rules.city"
+          v-model="input.district_name"
+          v-validate="rules.district_name"
           name="city"
           class="uk-select"
           @change="onCityChanged"
@@ -125,62 +125,59 @@ export default {
     async fetchProvinces() {
       this.__startLoading();
 
-      await this.__fetchProvinces().then(res => {
+      await this.__fetchProvincesLocationCode().then(res => {
         this.provinces = res.data;
 
         this.options.province = res.data.map(item => {
           let $item = {
-            value: parseInt(item.province_id),
-            label: item.province
+            value: item.province_name,
+            label: item.province_name
           };
 
           return $item;
         });
       });
-
-      // console.log(this.options.province);
 
       this.__stopLoading();
     },
     async fetchCities() {
       this.__startLoading();
 
-      await this.__fetchCitiesByProvince(this.input.provinceId).then(res => {
-        this.cities = res.data;
+      await this.__fetchCitiesLocationCode(this.input.province_name).then(
+        res => {
+          this.cities = res.data;
 
-        this.options.city = res.data.map(item => {
-          let $item = {
-            value: parseInt(item.city_id),
-            label:
-              item.type === "Kabupaten"
-                ? `Kab. ${item.city_name}`
-                : item.city_name
-          };
+          this.options.city = res.data.map(item => {
+            let $item = {
+              value: item.district_name,
+              label: item.district_name
+            };
 
-          return $item;
-        });
-      });
+            return $item;
+          });
+        }
+      );
 
       this.__stopLoading();
     },
     onProvinceChanged() {
       let provinces = this.provinces.filter(
-        province => province.province_id === this.input.provinceId
+        province => province.province_name === this.input.province_name
       );
 
       if (provinces.length > 0) {
-        this.input.province_name = provinces[0].province;
+        this.input.province_name = provinces[0].province_name;
       }
 
       this.fetchCities();
     },
     onCityChanged() {
       let cities = this.cities.filter(
-        city => city.city_id === this.input.cityId
+        city => city.district_name === this.input.district_name
       );
 
       if (cities.length > 0) {
-        this.input.district_name = cities[0].city_name;
+        this.input.district_name = cities[0].district_name;
       }
     },
 
@@ -197,9 +194,6 @@ export default {
 
       this.error = false;
       this.errorMessage = "";
-
-      // console.log(this.input);
-      // return this.__stopLoading();
 
       try {
         let res = await this.$service.area.locationsCreate(this.input);
