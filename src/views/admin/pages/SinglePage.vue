@@ -77,13 +77,35 @@ export default {
       });
     },
     onUpdate() {
-      let payload = {
+      const payload = {
         title: this.page.title,
         body: this.page.body,
         slug: this.createSlug(this.page.title)
       };
+      const id = this.page.id;
+      const endpoint = `/configs/pages/${id}/update`;
 
-      console.log(payload); // Send this payload to server
+      this.$authHttp
+        .put(endpoint, payload)
+        .then(res => {
+          const resData = res.data;
+          console.log(resData);
+          const isSuccess = resData.success;
+          const message = resData.message;
+
+          if (isSuccess) {
+            this.$notify({
+              title: "SUCCESS",
+              message: message,
+              type: "success"
+            });
+            this.__fetchPages();
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          this.__stopLoading();
+        });
     }
   }
 };
