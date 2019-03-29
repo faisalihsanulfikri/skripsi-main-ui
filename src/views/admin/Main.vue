@@ -14,7 +14,7 @@
           <el-menu-item index="/admin/master/warehouses">Warehouses</el-menu-item>
           <el-menu-item index="/admin/master/exchange-rates">Exchange Rates</el-menu-item>
           <!-- <el-menu-item index="/admin/master/area">Area</el-menu-item> -->
-          <el-submenu index="/admin">
+          <el-submenu index="/admin/area">
             <template slot="title">
               <span>Aera</span>
             </template>
@@ -33,7 +33,42 @@
           <el-menu-item index="/admin/users/premium">Premium</el-menu-item>
           <el-menu-item index="/admin/users/agent">Agent</el-menu-item>
           <el-menu-item index="/admin/users/admin">Admin</el-menu-item>
-          <el-menu-item index="/admin/UserCreate">Add User</el-menu-item>
+          <!-- <el-menu-item index="/admin/user/create">Add User</el-menu-item> -->
+
+          <el-submenu index="/admin/adduser">
+            <template slot="title">
+              <span>Add User</span>
+            </template>
+            <!-- <el-menu-item index="/admin/user/create?level=2">Add User Regular</el-menu-item>
+            <el-menu-item index="/admin/user/create?level=3">Add User Premium</el-menu-item>
+            <el-menu-item index="/admin/user/create?level=4">Add User Agent</el-menu-item>
+            <el-menu-item index="/admin/user/create?level=1">Add User Admin</el-menu-item>-->
+
+            <el-menu-item>
+              <router-link
+                :to="{ name: 'admin-user-create', params: { level: '2' } }"
+                class="user"
+              >Add User Regular</router-link>
+            </el-menu-item>
+            <el-menu-item>
+              <router-link
+                :to="{ name: 'admin-user-create', params: { level: '3' } }"
+                class="user"
+              >Add User Premium</router-link>
+            </el-menu-item>
+            <el-menu-item>
+              <router-link
+                :to="{ name: 'admin-user-create', params: { level: '4' } }"
+                class="user"
+              >Add User Agent</router-link>
+            </el-menu-item>
+            <el-menu-item>
+              <router-link
+                :to="{ name: 'admin-user-create', params: { level: '1' } }"
+                class="user"
+              >Add User Admin</router-link>
+            </el-menu-item>
+          </el-submenu>
         </el-submenu>
         <el-menu-item index="/admin/pages">PAGES</el-menu-item>
         <el-menu-item index="/admin/settings">SETTINGS</el-menu-item>
@@ -68,10 +103,26 @@
   </el-container>
 </template>
 
+<script>
+export default {
+  watch: {
+    $route: {}
+  },
+  methods: {
+    onAddUser() {}
+  }
+};
+</script>
+
+
 <style lang="scss" scoped>
 .el-header {
   background-color: #fff;
   height: 80px !important;
+}
+
+.user {
+  color: white;
 }
 
 .el-menu {
