@@ -11,7 +11,7 @@
         <div class="uk-width-expand">
           <div class="app--card-header_title">
             <h3>
-              <span>Single Page</span>
+              <span>Edit Page</span>
             </h3>
           </div>
         </div>
@@ -32,8 +32,8 @@
 
         <!-- Buttons -->
         <el-form-item>
-          <el-button type="primary" @click="onSave">Save</el-button>
-          <el-button @click="onReset">Reset</el-button>
+          <el-button type="primary" @click="onUpdate">Update</el-button>
+          <el-button @click="$router.push('/admin/pages')">Cancel</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -43,16 +43,32 @@
 <script>
 import slugify from "slugify";
 export default {
+  mounted() {
+    this.getSinglePage();
+  },
   data() {
     return {
-      page: {
-        title: "",
-        body: "",
-        slug: ""
-      }
+      page: {}
     };
   },
   methods: {
+    getSinglePage() {
+      this.__startLoading();
+      const endpoint = "/configs/pages/single";
+      const slug = this.$route.params.slug;
+      const payload = { slug };
+
+      return this.$authHttp
+        .post(endpoint, payload)
+        .then(res => {
+          this.page = res.data;
+          this.__stopLoading();
+        })
+        .catch(err => {
+          console.log(err);
+          this.__stopLoading();
+        });
+    },
     createSlug(string) {
       return slugify(string, {
         replacement: "-",
@@ -60,7 +76,7 @@ export default {
         lower: true
       });
     },
-    onSave() {
+    onUpdate() {
       let payload = {
         title: this.page.title,
         body: this.page.body,
@@ -68,12 +84,6 @@ export default {
       };
 
       console.log(payload); // Send this payload to server
-    },
-    onReset() {
-      let page = this.page;
-      page.title = "";
-      page.body = "";
-      page.slug = "";
     }
   }
 };
