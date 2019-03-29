@@ -226,7 +226,10 @@ const user = {
     return Vue.authHttp().get(`/users/${level}`, {
       params
     });
-  }
+  },
+  userStore(params = {}) {
+    return Vue.authHttp().post(`/user/store`, params);
+  },
 };
 
 const warehouse = {
