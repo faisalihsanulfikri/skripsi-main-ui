@@ -4,23 +4,12 @@
       <div uk-grid>
         <div class="uk-width-auto">
           <div class="app--card-header__back">
-            <!-- <router-link
-              :to="{ name: 'admin-area-province-city', params: { provinceId: $route.params.provinceId } }"
-            >-->
             <font-awesome-icon icon="chevron-left"></font-awesome-icon>
-            <!-- </router-link> -->
           </div>
         </div>
         <div class="uk-width-expand">
           <div class="app--card-header_title">
-            <h3>Subdistricts</h3>
-          </div>
-        </div>
-        <div class="uk-width-auto">
-          <div class="app--card-header__link">
-            <!-- <router-link :to="{ name: 'admin-area-code-create' }">
-              <font-awesome-icon icon="plus"></font-awesome-icon>
-            </router-link>-->
+            <h3>Cities</h3>
           </div>
         </div>
       </div>
@@ -29,38 +18,29 @@
       <div class="uk-margin uk-grid-small" uk-grid>
         <div class="uk-width-1-3 uk-margin-auto-left">
           <el-input v-model="filter.search" placeholder="Search...">
-            <el-button slot="append" icon="el-icon-search" @click="fetchSubDistricts"></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="fetchCities"></el-button>
           </el-input>
         </div>
       </div>
       <div class="uk-overflow-auto">
-        <!-- start -->
         <table class="uk-table uk-table-divider uk-table-small">
           <thead>
             <tr>
-              <th>Sub District</th>
               <th>City</th>
+              <th>Type</th>
+              <th>Postal Code</th>
               <th>Province</th>
-              <th class="uk-text-center">Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="sub in subdistricts" :key="sub.subdistrict_id">
-              <td>{{sub.subdistrict_name}}</td>
-              <td>{{sub.city}}</td>
-              <td>{{sub.province}}</td>
-
-              <td class="uk-text-center">
-                <router-link
-                  :to="{ name: 'admin-area-subdistrict-edit', params: { id: sub.subdistrict_id } }"
-                >
-                  <font-awesome-icon icon="edit"></font-awesome-icon>
-                </router-link>
-              </td>
+            <tr v-for="city in cities" :key="city.city_id">
+              <td>{{city.city_name}}</td>
+              <td>{{city.type}}</td>
+              <td>{{city.postal_code}}</td>
+              <td>{{city.province}}</td>
             </tr>
           </tbody>
         </table>
-        <!-- end -->
       </div>
 
       <!-- pagination -->
@@ -98,7 +78,7 @@
 export default {
   data() {
     return {
-      subdistricts: {},
+      cities: {},
       totalPages: ["1"],
       pagination: {
         total: 0,
@@ -112,19 +92,19 @@ export default {
     };
   },
   created() {
-    this.fetchSubDistricts(this.pagination.page);
+    this.fetchCities(this.pagination.page);
   },
   methods: {
     onChangePagination(i) {
-      this.fetchSubDistricts(i + 1);
+      this.fetchCities(i + 1);
     },
-    async fetchSubDistricts(page) {
+    async fetchCities(page) {
       this.__startLoading();
 
       this.pagination.page = page;
 
       try {
-        let res = await this.$service.area.subdistricts(
+        let res = await this.$service.area.cities(
           {
             search: this.filter.search
           },
@@ -135,9 +115,9 @@ export default {
         this.totalPages = res.data.pages;
         this.current_page = page;
 
-        this.subdistricts = res.data.data;
+        this.cities = res.data.data;
 
-        console.log(this.subdistricts);
+        console.log(this.cities);
       } catch (err) {
         this.__handleError(this, err, true);
       }

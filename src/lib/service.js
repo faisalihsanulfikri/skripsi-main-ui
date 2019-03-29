@@ -261,6 +261,9 @@ const area = {
       params
     });
   },
+  locationsCreate(data = {}) {
+    return Vue.authHttp().post("/locations/", data);
+  },
   subdistricts(params = {}, page) {
     return Vue.authHttp().get("/sub-districts?page=" + page, {
       params
@@ -268,7 +271,13 @@ const area = {
   },
   findSubdistrict(code) {
     return Vue.authHttp().get(`/sub-districts/${code}`);
-  }
+  },
+  cities(params = {}, page) {
+    return Vue.authHttp().get("/city/list?page=" + page, {
+      params
+    });
+  },
+
 };
 
 

@@ -17,41 +17,61 @@
       </div>
     </div>
     <div class="uk-card-body">
+      <!-- Province -->
       <div class="uk-margin">
-        <label class="uk-form-label">Name</label>
-        <el-input v-model="input.name"></el-input>
+        <label class="uk-form-label">Province</label>
+        <select
+          v-model="input.province_name"
+          v-validate="rules.province_name"
+          name="province"
+          class="uk-select"
+          @change="onProvinceChanged"
+        >
+          <option
+            v-for="(item, index) in options.province"
+            :key="index"
+            :value="item.value"
+          >{{ item.label }}</option>
+        </select>
+        <p
+          v-if="errors.first('province')"
+          class="uk-margin-small uk-text-danger"
+        >{{ errors.first('province') }}</p>
       </div>
-      <div class="uk-margin">
-        <label class="uk-form-label">Description</label>
-        <el-input v-model="input.description" type="textarea" rows="10"></el-input>
-      </div>
-      <div class="uk-margin">
-        <label class="uk-form-label">Required Document</label>
 
-        <div class="req-doc">
-          <label class="btn-r">
-            <input
-              v-model="input.document"
-              class="uk-radio"
-              type="radio"
-              value="yes"
-              @click="onDocumentChanged"
-            >
-            <span class="uk-margin-small-left">Yes</span>
-          </label>
-
-          <label class="btn-r">
-            <input
-              v-model="input.document"
-              class="uk-radio"
-              type="radio"
-              value="No"
-              @click="onDocumentChanged"
-            >
-            <span class="uk-margin-small-left">No</span>
-          </label>
-        </div>
+      <!-- city -->
+      <div class="uk-margin">
+        <label class="uk-form-label">City</label>
+        <select
+          v-model="input.district_name"
+          v-validate="rules.district_name"
+          name="city"
+          class="uk-select"
+          @change="onCityChanged"
+        >
+          <option
+            v-for="(item, index) in options.city"
+            :key="index"
+            :value="item.value"
+          >{{ item.label }}</option>
+        </select>
+        <p
+          v-if="errors.first('city')"
+          class="uk-margin-small uk-text-danger"
+        >{{ errors.first('city') }}</p>
       </div>
+
+      <!-- Sub District -->
+      <div class="uk-margin">
+        <label class="uk-form-label">Subdistrict</label>
+        <el-input v-model="input.subdistrict_name"></el-input>
+      </div>
+
+      <div class="uk-margin">
+        <label class="uk-form-label">City Code</label>
+        <el-input v-model="input.city_code"></el-input>
+      </div>
+
       <el-alert v-if="error" title="ERROR" type="error" :description="errorMessage" show-icon></el-alert>
     </div>
     <div class="uk-card-footer uk-text-right">
@@ -67,9 +87,24 @@ export default {
       edit: false,
       title: "New Location Code",
       input: {
-        name: "",
-        description: "",
-        document: ""
+        province_name: "",
+        district_name: "",
+        subdistrict_name: "",
+        city_code: "",
+        provinceId: "",
+        cityId: ""
+      },
+      rules: {
+        province_name: "required",
+        district_name: "required",
+        subdistrict_name: "required",
+        city_code: "required"
+      },
+      provinces: [],
+      cities: [],
+      options: {
+        province: [],
+        city: []
       },
       error: false,
       errorMessage: ""
@@ -79,35 +114,74 @@ export default {
   created() {
     if (this.$route.params.id) {
       this.edit = true;
-      this.title = "Edit Category";
+      this.title = "Edit Location Code";
 
-      this.getCategory();
+      // this.fetchProvinces();
     }
+    this.fetchProvinces();
   },
 
   methods: {
-    onDocumentChanged() {
-      if (this.input.length > 0) {
-        this.input.document = "";
-      }
-    },
-    async getCategory() {
+    async fetchProvinces() {
       this.__startLoading();
 
-      this.error = false;
-      this.errorMessage = "";
+      await this.__fetchProvincesLocationCode().then(res => {
+        this.provinces = res.data;
 
-      try {
-        let res = await this.$service.category.find(this.$route.params.id);
+        this.options.province = res.data.map(item => {
+          let $item = {
+            value: item.province_name,
+            label: item.province_name
+          };
 
-        this.input.name = res.data.name;
-        this.input.description = res.data.description;
-      } catch (err) {
-        this.__handleError(this, err, true);
-      }
+          return $item;
+        });
+      });
 
       this.__stopLoading();
     },
+    async fetchCities() {
+      this.__startLoading();
+
+      await this.__fetchCitiesLocationCode(this.input.province_name).then(
+        res => {
+          this.cities = res.data;
+
+          this.options.city = res.data.map(item => {
+            let $item = {
+              value: item.district_name,
+              label: item.district_name
+            };
+
+            return $item;
+          });
+        }
+      );
+
+      this.__stopLoading();
+    },
+    onProvinceChanged() {
+      let provinces = this.provinces.filter(
+        province => province.province_name === this.input.province_name
+      );
+
+      if (provinces.length > 0) {
+        this.input.province_name = provinces[0].province_name;
+      }
+
+      this.fetchCities();
+    },
+    onCityChanged() {
+      let cities = this.cities.filter(
+        city => city.district_name === this.input.district_name
+      );
+
+      if (cities.length > 0) {
+        this.input.district_name = cities[0].district_name;
+      }
+    },
+
+    // old
     save() {
       if (this.edit) {
         this.update();
@@ -121,11 +195,8 @@ export default {
       this.error = false;
       this.errorMessage = "";
 
-      console.log(this.input);
-      return this.__stopLoading();
-
       try {
-        let res = await this.$service.category.create(this.input);
+        let res = await this.$service.area.locationsCreate(this.input);
 
         this.$notify({
           title: "SUCCESS",
@@ -133,38 +204,38 @@ export default {
           type: "success"
         });
 
-        this.$router.push({ name: "admin-category" });
-      } catch (err) {
-        this.__handleError(this, err, true);
-      }
-
-      this.__stopLoading();
-    },
-    async update() {
-      this.__startLoading();
-
-      this.error = false;
-      this.errorMessage = "";
-
-      try {
-        let res = await this.$service.category.update(
-          this.$route.params.id,
-          this.input
-        );
-
-        this.$notify({
-          title: "SUCCESS",
-          message: res.data.message,
-          type: "success"
-        });
-
-        this.$router.push({ name: "admin-category" });
+        this.$router.push({ name: "admin-area-code" });
       } catch (err) {
         this.__handleError(this, err, true);
       }
 
       this.__stopLoading();
     }
+    // async update() {
+    //   this.__startLoading();
+
+    //   this.error = false;
+    //   this.errorMessage = "";
+
+    //   try {
+    //     let res = await this.$service.category.update(
+    //       this.$route.params.id,
+    //       this.input
+    //     );
+
+    //     this.$notify({
+    //       title: "SUCCESS",
+    //       message: res.data.message,
+    //       type: "success"
+    //     });
+
+    //     this.$router.push({ name: "admin-category" });
+    //   } catch (err) {
+    //     this.__handleError(this, err, true);
+    //   }
+
+    //   this.__stopLoading();
+    // }
   }
 };
 </script>
