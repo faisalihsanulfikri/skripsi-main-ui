@@ -32,11 +32,12 @@
           </thead>
           <tbody>
             <tr v-for="province in provinces" :key="province.province_id">
-              <td class="uk-text-right">{{ province.id }}</td>
+              <td class="uk-text-right">{{ province.province_id }}</td>
               <td>
-                <router-link
+                <!-- <router-link
                   :to="{ name: 'admin-area-province-city', params: { provinceId: province.province_id } }"
-                >{{ province.province }}</router-link>
+                >{{ province.province }}</router-link>-->
+                {{ province.province }}
               </td>
             </tr>
           </tbody>

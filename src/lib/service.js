@@ -101,6 +101,19 @@ const config = {
   }
 };
 
+const forgot = {
+  sendEmail(email = '', origin = "") {
+    // console.log(params)
+    return Vue.http().post('forgot-password', {
+      email,origin
+    })
+  },
+  changePassword(data = {}) {
+    // console.log(params)
+    return Vue.http().post('reset-password', data)
+  }
+}
+
 const invoice = {
   get(params = {}, page) {
     return Vue.authHttp().get("/invoices?page=" + page, {
@@ -248,6 +261,9 @@ const area = {
       params
     });
   },
+  locationsCreate(data = {}) {
+    return Vue.authHttp().post("/locations/", data);
+  },
   subdistricts(params = {}, page) {
     return Vue.authHttp().get("/sub-districts?page=" + page, {
       params
@@ -255,7 +271,13 @@ const area = {
   },
   findSubdistrict(code) {
     return Vue.authHttp().get(`/sub-districts/${code}`);
-  }
+  },
+  cities(params = {}, page) {
+    return Vue.authHttp().get("/city/list?page=" + page, {
+      params
+    });
+  },
+
 };
 
 
@@ -279,6 +301,7 @@ const services = {
   category,
   chart,
   config,
+  forgot,
   invoice,
   manifest,
   order,
