@@ -1,155 +1,177 @@
-import Vue from 'vue'
+import Vue from "vue";
 
-import $router from './router'
-import $store from './store'
+import $router from "./router";
+import $store from "./store";
 
 Vue.mixin({
   computed: {
-    application () {
+    application() {
       return {
         loading: $store.state.app.loading,
         loadingFullScreen: $store.state.app.loadingFullScreen
-      }
+      };
     }
   },
 
   methods: {
-    __startLoading (fullScreen = true) {
-      $store.dispatch('app/startLoading', fullScreen)
+    __startLoading(fullScreen = true) {
+      $store.dispatch("app/startLoading", fullScreen);
     },
-    __stopLoading () {
-      $store.dispatch('app/stopLoading')
+    __stopLoading() {
+      $store.dispatch("app/stopLoading");
     },
-    __handleError (context, err, notify = false) {
+    __handleError(context, err, notify = false) {
       if (err.response) {
-        context.error = true
-        context.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
+        context.error = true;
+        context.errorMessage = err.response.data.message
+          ? err.response.data.message
+          : err.response.statusText;
 
         if (notify) {
           context.$notify({
-            title: 'ERROR',
+            title: "ERROR",
             message: context.errorMessage,
-            type: 'error'
-          })
+            type: "error"
+          });
         }
 
         if (err.response.data.errorValidation) {
-          context.$validator.errors.clear()
+          context.$validator.errors.clear();
 
-          context.validationErrors = err.response.data.errors
+          context.validationErrors = err.response.data.errors;
 
           Object.keys(context.validationErrors).forEach(key => {
             context.$validator.errors.add({
               field: key,
               msg: context.validationErrors[key][0]
-            })
-          })
+            });
+          });
         }
       }
     },
-    __roundHalf (value) {
-      let splitedValue = parseFloat(value).toFixed(1).split('.')
-      let x = parseInt(splitedValue[0])
-      let y = parseInt(splitedValue[1])
+    __roundHalf(value) {
+      let splitedValue = parseFloat(value)
+        .toFixed(1)
+        .split(".");
+      let x = parseInt(splitedValue[0]);
+      let y = parseInt(splitedValue[1]);
 
       if (y > 0 && y <= 5) {
-        y = 5
+        y = 5;
       } else if (y > 5 && y <= 9) {
-        x += 1
-        y = 0
+        x += 1;
+        y = 0;
       }
 
-      return parseFloat(`${x}.${y}`)
+      return parseFloat(`${x}.${y}`);
     },
-    __focusElement (elementId) {
+    __focusElement(elementId) {
       document.getElementById(elementId).scrollIntoView({
-        behavior: 'smooth'
-      })
+        behavior: "smooth"
+      });
     },
-    __logout () {
-      Vue.auth.destroy()
+    __logout() {
+      Vue.auth.destroy();
 
       $router.push({
-        path: '/login',
+        path: "/login",
         force: true
-      })
+      });
     },
-    __internationalCurrency (value) {
-      return Vue.options.filters.currency(value, '', 2, {
-        thousandsSeparator: ',',
-        decimalSeparator: '.'
-      })
+    __internationalCurrency(value) {
+      return Vue.options.filters.currency(value, "", 2, {
+        thousandsSeparator: ",",
+        decimalSeparator: "."
+      });
     },
-    __fetchWarehouses () {
+    __fetchWarehouses() {
       return new Promise((resolve, reject) => {
-        Vue.http().get('/warehouses/list')
+        Vue.http()
+          .get("/warehouses/list")
           .then(res => {
-            resolve(res)
+            resolve(res);
           })
           .catch(err => {
-            reject(err)
-          })
-      })
+            reject(err);
+          });
+      });
     },
-    __fetchProvinces () {
+    __fetchProvinces() {
       return new Promise((resolve, reject) => {
-        Vue.http().get('/provinces')
+        Vue.http()
+          .get("/provinces")
           .then(res => {
-            resolve(res)
+            resolve(res);
           })
           .catch(err => {
-            reject(err)
-          })
-      })
+            reject(err);
+          });
+      });
     },
-    __fetchCitiesByProvince (id) {
+    __fetchCitiesByProvince(id) {
       return new Promise((resolve, reject) => {
-        Vue.http().get(`/provinces/${id}/cities`)
+        Vue.http()
+          .get(`/provinces/${id}/cities`)
           .then(res => {
-            resolve(res)
+            resolve(res);
           })
           .catch(err => {
-            reject(err)
-          })
-      })
+            reject(err);
+          });
+      });
     },
-    __fetchDistrictsByCity (id) {
+    __fetchDistrictsByCity(id) {
       return new Promise((resolve, reject) => {
-        Vue.http().get(`/cities/${id}/sub-districts`)
+        Vue.http()
+          .get(`/cities/${id}/sub-districts`)
           .then(res => {
-            resolve(res)
+            resolve(res);
           })
           .catch(err => {
-            reject(err)
-          })
-      })
+            reject(err);
+          });
+      });
     },
-    __fetchUserAddresses () {
+    __fetchUserAddresses() {
       return new Promise((resolve, reject) => {
-        Vue.authHttp().get('/user/addresses/list')
+        Vue.authHttp()
+          .get("/user/addresses/list")
           .then(res => {
-            resolve(res)
+            resolve(res);
           })
           .catch(err => {
-            reject(err)
-          })
-      })
+            reject(err);
+          });
+      });
     },
-    __fetchAgentAddresses () {
+    __fetchAgentAddresses() {
       return new Promise((resolve, reject) => {
-        Vue.authHttp().get('/agent/addresses/list')
+        Vue.authHttp()
+          .get("/agent/addresses/list")
           .then(res => {
-            resolve(res)
+            resolve(res);
           })
           .catch(err => {
-            reject(err)
-          })
-      })
+            reject(err);
+          });
+      });
     },
-    __getUsersByLevel (level, params) {
+    __getUsersByLevel(level, params) {
       return Vue.authHttp().get(`/users/${level}`, {
         params
-      })
+      });
+    },
+    __fetchPages() {
+      return new Promise((resolve, reject) => {
+        Vue.authHttp("/configs/pages")
+          .get("/configs/pages")
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
     }
   }
-})
+});
