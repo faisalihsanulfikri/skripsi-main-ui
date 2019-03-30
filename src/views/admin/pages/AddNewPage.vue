@@ -53,6 +53,11 @@ export default {
     };
   },
   methods: {
+    resetInput(page) {
+      page.title = "";
+      page.body = "";
+      page.slug = "";
+    },
     createSlug(string) {
       return slugify(string, {
         replacement: "-",
@@ -60,20 +65,56 @@ export default {
         lower: true
       });
     },
-    onSave() {
-      let payload = {
+    async onSave() {
+      const payload = {
         title: this.page.title,
         body: this.page.body,
         slug: this.createSlug(this.page.title)
       };
 
-      console.log(payload); // Send this payload to server
+      try {
+        this.__startLoading();
+
+        const page = this.page;
+        const endpoint = "/configs/pages/create";
+        const createPage = await this.$authHttp.post(endpoint, payload);
+        const isSuccess = createPage.data.success;
+        const message = createPage.data.message;
+
+        if (isSuccess) {
+          this.$notify({
+            title: "SUCCESS",
+            message: message,
+            type: "success"
+          });
+
+          this.resetInput(page);
+        }
+      } catch (error) {
+        const errStatus = error.response.status;
+        const errMsg = error.response.data.message;
+
+        if (errStatus === 422) {
+          this.$notify({
+            title: "Warning",
+            message: errMsg,
+            type: "warning"
+          });
+        } else {
+          this.$notify({
+            title: "Error",
+            message:
+              "Terjadi kesalahan pada server, harap hubungi admin@kirimin.co.id",
+            type: "error"
+          });
+        }
+      }
+
+      this.__stopLoading();
     },
     onReset() {
       let page = this.page;
-      page.title = "";
-      page.body = "";
-      page.slug = "";
+      this.resetInput(page);
     }
   }
 };
