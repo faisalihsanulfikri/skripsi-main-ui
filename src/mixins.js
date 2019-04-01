@@ -184,23 +184,6 @@ Vue.mixin({
             reject(err);
           });
       });
-    },
-    __getUsersByLevel(level, params) {
-      return Vue.authHttp().get(`/users/${level}`, {
-        params
-      });
-    },
-    __fetchCitiesLocationCode(param) {
-      return new Promise((resolve, reject) => {
-        Vue.authHttp()
-          .get(`/locations/cities/${param}`)
-          .then(res => {
-            resolve(res);
-          })
-          .catch(err => {
-            reject(err);
-          });
-      });
     }
   }
 });

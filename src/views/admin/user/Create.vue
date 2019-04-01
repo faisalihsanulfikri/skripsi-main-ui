@@ -14,6 +14,27 @@
       <div uk-grid>
         <div class="uk-width-1-2">
           <div class="uk-margin">
+            <label class="uk-form-label">Level</label>
+            <select
+              v-model="input.level"
+              v-validate="rules.level"
+              name="province"
+              class="uk-select"
+              @change="onLevelChanged"
+            >
+              <option
+                v-for="(item, index) in options.level"
+                :key="index"
+                :value="item.value"
+              >{{ item.label }}</option>
+            </select>
+            <small
+              v-if="errors.first('level')"
+              class="uk-margin-small uk-text-danger"
+            >{{ errors.first('level') }}</small>
+          </div>
+
+          <div class="uk-margin">
             <label class="uk-form-label">Name</label>
             <input
               v-model="input.name"
@@ -109,7 +130,8 @@
 export default {
   data() {
     return {
-      levelName: "",
+      index: "",
+      route_name: "",
       edit: false,
       title: "New User",
       input: {
@@ -123,6 +145,7 @@ export default {
         level_name: ""
       },
       rules: {
+        level: "required",
         name: "required|alpha_spaces",
         email: "required|email",
         password: "required|min:6",
@@ -143,21 +166,23 @@ export default {
   },
 
   created() {
-    this.fetchLevels();
-    this.onUserCreate();
-
-    if (this.input.level) {
-      console.log(this.input.level);
+    //add from type of user
+    if (this.$route.params.level) {
+      this.index = this.$route.params.level;
     } else {
-      // this.$router.push("/admin/users/regular");
+      this.index = "2";
     }
 
+    //if edit user
     if (this.$route.params.id) {
       this.edit = true;
       this.title = "Edit User";
 
       //   this.fetchUsers();
     }
+
+    this.onUserCreate();
+    this.fetchLevels();
   },
 
   methods: {
@@ -167,19 +192,19 @@ export default {
       switch (this.$route.params.level) {
         case "2":
           this.title = "New User Regular";
-          this.levelName = "regular";
+          this.route_name = "regular";
           break;
         case "3":
           this.title = "New User Premium";
-          this.levelName = "premium";
+          this.route_name = "premium";
           break;
         case "4":
           this.title = "New User Agent";
-          this.levelName = "agent";
+          this.route_name = "agent";
           break;
         case "1":
           this.title = "New User Admin";
-          this.levelName = "admin";
+          this.route_name = "admin";
           break;
       }
     },
@@ -202,13 +227,13 @@ export default {
           return $item;
         });
 
-        this.input.level = res.data[0].code;
-        this.input.level_name = res.data[0].name;
+        console.log(this.index);
 
-        console.log("res data", res.data);
-        console.log("option level", this.options.level);
-        console.log("level", this.input.level);
-        console.log("level name", this.input.level_name);
+        let i = this.index;
+
+        this.input.level = res.data[i].code;
+        this.input.level_name = res.data[i].name;
+        this.route_name = res.data[i].name.toLowerCase();
       } catch (err) {
         this.__handleError(this, err, true);
       }
@@ -233,6 +258,18 @@ export default {
 
     //   this.__stopLoading();
     // },
+    onLevelChanged() {
+      let level = this.master.levels.filter(
+        level => level.code == this.input.level
+      );
+
+      if (level.length > 0) {
+        this.input.level = level[0].code;
+        this.input.level_name = level[0].name;
+        this.route_name = level[0].name.toLowerCase();
+      }
+    },
+
     save() {
       if (this.edit) {
         this.update();
@@ -250,8 +287,9 @@ export default {
       this.error = false;
       this.errorMessage = "";
 
-      //   console.log(this.input);
-      //   return this.__stopLoading();
+      // console.log("input", this.input);
+      // console.log("route name", this.route_name);
+      // return this.__stopLoading();
 
       try {
         let res = await this.$service.user.userStore(this.input);
@@ -262,7 +300,7 @@ export default {
           type: "success"
         });
 
-        this.$router.push("/admin/users/" + this.levelName);
+        this.$router.push("/admin/users/" + this.route_name);
       } catch (err) {
         this.__handleError(this, err, true);
       }
