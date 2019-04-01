@@ -33,16 +33,15 @@
           <el-menu-item index="/admin/users/premium">Premium</el-menu-item>
           <el-menu-item index="/admin/users/agent">Agent</el-menu-item>
           <el-menu-item index="/admin/users/admin">Admin</el-menu-item>
-          <!-- <el-menu-item index="/admin/user/create">Add User</el-menu-item> -->
+          <el-menu-item index="/admin/user/create">Add User</el-menu-item>
+          <!-- <router-link :to="{ name: 'admin-user-create', params: { level: '2' } }" class="user">
+            <el-menu-item>Add User</el-menu-item>
+          </router-link>-->
 
-          <el-submenu index="/admin/adduser">
+          <!-- <el-submenu index="/admin/adduser">
             <template slot="title">
               <span>Add User</span>
             </template>
-            <!-- <el-menu-item index="/admin/user/create?level=2">Add User Regular</el-menu-item>
-            <el-menu-item index="/admin/user/create?level=3">Add User Premium</el-menu-item>
-            <el-menu-item index="/admin/user/create?level=4">Add User Agent</el-menu-item>
-            <el-menu-item index="/admin/user/create?level=1">Add User Admin</el-menu-item>-->
 
             <el-menu-item>
               <router-link
@@ -68,7 +67,7 @@
                 class="user"
               >Add User Admin</router-link>
             </el-menu-item>
-          </el-submenu>
+          </el-submenu>-->
         </el-submenu>
         <el-menu-item index="/admin/pages">PAGES</el-menu-item>
         <el-menu-item index="/admin/settings">SETTINGS</el-menu-item>
