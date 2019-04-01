@@ -81,8 +81,30 @@ export default {
       const slug = row.slug;
       this.$router.push(`/admin/pages/${slug}`);
     },
-    handleDelete(index, row) {
-      console.log(index, row);
+    async handleDelete(index, row) {
+      const id = row.id;
+      const title = row.title;
+      const endpoint = `/configs/pages/${id}/delete`;
+      try {
+        const res = await this.$authHttp.delete(endpoint);
+
+        if (res.status === 201) {
+          this.$notify({
+            type: "success",
+            title: "success",
+            message: `${title} berhasil dihapus dari database.`
+          });
+          this.getPages();
+        }
+      } catch (err) {
+        console.log({ err });
+        this.$notify({
+          type: "error",
+          title: "error",
+          message:
+            "Terjadi kesalahan pada saat menghapus halaman, harap hubungi admin@kirimin.co.id"
+        });
+      }
     }
   }
 };
