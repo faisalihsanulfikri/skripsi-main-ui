@@ -4,13 +4,13 @@
       <div uk-grid>
         <div class="uk-width-auto">
           <div class="app--card-header__icon">
-            <font-awesome-icon icon="shipping-fast"></font-awesome-icon>
+            <font-awesome-icon icon="file-alt"></font-awesome-icon>
           </div>
         </div>
         <div class="uk-width-expand">
           <div class="app--card-header_title">
             <h3>
-              <span>Air Waybill Report</span>
+              <span>Sales Report</span>
             </h3>
           </div>
         </div>
@@ -32,17 +32,20 @@
             ></el-date-picker>
           </div>
           <div class="uk-width-auto">
-            <el-button type="default" @click="fetchAirWaybills">Filter</el-button>
-          </div>
-          <div class="uk-width-auto">
-            <el-button type="default" @click="exportReport">
-              <font-awesome-icon icon="file-excel"></font-awesome-icon>
-            </el-button>
+            <el-button type="default" @click="fetchOrderReport">Filter</el-button>
           </div>
           <div class="uk-width-1-3 uk-margin-auto-left">
             <el-input v-model="filter.search" placeholder="Search...">
-              <el-button slot="append" icon="el-icon-search" @click="fetchAirWaybills"></el-button>
+              <el-button slot="append" icon="el-icon-search" @click="fetchOrderReport"></el-button>
             </el-input>
+          </div>
+          <div class="uk-width-1-1" style="padding-top:10px">
+            <el-button type="default" @click="exportReportXLSX">
+              <font-awesome-icon icon="file-excel"></font-awesome-icon>Download XLSX
+            </el-button>
+            <el-button type="default" @click="exportReportCSV">
+              <font-awesome-icon icon="file-excel"></font-awesome-icon>Download CSV
+            </el-button>
           </div>
         </div>
       </div>
@@ -51,26 +54,55 @@
           <thead>
             <tr>
               <th>Date</th>
-              <th>Order Code</th>
-              <th>AWB</th>
+              <th>Code</th>
+              <th>Reference No.</th>
+              <th>AWB No.</th>
+              <th>Customer</th>
+              <th>Consolidate</th>
+              <th>Total Packages</th>
               <th>Total Item`s</th>
+              <th>WEIGHT</th>
+              <th>Item Price</th>
+              <th>International Cost</th>
+              <th>Domestic Cost</th>
+              <th>Incoming Duty</th>
+              <th>PPN</th>
+              <th>PPH</th>
+              <th>Insurance</th>
+              <th>Packagin Cost</th>
+              <th>Total</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(awb, index) in airWaybills" :key="index">
-              <td>{{ moment(awb.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
-              <td>{{ awb.order_code }}</td>
-              <td>{{ awb.awb }}</td>
-              <td>{{ awb.item_count }}</td>
+            <tr v-for="(order, index) in orders" :key="index">
+              <td>{{ moment(order.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
+              <td>{{ order.code }}</td>
+              <td>{{ order.no_reference }}</td>
+              <td>{{ order.no_awb }}</td>
+              <td>{{ order.user_name }}</td>
+              <td>{{ order.string_consolidate }}</td>
+              <td>{{ order.packet_count }}</td>
+              <td>{{ order.item_count }}</td>
+              <td>{{ order.weight }}</td>
+              <td>{{ order.detail.cost.itemPrice }}</td>
+              <td>{{ order.detail.cost.internationalCost }}</td>
+              <td>{{ order.detail.cost.domesticCost }}</td>
+              <td>{{ order.detail.cost.beaMasuk }}</td>
+              <td>{{ order.detail.cost.ppn }}</td>
+              <td>{{ order.detail.cost.pph }}</td>
+              <td>{{ order.detail.cost.insurance }}</td>
+              <td>{{ order.detail.cost.packagingCost }}</td>
+              <td>{{ order.detail.cost.estimatedShippingCostFinal }}</td>
+              <td>{{ order.status }}</td>
             </tr>
           </tbody>
         </table>
       </div>
-
       <!-- pagination -->
       <div v-if="this.totalPages.length < 2"></div>
 
-      <div v-else>
+      <div v-else class="uk-card-footer uk-text-center">
         <ul class="uk-pagination" uk-margin>
           <li>
             <a href="#">
@@ -104,6 +136,7 @@ import saveAs from "file-saver";
 export default {
   data() {
     return {
+      orders: [],
       totalPages: ["1"],
       pagination: {
         total: 0,
@@ -111,7 +144,6 @@ export default {
         last_page: 0,
         page: 1
       },
-      airWaybills: [],
       filter: {
         time: [],
         search: ""
@@ -129,18 +161,19 @@ export default {
         .format("YYYY-MM-DD")
     ];
 
-    this.fetchAirWaybills(this.pagination.page);
+    this.fetchOrderReport(this.pagination.page);
   },
 
   methods: {
     onChangePagination(i) {
-      this.fetchAirWaybills(i + 1);
+      // console.log("test", i + 1);
+      this.fetchOrderReport(i + 1);
     },
-    async exportReport() {
+    async exportReportCSV() {
       this.__startLoading();
 
       try {
-        let res = await this.$service.report.airWaybillExport(this.filter);
+        let res = await this.$service.report.salesExportCSV(this.filter);
 
         let content = res.request.getResponseHeader("Content-Disposition");
         let regexResult = content.match("filename=(.*)");
@@ -154,21 +187,38 @@ export default {
 
       this.__stopLoading();
     },
-    async fetchAirWaybills(page) {
+    async exportReportXLSX() {
       this.__startLoading();
 
-      this.pagination.page = page;
+      try {
+        let res = await this.$service.report.salesExportXLSX(this.filter);
 
+        let content = res.request.getResponseHeader("Content-Disposition");
+        let regexResult = content.match("filename=(.*)");
+        let filename = regexResult[1].replace(new RegExp('"', "g"), "");
+        let blob = new Blob([res.data]);
+
+        saveAs(blob, filename);
+      } catch (err) {
+        this.__handleError(this, err, true);
+      }
+
+      this.__stopLoading();
+    },
+    async fetchOrderReport(page) {
+      this.__startLoading();
 
       try {
-        let res = await this.$service.report.airWaybill(this.filter, page);
+        let res = await this.$service.report.sales(this.filter, page);
 
         this.pagination.last_page = res.data.last_page;
 
         this.totalPages = res.data.pages;
         this.current_page = page;
 
-        this.airWaybills = res.data.data;
+        // console.log(this.totalPages.length);
+
+        this.orders = res.data.data;
       } catch (err) {
         this.__handleError(this, err, true);
       }

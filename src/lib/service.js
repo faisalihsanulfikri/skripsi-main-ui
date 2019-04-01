@@ -217,6 +217,23 @@ const report = {
       params,
       responseType: "blob"
     });
+  },
+  sales(params = {},page) {
+      return Vue.authHttp().get("/reports/sales?page=" + page, {
+        params
+      });
+  },
+  salesExportXLSX(params = {}) {
+    return Vue.authHttp().get("/reports/sales/export/xlsx", {
+      params,
+      responseType: "blob"
+    });
+  },
+  salesExportCSV(params = {}) {
+    return Vue.authHttp().get("/reports/sales/export/csv", {
+      params,
+      responseType: "blob"
+    });
   }
 };
 
