@@ -19,7 +19,7 @@ import AreaIndexCity from '../views/admin/area/city/Index'
 import AreaCode from '../views/admin/area/location/Index'
 import AreaCodeCreate from '../views/admin/area/location/Create'
 import User from '../views/admin/user/Index'
-import UserCreate from '../views/admin/UserCreate'
+import UserCreate from '../views/admin/user/Create'
 import Setting from '../views/admin/setting/Index'
 
 import {
@@ -95,8 +95,8 @@ export default {
     },
 
     {
-      path: "UserCreate",
-      name: "admin-user-create",
+      path: 'user/create',
+      name: 'admin-user-create',
       component: UserCreate,
       meta: {
         auth: true,

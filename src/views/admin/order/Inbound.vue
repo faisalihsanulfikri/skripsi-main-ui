@@ -222,7 +222,7 @@
 </template>
 
 <script>
-import moment from "moment";
+// import moment from "moment";
 import CalculatorResult from "../../../components/CalculatorResult";
 
 export default {
@@ -248,14 +248,14 @@ export default {
   },
 
   created() {
-    this.filter.time = [
-      moment()
-        .startOf("month")
-        .format("YYYY-MM-DD"),
-      moment()
-        .endOf("month")
-        .format("YYYY-MM-DD")
-    ];
+    // this.filter.time = [
+    //   moment()
+    //     .startOf("month")
+    //     .format("YYYY-MM-DD"),
+    //   moment()
+    //     .endOf("month")
+    //     .format("YYYY-MM-DD")
+    // ];
 
     this.fetchOrders(this.pagination.page);
   },

@@ -115,8 +115,6 @@ export default {
     if (this.$route.params.id) {
       this.edit = true;
       this.title = "Edit Location Code";
-
-      // this.fetchProvinces();
     }
     this.fetchProvinces();
   },

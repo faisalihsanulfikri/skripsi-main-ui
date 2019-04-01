@@ -11,7 +11,10 @@
           <div class="app--card-header_title">
             <h3>
               <span>Users</span>
-              <el-tag class="uk-margin-small-left" size="small">{{ $route.params.level.toUpperCase() }}</el-tag>
+              <el-tag
+                class="uk-margin-small-left"
+                size="small"
+              >{{ $route.params.level.toUpperCase() }}</el-tag>
             </h3>
           </div>
         </div>
@@ -22,8 +25,12 @@
         <div class="uk-grid-small" uk-grid>
           <div class="uk-width-1-3">
             <el-select v-model="filter.verified" class="uk-width-1-1" multiple>
-              <el-option v-for="(item, index) in options.verified" :key="index" :value="item.value" :label="item.label">
-              </el-option>
+              <el-option
+                v-for="(item, index) in options.verified"
+                :key="index"
+                :value="item.value"
+                :label="item.label"
+              ></el-option>
             </el-select>
           </div>
           <div class="uk-width-1-3">
@@ -33,7 +40,7 @@
             <el-button type="primary" @click="fetchUsers">Filter</el-button>
           </div>
           <div class="uk-width-auto">
-            <router-link :to="{ name: 'admin-user-create' }">
+            <router-link :to="{ name: 'admin-user-create', params: { level: this.level } }">
               <el-button type="primary">Add</el-button>
             </router-link>
           </div>
@@ -44,20 +51,36 @@
           <thead>
             <tr>
               <th>
-                <column-sort title="Name" field="name" :active-field="filter.sortField" @change="onSortChange">
-                </column-sort>
+                <column-sort
+                  title="Name"
+                  field="name"
+                  :active-field="filter.sortField"
+                  @change="onSortChange"
+                ></column-sort>
               </th>
               <th>
-                <column-sort title="Email" field="email" :active-field="filter.sortField" @change="onSortChange">
-                </column-sort>
+                <column-sort
+                  title="Email"
+                  field="email"
+                  :active-field="filter.sortField"
+                  @change="onSortChange"
+                ></column-sort>
               </th>
               <th>
-                <column-sort title="Mobile" field="phone" :active-field="filter.sortField" @change="onSortChange">
-                </column-sort>
+                <column-sort
+                  title="Mobile"
+                  field="phone"
+                  :active-field="filter.sortField"
+                  @change="onSortChange"
+                ></column-sort>
               </th>
               <th class="uk-text-center">
-                <column-sort title="Verified" field="active" :active-field="filter.sortField" @change="onSortChange">
-                </column-sort>
+                <column-sort
+                  title="Verified"
+                  field="active"
+                  :active-field="filter.sortField"
+                  @change="onSortChange"
+                ></column-sort>
               </th>
             </tr>
           </thead>
@@ -76,104 +99,128 @@
       </div>
     </div>
     <div class="uk-card-footer uk-text-center">
-      <el-pagination layout="prev, pager, next" :page-size="pagination.per_page" :page-count="pagination.last_page"
-        :total="pagination.total" @current-change="onChangePage">
-      </el-pagination>
+      <el-pagination
+        layout="prev, pager, next"
+        :page-size="pagination.per_page"
+        :page-count="pagination.last_page"
+        :total="pagination.total"
+        @current-change="onChangePage"
+      ></el-pagination>
     </div>
   </div>
 </template>
 
 <script>
-  import ColumnSort from '../../../components/ColumnSort'
+import ColumnSort from "../../../components/ColumnSort";
 
-  export default {
-    components: {
-      ColumnSort
-    },
+export default {
+  components: {
+    ColumnSort
+  },
 
-    data() {
-      return {
-        users: [],
-        pagination: {
-          current_page: 1,
-          per_page: 25,
-          total: 0
-        },
-        filter: {
-          keyword: '',
-          verified: [1, 0],
-          sortField: 'active',
-          sortOrder: 'desc'
-        },
-        options: {
-          verified: [{
-              value: 1,
-              label: 'Verified'
-            },
-            {
-              value: 0,
-              label: 'Unverified'
-            }
-          ]
-        }
-      }
-    },
-
-    watch: {
-      $route: {
-        handler: 'fetchUsers'
-      }
-    },
-
-    async created() {
-      this.__startLoading()
-
-      await this.fetchUsers()
-
-      this.__stopLoading()
-    },
-
-    methods: {
-      async onChangePage(page) {
-        this.pagination.current_page = page
-
-        this.__startLoading()
-
-        await this.fetchUsers()
-
-        this.__stopLoading()
+  data() {
+    return {
+      level: "",
+      users: [],
+      pagination: {
+        current_page: 1,
+        per_page: 25,
+        total: 0
       },
-      async onSortChange(payload) {
-        this.filter.sortField = payload.field
-        this.filter.sortOrder = payload.order
-
-        this.__startLoading()
-
-        await this.fetchUsers()
-
-        this.__stopLoading()
+      filter: {
+        keyword: "",
+        verified: [1, 0],
+        sortField: "active",
+        sortOrder: "desc"
       },
-      async fetchUsers() {
-        try {
-          let res = await this.$service.user.getByLevel(this.$route.params.level, {
+      options: {
+        verified: [
+          {
+            value: 1,
+            label: "Verified"
+          },
+          {
+            value: 0,
+            label: "Unverified"
+          }
+        ]
+      }
+    };
+  },
+
+  watch: {
+    $route: {
+      handler: "fetchUsers"
+    }
+  },
+
+  async created() {
+    this.__startLoading();
+
+    await this.fetchUsers();
+
+    this.__stopLoading();
+  },
+
+  methods: {
+    async onChangePage(page) {
+      this.pagination.current_page = page;
+
+      this.__startLoading();
+
+      await this.fetchUsers();
+
+      this.__stopLoading();
+    },
+    async onSortChange(payload) {
+      this.filter.sortField = payload.field;
+      this.filter.sortOrder = payload.order;
+
+      this.__startLoading();
+
+      await this.fetchUsers();
+
+      this.__stopLoading();
+    },
+    async fetchUsers() {
+      try {
+        let res = await this.$service.user.getByLevel(
+          this.$route.params.level,
+          {
             page: this.pagination.current_page,
-            sort: [
-              this.filter.sortField,
-              this.filter.sortOrder
-            ],
+            sort: [this.filter.sortField, this.filter.sortOrder],
             active: this.filter.verified,
             search: this.filter.keyword
-          })
+          }
+        );
 
-          this.users = res.data.data
-          this.pagination = res.data
+        this.users = res.data.data;
+        this.pagination = res.data;
 
-          delete this.pagination.data
-          delete this.pagination.filter
-        } catch (err) {
-          this.__handleError(this, err, true)
+        switch (this.$route.params.level) {
+          case "regular":
+            this.level = "2";
+            break;
+          case "premium":
+            this.level = "3";
+            break;
+          case "agent":
+            this.level = "4";
+            break;
+          case "admin":
+            this.level = "1";
+            break;
         }
+
+        // console.log("level name", this.$route.params.level);
+        // console.log("level id", this.level);
+
+        delete this.pagination.data;
+        delete this.pagination.filter;
+      } catch (err) {
+        this.__handleError(this, err, true);
       }
     }
   }
+};
 </script>
