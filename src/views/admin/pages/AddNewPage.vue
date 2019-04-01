@@ -89,6 +89,7 @@ export default {
           });
 
           this.resetInput(page);
+          this.$router.push("/admin/pages");
         }
       } catch (error) {
         const errStatus = error.response.status;
