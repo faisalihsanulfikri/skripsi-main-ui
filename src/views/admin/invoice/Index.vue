@@ -171,7 +171,7 @@
 </template>
 
 <script>
-import moment from "moment";
+// import moment from "moment";
 export default {
   data() {
     return {
@@ -192,14 +192,14 @@ export default {
   },
 
   async created() {
-    this.filter.time = [
-      moment()
-        .startOf("month")
-        .format("YYYY-MM-DD"),
-      moment()
-        .endOf("month")
-        .format("YYYY-MM-DD")
-    ];
+    // this.filter.time = [
+    //   moment()
+    //     .startOf("month")
+    //     .format("YYYY-MM-DD"),
+    //   moment()
+    //     .endOf("month")
+    //     .format("YYYY-MM-DD")
+    // ];
 
     await this.fetchInvoices(this.pagination.page);
     this.linkdownload = process.env.VUE_APP_ROOT_API;
