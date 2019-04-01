@@ -23,9 +23,9 @@ Vue.mixin({
     __handleError(context, err, notify = false) {
       if (err.response) {
         context.error = true;
-        context.errorMessage = err.response.data.message
-          ? err.response.data.message
-          : err.response.statusText;
+        context.errorMessage = err.response.data.message ?
+          err.response.data.message :
+          err.response.statusText;
 
         if (notify) {
           context.$notify({
@@ -165,6 +165,35 @@ Vue.mixin({
       return new Promise((resolve, reject) => {
         Vue.authHttp("/configs/pages")
           .get("/configs/pages")
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
+    __fetchProvincesLocationCode() {
+      return new Promise((resolve, reject) => {
+        Vue.authHttp()
+          .get("/locations/provinces")
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
+    __getUsersByLevel(level, params) {
+      return Vue.authHttp().get(`/users/${level}`, {
+        params
+      });
+    },
+    __fetchCitiesLocationCode(param) {
+      return new Promise((resolve, reject) => {
+        Vue.authHttp()
+          .get(`/locations/cities/${param}`)
           .then(res => {
             resolve(res);
           })

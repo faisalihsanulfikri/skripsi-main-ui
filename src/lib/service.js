@@ -105,7 +105,8 @@ const forgot = {
   sendEmail(email = '', origin = "") {
     // console.log(params)
     return Vue.http().post('forgot-password', {
-      email,origin
+      email,
+      origin
     })
   },
   changePassword(data = {}) {
@@ -296,6 +297,12 @@ const chart = {
   }
 };
 
+const level = {
+  get() {
+    return Vue.authHttp().get("/levels");
+  }
+};
+
 const services = {
   agent,
   auth,
@@ -317,7 +324,8 @@ const services = {
   unit,
   importExcel,
   exchangerates,
-  area
+  area,
+  level
 };
 
 Object.defineProperties(Vue.prototype, {

@@ -119,7 +119,8 @@ export default {
         passwordConfirmation: "",
         phone: "",
         active: "1",
-        level: ""
+        level: "",
+        level_name: ""
       },
       rules: {
         name: "required|alpha_spaces",
@@ -129,17 +130,26 @@ export default {
         phone: "required|min:10"
       },
       error: false,
-      errorMessage: ""
+      errorMessage: "",
+
+      master: {
+        levels: []
+      },
+
+      options: {
+        level: []
+      }
     };
   },
 
   created() {
+    this.fetchLevels();
     this.onUserCreate();
 
     if (this.input.level) {
       console.log(this.input.level);
     } else {
-      this.$router.push("/admin/users/regular");
+      // this.$router.push("/admin/users/regular");
     }
 
     if (this.$route.params.id) {
@@ -173,7 +183,40 @@ export default {
           break;
       }
     },
-    // async this.fetchUsers(); {
+    async fetchLevels() {
+      this.__startLoading();
+
+      this.error = false;
+      this.errorMessage = "";
+
+      try {
+        let res = await this.$service.level.get();
+
+        this.master.levels = res.data;
+        this.options.level = res.data.map(item => {
+          let $item = {
+            value: item.code,
+            label: item.name
+          };
+
+          return $item;
+        });
+
+        this.input.level = res.data[0].code;
+        this.input.level_name = res.data[0].name;
+
+        console.log("res data", res.data);
+        console.log("option level", this.options.level);
+        console.log("level", this.input.level);
+        console.log("level name", this.input.level_name);
+      } catch (err) {
+        this.__handleError(this, err, true);
+      }
+
+      this.__stopLoading();
+    },
+
+    // async fetchUsers(); {
     //   this.__startLoading();
 
     //   this.error = false;
