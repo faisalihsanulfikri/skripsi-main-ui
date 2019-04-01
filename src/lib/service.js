@@ -244,6 +244,9 @@ const user = {
   userStore(params = {}) {
     return Vue.authHttp().post(`/user/store`, params);
   },
+  getUserData(id) {
+    return Vue.authHttp().get(`/userdata/${id}`);
+  },
 };
 
 const warehouse = {

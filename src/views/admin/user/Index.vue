@@ -82,6 +82,7 @@
                   @change="onSortChange"
                 ></column-sort>
               </th>
+              <th class="uk-text-center" style="vertical-align: middle;">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -92,6 +93,11 @@
               <td class="uk-text-center">
                 <el-tag v-if="user.active" type="success" size="small">Yes</el-tag>
                 <el-tag v-else type="danger" size="small">No</el-tag>
+              </td>
+              <td class="uk-text-center" style="vertical-align: middle;">
+                <router-link :to="{ name: 'admin-user-edit', params: { id: user.id } }">
+                  <font-awesome-icon icon="edit"></font-awesome-icon>
+                </router-link>
               </td>
             </tr>
           </tbody>
@@ -211,6 +217,8 @@ export default {
             this.level = "1";
             break;
         }
+
+        console.log(this.users);
 
         // console.log("level name", this.$route.params.level);
         // console.log("level id", this.level);

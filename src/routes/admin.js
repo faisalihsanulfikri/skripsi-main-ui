@@ -20,6 +20,7 @@ import AreaCode from '../views/admin/area/location/Index'
 import AreaCodeCreate from '../views/admin/area/location/Create'
 import User from '../views/admin/user/Index'
 import UserCreate from '../views/admin/user/Create'
+import UserEdit from '../views/admin/user/Edit'
 import Setting from '../views/admin/setting/Index'
 
 import {
@@ -98,6 +99,16 @@ export default {
       path: 'user/create',
       name: 'admin-user-create',
       component: UserCreate,
+      meta: {
+        auth: true,
+        level: [ADMIN, SUPER_ADMIN]
+      }
+    },
+
+    {
+      path: 'user/:id/edit',
+      name: 'admin-user-edit',
+      component: UserEdit,
       meta: {
         auth: true,
         level: [ADMIN, SUPER_ADMIN]
