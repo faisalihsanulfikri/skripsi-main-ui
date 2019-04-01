@@ -14,26 +14,21 @@
       <div uk-grid>
         <div class="uk-width-1-2">
           <div class="uk-margin">
-            <label class="uk-form-label">Level</label>
-            <select
-              v-model="input.level"
-              v-validate="rules.level"
-              name="province"
-              class="uk-select"
-              @change="onLevelChanged"
+            <label class="uk-form-label">Code</label>
+            <input
+              v-model="input.code"
+              v-validate="rules.code"
+              name="code"
+              class="uk-input"
+              type="text"
+              placeholder="Name"
+              disabled
             >
-              <option
-                v-for="(item, index) in options.level"
-                :key="index"
-                :value="item.value"
-              >{{ item.label }}</option>
-            </select>
             <small
-              v-if="errors.first('level')"
+              v-if="errors.first('name')"
               class="uk-margin-small uk-text-danger"
-            >{{ errors.first('level') }}</small>
+            >{{ errors.first('name') }}</small>
           </div>
-
           <div class="uk-margin">
             <label class="uk-form-label">Name</label>
             <input
@@ -65,42 +60,7 @@
             >{{ errors.first('email') }}</small>
           </div>
           <div class="uk-margin">
-            <label class="uk-form-label">Kata Sandi</label>
-            <input
-              v-model="input.password"
-              v-validate="rules.password"
-              name="password"
-              class="uk-input"
-              type="password"
-              placeholder="Password"
-              ref="password"
-            >
-            <small
-              v-if="errors.first('password')"
-              class="uk-margin-small uk-text-danger"
-            >{{ errors.first('password') }}</small>
-          </div>
-          <div class="uk-margin">
-            <label class="uk-form-label">Konfirmasi Kata Sandi</label>
-            <input
-              v-model="input.passwordConfirmation"
-              v-validate="rules.passwordConfirmation"
-              name="password_confirmation"
-              class="uk-input"
-              type="password"
-              placeholder="Password Confirmation"
-              data-vv-as="password"
-            >
-            <small
-              v-if="errors.first('password_confirmation')"
-              class="uk-margin-small uk-text-danger"
-            >
-              {{
-              errors.first('password_confirmation') }}
-            </small>
-          </div>
-          <div class="uk-margin">
-            <label class="uk-form-label">Nomor Handphone</label>
+            <label class="uk-form-label">Phone Number</label>
             <input
               v-model="input.phone"
               v-validate="rules.phone"
@@ -113,6 +73,59 @@
               v-if="errors.first('phone')"
               class="uk-margin-small uk-text-danger"
             >{{ errors.first('phone') }}</small>
+          </div>
+
+          <div class="uk-margin">
+            <label class="uk-form-label">Level</label>
+            <select
+              v-model="input.level"
+              v-validate="rules.level"
+              name="province"
+              class="uk-select"
+              @change="onLevelChanged"
+            >
+              <option
+                v-for="(item, index) in options.level"
+                :key="index"
+                :value="item.value"
+              >{{ item.label }}</option>
+            </select>
+            <small
+              v-if="errors.first('level')"
+              class="uk-margin-small uk-text-danger"
+            >{{ errors.first('level') }}</small>
+          </div>
+
+          <div class="uk-margin">
+            <label class="uk-form-label">Active</label>
+            <div class="req-doc">
+              <label class="btn-r">
+                <input
+                  v-model="input.active"
+                  class="uk-radio"
+                  type="radio"
+                  value="1"
+                  @click="onActiveChanged"
+                >
+                <span class="uk-margin-small-left">Yes</span>
+              </label>
+
+              <label class="btn-r">
+                <input
+                  v-model="input.active"
+                  class="uk-radio"
+                  type="radio"
+                  value="0"
+                  @click="onActiveChanged"
+                >
+                <span class="uk-margin-small-left">No</span>
+              </label>
+            </div>
+
+            <small
+              v-if="errors.first('active')"
+              class="uk-margin-small uk-text-danger"
+            >{{ errors.first('active') }}</small>
           </div>
 
           <el-alert v-if="error" title="ERROR" type="error" :description="errorMessage" show-icon></el-alert>
@@ -181,13 +194,18 @@ export default {
       this.fetchUsers();
     }
 
-    console.log(this.$route);
+    // console.log("input", this.input);
 
     // this.onUserCreate();
-    // this.fetchLevels();
+    this.fetchLevels();
   },
 
   methods: {
+    onActiveChanged() {
+      if (this.input.length > 0) {
+        this.input.active = "";
+      }
+    },
     onUserCreate() {
       this.input.level = this.$route.params.level;
 
@@ -229,7 +247,7 @@ export default {
           return $item;
         });
 
-        console.log(this.index);
+        // console.log(this.index);
 
         let i = this.index;
 
@@ -254,7 +272,8 @@ export default {
 
         console.log(res.data);
 
-        // this.input.name = res.data.name;
+        this.input = res.data;
+        console.log("input", this.input);
         // this.input.description = res.data.description;
       } catch (err) {
         this.__handleError(this, err, true);
@@ -342,3 +361,13 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.req-doc {
+  padding-top: 10px;
+  .btn-r {
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+}
+</style>

@@ -65,7 +65,7 @@
             >{{ errors.first('email') }}</small>
           </div>
           <div class="uk-margin">
-            <label class="uk-form-label">Kata Sandi</label>
+            <label class="uk-form-label">Password</label>
             <input
               v-model="input.password"
               v-validate="rules.password"
@@ -81,7 +81,7 @@
             >{{ errors.first('password') }}</small>
           </div>
           <div class="uk-margin">
-            <label class="uk-form-label">Konfirmasi Kata Sandi</label>
+            <label class="uk-form-label">Password Confirmation</label>
             <input
               v-model="input.passwordConfirmation"
               v-validate="rules.passwordConfirmation"
@@ -100,7 +100,7 @@
             </small>
           </div>
           <div class="uk-margin">
-            <label class="uk-form-label">Nomor Handphone</label>
+            <label class="uk-form-label">Phone Number</label>
             <input
               v-model="input.phone"
               v-validate="rules.phone"
