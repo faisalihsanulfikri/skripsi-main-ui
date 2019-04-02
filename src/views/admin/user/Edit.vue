@@ -14,26 +14,21 @@
       <div uk-grid>
         <div class="uk-width-1-2">
           <div class="uk-margin">
-            <label class="uk-form-label">Level</label>
-            <select
-              v-model="input.level"
-              v-validate="rules.level"
-              name="province"
-              class="uk-select"
-              @change="onLevelChanged"
+            <label class="uk-form-label">Code</label>
+            <input
+              v-model="input.code"
+              v-validate="rules.code"
+              name="code"
+              class="uk-input"
+              type="text"
+              placeholder="Name"
+              disabled
             >
-              <option
-                v-for="(item, index) in options.level"
-                :key="index"
-                :value="item.value"
-              >{{ item.label }}</option>
-            </select>
             <small
-              v-if="errors.first('level')"
+              v-if="errors.first('name')"
               class="uk-margin-small uk-text-danger"
-            >{{ errors.first('level') }}</small>
+            >{{ errors.first('name') }}</small>
           </div>
-
           <div class="uk-margin">
             <label class="uk-form-label">Name</label>
             <input
@@ -65,41 +60,6 @@
             >{{ errors.first('email') }}</small>
           </div>
           <div class="uk-margin">
-            <label class="uk-form-label">Password</label>
-            <input
-              v-model="input.password"
-              v-validate="rules.password"
-              name="password"
-              class="uk-input"
-              type="password"
-              placeholder="Password"
-              ref="password"
-            >
-            <small
-              v-if="errors.first('password')"
-              class="uk-margin-small uk-text-danger"
-            >{{ errors.first('password') }}</small>
-          </div>
-          <div class="uk-margin">
-            <label class="uk-form-label">Password Confirmation</label>
-            <input
-              v-model="input.passwordConfirmation"
-              v-validate="rules.passwordConfirmation"
-              name="password_confirmation"
-              class="uk-input"
-              type="password"
-              placeholder="Password Confirmation"
-              data-vv-as="password"
-            >
-            <small
-              v-if="errors.first('password_confirmation')"
-              class="uk-margin-small uk-text-danger"
-            >
-              {{
-              errors.first('password_confirmation') }}
-            </small>
-          </div>
-          <div class="uk-margin">
             <label class="uk-form-label">Phone Number</label>
             <input
               v-model="input.phone"
@@ -113,6 +73,59 @@
               v-if="errors.first('phone')"
               class="uk-margin-small uk-text-danger"
             >{{ errors.first('phone') }}</small>
+          </div>
+
+          <div class="uk-margin">
+            <label class="uk-form-label">Level</label>
+            <select
+              v-model="input.level"
+              v-validate="rules.level"
+              name="province"
+              class="uk-select"
+              @change="onLevelChanged"
+            >
+              <option
+                v-for="(item, index) in options.level"
+                :key="index"
+                :value="item.value"
+              >{{ item.label }}</option>
+            </select>
+            <small
+              v-if="errors.first('level')"
+              class="uk-margin-small uk-text-danger"
+            >{{ errors.first('level') }}</small>
+          </div>
+
+          <div class="uk-margin">
+            <label class="uk-form-label">Active</label>
+            <div class="req-doc">
+              <label class="btn-r">
+                <input
+                  v-model="input.active"
+                  class="uk-radio"
+                  type="radio"
+                  value="1"
+                  @click="onActiveChanged"
+                >
+                <span class="uk-margin-small-left">Yes</span>
+              </label>
+
+              <label class="btn-r">
+                <input
+                  v-model="input.active"
+                  class="uk-radio"
+                  type="radio"
+                  value="0"
+                  @click="onActiveChanged"
+                >
+                <span class="uk-margin-small-left">No</span>
+              </label>
+            </div>
+
+            <small
+              v-if="errors.first('active')"
+              class="uk-margin-small uk-text-danger"
+            >{{ errors.first('active') }}</small>
           </div>
 
           <el-alert v-if="error" title="ERROR" type="error" :description="errorMessage" show-icon></el-alert>
@@ -135,11 +148,19 @@ export default {
       edit: false,
       title: "New User",
       input: {
+        code: "",
         name: "",
         email: "",
         password: "",
         passwordConfirmation: "",
         phone: "",
+        gender: "",
+        birthdate: "",
+        birthdateSplited: {
+          year: "",
+          month: "",
+          day: ""
+        },
         active: "1",
         level: "",
         level_name: ""
@@ -167,17 +188,32 @@ export default {
 
   created() {
     //add from type of user
-    if (this.$route.params.level) {
-      this.index = this.$route.params.level;
-    } else {
-      this.index = "2";
+    // if (this.$route.params.level) {
+    //   this.index = this.$route.params.level;
+    // } else {
+    //   this.index = "2";
+    // }
+
+    //if edit user
+    if (this.$route.params.id) {
+      this.edit = true;
+      this.title = "Edit User";
+
+      this.fetchUsers();
     }
 
-    this.onUserCreate();
+    // console.log("input", this.input);
+
+    // this.onUserCreate();
     this.fetchLevels();
   },
 
   methods: {
+    onActiveChanged() {
+      if (this.input.length > 0) {
+        this.input.active = "";
+      }
+    },
     onUserCreate() {
       this.input.level = this.$route.params.level;
 
@@ -219,7 +255,7 @@ export default {
           return $item;
         });
 
-        console.log(this.index);
+        // console.log(this.index);
 
         let i = this.index;
 
@@ -233,6 +269,26 @@ export default {
       this.__stopLoading();
     },
 
+    async fetchUsers() {
+      this.__startLoading();
+
+      this.error = false;
+      this.errorMessage = "";
+
+      try {
+        let res = await this.$service.user.getUserData(this.$route.params.id);
+
+        // console.log(res.data);
+
+        this.input = res.data;
+        // console.log("input", this.input);
+        // this.input.description = res.data.description;
+      } catch (err) {
+        this.__handleError(this, err, true);
+      }
+
+      this.__stopLoading();
+    },
     onLevelChanged() {
       let level = this.master.levels.filter(
         level => level.code == this.input.level
@@ -246,17 +302,50 @@ export default {
     },
 
     save() {
-      this.store();
-    },
+      if (this.edit) {
+        this.update();
+      } else {
+        // this.error = false;
+        // this.errorMessage = "";
+        // console.log(this.input);
 
-    async store() {
+        this.store();
+      }
+    },
+    // async store() {
+    //   this.__startLoading();
+
+    //   this.error = false;
+    //   this.errorMessage = "";
+
+    //   try {
+    //     let res = await this.$service.user.userStore(this.input);
+
+    //     this.$notify({
+    //       title: "SUCCESS",
+    //       message: res.data.message,
+    //       type: "success"
+    //     });
+
+    //     this.$router.push("/admin/users/" + this.route_name);
+    //   } catch (err) {
+    //     this.__handleError(this, err, true);
+    //   }
+
+    //   this.__stopLoading();
+    // }
+
+    async update() {
       this.__startLoading();
 
       this.error = false;
       this.errorMessage = "";
 
       try {
-        let res = await this.$service.user.userStore(this.input);
+        let res = await this.$service.user.updateUserData(
+          this.$route.params.id,
+          this.input
+        );
 
         this.$notify({
           title: "SUCCESS",
@@ -264,7 +353,9 @@ export default {
           type: "success"
         });
 
-        this.$router.push("/admin/users/" + this.route_name);
+        // this.$router.push({
+        //   name: "admin-category"
+        // });
       } catch (err) {
         this.__handleError(this, err, true);
       }
@@ -274,3 +365,13 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.req-doc {
+  padding-top: 10px;
+  .btn-r {
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+}
+</style>
