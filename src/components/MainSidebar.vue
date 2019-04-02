@@ -50,7 +50,6 @@ export default {
 .main-sidebar {
   .el-menu {
     height: 100%;
-    color: red;
   }
 }
 </style>
