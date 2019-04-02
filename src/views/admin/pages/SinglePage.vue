@@ -89,7 +89,6 @@ export default {
         .put(endpoint, payload)
         .then(res => {
           const resData = res.data;
-          console.log(resData);
           const isSuccess = resData.success;
           const message = resData.message;
 
@@ -100,6 +99,7 @@ export default {
               type: "success"
             });
             this.__fetchPages();
+            this.$router.push("/admin/pages");
           }
         })
         .catch(err => {
