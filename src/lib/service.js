@@ -247,6 +247,9 @@ const user = {
   getUserData(id) {
     return Vue.authHttp().get(`/userdata/${id}`);
   },
+  updateUserData(id, data = {}) {
+    return Vue.authHttp().put(`/userdata/${id}`, data);
+  },
 };
 
 const warehouse = {

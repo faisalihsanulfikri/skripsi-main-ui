@@ -148,11 +148,19 @@ export default {
       edit: false,
       title: "New User",
       input: {
+        code: "",
         name: "",
         email: "",
         password: "",
         passwordConfirmation: "",
         phone: "",
+        gender: "",
+        birthdate: "",
+        birthdateSplited: {
+          year: "",
+          month: "",
+          day: ""
+        },
         active: "1",
         level: "",
         level_name: ""
@@ -270,10 +278,10 @@ export default {
       try {
         let res = await this.$service.user.getUserData(this.$route.params.id);
 
-        console.log(res.data);
+        // console.log(res.data);
 
         this.input = res.data;
-        console.log("input", this.input);
+        // console.log("input", this.input);
         // this.input.description = res.data.description;
       } catch (err) {
         this.__handleError(this, err, true);
@@ -304,44 +312,14 @@ export default {
         this.store();
       }
     },
-    async store() {
-      this.__startLoading();
-
-      this.error = false;
-      this.errorMessage = "";
-
-      // console.log("input", this.input);
-      // console.log("route name", this.route_name);
-      // return this.__stopLoading();
-
-      try {
-        let res = await this.$service.user.userStore(this.input);
-
-        this.$notify({
-          title: "SUCCESS",
-          message: res.data.message,
-          type: "success"
-        });
-
-        this.$router.push("/admin/users/" + this.route_name);
-      } catch (err) {
-        this.__handleError(this, err, true);
-      }
-
-      this.__stopLoading();
-    }
-
-    // async update() {
+    // async store() {
     //   this.__startLoading();
 
     //   this.error = false;
     //   this.errorMessage = "";
 
     //   try {
-    //     let res = await this.$service.category.update(
-    //       this.$route.params.id,
-    //       this.input
-    //     );
+    //     let res = await this.$service.user.userStore(this.input);
 
     //     this.$notify({
     //       title: "SUCCESS",
@@ -349,15 +327,41 @@ export default {
     //       type: "success"
     //     });
 
-    //     this.$router.push({
-    //       name: "admin-category"
-    //     });
+    //     this.$router.push("/admin/users/" + this.route_name);
     //   } catch (err) {
     //     this.__handleError(this, err, true);
     //   }
 
     //   this.__stopLoading();
     // }
+
+    async update() {
+      this.__startLoading();
+
+      this.error = false;
+      this.errorMessage = "";
+
+      try {
+        let res = await this.$service.user.updateUserData(
+          this.$route.params.id,
+          this.input
+        );
+
+        this.$notify({
+          title: "SUCCESS",
+          message: res.data.message,
+          type: "success"
+        });
+
+        // this.$router.push({
+        //   name: "admin-category"
+        // });
+      } catch (err) {
+        this.__handleError(this, err, true);
+      }
+
+      this.__stopLoading();
+    }
   }
 };
 </script>
