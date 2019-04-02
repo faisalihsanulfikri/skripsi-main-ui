@@ -29,6 +29,7 @@
           <el-menu-item index="/agent/reports/order">ORDER</el-menu-item>
           <el-menu-item index="/agent/reports/air-waybill">AIR WAYBILL</el-menu-item>
           <el-menu-item index="/agent/reports/manifest">MANIFEST</el-menu-item>
+          <el-menu-item index="/agent/reports/sales">SALES</el-menu-item>
         </el-submenu>
 
       </el-menu>

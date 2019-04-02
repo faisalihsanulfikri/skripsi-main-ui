@@ -218,7 +218,7 @@
 </template>
 
 <script>
-import moment from "moment";
+// import moment from "moment";
 import CalculatorResult from "../../../components/CalculatorResult";
 import DialogCreateAwb from "../../../components/DialogCreateAwb";
 
@@ -254,15 +254,14 @@ export default {
   },
 
   created() {
-    this.filter.time = [
-      moment()
-        .startOf("month")
-        .format("YYYY-MM-DD"),
-      moment()
-        .endOf("month")
-        .format("YYYY-MM-DD")
-    ];
-
+    // this.filter.time = [
+    //   moment()
+    //     .startOf("month")
+    //     .format("YYYY-MM-DD"),
+    //   moment()
+    //     .endOf("month")
+    //     .format("YYYY-MM-DD")
+    // ];
   },
 
   mounted() {
@@ -412,7 +411,6 @@ export default {
       this.__startLoading();
 
       this.pagination.page = page;
-
 
       try {
         let res = await this.$service.order.get(
