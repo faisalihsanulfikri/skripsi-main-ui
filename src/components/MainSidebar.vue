@@ -15,7 +15,7 @@
         <!-- <el-menu-item index="/admin/master/area">Area</el-menu-item> -->
         <el-submenu index="/admin/area">
           <template slot="title">
-            <span>Aera</span>
+            <span>Area</span>
           </template>
           <el-menu-item index="/admin/master/area">Provinces</el-menu-item>
           <el-menu-item index="/admin/master/area/city">Cities</el-menu-item>
