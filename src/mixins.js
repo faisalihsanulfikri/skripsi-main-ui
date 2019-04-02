@@ -184,6 +184,18 @@ Vue.mixin({
             reject(err);
           });
       });
+    },
+    __fetchCitiesLocationCode(data) {
+      return new Promise((resolve, reject) => {
+        Vue.authHttp()
+          .get(`/locations/cities/${data}`)
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
     }
   }
 });
