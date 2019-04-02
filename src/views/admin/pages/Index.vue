@@ -39,10 +39,12 @@
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
             <el-button
+              v-if="scope.row.slug != 'kebijakan-privacy' && scope.row.slug != 'syarat-dan-ketentuan'"
               size="mini"
               type="danger"
               @click="handleDelete(scope.$index, scope.row)"
             >Delete</el-button>
+            <el-button v-else size="mini" type="danger" disabled>Delete</el-button>
           </template>
         </el-table-column>
       </el-table>
