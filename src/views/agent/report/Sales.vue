@@ -152,14 +152,14 @@ export default {
   },
 
   created() {
-    this.filter.time = [
-      moment()
-        .startOf("month")
-        .format("YYYY-MM-DD"),
-      moment()
-        .endOf("month")
-        .format("YYYY-MM-DD")
-    ];
+    // this.filter.time = [
+    //   moment()
+    //     .startOf("month")
+    //     .format("YYYY-MM-DD"),
+    //   moment()
+    //     .endOf("month")
+    //     .format("YYYY-MM-DD")
+    // ];
 
     this.fetchOrderReport(this.pagination.page);
   },
