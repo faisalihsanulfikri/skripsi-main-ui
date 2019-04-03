@@ -42,6 +42,7 @@
               <th>City</th>
               <th>Province</th>
               <th>City Code</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -50,6 +51,18 @@
               <td>{{loc.district_name}}</td>
               <td>{{loc.province_name}}</td>
               <td>{{loc.city_code}}</td>
+              <td>
+                <router-link :to="{ name: 'admin-area-code-create', params: { id: loc.id } }">
+                  <font-awesome-icon icon="edit"></font-awesome-icon>
+                </router-link>
+                <a
+                  class="uk-margin-small-left uk-text-danger"
+                  href="#"
+                  @click.prevent="deleteConfirmation(loc.id)"
+                >
+                  <font-awesome-icon icon="trash-alt"></font-awesome-icon>
+                </a>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -129,13 +142,42 @@ export default {
         this.current_page = page;
 
         this.locations = res.data.data;
-
-        console.log(this.data);
       } catch (err) {
         this.__handleError(this, err, true);
       }
 
       this.__stopLoading();
+    },
+
+    deleteConfirmation(id) {
+      this.$confirm("Are you sure to delete this?", "Waning", {
+        type: "warning",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No"
+      })
+        .then(() => {
+          this.delete(id);
+        })
+        .catch(() => {});
+    },
+    async delete(id) {
+      this.error = false;
+      this.errorMessage = "";
+
+      try {
+        let res = await this.$service.area.locationDelete(id);
+
+        this.$notify({
+          title: "SUCCESS",
+          message: res.data.message,
+          type: "success"
+        });
+
+        this.filter.search = "";
+        this.fetchLocation(this.pagination.page);
+      } catch (err) {
+        this.__handleError(this, err, true);
+      }
     }
   }
 };

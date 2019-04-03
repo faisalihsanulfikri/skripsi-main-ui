@@ -278,11 +278,7 @@ export default {
       try {
         let res = await this.$service.user.getUserData(this.$route.params.id);
 
-        // console.log(res.data);
-
         this.input = res.data;
-        // console.log("input", this.input);
-        // this.input.description = res.data.description;
       } catch (err) {
         this.__handleError(this, err, true);
       }

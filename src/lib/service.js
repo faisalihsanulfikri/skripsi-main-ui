@@ -219,10 +219,10 @@ const report = {
       responseType: "blob"
     });
   },
-  sales(params = {},page) {
-      return Vue.authHttp().get("/reports/sales?page=" + page, {
-        params
-      });
+  sales(params = {}, page) {
+    return Vue.authHttp().get("/reports/sales?page=" + page, {
+      params
+    });
   },
   salesExportXLSX(params = {}) {
     return Vue.authHttp().get("/reports/sales/export/xlsx", {
@@ -290,6 +290,15 @@ const area = {
   },
   locationsCreate(data = {}) {
     return Vue.authHttp().post("/locations/", data);
+  },
+  locationsGet(id) {
+    return Vue.authHttp().get(`/locations/${id}`);
+  },
+  locationsUpdate(id, data = {}) {
+    return Vue.authHttp().put(`/locations/${id}`, data);
+  },
+  locationDelete(id) {
+    return Vue.authHttp().delete(`/locations/${id}`);
   },
   subdistricts(params = {}, page) {
     return Vue.authHttp().get("/sub-districts?page=" + page, {
