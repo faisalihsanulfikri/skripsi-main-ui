@@ -35,7 +35,7 @@ export default {
       component: ForgotPass
     },
     {
-      path: 'reset-password/:token',
+      path: 'forgot_password/:token',
       name: 'reset-password',
       component: ResetPass
     },
