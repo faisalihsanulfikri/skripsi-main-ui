@@ -105,12 +105,25 @@
                           >{{ payment.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
                           <td class="uk-text-center">{{ payment.status }}</td>
                           <td>
-                            <a
-                              :href="linkdownload+'/receipt/'+payment.id+'/'+payment.filename+'/download'"
-                              class="link"
-                              :data-id="payment.id"
-                              :data-filename="payment.filename"
-                            >{{ payment.filename }}</a>
+                            <el-button
+                              type="primary"
+                              size="mini"
+                              @click="centerDialogVisible = true"
+                            >Preview</el-button>
+
+                            <el-dialog
+                              title="Payment Preview"
+                              :visible.sync="centerDialogVisible"
+                              class="payment-preview"
+                              center
+                            >
+                              <div style="text-align:center;">
+                                <img
+                                  :src="linkdownload+'/receipt/'+payment.id+'/'+payment.filename+'/download'"
+                                  alt="preview"
+                                >
+                              </div>
+                            </el-dialog>
                           </td>
                           <td class="uk-text-center">
                             <el-button
@@ -171,7 +184,6 @@
 </template>
 
 <script>
-// import moment from "moment";
 export default {
   data() {
     return {
@@ -187,20 +199,12 @@ export default {
       filter: {
         time: [],
         search: ""
-      }
+      },
+      centerDialogVisible: false
     };
   },
 
   async created() {
-    // this.filter.time = [
-    //   moment()
-    //     .startOf("month")
-    //     .format("YYYY-MM-DD"),
-    //   moment()
-    //     .endOf("month")
-    //     .format("YYYY-MM-DD")
-    // ];
-
     await this.fetchInvoices(this.pagination.page);
     this.linkdownload = process.env.VUE_APP_ROOT_API;
   },
@@ -297,5 +301,9 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
+}
+
+.payment-preview {
+  z-index: 3000 !important;
 }
 </style>
