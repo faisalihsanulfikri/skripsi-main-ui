@@ -115,8 +115,14 @@ export default {
     if (this.$route.params.id) {
       this.edit = true;
       this.title = "Edit Location Code";
+      console.log(this.$route);
+
+      this.fetchLocation();
     }
+
     this.fetchProvinces();
+
+    console.log("input", this.input);
   },
 
   methods: {
@@ -135,6 +141,11 @@ export default {
           return $item;
         });
       });
+
+      if (this.edit) {
+        console.log("test ==", this.input.province_name);
+        this.fetchCities();
+      }
 
       this.__stopLoading();
     },
@@ -155,6 +166,23 @@ export default {
           });
         }
       );
+
+      this.__stopLoading();
+    },
+    async fetchLocation() {
+      this.__startLoading();
+      try {
+        let res = await this.$service.area.locationsGet(this.$route.params.id);
+
+        this.input.province_name = res.data[0].province_name;
+        this.input.district_name = res.data[0].district_name;
+        this.input.subdistrict_name = res.data[0].subdistrict_name;
+        this.input.city_code = res.data[0].city_code;
+
+        console.log("res", res.data);
+      } catch (err) {
+        this.__handleError(this, err, true);
+      }
 
       this.__stopLoading();
     },
@@ -208,32 +236,32 @@ export default {
       }
 
       this.__stopLoading();
+    },
+    async update() {
+      this.__startLoading();
+
+      this.error = false;
+      this.errorMessage = "";
+
+      try {
+        let res = await this.$service.area.locationsUpdate(
+          this.$route.params.id,
+          this.input
+        );
+
+        this.$notify({
+          title: "SUCCESS",
+          message: res.data.message,
+          type: "success"
+        });
+
+        this.$router.push({ name: "admin-area-code" });
+      } catch (err) {
+        this.__handleError(this, err, true);
+      }
+
+      this.__stopLoading();
     }
-    // async update() {
-    //   this.__startLoading();
-
-    //   this.error = false;
-    //   this.errorMessage = "";
-
-    //   try {
-    //     let res = await this.$service.category.update(
-    //       this.$route.params.id,
-    //       this.input
-    //     );
-
-    //     this.$notify({
-    //       title: "SUCCESS",
-    //       message: res.data.message,
-    //       type: "success"
-    //     });
-
-    //     this.$router.push({ name: "admin-category" });
-    //   } catch (err) {
-    //     this.__handleError(this, err, true);
-    //   }
-
-    //   this.__stopLoading();
-    // }
   }
 };
 </script>
