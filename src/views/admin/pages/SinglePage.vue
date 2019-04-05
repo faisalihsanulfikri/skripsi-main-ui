@@ -79,8 +79,8 @@ export default {
     onUpdate() {
       const payload = {
         title: this.page.title,
-        body: this.page.body,
-        slug: this.createSlug(this.page.title)
+        body: this.page.body
+        // slug: this.createSlug(this.page.title)
       };
       const id = this.page.id;
       const endpoint = `/configs/pages/${id}/update`;

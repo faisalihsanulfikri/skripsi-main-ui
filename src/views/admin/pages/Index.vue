@@ -39,7 +39,7 @@
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
             <el-button
-              v-if="scope.row.slug != 'kebijakan-privacy' && scope.row.slug != 'syarat-dan-ketentuan'"
+              v-if="scope.row.slug != 'privacy-policy' && scope.row.slug != 'terms-conditions' && scope.row.slug != 'delivery-policy'"
               size="mini"
               type="danger"
               @click="handleDelete(scope.$index, scope.row)"
