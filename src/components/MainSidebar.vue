@@ -34,15 +34,22 @@
         <el-menu-item index="/admin/users/admin">Admin</el-menu-item>
         <el-menu-item index="/admin/user/create">Add User</el-menu-item>
       </el-submenu>
-      <el-menu-item index="/admin/pages">PAGES</el-menu-item>
-      <el-menu-item index="/admin/settings">SETTINGS</el-menu-item>
+      <el-menu-item v-if="level == 0" index="/admin/pages">PAGES</el-menu-item>
+      <el-menu-item v-if="level == 0" index="/admin/settings">SETTINGS</el-menu-item>
     </el-menu>
   </el-aside>
 </template>
 
 <script>
 export default {
-  name: "main-sidebar"
+  name: "main-sidebar",
+
+  props: {
+    level: {
+      type: Number,
+      required: true
+    }
+  }
 };
 </script>
 
