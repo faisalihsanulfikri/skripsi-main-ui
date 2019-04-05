@@ -27,6 +27,9 @@
                 <el-alert v-if="error" :title="errorMessage" type="error" show-icon>
                 </el-alert>
               </div>
+              <div class="uk-margin" v-if="success">
+                <el-alert :title="successMessage" type="success" show-icon></el-alert>
+              </div>
               <div class="uk-margin">
                 <button class="uk-button uk-button-primary uk-width-1-1" type="button" @click="forgot">
                   <span v-if="!application.loading">Confirm</span>
@@ -97,7 +100,7 @@ export default {
       return this.$service.forgot
         .sendEmail(email,'cms')
         .then(res => {
-          console.log(res);
+          console.log(res.data.message);
           let message = res.data.message;
           this.success = true;
           this.successMessage = message;
