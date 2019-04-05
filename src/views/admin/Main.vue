@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <main-sidebar/>
+    <main-sidebar :level="level"/>
 
     <el-container>
       <el-header>
@@ -35,8 +35,23 @@
 <script>
 import MainSidebar from "@/components/MainSidebar";
 export default {
+  data() {
+    return {
+      user: {}
+    };
+  },
   components: {
     MainSidebar
+  },
+
+  computed: {
+    level() {
+      return this.user.level;
+    }
+  },
+
+  async created() {
+    this.user = await this.$auth.getUser();
   }
 };
 </script>
