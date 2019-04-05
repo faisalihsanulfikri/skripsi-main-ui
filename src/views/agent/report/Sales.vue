@@ -56,22 +56,23 @@
               <th>Date</th>
               <th>Code</th>
               <th>Reference No.</th>
-              <th>AWB No.</th>
+              <!-- <th>AWB No.</th> -->
               <th>Customer</th>
-              <th>Consolidate</th>
-              <th>Total Packages</th>
+              <!-- <th>Consolidate</th> -->
+              <!-- <th>Total Packages</th> -->
               <th>Total Item`s</th>
-              <th>WEIGHT</th>
+              <!-- <th>WEIGHT</th> -->
               <th>Item Price</th>
-              <th>International Cost</th>
-              <th>Domestic Cost</th>
+              <th>Shipping Cost</th>
+              <!-- <th>Domestic Cost</th>
               <th>Incoming Duty</th>
               <th>PPN</th>
-              <th>PPH</th>
+              <th>PPH</th> -->
+              <th>Tax</th>
               <th>Insurance</th>
-              <th>Packagin Cost</th>
+              <!-- <th>Packagin Cost</th> -->
               <th>Total</th>
-              <th>Status</th>
+              <!-- <th>Status</th> -->
             </tr>
           </thead>
           <tbody>
@@ -79,22 +80,13 @@
               <td>{{ moment(order.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
               <td>{{ order.code }}</td>
               <td>{{ order.no_reference }}</td>
-              <td>{{ order.no_awb }}</td>
               <td>{{ order.user_name }}</td>
-              <td>{{ order.string_consolidate }}</td>
-              <td>{{ order.packet_count }}</td>
               <td>{{ order.item_count }}</td>
-              <td>{{ order.weight }}</td>
               <td>{{ order.detail.cost.itemPrice }}</td>
-              <td>{{ order.detail.cost.internationalCost }}</td>
-              <td>{{ order.detail.cost.domesticCost }}</td>
-              <td>{{ order.detail.cost.beaMasuk }}</td>
-              <td>{{ order.detail.cost.ppn }}</td>
-              <td>{{ order.detail.cost.pph }}</td>
-              <td>{{ order.detail.cost.insurance }}</td>
-              <td>{{ order.detail.cost.packagingCost }}</td>
+              <td>{{ order.detail.cost.internationalCost + order.detail.cost.domesticCost+order.detail.cost.packagingCost }}</td>
+              <td>{{ order.detail.cost.beaMasuk+order.detail.cost.ppn+order.detail.cost.pph }}</td>
+              <td>{{ order.detail.insurance}}</td>
               <td>{{ order.detail.cost.estimatedShippingCostFinal }}</td>
-              <td>{{ order.status }}</td>
             </tr>
           </tbody>
         </table>
