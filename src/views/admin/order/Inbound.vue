@@ -96,6 +96,51 @@
                         >{{ order.receiver.sub_district }}, {{ order.receiver.city }} {{ order.receiver.postal_code }}</div>
                         <div class="app--list-text">{{ order.receiver.province }}</div>
                         <div class="app--list-text">{{ order.receiver.phone }}</div>
+                        <div>
+                          <el-button
+                            v-if="user.level == 0"
+                            type="primary"
+                            size="mini"
+                            @click="onUpdateAddressDialog(order.id,orderIndex)"
+                          >Edit</el-button>
+                        </div>
+                        <div>
+                          <el-dialog
+                            title="Edit Address"
+                            :visible.sync="addressEditDialog"
+                            class="edit-address"
+                            center
+                          >
+                            <div class="uk-card-body">
+                              <div class="uk-margin">
+                                <label class="uk-form-label">Province</label>
+                                <el-input v-model="input.province"></el-input>
+                                <!-- <input type="text"> -->
+                              </div>
+                              <div class="uk-margin">
+                                <label class="uk-form-label">City</label>
+                                <el-input v-model="input.city"></el-input>
+                              </div>
+                              <div class="uk-margin">
+                                <label class="uk-form-label">Sub District</label>
+                                <el-input v-model="input.subdistrict_name"></el-input>
+                              </div>
+                              <div class="uk-margin">
+                                <label class="uk-form-label">Address</label>
+                                <el-input v-model="input.address"></el-input>
+                              </div>
+                              <div class="uk-margin">
+                                <label class="uk-form-label">Postal Code</label>
+                                <el-input v-model="input.postal_code"></el-input>
+                              </div>
+                              <el-button
+                                type="primary"
+                                size="mini"
+                                @click="updateAddress(order.id)"
+                              >Update</el-button>
+                            </div>
+                          </el-dialog>
+                        </div>
                       </div>
                     </div>
                     <div class="uk-width-3-5">
@@ -232,6 +277,17 @@ export default {
 
   data() {
     return {
+      detail: {},
+      receiver: {},
+      user: "",
+      input: {
+        province: "",
+        city: "",
+        subdistrict_name: "",
+        address: "a",
+        postal_code: "p"
+      },
+      addressEditDialog: false,
       orders: [],
       totalPages: ["1"],
       pagination: {
@@ -247,7 +303,7 @@ export default {
     };
   },
 
-  created() {
+  async created() {
     // this.filter.time = [
     //   moment()
     //     .startOf("month")
@@ -258,6 +314,7 @@ export default {
     // ];
 
     this.fetchOrders(this.pagination.page);
+    this.user = await this.$auth.getUser();
   },
 
   methods: {
@@ -308,6 +365,10 @@ export default {
           return order;
         });
 
+        console.log(this.orders);
+
+        // this.input.province =
+
         this.pagination = res.data;
 
         delete this.pagination.data;
@@ -316,7 +377,78 @@ export default {
       }
 
       this.__stopLoading();
+    },
+
+    onUpdateAddressDialog(id, i) {
+      this.addressEditDialog = true;
+      // console.log(this.orders[i].detail.destination);
+      // console.log(id, i);
+      this.input.address = this.orders[i].receiver.address;
+      this.input.postal_code = this.orders[i].receiver.postal_code;
+      this.input.province = this.orders[i].detail.destination.province;
+      this.input.city = this.orders[i].detail.destination.city;
+      this.input.subdistrict_name = this.orders[
+        i
+      ].detail.destination.subdistrict_name;
+
+      this.detail = this.orders[i].detail;
+      this.receiver = this.orders[i].receiver;
+    },
+
+    updateAddress(id) {
+      // console.log(this.orders[i].detail.destination);
+      console.log(id);
+
+      // destination
+      this.detail.destination.province = this.input.province;
+      this.detail.destination.city = this.input.city;
+      this.detail.destination.subdistrict_name = this.input.subdistrict_name;
+
+      //receiver
+      this.receiver.address = this.input.address;
+      this.receiver.province = this.input.province;
+      this.receiver.city = this.input.city;
+      this.receiver.sub_district = this.input.subdistrict_name;
+      this.receiver.postal_code = this.input.postal_code;
+
+      // console.log("detail", this.detail);
+      // console.log("receiver", this.receiver);
+      this.update(id);
+    },
+    update(id) {
+      console.log("receiver", this.receiver);
+
+      this.$authHttp
+        .put(`/order/addresses/${id}`, {
+          detail: this.detail,
+          receiver: this.receiver
+        })
+        .then(res => {
+          this.$notify({
+            title: "SUCCESS",
+            message: res.data.message,
+            type: "success"
+          });
+        })
+        .catch(err => {
+          if (err.response) {
+            this.error = true;
+            this.errorMessage = err.response.data.message
+              ? err.response.data.message
+              : err.response.statusText;
+          }
+        });
+
+      this.addressEditDialog = false;
+      this.fetchOrders(this.pagination.page);
     }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.edit-address {
+  z-index: 3000 !important;
+}
+</style>
+
