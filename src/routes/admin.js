@@ -21,6 +21,7 @@ import AreaCodeCreate from '../views/admin/area/location/Create'
 import User from '../views/admin/user/Index'
 import UserCreate from '../views/admin/user/Create'
 import UserEdit from '../views/admin/user/Edit'
+import Sales from '../views/admin/report/Sales'
 import Setting from '../views/admin/setting/Index'
 
 import {
@@ -44,6 +45,15 @@ export default {
       path: "air-waybills/:code",
       name: "admin-awb-show",
       component: AwbShow,
+      meta: {
+        auth: true,
+        level: [ADMIN, SUPER_ADMIN]
+      }
+    },
+    {
+      path: 'reports/sales',
+      name: 'admin-report-sales',
+      component: Sales,
       meta: {
         auth: true,
         level: [ADMIN, SUPER_ADMIN]

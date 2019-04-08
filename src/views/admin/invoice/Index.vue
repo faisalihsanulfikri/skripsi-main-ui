@@ -239,6 +239,17 @@ export default {
 
       this.pagination.page = page;
 
+      // if (this.filter.search.toLowerCase() == "paid") {
+      //   let filter = parseInt("1");
+      //   this.filter.search = filter;
+      // } else if (this.filter.search.toLowerCase() == "unpaid") {
+      //   let filter = parseInt("0");
+      //   this.filter.search = filter;
+      // }
+
+      // console.log(this.filter.search);
+      // return this.__stopLoading();
+
       try {
         let res = await this.$service.invoice.get(
           {
