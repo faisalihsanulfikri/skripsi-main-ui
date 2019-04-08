@@ -23,7 +23,7 @@
           <el-menu-item index="/admin/master/area/code">Location Codes</el-menu-item>
         </el-submenu>
       </el-submenu>
-
+      <el-menu-item index="/admin/reports/sales">SALES</el-menu-item>
       <el-submenu index="/admin/users">
         <template slot="title">
           <span>USERS</span>
@@ -53,4 +53,3 @@ export default {
   }
 }
 </style>
-

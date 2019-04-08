@@ -10,7 +10,7 @@ import OrderImportInbound from '../views/agent/inbound/Import'
 import OrderExportInbound from '../views/agent/inbound/Export'
 import OrderReport from '../views/agent/report/Order'
 import ScanAwb from '../views/agent/outbound/ScanAwb'
-import Sales from '../views/agent/report/Sales'
+// import Sales from '../views/agent/report/Sales'
 
 import {
   AGENT
@@ -109,15 +109,15 @@ export default {
       level: [AGENT]
     }
   },
-  {
-    path: 'reports/sales',
-    name: 'agent-report-sales',
-    component: Sales,
-    meta: {
-      auth: true,
-      level: [AGENT]
-    }
-  },
+  // {
+  //   path: 'reports/sales',
+  //   name: 'agent-report-sales',
+  //   component: Sales,
+  //   meta: {
+  //     auth: true,
+  //     level: [AGENT]
+  //   }
+  // },
   {
     path: 'inbound/export',
     name: 'inbound-export',
