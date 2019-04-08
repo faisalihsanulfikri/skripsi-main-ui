@@ -29,6 +29,11 @@
           <input type="checkbox" v-bind:value="format.awb" v-model="format.checked" v-bind:checked=true> {{ format.awb +' - '+ format.name+' - '+format.address }}
           <br>
         </span>
+        {{data.manifest_saved}}
+        <button
+          v-if="data.manifest_saved != ''"
+          @click="manifestToExcel()"
+          > Download {{data.manifest_saved}} Excel </button>
         <button type="button" @click="create">Create Manifest</button>
       </div>
     </div>
@@ -45,7 +50,8 @@ export default {
       data: {
         awb:"",
         name:"",
-        address:""
+        address:"",
+        manifest_saved:""
       },
       test: [],
       checked: [],
@@ -95,7 +101,7 @@ export default {
         }).map(function(obj) { return {awb:obj.awb,name:obj.name,address:obj.address} })
 
         let res = await this.$service.manifest.create(this.input)
-        console.log(res)
+        this.data.manifest_saved = res.data.data
         this.$notify({
           title: "SUCCESS",
           message: res.data.message,
@@ -106,7 +112,24 @@ export default {
         this.__handleError(this, err, true);
       }
       this.__stopLoading()
+    },
+  async manifestToExcel() {
+    this.__startLoading();
+
+    try {
+      let res = await this.$service.manifest.toExcel(this.data.manifest_saved);
+
+      let content = res.request.getResponseHeader("Content-Disposition");
+      let regexResult = content.match("filename=(.*)");
+      let filename = regexResult[1].replace(new RegExp('"', "g"), "");
+      let blob = new Blob([res.data]);
+      saveAs(blob, filename);
+    } catch (err) {
+      this.__handleError(this, err, true);
     }
+
+    this.__stopLoading();
+  }
   }
 }
 
