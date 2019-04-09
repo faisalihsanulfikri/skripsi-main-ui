@@ -108,20 +108,17 @@
                             <el-button
                               type="primary"
                               size="mini"
-                              @click="centerDialogVisible = true"
+                              @click="openPreview(payment)"
                             >Preview</el-button>
 
                             <el-dialog
-                              title="Payment Preview"
+                              title="Preview Payment"
                               :visible.sync="centerDialogVisible"
                               class="payment-preview"
                               center
                             >
-                              <div style="text-align:center;">
-                                <img
-                                  :src="linkdownload+'/receipt/'+payment.id+'/'+payment.filename+'/download'"
-                                  alt="preview"
-                                >
+                              <div style="text-align:center">
+                                <img :src="previewLink">
                               </div>
                             </el-dialog>
                           </td>
@@ -200,7 +197,8 @@ export default {
         time: [],
         search: ""
       },
-      centerDialogVisible: false
+      centerDialogVisible: false,
+      previewLink: ""
     };
   },
 
@@ -238,17 +236,6 @@ export default {
       this.__startLoading();
 
       this.pagination.page = page;
-
-      // if (this.filter.search.toLowerCase() == "paid") {
-      //   let filter = parseInt("1");
-      //   this.filter.search = filter;
-      // } else if (this.filter.search.toLowerCase() == "unpaid") {
-      //   let filter = parseInt("0");
-      //   this.filter.search = filter;
-      // }
-
-      // console.log(this.filter.search);
-      // return this.__stopLoading();
 
       try {
         let res = await this.$service.invoice.get(
@@ -301,6 +288,12 @@ export default {
       }
 
       this.__stopLoading();
+    },
+    openPreview(payment) {
+      this.centerDialogVisible = true;
+      this.previewLink = `${this.linkdownload}/receipt/${payment.id}/${
+        payment.filename
+      }/download`;
     }
   }
 };
