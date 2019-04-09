@@ -87,7 +87,14 @@
               </tr>
               <tr v-show="!manifest.collapse" :key="`${index}_info`">
                 <td colspan="4">
-                  <table style="width : 100%">
+                  <table style="width : 100%;">
+                    <th style="width: 5%;">Date</th>
+                    <th>Order Code</th>
+                    <th>Manifest No</th>
+                    <th>AWB No</th>
+                    <th>Consignee</th>
+                    <th>Country Receiver</th>
+                    <th>Region Receiver</th>
                     <template v-for="(awb , index) in manifest.order_awb">
                       <tr>
                         <td>
@@ -109,7 +116,7 @@
                           <h5 class="uk-margin-small">ID</h5>
                         </td>
                         <td>
-                          <h5 class="uk-margin-small">{{awb.detail.shipper_region}}</h5>
+                          <h5 class="uk-margin-small">{{awb.detail.receiver_region}}</h5>
                         </td>
                       </tr>
                     </template>
