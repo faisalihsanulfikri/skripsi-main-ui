@@ -116,7 +116,7 @@
                           <h5 class="uk-margin-small">ID</h5>
                         </td>
                         <td>
-                          <h5 class="uk-margin-small">{{awb.detail.shipper_region}}</h5>
+                          <h5 class="uk-margin-small">{{awb.detail.receiver_region}}</h5>
                         </td>
                       </tr>
                     </template>
