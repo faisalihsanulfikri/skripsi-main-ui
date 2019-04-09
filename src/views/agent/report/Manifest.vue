@@ -86,18 +86,30 @@
                 </td>
               </tr>
               <tr v-show="!manifest.collapse" :key="`${index}_info`">
-                <td colspan="3">
+                <td colspan="4">
                   <table style="width : 100%">
                     <template v-for="(awb , index) in manifest.order_awb">
                       <tr>
                         <td>
-                          <h5 class="uk-margin-small">AWB {{awb.awb}}</h5>
+                          <h5 class="uk-margin-small">{{awb.created_at}}</h5>
                         </td>
                         <td>
-                          <h5 class="uk-margin-small">Receiver {{awb.detail.receiver_name}}</h5>
+                          <h5 class="uk-margin-small">{{awb.order_code}}</h5>
                         </td>
                         <td>
-                          <h5 class="uk-margin-small">Address {{awb.detail.receiver_address}}</h5>
+                          <h5 class="uk-margin-small">{{awb.manifest_no}}</h5>
+                        </td>
+                        <td>
+                          <h5 class="uk-margin-small">{{awb.awb}}</h5>
+                        </td>
+                        <td>
+                          <h5 class="uk-margin-small">{{awb.detail.receiver_name}}</h5>
+                        </td>
+                        <td>
+                          <h5 class="uk-margin-small">ID</h5>
+                        </td>
+                        <td>
+                          <h5 class="uk-margin-small">{{awb.detail.shipper_region}}</h5>
                         </td>
                       </tr>
                     </template>
