@@ -43,8 +43,9 @@
           <thead>
             <tr>
               <th></th>
-              <th width="150">Code</th>
               <th width="150">Date</th>
+              <th width="150">Code</th>
+              <th>Reference</th>
               <th>Customer</th>
               <th class="uk-text-right" width="200">Amount (IDR)</th>
               <th class="uk-text-center" width="150">Status</th>
@@ -62,13 +63,22 @@
                     <font-awesome-icon v-else icon="angle-down"></font-awesome-icon>
                   </a>
                 </td>
+                <td>{{ moment(order.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
                 <td
                   class="app--table-column__collapse-toggle"
                   @click.prevent="collapseToggle(orderIndex)"
                 >
                   <a href="#">{{ order.code }}</a>
                 </td>
-                <td>{{ moment(order.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
+                <td>
+                  <!-- start -->
+                  <template v-for="(items, groupIndex) in order.item_groups">
+                    <ul :key="groupIndex" class="ul-ref">
+                      <li class="li-ref">{{ items[0].reference }}</li>
+                    </ul>
+                  </template>
+                  <!-- end -->
+                </td>
                 <td>{{ order.user.code }} - {{ order.user.name }}</td>
                 <td
                   class="uk-text-right"
@@ -449,6 +459,14 @@ export default {
 <style lang="scss" scoped>
 .edit-address {
   z-index: 3000 !important;
+}
+
+.ul-ref {
+  padding-left: 0px;
+
+  .li-ref {
+    list-style: none;
+  }
 }
 </style>
 

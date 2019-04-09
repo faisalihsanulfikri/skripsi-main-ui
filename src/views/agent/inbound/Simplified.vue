@@ -43,8 +43,9 @@
           <thead>
             <tr>
               <th></th>
-              <th width="150">Code</th>
               <th width="150">Date</th>
+              <th width="150">Code</th>
+              <th>Reference</th>
               <th>Customer</th>
               <th class="uk-text-center" width="150">Status</th>
             </tr>
@@ -61,19 +62,28 @@
                     <font-awesome-icon v-else icon="angle-down"></font-awesome-icon>
                   </a>
                 </td>
+                <td>{{ moment(order.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
                 <td
                   class="app--table-column__collapse-toggle"
                   @click.prevent="collapseToggle(orderIndex)"
                 >
                   <a href="#!" class="custom-link-black">{{ order.code }}</a>
                 </td>
-                <td>{{ moment(order.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
+                <td>
+                  <!-- start -->
+                  <template v-for="(items, groupIndex) in order.item_groups">
+                    <ul :key="groupIndex" class="ul-ref">
+                      <li class="li-ref">{{ items[0].reference }}</li>
+                    </ul>
+                  </template>
+                  <!-- end -->
+                </td>
                 <td>{{ order.user.code }} - {{ order.user.name }}</td>
                 <td class="uk-text-center">{{ order.status }}</td>
               </tr>
               <tr v-show="!order.collapse" :key="`${orderIndex}_info`">
                 <td></td>
-                <td colspan="4">
+                <td colspan="5">
                   <div class="uk-grid-small" uk-grid>
                     <div class="uk-width-1-2">
                       <h5 class="uk-margin-small">
@@ -508,3 +518,14 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.ul-ref {
+  padding-left: 0px;
+
+  .li-ref {
+    list-style: none;
+  }
+}
+</style>
+

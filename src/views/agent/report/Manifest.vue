@@ -39,7 +39,6 @@
               <el-button slot="append" icon="el-icon-search" @click="getManifest"></el-button>
             </el-input>
           </div>
-
         </div>
       </div>
       <div class="uk-overflow-auto">
@@ -87,11 +86,20 @@
               </tr>
               <tr v-show="!manifest.collapse" :key="`${index}_info`">
                 <td colspan="4">
-                  <table style="width : 100%">
-                    <template v-for="(awb , index) in manifest.order_awb">
-                      <tr>
+                  <table style="width : 100%;">
+                    <th style="width: 5%;">Date</th>
+                    <th>Order Code</th>
+                    <th>Manifest No</th>
+                    <th>AWB No</th>
+                    <th>Consignee</th>
+                    <th>Country Receiver</th>
+                    <th>Region Receiver</th>
+                    <template v-for="(awb , index) in data">
+                      <tr :key="index" v-if="manifest.manifest_no == awb.manifest_no">
                         <td>
-                          <h5 class="uk-margin-small">{{awb.created_at}}</h5>
+                          <h5
+                            class="uk-margin-small"
+                          >{{ moment(awb.created_at).format('YYYY-MM-DD, HH:mm:ss') }}</h5>
                         </td>
                         <td>
                           <h5 class="uk-margin-small">{{awb.order_code}}</h5>
@@ -109,7 +117,7 @@
                           <h5 class="uk-margin-small">ID</h5>
                         </td>
                         <td>
-                          <h5 class="uk-margin-small">{{awb.detail.shipper_region}}</h5>
+                          <h5 class="uk-margin-small">{{awb.detail.receiver_region}}</h5>
                         </td>
                       </tr>
                     </template>
@@ -168,7 +176,8 @@ export default {
       filter: {
         time: []
       },
-      manifests: []
+      manifests: [],
+      data: []
     };
   },
 
@@ -185,7 +194,6 @@ export default {
 
       this.pagination.page = page;
 
-
       try {
         let res = await this.$service.manifest.get(this.filter, page);
 
@@ -193,14 +201,39 @@ export default {
         this.totalPages = res.data.data.pages;
         this.current_page = page;
 
-        console.log(this.current_page);
+        const sumber = res.data.data.data;
+        console.log("data asal", sumber);
 
-        this.manifests = res.data.data.data.map(function(item, index) {
+        const bahan = res.data.data.data;
+
+        let details = [];
+        let receivers = [];
+
+        // parse detail receiver
+        bahan.forEach(el => {
+          details.push(JSON.parse(el.detail));
+        });
+
+        bahan.forEach(el => {
+          receivers.push(JSON.parse(el.receiver));
+        });
+
+        //replace detail receiver
+        bahan.forEach((el, i) => {
+          bahan[i].detail = details[i];
+          bahan[i].receiver = receivers[i];
+        });
+
+        this.data = bahan;
+
+        this.manifests = bahan.map(function(item, index) {
           return {
             ...item,
             collapse: true
           };
         });
+
+        console.log(this.manifests);
       } catch (err) {
         this.__handleError(this, err, true);
       }
