@@ -84,16 +84,19 @@
                   </el-button>
                 </td>
               </tr>
+              <!-- Date	Order Code	Reference No.	AWB No.	Consignee	Contact Person	Country	State	City	District	Address	Postcode	Telp	Total Items	Item Description	No of Pieces	Weight (kg)	Currency	value -->
               <tr v-show="!manifest.collapse" :key="`${index}_info`">
                 <td colspan="4">
                   <table style="width : 100%;">
                     <th style="width: 5%;">Date</th>
                     <th>Order Code</th>
                     <th>Manifest No</th>
+                    <th>Reference No</th>
                     <th>AWB No</th>
                     <th>Consignee</th>
-                    <th>Country Receiver</th>
-                    <th>Region Receiver</th>
+                    <th>Contact Person</th>
+                    <th>Country</th>
+                    <th>Region</th>
                     <template v-for="(awb , index) in data">
                       <tr :key="index" v-if="manifest.manifest_no == awb.manifest_no">
                         <td>
@@ -108,10 +111,16 @@
                           <h5 class="uk-margin-small">{{awb.manifest_no}}</h5>
                         </td>
                         <td>
+                          <h5 class="uk-margin-small">{{awb.reference}}</h5>
+                        </td>
+                        <td>
                           <h5 class="uk-margin-small">{{awb.awb}}</h5>
                         </td>
                         <td>
                           <h5 class="uk-margin-small">{{awb.detail.receiver_name}}</h5>
+                        </td>
+                        <td>
+                          <h5 class="uk-margin-small">{{awb.name}}</h5>
                         </td>
                         <td>
                           <h5 class="uk-margin-small">ID</h5>
