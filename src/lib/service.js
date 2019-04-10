@@ -197,8 +197,14 @@ const report = {
       params
     });
   },
-  airWaybillExport(params = {}) {
-    return Vue.authHttp().get("/reports/air-waybill/export", {
+  airWaybillExportXLSX(params = {}) {
+    return Vue.authHttp().get("/reports/air-waybill/export/xlsx", {
+      params,
+      responseType: "blob"
+    });
+  },
+  airWaybillExportCSV(params = {}) {
+    return Vue.authHttp().get("/reports/air-waybill/export/csv", {
       params,
       responseType: "blob"
     });
