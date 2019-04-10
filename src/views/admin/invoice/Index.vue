@@ -133,8 +133,30 @@
                               v-if="payment.status === 'new' || payment.status === 'confirmed'"
                               type="danger"
                               size="mini"
-                              @click="rejectPayment(payment.id)"
+                              @click="centerDialogReject = true"
                             >Reject</el-button>
+
+                            <el-dialog
+                              title="Rejected Message"
+                              :visible.sync="centerDialogReject"
+                              class="reject-message"
+                              center
+                            >
+                              <div style="text-align:center;">
+                                <el-input
+                                  v-model="reject_message"
+                                  type="textarea"
+                                  class="text-message"
+                                ></el-input>
+                                <br>
+                                <el-button
+                                  v-if="payment.status === 'new' || payment.status === 'confirmed'"
+                                  type="danger"
+                                  size="mini"
+                                  @click="updatePaymentStatus(payment, 'rejected',reject_message)"
+                                >Reject</el-button>
+                              </div>
+                            </el-dialog>
                           </td>
                         </tr>
                       </tbody>
@@ -184,6 +206,7 @@
 export default {
   data() {
     return {
+      reject_message: "",
       totalPages: ["1"],
       pagination: {
         total: 0,
@@ -198,6 +221,7 @@ export default {
         search: ""
       },
       centerDialogVisible: false,
+      centerDialogReject: false,
       previewLink: ""
     };
   },
@@ -224,7 +248,7 @@ export default {
         .catch(() => {});
     },
     rejectPayment(paymentId) {
-      this.$confirm("Are you sure to confirm this payment?", "Confirm", {
+      this.$confirm("Are you sure to reject this payment?", "Confirm", {
         type: "warning"
       })
         .then(() => {
@@ -262,12 +286,19 @@ export default {
 
       this.__stopLoading();
     },
-    async updatePaymentStatus(paymentId, status) {
+    async updatePaymentStatus(payment, status, message) {
       this.__startLoading();
 
+      // console.log("1", payment.id, status, message);
+      // console.log("2", payment);
+
+      // return this.__stopLoading();
+
       try {
-        let res = await this.$service.payment.updateStatus(paymentId, {
-          status: status
+        let res = await this.$service.payment.updateStatus(payment.id, {
+          payment: payment,
+          status: status,
+          message: message
         });
 
         this.$notify({
@@ -309,5 +340,12 @@ export default {
 
 .payment-preview {
   z-index: 3000 !important;
+}
+.reject-message {
+  z-index: 3000 !important;
+
+  .text-message {
+    margin-bottom: 10px;
+  }
 }
 </style>

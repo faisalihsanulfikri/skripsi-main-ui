@@ -281,6 +281,18 @@ const warehouse = {
     return Vue.http().get("/warehouses/list", {
       params
     });
+  },
+  find(id) {
+    return Vue.authHttp().get(`/warehouses/${id}`);
+  },
+  create(data = {}) {
+    return Vue.authHttp().post("/warehouses/", data);
+  },
+  update(id = null, data = {}) {
+    return Vue.authHttp().put(`/warehouses/${id}`, data);
+  },
+  delete(id) {
+    return Vue.authHttp().delete(`/warehouses/${id}`);
   }
 };
 
