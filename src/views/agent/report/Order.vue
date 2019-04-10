@@ -81,6 +81,8 @@
             <tr>
               <th>Date</th>
               <th>Code</th>
+              <th>Reference</th>
+              <th>AWB</th>
               <th>Customer</th>
               <th>Consolidate</th>
               <th>Total Packages</th>
@@ -89,9 +91,43 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(order, index) in orders" :key="index">
+            <tr v-for="(order, i) in orders" :key="i">
               <td>{{ moment(order.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
               <td>{{ order.code }}</td>
+
+              <!-- reference -->
+
+              <td>
+                <template v-for="(data, i) in order.items">
+                  <ul :key="i" class="ul-ref" v-if="i == 0">
+                    <li class="li-ref">{{ order.items[i].reference }}</li>
+                  </ul>
+                  <ul
+                    :key="i"
+                    class="ul-ref"
+                    v-else-if="order.items[i].category_id != order.items[i-1].category_id"
+                  >
+                    <li class="li-ref">{{ order.items[i].reference }}</li>
+                  </ul>
+                </template>
+              </td>
+
+              <!-- awb -->
+
+              <td>
+                <template v-for="(data, i) in order.items">
+                  <ul :key="i" class="ul-ref" v-if="i == 0">
+                    <li class="li-ref">{{ order.items[i].awb }}</li>
+                  </ul>
+                  <ul
+                    :key="i"
+                    class="ul-ref"
+                    v-else-if="order.items[i].category_id != order.items[i-1].category_id"
+                  >
+                    <li class="li-ref">{{ order.items[i].awb }}</li>
+                  </ul>
+                </template>
+              </td>
               <td>{{ order.user_name }}</td>
               <td>{{ order.string_consolidate }}</td>
               <td>{{ order.packet_count }}</td>
@@ -166,6 +202,12 @@ export default {
     this.fetchOrderReport(this.pagination.page);
   },
 
+  // computed: {
+  //   ref() {
+  //     let data = this.fetchOrderReport
+  //   }
+  // },
+
   methods: {
     onChangePagination(i) {
       // console.log("test", i + 1);
@@ -222,9 +264,8 @@ export default {
         this.totalPages = res.data.pages;
         this.current_page = page;
 
-        // console.log(this.totalPages.length);
-
         this.orders = res.data.data;
+        console.log(this.orders[0].items);
       } catch (err) {
         this.__handleError(this, err, true);
       }
@@ -234,3 +275,14 @@ export default {
   }
 };
 </script>
+
+
+<style lang="scss" scoped>
+.ul-ref {
+  padding-left: 0px;
+
+  .li-ref {
+    list-style: none;
+  }
+}
+</style>

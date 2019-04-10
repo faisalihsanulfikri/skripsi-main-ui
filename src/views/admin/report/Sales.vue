@@ -60,18 +60,18 @@
               <th>Customer</th>
               <!-- <th>Consolidate</th> -->
               <!-- <th>Total Packages</th> -->
-              <th>Total Item`s</th>
+              <th class="uk-table-expand">Total Item`s</th>
               <!-- <th>WEIGHT</th> -->
-              <th>Item Price</th>
-              <th>Shipping Cost</th>
+              <th class="uk-table-expand">Item Price</th>
+              <th class="uk-table-expand">Shipping Cost</th>
               <!-- <th>Domestic Cost</th>
               <th>Incoming Duty</th>
               <th>PPN</th>
-              <th>PPH</th> -->
-              <th>Tax</th>
-              <th>Insurance</th>
+              <th>PPH</th>-->
+              <th class="uk-table-expand">Tax</th>
+              <th class="uk-table-expand">Insurance</th>
               <!-- <th>Packagin Cost</th> -->
-              <th>Total</th>
+              <th class="uk-table-expand">Total</th>
               <!-- <th>Status</th> -->
             </tr>
           </thead>
@@ -82,11 +82,26 @@
               <td>{{ order.no_reference }}</td>
               <td>{{ order.user_name }}</td>
               <td>{{ order.item_count }}</td>
-              <td>{{ order.detail.cost.itemPrice }}</td>
-              <td>{{ order.detail.cost.internationalCost + order.detail.cost.domesticCost+order.detail.cost.packagingCost }}</td>
-              <td>{{ order.detail.cost.beaMasuk+order.detail.cost.ppn+order.detail.cost.pph }}</td>
-              <td>{{ order.detail.insurance}}</td>
-              <td>{{ order.detail.cost.estimatedShippingCostFinal }}</td>
+              <td
+                class="align-right"
+              >Rp {{ order.detail.cost.itemPrice | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
+              <td class="align-right">
+                Rp {{ order.detail.cost.internationalCost + order.detail.cost.domesticCost+order.detail.cost.packagingCost | currency('', 2, { thousandsSeparator: '.',
+                decimalSeparator: ',' }) }}
+              </td>
+              <td class="align-right">
+                Rp {{ order.detail.cost.beaMasuk+order.detail.cost.ppn+order.detail.cost.pph | currency('', 2, { thousandsSeparator: '.',
+                decimalSeparator: ',' }) }}
+              </td>
+              <td v-if="order.detail.insurance != NULL" class="align-right">
+                Rp {{ order.detail.insurance | currency('', 2, { thousandsSeparator: '.',
+                decimalSeparator: ',' }) }}
+              </td>
+              <td v-else class="align-right">Rp 0</td>
+              <td class="align-right">
+                Rp 2{{ order.detail.cost.estimatedShippingCostFinal | currency('', 2, { thousandsSeparator: '.',
+                decimalSeparator: ',' }) }}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -220,3 +235,8 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.align-right {
+  text-align: right;
+}
+</style>

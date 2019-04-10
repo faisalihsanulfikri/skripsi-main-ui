@@ -197,8 +197,14 @@ const report = {
       params
     });
   },
-  airWaybillExport(params = {}) {
-    return Vue.authHttp().get("/reports/air-waybill/export", {
+  airWaybillExportXLSX(params = {}) {
+    return Vue.authHttp().get("/reports/air-waybill/export/xlsx", {
+      params,
+      responseType: "blob"
+    });
+  },
+  airWaybillExportCSV(params = {}) {
+    return Vue.authHttp().get("/reports/air-waybill/export/csv", {
       params,
       responseType: "blob"
     });
@@ -275,6 +281,18 @@ const warehouse = {
     return Vue.http().get("/warehouses/list", {
       params
     });
+  },
+  find(id) {
+    return Vue.authHttp().get(`/warehouses/${id}`);
+  },
+  create(data = {}) {
+    return Vue.authHttp().post("/warehouses/", data);
+  },
+  update(id = null, data = {}) {
+    return Vue.authHttp().put(`/warehouses/${id}`, data);
+  },
+  delete(id) {
+    return Vue.authHttp().delete(`/warehouses/${id}`);
   }
 };
 

@@ -108,20 +108,17 @@
                             <el-button
                               type="primary"
                               size="mini"
-                              @click="centerDialogVisible = true"
+                              @click="openPreview(payment)"
                             >Preview</el-button>
 
                             <el-dialog
-                              title="Payment Preview"
+                              title="Preview Payment"
                               :visible.sync="centerDialogVisible"
                               class="payment-preview"
                               center
                             >
-                              <div style="text-align:center;">
-                                <img
-                                  :src="linkdownload+'/receipt/'+payment.id+'/'+payment.filename+'/download'"
-                                  alt="preview"
-                                >
+                              <div style="text-align:center">
+                                <img :src="previewLink">
                               </div>
                             </el-dialog>
                           </td>
@@ -224,7 +221,8 @@ export default {
         search: ""
       },
       centerDialogVisible: false,
-      centerDialogReject: false
+      centerDialogReject: false,
+      previewLink: ""
     };
   },
 
@@ -321,6 +319,12 @@ export default {
       }
 
       this.__stopLoading();
+    },
+    openPreview(payment) {
+      this.centerDialogVisible = true;
+      this.previewLink = `${this.linkdownload}/receipt/${payment.id}/${
+        payment.filename
+      }/download`;
     }
   }
 };
