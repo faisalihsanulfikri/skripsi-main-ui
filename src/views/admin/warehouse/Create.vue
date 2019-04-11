@@ -19,7 +19,7 @@
     <div class="uk-card-body">
       <div class="uk-margin">
         <label class="uk-form-label">Code</label>
-        <el-input v-model="input.code"></el-input>
+        <el-input v-model="input.code" :disabled="this.$route.params.id"></el-input>
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Name</label>
@@ -35,15 +35,9 @@
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Zip Code</label>
-        <el-input v-model="input.zipcode"></el-input>
+        <el-input v-model="input.zip_code"></el-input>
       </div>
-      <el-alert
-          v-if="error"
-          title="ERROR"
-          type="error"
-          :description="errorMessage"
-          show-icon>
-        </el-alert>
+      <el-alert v-if="error" title="ERROR" type="error" :description="errorMessage" show-icon></el-alert>
     </div>
     <div class="uk-card-footer uk-text-right">
       <el-button type="primary" @click="save">SAVE</el-button>
@@ -53,100 +47,102 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       edit: false,
-      title: 'New Warehouse',
+      title: "New Warehouse",
       input: {
-        code: '',
-        name: '',
-        price: '',
-        address: '',
-        zipcode: ''
+        code: "",
+        name: "",
+        price: "",
+        address: "",
+        zip_code: ""
       },
       error: false,
-      errorMessage: ''
+      errorMessage: ""
+    };
+  },
+  created() {
+    if (this.$route.params.id) {
+      this.edit = true;
+      this.title = "Edit Warehouse";
+
+      this.getWareHouse();
     }
   },
   methods: {
-    getWareHouse () {
-      this.error = false
-      this.errorMessage = ''
+    async getWareHouse() {
+      this.__startLoading();
 
-      this.$authHttp.get(`/v1/cfees/${this.$route.params.id}`).then(res => {
-        this.input.code = res.data[0].code
-        this.input.name = res.data[0].name
-        this.input.price = res.data[0].price
-        this.input.address = res.data[0].address
-        this.input.zipcode = res.data[0].zipcode
-      }).catch(err => {
-        if (err.response) {
-          this.error = true
-          this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
+      this.error = false;
+      this.errorMessage = "";
 
-          this.$notify({
-            title: 'ERROR',
-            message: this.errorMessage,
-            type: 'error'
-          })
+      try {
+        let res = await this.$service.warehouse.find(this.$route.params.id);
 
-          this.$router.push({ name: 'admin-category' })
-        }
-      })
+        console.log(res.data);
+
+        this.input = res.data;
+      } catch (err) {
+        this.__handleError(this, err, true);
+      }
+
+      this.__stopLoading();
     },
-    save () {
+    save() {
       if (this.edit) {
-        this.update()
+        this.update();
       } else {
-        this.store()
+        this.store();
       }
     },
-    store () {
-      this.error = false
-      this.errorMessage = ''
+    async store() {
+      this.__startLoading();
+      this.error = false;
+      this.errorMessage = "";
 
-      this.$authHttp.post('/v1/cfees', this.input).then(res => {
+      console.log(this.input);
+      // return this.__stopLoading();
+
+      try {
+        let res = await this.$service.warehouse.create(this.input);
+
         this.$notify({
-          title: 'SUCCESS',
+          title: "SUCCESS",
           message: res.data.message,
-          type: 'success'
-        })
+          type: "success"
+        });
 
-        this.$router.push({ name: 'admin-warehouse' })
-      }).catch(err => {
-        if (err.response) {
-          this.error = true
-          this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
-        }
-      })
+        this.$router.push({ name: "admin-warehouse" });
+      } catch (err) {
+        this.__handleError(this, err, true);
+      }
+
+      this.__stopLoading();
     },
-    update () {
-      this.error = false
-      this.errorMessage = ''
+    async update() {
+      this.__startLoading();
+      this.error = false;
+      this.errorMessage = "";
 
-      this.$authHttp.put(`/v1/cfees/${this.$route.params.id}`, this.input).then(res => {
+      try {
+        let res = await this.$service.warehouse.update(
+          this.$route.params.id,
+          this.input
+        );
+
         this.$notify({
-          title: 'SUCCESS',
+          title: "SUCCESS",
           message: res.data.message,
-          type: 'success'
-        })
+          type: "success"
+        });
 
-        this.$router.push({ name: 'admin-warehouse' })
-      }).catch(err => {
-        if (err.response) {
-          this.error = true
-          this.errorMessage = err.response.data.message ? err.response.data.message : err.response.statusText
-        }
-      })
-    }
-  },
-  created () {
-    if (this.$route.params.id) {
-      this.edit = true
-      this.title = 'Edit Warehouse'
-
-      this.getWareHouse()
+        this.$router.push({ name: "admin-warehouse" });
+      } catch (err) {
+        this.__handleError(this, err, true);
+      }
+      this.__stopLoading();
     }
   }
-}
+};
 </script>

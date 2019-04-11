@@ -49,7 +49,9 @@
                 <td>{{ warehouse.name }}</td>
                 <td class="uk-text-right">{{ warehouse.price }}</td>
                 <td class="uk-text-center">
-                  <router-link :to="{ name: 'admin-warehouse-edit', params: { id: warehouse.id } }">
+                  <router-link
+                    :to="{ name: 'admin-warehouse-edit', params: { id: warehouse.code } }"
+                  >
                     <font-awesome-icon icon="edit"></font-awesome-icon>
                   </router-link>
                   <a
@@ -85,6 +87,9 @@ export default {
       warehouses: []
     };
   },
+  created() {
+    this.fetchWareHouses();
+  },
   methods: {
     fetchWareHouses() {
       this.$authHttp.get(`/warehouses`).then(res => {
@@ -95,35 +100,23 @@ export default {
         });
       });
     },
-    delete(id) {
+    async delete(id) {
       this.error = false;
       this.errorMessage = "";
 
-      this.$authHttp
-        .delete(`/v1/cfees/${id}`)
-        .then(res => {
-          this.$notify({
-            title: "SUCCESS",
-            message: res.data.message,
-            type: "success"
-          });
+      try {
+        let res = await this.$service.warehouse.delete(id);
 
-          this.fetchWareHouses();
-        })
-        .catch(err => {
-          if (err.response) {
-            this.error = true;
-            this.errorMessage = err.response.data.message
-              ? err.response.data.message
-              : err.response.statusText;
-
-            this.$notify({
-              title: "ERROR",
-              message: this.errorMessage,
-              type: "error"
-            });
-          }
+        this.$notify({
+          title: "SUCCESS",
+          message: res.data.message,
+          type: "success"
         });
+
+        this.fetchWareHouses();
+      } catch (err) {
+        this.__handleError(this, err, true);
+      }
     },
     deleteConfirmation(id) {
       this.$confirm("Are you sure to delete this?", "Waning", {
@@ -139,9 +132,6 @@ export default {
     collapseToggle(index) {
       this.warehouses[index].collapse = !this.warehouses[index].collapse;
     }
-  },
-  created() {
-    this.fetchWareHouses();
   }
 };
 </script>

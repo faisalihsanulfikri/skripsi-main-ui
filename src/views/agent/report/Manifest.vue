@@ -218,7 +218,6 @@ export default {
         let details = [];
         let receivers = [];
 
-        // parse detail receiver
         bahan.forEach(el => {
           details.push(JSON.parse(el.detail));
         });
