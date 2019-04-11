@@ -35,8 +35,8 @@
             <el-button type="default" @click="fetchAirWaybills">Filter</el-button>
           </div>
           <div class="uk-width-1-3 uk-margin-auto-left">
-            <el-input v-model="filter.search" placeholder="Search...">
-              <el-button slot="append" icon="el-icon-search" @click="fetchAirWaybills"></el-button>
+            <el-input v-model="filter.search" placeholder="Search..." @keyup.enter="onSearchEnter">
+              <el-button slot="append" icon="el-icon-search" @click="onSearchclick"></el-button>
             </el-input>
           </div>
           <div class="uk-width-1-1" style="padding-top:10px">
@@ -135,9 +135,35 @@ export default {
     this.fetchAirWaybills(this.pagination.page);
   },
 
+  mounted() {
+    this.onSearchEnter();
+  },
+
   methods: {
     onChangePagination(i) {
       this.fetchAirWaybills(i + 1);
+    },
+    onSearchEnter() {
+      window.addEventListener("keyup", event => {
+        if (event.keyCode === 13) {
+          if (this.filter.search === "") {
+          } else {
+            this.fetchAirWaybills(this.pagination.page);
+          }
+        }
+      });
+    },
+
+    onSearchclick() {
+      if (this.filter.search === "") {
+        this.$notify({
+          title: "Notification",
+          message: "Search form cannot be empty",
+          type: "warning"
+        });
+      } else {
+        this.fetchAirWaybills(this.pagination.page);
+      }
     },
     async exportReportXLSX() {
       this.__startLoading();
@@ -179,7 +205,6 @@ export default {
       this.__startLoading();
 
       this.pagination.page = page;
-
 
       try {
         let res = await this.$service.report.airWaybill(this.filter, page);

@@ -35,8 +35,8 @@
             <el-button type="default" @click="fetchOrderReport">Filter</el-button>
           </div>
           <div class="uk-width-1-3 uk-margin-auto-left">
-            <el-input v-model="filter.search" placeholder="Search...">
-              <el-button slot="append" icon="el-icon-search" @click="fetchOrderReport"></el-button>
+            <el-input v-model="filter.search" placeholder="Search..." @keyup.enter="onSearchEnter">
+              <el-button slot="append" icon="el-icon-search" @click="onSearchclick"></el-button>
             </el-input>
           </div>
           <div class="uk-width-1-1" style="padding-top:10px">
@@ -49,32 +49,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="uk-margin">
-        <div class="uk-grid-small" uk-grid>
-          <div class="uk-width-auto">
-            <el-date-picker
-              v-model="filter.time"
-              type="daterange"
-              format="yyyy-MM-dd"
-              value-format="yyyy-MM-dd"
-              range-separator="To"
-              start-placeholder="Start date"
-              end-placeholder="End date"
-            ></el-date-picker>
-          </div>
-          <div class="uk-width-auto">
-            <el-button type="default" @click="fetchOrderReport">Filter</el-button>
-          </div>
-          <div class="uk-width-auto">
-            <el-button type="default" @click="exportReportXLSX">
-              <font-awesome-icon icon="file-excel"></font-awesome-icon>
-            </el-button>XLSX
-            <el-button type="default" @click="exportReportCSV">
-              <font-awesome-icon icon="file-excel"></font-awesome-icon>
-            </el-button>CSV
-          </div>
-        </div>
-      </div>-->
       <div class="uk-overflow-auto">
         <table class="uk-table uk-table-divider uk-table-small uk-text-small">
           <thead>
@@ -202,16 +176,37 @@ export default {
     this.fetchOrderReport(this.pagination.page);
   },
 
-  // computed: {
-  //   ref() {
-  //     let data = this.fetchOrderReport
-  //   }
-  // },
+  mounted() {
+    this.onSearchEnter();
+  },
 
   methods: {
     onChangePagination(i) {
       // console.log("test", i + 1);
       this.fetchOrderReport(i + 1);
+    },
+
+    onSearchEnter() {
+      window.addEventListener("keyup", event => {
+        if (event.keyCode === 13) {
+          if (this.filter.search === "") {
+          } else {
+            this.fetchOrderReport(this.pagination.page);
+          }
+        }
+      });
+    },
+
+    onSearchclick() {
+      if (this.filter.search === "") {
+        this.$notify({
+          title: "Notification",
+          message: "Search form cannot be empty",
+          type: "warning"
+        });
+      } else {
+        this.fetchOrderReport(this.pagination.page);
+      }
     },
     async exportReportCSV() {
       this.__startLoading();

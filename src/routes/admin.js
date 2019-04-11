@@ -21,8 +21,11 @@ import AreaCodeCreate from '../views/admin/area/location/Create'
 import User from '../views/admin/user/Index'
 import UserCreate from '../views/admin/user/Create'
 import UserEdit from '../views/admin/user/Edit'
+import UserDetail from '../views/admin/user/Detail'
 import Sales from '../views/admin/report/Sales'
 import Setting from '../views/admin/setting/Index'
+
+
 
 import {
   ADMIN,
@@ -119,6 +122,16 @@ export default {
       path: 'user/:id/edit',
       name: 'admin-user-edit',
       component: UserEdit,
+      meta: {
+        auth: true,
+        level: [ADMIN, SUPER_ADMIN]
+      }
+    },
+
+    {
+      path: 'user/:id/detail',
+      name: 'admin-user-detail',
+      component: UserDetail,
       meta: {
         auth: true,
         level: [ADMIN, SUPER_ADMIN]

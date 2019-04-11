@@ -10,11 +10,11 @@
         <div class="uk-width-expand">
           <div class="app--card-header_title">
             <h3>
-              <span>Users</span>
-              <el-tag
+              <span>Detail User</span>
+              <!-- <el-tag
                 class="uk-margin-small-left"
                 size="small"
-              >{{ $route.params.level.toUpperCase() }}</el-tag>
+              >{{ $route.params.level.toUpperCase() }}</el-tag>-->
             </h3>
           </div>
         </div>
@@ -34,10 +34,10 @@
             </el-select>
           </div>
           <div class="uk-width-1-3">
-            <el-input v-model="filter.keyword" placeholder="Search..." @keyup.enter="onSearchEnter"></el-input>
+            <el-input v-model="filter.keyword" placeholder="Search..."></el-input>
           </div>
           <div class="uk-width-auto">
-            <el-button type="primary" @click="onSearchclick">Filter</el-button>
+            <el-button type="primary" @click="fetchUsers">Filter</el-button>
           </div>
           <div class="uk-width-auto">
             <router-link :to="{ name: 'admin-user-create', params: { level: this.level } }">
@@ -97,7 +97,7 @@
               <td class="uk-text-center" style="vertical-align: middle;">
                 <div class="uk-grid-small" uk-grid>
                   <div class="uk-width-1-2">
-                    <router-link :to="{ name: 'admin-user-detail', params: { id: user.id } }">
+                    <router-link :to="{ name: 'admin-user-edit', params: { id: user.id } }">
                       <font-awesome-icon icon="info"></font-awesome-icon>
                     </router-link>
                   </div>
@@ -172,38 +172,12 @@ export default {
   async created() {
     this.__startLoading();
 
-    await this.fetchUsers();
+    // await this.fetchUsers();
 
     this.__stopLoading();
   },
 
-  mounted() {
-    this.onSearchEnter();
-  },
-
   methods: {
-    onSearchEnter() {
-      window.addEventListener("keyup", event => {
-        if (event.keyCode === 13) {
-          if (this.filter.keyword === "") {
-          } else {
-            this.fetchUsers(this.pagination.page);
-          }
-        }
-      });
-    },
-
-    onSearchclick() {
-      if (this.filter.keyword === "") {
-        this.$notify({
-          title: "Notification",
-          message: "Search form cannot be empty",
-          type: "warning"
-        });
-      } else {
-        this.fetchUsers(this.pagination.page);
-      }
-    },
     async onChangePage(page) {
       this.pagination.current_page = page;
 
