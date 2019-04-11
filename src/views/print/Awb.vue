@@ -35,11 +35,11 @@
         <div class="uk-width-1-2">
           <div class="uk-margin">
             <div v-if="awb.order" class="uk-text-center">
-              <img class="barcode-image" :src="`${$web.defaults.baseURL}/barcode/${awb.order.code}?w=1&h=75`" width="150" />
+              <img class="barcode-image" :src="`${$web.defaults.baseURL}/barcode/${awb.order.code}?w=300&h=75`" />
               <h5 class="uk-margin-small-top">{{ awb.order.code }}</h5>
             </div>
             <div v-if="awb.awb" class="uk-text-center">
-              <img class="barcode-image" :src="`${$web.defaults.baseURL}/barcode/${awb.awb}?w=1&h=75`" width="150" />
+              <img class="barcode-image" :src="`${$web.defaults.baseURL}/barcode/${awb.awb}?w=300&h=75`" />
               <h5 class="uk-margin-small-top">{{ awb.awb }}</h5>
             </div>
           </div>
