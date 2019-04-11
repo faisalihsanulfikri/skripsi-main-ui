@@ -60,18 +60,18 @@
               <th>Customer</th>
               <!-- <th>Consolidate</th> -->
               <!-- <th>Total Packages</th> -->
-              <th class="uk-table-expand">Total Item`s</th>
+              <th>Total Item`s</th>
               <!-- <th>WEIGHT</th> -->
-              <th class="uk-table-expand">Item Price</th>
-              <th class="uk-table-expand">Shipping Cost</th>
+              <th class="uk-table-expand min-width">Item Price</th>
+              <th class="uk-table-expand min-width">Shipping Cost</th>
               <!-- <th>Domestic Cost</th>
               <th>Incoming Duty</th>
               <th>PPN</th>
-              <th>PPH</th>-->
-              <th class="uk-table-expand">Tax</th>
-              <th class="uk-table-expand">Insurance</th>
+              <th>PPH</th> -->
+              <th class="uk-table-expand min-width">Tax</th>
+              <th class="uk-table-expand min-width">Insurance</th>
               <!-- <th>Packagin Cost</th> -->
-              <th class="uk-table-expand">Total</th>
+              <th class="uk-table-expand min-width">Total</th>
               <!-- <th>Status</th> -->
             </tr>
           </thead>
@@ -263,7 +263,11 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.align-right {
-  text-align: right;
-}
+  .align-right {
+    text-align: right;
+
+  }
+  .auto{
+
+  }
 </style>
