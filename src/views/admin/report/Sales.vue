@@ -270,4 +270,7 @@ export default {
   .auto{
 
   }
+  .uk-table-expand.min-width {
+    min-width: 125px;
+  }
 </style>
