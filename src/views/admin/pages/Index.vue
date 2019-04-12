@@ -34,7 +34,6 @@
           </template>
         </el-table-column>
         <el-table-column prop="title" label="Title" width="auto"></el-table-column>
-        <el-table-column prop="slug" label="Slug" width="auto"></el-table-column>
         <el-table-column label="Operations">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
