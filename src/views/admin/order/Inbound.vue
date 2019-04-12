@@ -33,8 +33,8 @@
           <el-button slot="append" icon="el-icon-search" @click="fetchOrders"></el-button>
         </div>
         <div class="uk-width-1-3 uk-margin-auto-left">
-          <el-input v-model="filter.search" placeholder="Search..." @keyup.enter="onSearchEnter">
-            <el-button slot="append" icon="el-icon-search" @click="onSearchclick"></el-button>
+          <el-input v-model="filter.search" placeholder="Search..." @keyup.enter="fetchOrders">
+            <el-button slot="append" icon="el-icon-search" @click="fetchOrders"></el-button>
           </el-input>
         </div>
       </div>
@@ -327,36 +327,11 @@ export default {
     this.user = await this.$auth.getUser();
   },
 
-  mounted() {
-    this.onSearchEnter();
-  },
-
   methods: {
     onChangePagination(i) {
       this.fetchOrders(i + 1);
     },
-    onSearchEnter() {
-      window.addEventListener("keyup", event => {
-        if (event.keyCode === 13) {
-          if (this.filter.search === "") {
-          } else {
-            this.fetchOrders(this.pagination.page);
-          }
-        }
-      });
-    },
 
-    onSearchclick() {
-      if (this.filter.search === "") {
-        this.$notify({
-          title: "Notification",
-          message: "Search form cannot be empty",
-          type: "warning"
-        });
-      } else {
-        this.fetchOrders(this.pagination.page);
-      }
-    },
     collapseToggle(index) {
       this.orders[index].collapse = !this.orders[index].collapse;
     },
