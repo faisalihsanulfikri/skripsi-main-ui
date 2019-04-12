@@ -15,7 +15,7 @@
         </div>
         <div class="uk-width-expand">
           <div class="app--card-header_title">
-            <h3>{{title}}</h3>
+            <h3>{{title}} {{input.userLevel}}</h3>
           </div>
         </div>
       </div>
@@ -44,35 +44,92 @@
               </tr>
               <tr>
                 <th>Level</th>
-                <!-- <td>: {{input.level_name}}</td> -->
-                <td>
-                  :
-                  <select
-                    v-model="input.level"
-                    v-validate="rules.level"
-                    name="province"
-                    class="uk-select"
-                    @change="onLevelChanged"
-                  >
-                    <option
-                      v-for="(item, index) in options.level"
-                      :key="index"
-                      :value="item.value"
-                    >{{ item.label }}</option>
-                  </select>
-                </td>
+                <td>: {{input.userLevel}}</td>
               </tr>
               <tr>
                 <th>Active</th>
-                <td>: {{input.active}}</td>
+                <td>: {{input.userActive}}</td>
               </tr>
             </table>
+          </div>
+
+          <hr>
+
+          <div class="uk-margin">
+            <div class="head-address">
+              <span class="title">Alamat</span>
+              <button class="btn" @click="createAddress">+</button>
+            </div>
+          </div>
+
+          <dialog-input-address
+            :title="dialogInput.title"
+            :visible.sync="dialogInput.visible"
+            :edit="dialogInput.edit"
+            :address="dialogInput.address"
+            @close="onInputClose"
+          />
+
+          <div
+            class="uk-grid uk-grid-small uk-child-width"
+            uk-grid
+            uk-height-match="target: .uk-card-body"
+          >
+            <div v-for="(address, index) in addresses" :key="address.id">
+              <div class="uk-card uk-card-default uk-card-small">
+                <div v-if="index === 0" class="is-favorite">
+                  <div class="uk-card-body">
+                    <div class="marker">
+                      <img src="/img/set-favorite-address-icon.png" alt="set favorite address icon">
+                    </div>
+                    <h4>{{ address.alias }}</h4>
+                    <p>{{ `${address.province}, ${address.city}, ${address.sub_district}, ${address.address}, ${address.postal_code}` }}</p>
+                    <p>{{ `${address.name} - ${address.phone}` }}</p>
+                  </div>
+                </div>
+                <div v-else>
+                  <div class="uk-card-body">
+                    <h4>{{ address.alias }}</h4>
+                    <p>{{ `${address.province}, ${address.city}, ${address.sub_district}, ${address.address}, ${address.postal_code}` }}</p>
+                    <p>{{ `${address.name} - ${address.phone}` }}</p>
+                  </div>
+                </div>
+                <div class="uk-card-footer uk-text-right">
+                  <el-tooltip
+                    :content="address.primary ? 'Alamat Utama': 'Set Alamat Utama'"
+                    placement="top"
+                  >
+                    <a
+                      :class="address.primary ? 'primary-address': 'non-primary-address'"
+                      href="#"
+                      @click.prevent="setPrimaryAddress(index)"
+                    >
+                      <font-awesome-icon icon="star" class="icon"/>
+                    </a>
+                  </el-tooltip>
+                  <el-tooltip content="Ubah" placement="top">
+                    <a class="uk-margin-left" href="#" @click.prevent="editAddress(index)">
+                      <font-awesome-icon icon="edit" class="icon"/>
+                    </a>
+                  </el-tooltip>
+                  <el-tooltip content="Hapus" placement="top">
+                    <a
+                      class="uk-text-danger uk-margin-left"
+                      href="#"
+                      @click.prevent="showConfirmDelete(index)"
+                    >
+                      <font-awesome-icon icon="trash-alt" class="icon"/>
+                    </a>
+                  </el-tooltip>
+                </div>
+              </div>
+            </div>
           </div>
 
           <el-alert v-if="error" title="ERROR" type="error" :description="errorMessage" show-icon></el-alert>
 
           <div class="uk-card-footer uk-text-right">
-            <el-button type="primary" @click="save">SAVE</el-button>
+            <!-- <el-button type="primary" @click="save">SAVE</el-button> -->
           </div>
         </div>
       </div>
@@ -81,13 +138,25 @@
 </template>
 
 <script>
+import DialogInputAddress from "@/components/DialogInputAddress";
+
 export default {
+  components: {
+    DialogInputAddress
+  },
+
   data() {
     return {
+      dialogInput: {
+        title: "Tambah Alamat",
+        visible: false,
+        edit: false,
+        address: {}
+      },
       index: "",
       route_name: "",
       edit: false,
-      title: "New User",
+      title: "Detail User",
       input: {
         code: "",
         name: "",
@@ -105,132 +174,26 @@ export default {
         active: "",
         active_name: "",
         level: "",
-        level_name: ""
+        userLevel: "",
+        userActive: ""
       },
-      rules: {
-        level: "required",
-        name: "required|alpha_spaces",
-        email: "required|email",
-        password: "required|min:6",
-        passwordConfirmation: "required|confirmed:password",
-        phone: "required|min:10"
-      },
+      addresses: [],
+      selectedAddress: {},
       error: false,
-      errorMessage: "",
-
-      master: {
-        levels: []
-      },
-
-      options: {
-        level: []
-      }
+      errorMessage: ""
     };
   },
 
-  // computed: {
-  //   level_name() {
-  //     // console.log(level);
-  //     let level = this.input.level;
-
-  //     switch (level) {
-  //       case "2":
-  //         return "Regular";
-  //         break;
-  //       case "3":
-  //         return "Premium";
-  //         break;
-  //       case "4":
-  //         return "Agent";
-  //         break;
-  //       case "1":
-  //         return "Admin";
-  //         break;
-  //     }
-  //   }
-  // },
-
-  created() {
+  async created() {
     if (this.$route.params.id) {
-      this.edit = true;
       this.title = "Detail User";
 
       this.fetchUsers();
-      this.fetchLevels();
+      this.fetchAddresses();
     }
-
-    // console.log("input", this.input);
-
-    // this.onUserCreate();
-    // this.fetchLevels();
   },
 
   methods: {
-    onActiveChanged() {
-      if (this.input.length > 0) {
-        this.input.active = "";
-      }
-    },
-    // onUserCreate() {
-    //   this.input.level = this.$route.params.level;
-
-    //   switch (this.$route.params.level) {
-    //     case "2":
-    //       this.title = "New User Regular";
-    //       this.route_name = "regular";
-    //       break;
-    //     case "3":
-    //       this.title = "New User Premium";
-    //       this.route_name = "premium";
-    //       break;
-    //     case "4":
-    //       this.title = "New User Agent";
-    //       this.route_name = "agent";
-    //       break;
-    //     case "1":
-    //       this.title = "New User Admin";
-    //       this.route_name = "admin";
-    //       break;
-    //   }
-    // },
-
-    async fetchLevels() {
-      this.__startLoading();
-
-      this.index = this.input.level;
-
-      this.error = false;
-      this.errorMessage = "";
-
-      try {
-        let res = await this.$service.level.get();
-
-        this.master.levels = res.data;
-        this.options.level = res.data.map(item => {
-          let $item = {
-            value: item.code,
-            label: item.name
-          };
-
-          return $item;
-        });
-
-        // console.log(this.index);
-
-        let i = this.index;
-
-        this.input.level = res.data[i].code;
-        this.input.level_name = res.data[i].name;
-        this.route_name = res.data[i].name.toLowerCase();
-
-        console.log(this.input);
-      } catch (err) {
-        this.__handleError(this, err, true);
-      }
-
-      this.__stopLoading();
-    },
-
     async fetchUsers() {
       this.__startLoading();
 
@@ -241,64 +204,98 @@ export default {
         let res = await this.$service.user.getUserData(this.$route.params.id);
 
         this.input = res.data;
-
-        console.log(this.route_name);
       } catch (err) {
         this.__handleError(this, err, true);
       }
 
       this.__stopLoading();
     },
-    // onLevelChanged() {
-    //   let level = this.master.levels.filter(
-    //     level => level.code == this.input.level
-    //   );
-
-    //   if (level.length > 0) {
-    //     this.input.level = level[0].code;
-    //     this.input.level_name = level[0].name;
-    //     this.route_name = level[0].name.toLowerCase();
-    //   }
-    // },
-
-    save() {
-      if (this.edit) {
-        this.update();
-      } else {
-        // this.error = false;
-        // this.errorMessage = "";
-        // console.log(this.input);
-
-        this.store();
-      }
-    },
-    async update() {
+    async onInputClose() {
+      this.dialogInput.visible = false;
       this.__startLoading();
 
-      this.error = false;
-      this.errorMessage = "";
-
-      try {
-        let res = await this.$service.user.updateUserData(
-          this.$route.params.id,
-          this.input
-        );
-
-        this.$notify({
-          title: "SUCCESS",
-          message: res.data.message,
-          type: "success"
-        });
-
-        this.$router.push({
-          path: "/admin"
-        });
-      } catch (err) {
-        this.__handleError(this, err, true);
-      }
+      await this.fetchAddresses();
 
       this.__stopLoading();
+    },
+
+    async fetchAddresses() {
+      let res = await this.$service.user.getAddressesById(
+        this.$route.params.id
+      );
+
+      this.addresses = res.data;
+
+      console.log(this.addresses);
+    },
+    createAddress() {
+      this.dialogInput.title = "Tambah Alamat";
+      this.dialogInput.visible = true;
+      this.dialogInput.edit = false;
+      // this.dialogInput.address = {};
     }
+    // editAddress(index) {
+    //   this.dialogInput.title = "Ubah Alamat";
+    //   this.dialogInput.visible = true;
+    //   this.dialogInput.edit = true;
+    //   this.dialogInput.address = this.addresses[index];
+    // },
+    // async deleteAddress() {
+    //   this.__startLoading();
+
+    //   await this.$authHttp
+    //     .delete(`/user/addresses/${this.selectedAddress.id}`)
+    //     .then(res => {
+    //       this.fetchAddresses();
+
+    //       this.$notify({
+    //         title: "SUCCESS",
+    //         message: res.data.message,
+    //         type: "success"
+    //       });
+    //     })
+    //     .catch(err => {
+    //       if (err.response) {
+    //         this.$notify({
+    //           title: "ERROR",
+    //           message: err.response.data.message,
+    //           type: "error"
+    //         });
+    //       }
+    //     });
+
+    //   this.__stopLoading();
+    // },
+    // async setPrimaryAddress(index) {
+    //   let address = this.addresses[index];
+
+    //   if (address.primary) return;
+
+    //   this.__startLoading();
+
+    //   await this.$authHttp
+    //     .put(`/user/addresses/${address.id}/primary`)
+    //     .then(res => {
+    //       this.fetchAddresses();
+
+    //       this.$notify({
+    //         title: "SUCCESS",
+    //         message: res.data.message,
+    //         type: "success"
+    //       });
+    //     })
+    //     .catch(err => {
+    //       if (err.response) {
+    //         this.$notify({
+    //           title: "ERROR",
+    //           message: err.response.data.message,
+    //           type: "error"
+    //         });
+    //       }
+    //     });
+
+    //   this.__stopLoading();
+    // }
   }
 };
 </script>
@@ -311,10 +308,18 @@ export default {
     padding-left: 5px;
   }
 }
-
 .detail {
   th {
     text-align: left;
+  }
+}
+
+.head-address {
+  .title {
+    font-weight: 700;
+  }
+  .btn {
+    margin-left: 10px;
   }
 }
 </style>
