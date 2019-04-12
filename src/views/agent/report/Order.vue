@@ -35,8 +35,12 @@
             <el-button type="default" @click="fetchOrderReport">Filter</el-button>
           </div>
           <div class="uk-width-1-3 uk-margin-auto-left">
-            <el-input v-model="filter.search" placeholder="Search..." @keyup.enter="onSearchEnter">
-              <el-button slot="append" icon="el-icon-search" @click="onSearchclick"></el-button>
+            <el-input
+              v-model="filter.search"
+              placeholder="Search..."
+              @keyup.enter="fetchOrderReport"
+            >
+              <el-button slot="append" icon="el-icon-search" @click="fetchOrderReport"></el-button>
             </el-input>
           </div>
           <div class="uk-width-1-1" style="padding-top:10px">
@@ -176,38 +180,11 @@ export default {
     this.fetchOrderReport(this.pagination.page);
   },
 
-  mounted() {
-    this.onSearchEnter();
-  },
-
   methods: {
     onChangePagination(i) {
-      // console.log("test", i + 1);
       this.fetchOrderReport(i + 1);
     },
 
-    onSearchEnter() {
-      window.addEventListener("keyup", event => {
-        if (event.keyCode === 13) {
-          if (this.filter.search === "") {
-          } else {
-            this.fetchOrderReport(this.pagination.page);
-          }
-        }
-      });
-    },
-
-    onSearchclick() {
-      if (this.filter.search === "") {
-        this.$notify({
-          title: "Notification",
-          message: "Search form cannot be empty",
-          type: "warning"
-        });
-      } else {
-        this.fetchOrderReport(this.pagination.page);
-      }
-    },
     async exportReportCSV() {
       this.__startLoading();
 
@@ -237,10 +214,6 @@ export default {
         let filename = regexResult[1].replace(new RegExp('"', "g"), "");
         let blob = new Blob([res.data]);
 
-        console.log("content", content);
-        console.log("regexResult", regexResult);
-        console.log("filename", filename);
-
         saveAs(blob, filename);
       } catch (err) {
         this.__handleError(this, err, true);
@@ -260,7 +233,6 @@ export default {
         this.current_page = page;
 
         this.orders = res.data.data;
-        console.log(this.orders[0].items);
       } catch (err) {
         this.__handleError(this, err, true);
       }

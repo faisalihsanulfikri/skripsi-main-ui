@@ -28,8 +28,12 @@
     <div class="uk-card-body">
       <div class="uk-margin uk-grid-small" uk-grid>
         <div class="uk-width-1-3 uk-margin-auto-left">
-          <el-input v-model="filter.search" placeholder="Search..." @keyup.enter="onSearchEnter">
-            <el-button slot="append" icon="el-icon-search" @click="onSearchclick"></el-button>
+          <el-input
+            v-model="filter.search"
+            placeholder="Search..."
+            @keyup.enter="fetchSubDistricts"
+          >
+            <el-button slot="append" icon="el-icon-search" @click="fetchSubDistricts"></el-button>
           </el-input>
         </div>
       </div>
@@ -114,35 +118,11 @@ export default {
   created() {
     this.fetchSubDistricts(this.pagination.page);
   },
-  mounted() {
-    this.onSearchEnter();
-  },
   methods: {
     onChangePagination(i) {
       this.fetchSubDistricts(i + 1);
     },
-    onSearchEnter() {
-      window.addEventListener("keyup", event => {
-        if (event.keyCode === 13) {
-          if (this.filter.search === "") {
-          } else {
-            this.fetchSubDistricts(this.pagination.page);
-          }
-        }
-      });
-    },
 
-    onSearchclick() {
-      if (this.filter.search === "") {
-        this.$notify({
-          title: "Notification",
-          message: "Search form cannot be empty",
-          type: "warning"
-        });
-      } else {
-        this.fetchSubDistricts(this.pagination.page);
-      }
-    },
     async fetchSubDistricts(page) {
       this.__startLoading();
 

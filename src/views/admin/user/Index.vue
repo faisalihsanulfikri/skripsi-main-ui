@@ -34,10 +34,10 @@
             </el-select>
           </div>
           <div class="uk-width-1-3">
-            <el-input v-model="filter.keyword" placeholder="Search..." @keyup.enter="onSearchEnter"></el-input>
+            <el-input v-model="filter.keyword" placeholder="Search..." @keyup.enter="fetchUsers"></el-input>
           </div>
           <div class="uk-width-auto">
-            <el-button type="primary" @click="onSearchclick">Filter</el-button>
+            <el-button type="primary" @click="fetchUsers">Filter</el-button>
           </div>
           <div class="uk-width-auto">
             <router-link :to="{ name: 'admin-user-create', params: { level: this.level } }">
@@ -177,33 +177,7 @@ export default {
     this.__stopLoading();
   },
 
-  mounted() {
-    this.onSearchEnter();
-  },
-
   methods: {
-    onSearchEnter() {
-      window.addEventListener("keyup", event => {
-        if (event.keyCode === 13) {
-          if (this.filter.keyword === "") {
-          } else {
-            this.fetchUsers(this.pagination.page);
-          }
-        }
-      });
-    },
-
-    onSearchclick() {
-      if (this.filter.keyword === "") {
-        this.$notify({
-          title: "Notification",
-          message: "Search form cannot be empty",
-          type: "warning"
-        });
-      } else {
-        this.fetchUsers(this.pagination.page);
-      }
-    },
     async onChangePage(page) {
       this.pagination.current_page = page;
 
