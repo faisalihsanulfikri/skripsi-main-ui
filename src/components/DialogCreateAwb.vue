@@ -282,7 +282,7 @@ export default {
       this.validationErrors = {}
 
       this.input.packet.price = this.__roundHalf(this.input.packet.price)
-      this.input.packet.weight = this.input.packet.weight
+      // this.input.packet.weight = this.__roundHalf(this.input.packet.weight)
       this.input.packet.length = this.__roundHalf(this.input.packet.length)
       this.input.packet.width = this.__roundHalf(this.input.packet.width)
       this.input.packet.height = this.__roundHalf(this.input.packet.height)

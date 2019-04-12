@@ -2,6 +2,17 @@
   <div class="uk-card uk-card-default uk-card-small">
     <div class="uk-card-header app--card-header">
       <div uk-grid>
+        <div class="uk-width-auto">
+          <div class="app--card-header__back">
+            <!-- <router-link :to="{ name: 'admin-user', params: { level: input.level } }">
+              <font-awesome-icon icon="chevron-left"></font-awesome-icon>
+            </router-link>-->
+            <!-- <a href="/admin/users/${input.level}"> -->
+            <!-- <a href="/admin/users/" onclick="location.href=this.href+input.level;return false;">
+              <font-awesome-icon icon="chevron-left"></font-awesome-icon>
+            </a>-->
+          </div>
+        </div>
         <div class="uk-width-expand">
           <div class="app--card-header_title">
             <h3>{{title}}</h3>
@@ -308,29 +319,6 @@ export default {
         this.store();
       }
     },
-    // async store() {
-    //   this.__startLoading();
-
-    //   this.error = false;
-    //   this.errorMessage = "";
-
-    //   try {
-    //     let res = await this.$service.user.userStore(this.input);
-
-    //     this.$notify({
-    //       title: "SUCCESS",
-    //       message: res.data.message,
-    //       type: "success"
-    //     });
-
-    //     this.$router.push("/admin/users/" + this.route_name);
-    //   } catch (err) {
-    //     this.__handleError(this, err, true);
-    //   }
-
-    //   this.__stopLoading();
-    // }
-
     async update() {
       this.__startLoading();
 
@@ -349,9 +337,9 @@ export default {
           type: "success"
         });
 
-        // this.$router.push({
-        //   name: "admin-category"
-        // });
+        this.$router.push({
+          path: "/admin"
+        });
       } catch (err) {
         this.__handleError(this, err, true);
       }
