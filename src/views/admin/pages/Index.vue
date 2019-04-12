@@ -47,6 +47,17 @@
             <el-button v-else size="mini" type="danger" disabled>Delete</el-button>
           </template>
         </el-table-column>
+        
+        <el-table-column label="Enable/Disable">
+        <template slot-scope="scope">
+          <el-switch
+            @change="changePageStatus(scope)"
+            v-model="scope.row.is_enabled"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
+        </template>
+        </el-table-column>
       </el-table>
     </div>
   </div>
@@ -107,7 +118,32 @@ export default {
             "Terjadi kesalahan pada saat menghapus halaman, harap hubungi admin@kirimin.co.id"
         });
       }
-    }
+    },
+    async changePageStatus (scope) {
+
+      let pageId = scope.row.id;
+      let pageStatus = scope.row.is_enabled == true ? 'enable' : 'disable'
+      let payload = { status: pageStatus }
+      console.log({scope, isenable: scope.row.isEnabledPage, payload})
+
+      let endpoint = `/configs/pages/${pageId}/update`
+
+      try {
+        let res = await this.$authHttp.put(endpoint, payload)
+
+        this.$notify({
+          title: "Success",
+          type: "success",
+          message: res.data.message
+        })
+      } catch (err) {
+        this.$notify({
+          title: "Error",
+          type: "error",
+          message: err.message
+        })
+      }
+    },
   }
 };
 </script>
