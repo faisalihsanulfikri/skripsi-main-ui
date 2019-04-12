@@ -3,238 +3,318 @@
     <div class="uk-card-header app--card-header">
       <div uk-grid>
         <div class="uk-width-auto">
-          <div class="app--card-header__icon">
-            <font-awesome-icon icon="user"></font-awesome-icon>
+          <div class="app--card-header__back">
+            <!-- <router-link :to="{ name: 'admin-user', params: { level: input.level } }">
+              <font-awesome-icon icon="chevron-left"></font-awesome-icon>
+            </router-link>-->
+            <!-- <a href="/admin/users/${input.level}"> -->
+            <!-- <a href="/admin/users/" onclick="location.href=this.href+input.level;return false;">
+              <font-awesome-icon icon="chevron-left"></font-awesome-icon>
+            </a>-->
           </div>
         </div>
         <div class="uk-width-expand">
           <div class="app--card-header_title">
-            <h3>
-              <span>Detail User</span>
-              <!-- <el-tag
-                class="uk-margin-small-left"
-                size="small"
-              >{{ $route.params.level.toUpperCase() }}</el-tag>-->
-            </h3>
+            <h3>{{title}}</h3>
           </div>
         </div>
       </div>
     </div>
+
     <div class="uk-card-body">
-      <div class="uk-margin">
-        <div class="uk-grid-small" uk-grid>
-          <div class="uk-width-1-3">
-            <el-select v-model="filter.verified" class="uk-width-1-1" multiple>
-              <el-option
-                v-for="(item, index) in options.verified"
-                :key="index"
-                :value="item.value"
-                :label="item.label"
-              ></el-option>
-            </el-select>
+      <div uk-grid>
+        <div class="uk-width-1-1">
+          <div class="uk-margin">
+            <table class="detail">
+              <tr>
+                <th>Code</th>
+                <td>: {{input.code}}</td>
+              </tr>
+              <tr>
+                <th>Name</th>
+                <td>: {{input.name}}</td>
+              </tr>
+              <tr>
+                <th>Email</th>
+                <td>: {{input.email}}</td>
+              </tr>
+              <tr>
+                <th>Phone Number</th>
+                <td>: {{input.phone}}</td>
+              </tr>
+              <tr>
+                <th>Level</th>
+                <!-- <td>: {{input.level_name}}</td> -->
+                <td>
+                  :
+                  <select
+                    v-model="input.level"
+                    v-validate="rules.level"
+                    name="province"
+                    class="uk-select"
+                    @change="onLevelChanged"
+                  >
+                    <option
+                      v-for="(item, index) in options.level"
+                      :key="index"
+                      :value="item.value"
+                    >{{ item.label }}</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <th>Active</th>
+                <td>: {{input.active}}</td>
+              </tr>
+            </table>
           </div>
-          <div class="uk-width-1-3">
-            <el-input v-model="filter.keyword" placeholder="Search..."></el-input>
-          </div>
-          <div class="uk-width-auto">
-            <el-button type="primary" @click="fetchUsers">Filter</el-button>
-          </div>
-          <div class="uk-width-auto">
-            <router-link :to="{ name: 'admin-user-create', params: { level: this.level } }">
-              <el-button type="primary">Add</el-button>
-            </router-link>
+
+          <el-alert v-if="error" title="ERROR" type="error" :description="errorMessage" show-icon></el-alert>
+
+          <div class="uk-card-footer uk-text-right">
+            <el-button type="primary" @click="save">SAVE</el-button>
           </div>
         </div>
       </div>
-      <div class="uk-overflow-auto">
-        <table class="uk-table uk-table-divider uk-table-small">
-          <thead>
-            <tr>
-              <th>
-                <column-sort
-                  title="Name"
-                  field="name"
-                  :active-field="filter.sortField"
-                  @change="onSortChange"
-                ></column-sort>
-              </th>
-              <th>
-                <column-sort
-                  title="Email"
-                  field="email"
-                  :active-field="filter.sortField"
-                  @change="onSortChange"
-                ></column-sort>
-              </th>
-              <th>
-                <column-sort
-                  title="Mobile"
-                  field="phone"
-                  :active-field="filter.sortField"
-                  @change="onSortChange"
-                ></column-sort>
-              </th>
-              <th class="uk-text-center">
-                <column-sort
-                  title="Verified"
-                  field="active"
-                  :active-field="filter.sortField"
-                  @change="onSortChange"
-                ></column-sort>
-              </th>
-              <th class="uk-text-center" style="vertical-align: middle;">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="user in users" :key="user.id">
-              <td>{{ user.name }}</td>
-              <td>{{ user.email }}</td>
-              <td>{{ user.phone }}</td>
-              <td class="uk-text-center">
-                <el-tag v-if="user.active" type="success" size="small">Yes</el-tag>
-                <el-tag v-else type="danger" size="small">No</el-tag>
-              </td>
-              <td class="uk-text-center" style="vertical-align: middle;">
-                <div class="uk-grid-small" uk-grid>
-                  <div class="uk-width-1-2">
-                    <router-link :to="{ name: 'admin-user-edit', params: { id: user.id } }">
-                      <font-awesome-icon icon="info"></font-awesome-icon>
-                    </router-link>
-                  </div>
-                  <div class="uk-width-1-2">
-                    <router-link :to="{ name: 'admin-user-edit', params: { id: user.id } }">
-                      <font-awesome-icon icon="edit"></font-awesome-icon>
-                    </router-link>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="uk-card-footer uk-text-center">
-      <el-pagination
-        layout="prev, pager, next"
-        :page-size="pagination.per_page"
-        :page-count="pagination.last_page"
-        :total="pagination.total"
-        @current-change="onChangePage"
-      ></el-pagination>
     </div>
   </div>
 </template>
 
 <script>
-import ColumnSort from "../../../components/ColumnSort";
-
 export default {
-  components: {
-    ColumnSort
-  },
-
   data() {
     return {
-      level: "",
-      users: [],
-      pagination: {
-        current_page: 1,
-        per_page: 25,
-        total: 0
+      index: "",
+      route_name: "",
+      edit: false,
+      title: "New User",
+      input: {
+        code: "",
+        name: "",
+        email: "",
+        password: "",
+        passwordConfirmation: "",
+        phone: "",
+        gender: "",
+        birthdate: "",
+        birthdateSplited: {
+          year: "",
+          month: "",
+          day: ""
+        },
+        active: "",
+        active_name: "",
+        level: "",
+        level_name: ""
       },
-      filter: {
-        keyword: "",
-        verified: [1, 0],
-        sortField: "active",
-        sortOrder: "desc"
+      rules: {
+        level: "required",
+        name: "required|alpha_spaces",
+        email: "required|email",
+        password: "required|min:6",
+        passwordConfirmation: "required|confirmed:password",
+        phone: "required|min:10"
       },
+      error: false,
+      errorMessage: "",
+
+      master: {
+        levels: []
+      },
+
       options: {
-        verified: [
-          {
-            value: 1,
-            label: "Verified"
-          },
-          {
-            value: 0,
-            label: "Unverified"
-          }
-        ]
+        level: []
       }
     };
   },
 
-  watch: {
-    $route: {
-      handler: "fetchUsers"
+  // computed: {
+  //   level_name() {
+  //     // console.log(level);
+  //     let level = this.input.level;
+
+  //     switch (level) {
+  //       case "2":
+  //         return "Regular";
+  //         break;
+  //       case "3":
+  //         return "Premium";
+  //         break;
+  //       case "4":
+  //         return "Agent";
+  //         break;
+  //       case "1":
+  //         return "Admin";
+  //         break;
+  //     }
+  //   }
+  // },
+
+  created() {
+    if (this.$route.params.id) {
+      this.edit = true;
+      this.title = "Detail User";
+
+      this.fetchUsers();
+      this.fetchLevels();
     }
-  },
 
-  async created() {
-    this.__startLoading();
+    // console.log("input", this.input);
 
-    // await this.fetchUsers();
-
-    this.__stopLoading();
+    // this.onUserCreate();
+    // this.fetchLevels();
   },
 
   methods: {
-    async onChangePage(page) {
-      this.pagination.current_page = page;
+    onActiveChanged() {
+      if (this.input.length > 0) {
+        this.input.active = "";
+      }
+    },
+    // onUserCreate() {
+    //   this.input.level = this.$route.params.level;
 
+    //   switch (this.$route.params.level) {
+    //     case "2":
+    //       this.title = "New User Regular";
+    //       this.route_name = "regular";
+    //       break;
+    //     case "3":
+    //       this.title = "New User Premium";
+    //       this.route_name = "premium";
+    //       break;
+    //     case "4":
+    //       this.title = "New User Agent";
+    //       this.route_name = "agent";
+    //       break;
+    //     case "1":
+    //       this.title = "New User Admin";
+    //       this.route_name = "admin";
+    //       break;
+    //   }
+    // },
+
+    async fetchLevels() {
       this.__startLoading();
 
-      await this.fetchUsers();
+      this.index = this.input.level;
 
-      this.__stopLoading();
-    },
-    async onSortChange(payload) {
-      this.filter.sortField = payload.field;
-      this.filter.sortOrder = payload.order;
+      this.error = false;
+      this.errorMessage = "";
 
-      this.__startLoading();
-
-      await this.fetchUsers();
-
-      this.__stopLoading();
-    },
-    async fetchUsers() {
       try {
-        let res = await this.$service.user.getByLevel(
-          this.$route.params.level,
-          {
-            page: this.pagination.current_page,
-            sort: [this.filter.sortField, this.filter.sortOrder],
-            active: this.filter.verified,
-            search: this.filter.keyword
-          }
-        );
+        let res = await this.$service.level.get();
 
-        this.users = res.data.data;
-        this.pagination = res.data;
+        this.master.levels = res.data;
+        this.options.level = res.data.map(item => {
+          let $item = {
+            value: item.code,
+            label: item.name
+          };
 
-        switch (this.$route.params.level) {
-          case "regular":
-            this.level = "2";
-            break;
-          case "premium":
-            this.level = "3";
-            break;
-          case "agent":
-            this.level = "4";
-            break;
-          case "admin":
-            this.level = "1";
-            break;
-        }
+          return $item;
+        });
 
-        console.log(this.users);
+        // console.log(this.index);
 
-        delete this.pagination.data;
-        delete this.pagination.filter;
+        let i = this.index;
+
+        this.input.level = res.data[i].code;
+        this.input.level_name = res.data[i].name;
+        this.route_name = res.data[i].name.toLowerCase();
+
+        console.log(this.input);
       } catch (err) {
         this.__handleError(this, err, true);
       }
+
+      this.__stopLoading();
+    },
+
+    async fetchUsers() {
+      this.__startLoading();
+
+      this.error = false;
+      this.errorMessage = "";
+
+      try {
+        let res = await this.$service.user.getUserData(this.$route.params.id);
+
+        this.input = res.data;
+
+        console.log(this.route_name);
+      } catch (err) {
+        this.__handleError(this, err, true);
+      }
+
+      this.__stopLoading();
+    },
+    // onLevelChanged() {
+    //   let level = this.master.levels.filter(
+    //     level => level.code == this.input.level
+    //   );
+
+    //   if (level.length > 0) {
+    //     this.input.level = level[0].code;
+    //     this.input.level_name = level[0].name;
+    //     this.route_name = level[0].name.toLowerCase();
+    //   }
+    // },
+
+    save() {
+      if (this.edit) {
+        this.update();
+      } else {
+        // this.error = false;
+        // this.errorMessage = "";
+        // console.log(this.input);
+
+        this.store();
+      }
+    },
+    async update() {
+      this.__startLoading();
+
+      this.error = false;
+      this.errorMessage = "";
+
+      try {
+        let res = await this.$service.user.updateUserData(
+          this.$route.params.id,
+          this.input
+        );
+
+        this.$notify({
+          title: "SUCCESS",
+          message: res.data.message,
+          type: "success"
+        });
+
+        this.$router.push({
+          path: "/admin"
+        });
+      } catch (err) {
+        this.__handleError(this, err, true);
+      }
+
+      this.__stopLoading();
     }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.req-doc {
+  padding-top: 10px;
+  .btn-r {
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+}
+
+.detail {
+  th {
+    text-align: left;
+  }
+}
+</style>
