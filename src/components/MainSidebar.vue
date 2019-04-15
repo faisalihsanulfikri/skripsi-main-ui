@@ -64,4 +64,10 @@ export default {
     height: 100%;
   }
 }
+
+@media screen and (min-width: 300px) and (max-width: 720px) {
+  .main-sidebar {
+    display: none;
+  }
+}
 </style>
