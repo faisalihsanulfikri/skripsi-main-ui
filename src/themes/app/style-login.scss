@@ -1,0 +1,75 @@
+/**
+  * Style ini digunakan untuk halaman-halaman berikut:
+  * - Login Page
+  * - Forgot Password Page
+  */
+
+@import "../themes/_variables";
+
+.login-page,
+.forgot-password-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: $blue-color;
+  height: 100vh;
+}
+
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
+  background: white;
+  width: 400px;
+}
+
+.content-wrapper {
+  padding: 3rem 2rem;
+}
+
+.kirimin-logo {
+  text-align: center;
+  padding: 0 0 1rem;
+  border-bottom: 1px solid rgb(218, 218, 218);
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.input-label {
+  color: $black-color;
+}
+
+.el-input {
+  margin-top: 0.5rem;
+  .el-input__inner {
+    border-radius: 4px !important;
+  }
+}
+
+.el-row {
+  margin-bottom: 20px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.el-alert {
+  margin-bottom: 1rem;
+}
+
+@media screen and (min-width: 300px) and (max-width: 720px) {
+  .login-page,
+  .forgot-password-page {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .grid-content {
+    width: 100%;
+  }
+}

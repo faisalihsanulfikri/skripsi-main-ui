@@ -88,10 +88,7 @@ export default {
       this.loadingBtn = true;
       this.showAlert = false;
 
-      if (!isValidated) {
-        console.log(errors.items);
-        return;
-      }
+      if (!isValidated) return (this.loadingBtn = false);
 
       errors.clear();
 
@@ -122,70 +119,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../themes/_variables";
-
-.login-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: $blue-color;
-  height: 100vh;
-}
-
-.grid-content {
-  border-radius: 4px;
-  min-height: 36px;
-  background: white;
-  width: 400px;
-}
-
-.content-wrapper {
-  padding: 3rem 2rem;
-}
-
-.kirimin-logo {
-  text-align: center;
-  padding: 0 0 1rem;
-  border-bottom: 1px solid rgb(218, 218, 218);
-  margin-bottom: 2rem;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.input-label {
-  color: $black-color;
-}
-
-.el-input {
-  .el-input__inner {
-    border-radius: 4px !important;
-  }
-}
-
-.el-row {
-  margin-bottom: 20px;
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.el-alert {
-  margin-bottom: 1rem;
-}
-
-@media screen and (min-width: 300px) and (max-width: 720px) {
-  .login-page {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-
-  .grid-content {
-    width: 100%;
-  }
-}
+@import "../themes/app/style-login";
 </style>
