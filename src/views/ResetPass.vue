@@ -16,6 +16,7 @@
               <label class="input-label" for="password">Password</label>
               <el-input
                 placeholder="Masukan password baru..."
+                id="password"
                 name="password"
                 type="password"
                 v-model="input.password"
@@ -33,6 +34,7 @@
               <label class="input-label" for="c_password">Confirm Password</label>
               <el-input
                 placeholder="Konfirmasi password baru..."
+                id="c_password"
                 name="c_password"
                 type="password"
                 v-model="input.c_password"

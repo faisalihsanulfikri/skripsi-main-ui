@@ -17,6 +17,7 @@
               <el-input
                 placeholder="Masukan email..."
                 name="email"
+                id="email"
                 type="email"
                 v-model="input.email"
                 v-validate="rules.email"
@@ -27,10 +28,11 @@
 
             <!-- Input Password -->
             <div class="form-group">
-              <label class="input-label" for="email">Password</label>
+              <label class="input-label" for="password">Password</label>
               <el-input
                 placeholder="Masukan password..."
                 name="password"
+                id="password"
                 type="password"
                 v-model="input.password"
                 v-validate="rules.password"

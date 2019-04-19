@@ -17,6 +17,7 @@
               <el-input
                 placeholder="Masukan email..."
                 name="email"
+                id="email"
                 type="email"
                 v-model="input.email"
                 v-validate="rules.email"
