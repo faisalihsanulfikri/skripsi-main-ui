@@ -1,11 +1,5 @@
 <template>
   <div>
-
-    <main>
-      <div class="uk-container">
-        <router-view />
-      </div>
-    </main>
-    
+    <router-view></router-view>
   </div>
 </template>
