@@ -1,66 +1,68 @@
 <template>
-  <div class="uk-margin-top uk-margin-bottom">
-    <div class="uk-card uk-card-default">
-      <div class="uk-card-header uk-text-center">
-        <nav uk-navbar>
-          <div class="uk-navbar">
-            <router-link to="/">
-              <img class="app--navbar-logo" style="width:150px" src="../assets/logo-kirimin.jpg" />
-            </router-link>
-          </div>
-        </nav>
-      </div>
-      <div class="uk-card-body">
-        <div uk-grid>
-          <div class="uk-width-1-2">
-            <div>
-              <div class="uk-margin">
-                <label class="uk-form-label">New Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  class="uk-input"
-                  v-validate="rules.password"
-                  v-model="input.password"
-                  @keypress.enter="send"
-                >
-                <small
-                  v-if="errors.first('password')"
-                  class="uk-margin-small uk-text-danger"
-                >{{ errors.first('password') }}</small>
-              </div>
-              <div class="uk-margin">
-                <label class="uk-form-label">Confirm New Password</label>
-                <input
-                  v-model="input.c_password"
-                  v-validate="'required|confirmed:password'"
-                  name="c_password"
-                  class="uk-input"
-                  type="password"
-                  @keypress.enter="send"
-                >
-                <small
-                  v-if="errors.first('c_password')"
-                  class="uk-margin-small uk-text-danger"
-                >{{ errors.first('c_password') }}</small>
-              </div>
-              <div class="uk-margin">
-                <button class="uk-button uk-button-primary uk-width-1-1" type="button" @click="send">
-                  <span v-if="!application.loading">Change Password</span>
-                  <font-awesome-icon v-else icon="spinner" spin></font-awesome-icon>
-                </button>
-              </div>
+  <section class="reset-password-page">
+    <el-row>
+      <el-col :span="24">
+        <div class="grid-content">
+          <div class="content-wrapper">
+            <div class="kirimin-logo">
+              <img style="width:150px" src="../assets/logo-kirimin.jpg">
+            </div>
+
+            <!-- Error message on Request to server -->
+            <el-alert v-if="showAlert" :title="alertMsg" :type="alertType"></el-alert>
+
+            <!-- Input Password -->
+            <div class="form-group">
+              <label class="input-label" for="password">Password</label>
+              <el-input
+                placeholder="Masukan password baru..."
+                name="password"
+                type="password"
+                v-model="input.password"
+                v-validate="rules.password"
+                @keypress.enter="sendNewPassword"
+              ></el-input>
+              <small
+                class="color-danger"
+                v-if="errors.first('password')"
+              >{{ errors.first('password') }}</small>
+            </div>
+
+            <!-- Input Confirm Password -->
+            <div class="form-group">
+              <label class="input-label" for="c_password">Confirm Password</label>
+              <el-input
+                placeholder="Konfirmasi password baru..."
+                name="c_password"
+                type="password"
+                v-model="input.c_password"
+                v-validate="rules.c_password"
+                @keypress.enter="sendNewPassword"
+              ></el-input>
+              <small
+                class="color-danger"
+                v-if="errors.first('c_password')"
+              >{{ errors.first('c_password') }}</small>
+            </div>
+
+            <!-- Button Group -->
+            <div class="form-group">
+              <el-button
+                type="primary"
+                :loading="loadingBtn"
+                @click="sendNewPassword"
+              >Reset Password</el-button>
             </div>
           </div>
-          <div class="uk-width-1-2"></div>
         </div>
-      </div>
-    </div>
-  </div>
+      </el-col>
+    </el-row>
+  </section>
 </template>
 
 <script>
 export default {
+  name: "ResetPasswordPage",
   data() {
     return {
       input: {
@@ -71,27 +73,42 @@ export default {
         password: "required",
         c_password: "required|confirmed:password"
       },
-      error: false,
-      errorMessage: "",
-      validatorErrors: {}
+      showAlert: false,
+      alertMsg: "",
+      alertType: "error",
+      loadingBtn: false
     };
   },
   methods: {
-    async send() {
-      this.__startLoading();
+    async sendNewPassword() {
+      const input = this.input;
+      const isValidated = await this.$validator.validate();
+      const errors = this.$validator.errors;
+      const token = this.$route.params.token;
+      const payload = { ...input, token };
+
+      this.loadingBtn = true;
+      this.showAlert = false;
+
+      if (!isValidated) return (this.loadingBtn = false);
 
       try {
-        this.input.token = this.$route.params.token;
-        let res = await this.$service.forgot.changePassword(this.input);
-
-        this.$router.push({
-          name: "login"
-        });
+        const res = await this.$service.forgot.changePassword(payload);
+        this.$router.push({ name: "login" });
       } catch (err) {
-        this.__handleError(this, err);
+        const errData = err.response.data;
+        const errMsg = errData.message;
+
+        this.showAlert = true;
+        this.alertMsg = errMsg;
       }
-      this.__stopLoading();
+
+      this.loadingBtn = false;
     }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+@import "../themes/app/style-login";
+</style>

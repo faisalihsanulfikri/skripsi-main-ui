@@ -2,12 +2,14 @@
   * Style ini digunakan untuk halaman-halaman berikut:
   * - Login Page
   * - Forgot Password Page
+  * - Reset Password Page
   */
 
 @import "../themes/_variables";
 
 .login-page,
-.forgot-password-page {
+.forgot-password-page,
+.reset-password-page {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -64,7 +66,8 @@
 
 @media screen and (min-width: 300px) and (max-width: 720px) {
   .login-page,
-  .forgot-password-page {
+  .forgot-password-page,
+  .reset-password-page {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
