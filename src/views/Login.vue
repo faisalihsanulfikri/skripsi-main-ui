@@ -1,113 +1,191 @@
 <template>
-  <div class="uk-margin-top uk-margin-bottom">
-    <div class="uk-card uk-card-default">
-      <div class="uk-card-header uk-text-center">
-        <nav uk-navbar>
-          <div class="uk-navbar">
-            <router-link to="/">
-              <img class="app--navbar-logo" style="width:150px" src="../assets/logo-kirimin.jpg" />
-            </router-link>
-          </div>
-        </nav>
-      </div>
-      <div class="uk-card-body">
-        <div uk-grid>
-          <div class="uk-width-1-2">
-            <div>
-              <div class="uk-margin">
-                <label class="uk-form-label">Email</label>
-                <input v-model="input.email" v-validate="rules.email" name="email" class="uk-input" type="text"
-                  placeholder="Email" @keypress.enter="login" />
-                <p v-if="errors.first('email')" class="uk-margin-small uk-text-danger">
-                  {{ errors.first('email') }}
-                </p>
-              </div>
-              <div class="uk-margin">
-                <label class="uk-form-label">Kata Sandi</label>
-                <input v-model="input.password" v-validate="rules.password" name="password" class="uk-input" type="password"
-                  placeholder="Password" @keypress.enter="login" />
-                <p v-if="errors.first('password')" class="uk-margin-small uk-text-danger">
-                  {{ errors.first('password') }}
-                </p>
-              </div>
-              <div class="uk-margin">
-                <el-alert v-if="error" :title="errorMessage" type="error" show-icon>
-                </el-alert>
-              </div>
-              <div class="uk-margin">
-                <button class="uk-button uk-button-primary uk-width-1-1" type="button" @click="login">
-                  <span v-if="!application.loading">Masuk</span>
-                  <font-awesome-icon v-else icon="spinner" spin></font-awesome-icon>
-                </button>
-              </div>
-              <div class="uk-margin">
-                <button class="uk-button uk-button-default uk-width-1-1" :disabled="application.loading" @click="$router.push({ name: 'forgot-password'})">
-                  Forgot Password
-                </button>
-              </div>
+  <section class="login-page">
+    <el-row>
+      <el-col :span="24">
+        <div class="grid-content">
+          <div class="content-wrapper">
+            <div class="kirimin-logo">
+              <img style="width:150px" src="../assets/logo-kirimin.jpg">
+            </div>
+
+            <!-- Error message on Request to server -->
+            <el-alert v-if="showAlert" :title="alertMsg" :type="alertType"></el-alert>
+
+            <!-- Input Email -->
+            <div class="form-group">
+              <label class="input-label" for="email">Email</label>
+              <el-input
+                placeholder="Masukan email..."
+                name="email"
+                type="email"
+                v-model="input.email"
+                v-validate="rules.email"
+                @keypress.enter="login"
+              ></el-input>
+              <small class="color-danger" v-if="errors.first('email')">{{ errors.first('email') }}</small>
+            </div>
+
+            <!-- Input Password -->
+            <div class="form-group">
+              <label class="input-label" for="email">Password</label>
+              <el-input
+                placeholder="Masukan password..."
+                name="password"
+                type="password"
+                v-model="input.password"
+                v-validate="rules.password"
+                @keypress.enter="login"
+              ></el-input>
+              <small
+                class="color-danger"
+                v-if="errors.first('password')"
+              >{{ errors.first('password') }}</small>
+            </div>
+
+            <!-- Button Group -->
+            <div class="form-group">
+              <el-button type="primary" :loading="loadingBtn" @click="login">Login</el-button>
+              <el-button
+                style="margin-left:1rem;"
+                type="text"
+                @click="$router.push({ name: 'forgot-password' })"
+              >Forgot password</el-button>
             </div>
           </div>
-          <div class="uk-width-1-2"></div>
         </div>
-      </div>
-    </div>
-  </div>
+      </el-col>
+    </el-row>
+  </section>
 </template>
 
 <script>
-  import * as Level from '../config/level'
+import * as Level from "../config/level";
 
-  export default {
-    data() {
-      return {
-        input: {
-          email: '',
-          password: '',
-          origin: 'cms'
-        },
-        rules: {
-          email: 'required|email',
-          password: 'required'
-        },
-        error: false,
-        errorMessage: '',
-        validatorErrors: {}
+export default {
+  data() {
+    return {
+      input: {
+        email: "",
+        password: "",
+        origin: "cms"
+      },
+      rules: {
+        email: "required|email",
+        password: "required"
+      },
+      showAlert: false,
+      alertMsg: "",
+      alertType: "error",
+      loadingBtn: false
+    };
+  },
+  methods: {
+    async login() {
+      const input = this.input;
+      const isValidated = await this.$validator.validate();
+      const errors = this.$validator.errors;
+
+      this.loadingBtn = true;
+      this.showAlert = false;
+
+      if (!isValidated) {
+        console.log(errors.items);
+        return;
       }
-    },
-    methods: {
-      async login() {
-        if (this.application.loading) return
 
-        if (!(await this.$validator.validate())) return
+      errors.clear();
 
-        this.__startLoading(false)
+      try {
+        let res = await this.$service.auth.login(input);
 
-        this.error = false
-        this.errorMessage = ''
-        this.validatorErrors = {}
+        this.$auth.setAuth(res.data);
 
-        this.$validator.errors.clear()
+        let user = await this.$auth.getUser();
 
-        try {
-          let res = await this.$service.auth.login(this.input)
+        this.$root.user = user;
 
-          this.input = this.$options.data().input
+        this.$router.push({
+          name: Level.ROUTE_LEVEL[user.level]
+        });
+      } catch (err) {
+        const errData = err.response.data;
+        const errMsg = errData.message;
 
-          this.$auth.setAuth(res.data)
-
-          let user = await this.$auth.getUser()
-
-          this.$root.user = user
-
-          this.$router.push({
-            name: Level.ROUTE_LEVEL[user.level]
-          })
-        } catch (err) {
-          this.__handleError(this, err)
-        }
-
-        this.__stopLoading()
+        this.showAlert = true;
+        this.alertMsg = errMsg;
       }
+
+      this.loadingBtn = false;
     }
   }
+};
 </script>
+
+<style lang="scss" scoped>
+@import "../themes/_variables";
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: $blue-color;
+  height: 100vh;
+}
+
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
+  background: white;
+  width: 400px;
+}
+
+.content-wrapper {
+  padding: 3rem 2rem;
+}
+
+.kirimin-logo {
+  text-align: center;
+  padding: 0 0 1rem;
+  border-bottom: 1px solid rgb(218, 218, 218);
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.input-label {
+  color: $black-color;
+}
+
+.el-input {
+  .el-input__inner {
+    border-radius: 4px !important;
+  }
+}
+
+.el-row {
+  margin-bottom: 20px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.el-alert {
+  margin-bottom: 1rem;
+}
+
+@media screen and (min-width: 300px) and (max-width: 720px) {
+  .login-page {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .grid-content {
+    width: 100%;
+  }
+}
+</style>
