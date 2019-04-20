@@ -1,5 +1,6 @@
 <template>
   <el-container>
+    <navbar-mobile/>
     <main-sidebar :level="level"/>
 
     <el-main>
@@ -10,6 +11,8 @@
 
 <script>
 import MainSidebar from "@/components/MainSidebar";
+import NavbarMobile from "@/components/NavbarMobile";
+
 export default {
   data() {
     return {
@@ -17,7 +20,8 @@ export default {
     };
   },
   components: {
-    MainSidebar
+    MainSidebar,
+    NavbarMobile
   },
 
   computed: {
@@ -33,12 +37,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el-header {
-  background-color: #fff;
-  height: 80px !important;
-}
-
-.user {
-  color: white;
+@media screen and (min-width: 300px) and (max-width: 720px) {
+  .el-main {
+    margin-top: 3rem;
+  }
 }
 </style>

@@ -105,6 +105,7 @@ export default {
 
 .el-aside {
   width: 200px !important;
+  transition: all 200ms ease-in-out;
 }
 
 .ionicon {
@@ -112,8 +113,15 @@ export default {
 }
 
 @media screen and (min-width: 300px) and (max-width: 720px) {
-  .main-sidebar {
-    display: none;
+  .el-aside {
+    width: 0px !important;
+  }
+
+  .slide {
+    width: 90% !important;
+    position: absolute;
+    height: 100vh !important;
+    z-index: 10;
   }
 }
 </style>
