@@ -1,9 +1,9 @@
 <template>
   <el-aside class="main-sidebar">
     <el-menu background-color="#1565C0" text-color="#FFF" active-text-color="#FFF" :router="true">
-      <el-menu-item index="/admin">
+      <el-menu-item>
         <ios-contact-icon w="24px" h="24px" class="ionicon"/>
-        <span>Username</span>
+        <span>{{ username() }}</span>
       </el-menu-item>
 
       <el-menu-item index="/admin">
@@ -86,6 +86,11 @@ export default {
     level: {
       type: Number,
       required: true
+    }
+  },
+  methods: {
+    username() {
+      return window.localStorage.getItem("user_name").toUpperCase();
     }
   }
 };

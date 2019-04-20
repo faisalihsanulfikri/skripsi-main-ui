@@ -96,12 +96,12 @@ export default {
 
       try {
         let res = await this.$service.auth.login(input);
-
         this.$auth.setAuth(res.data);
 
         let user = await this.$auth.getUser();
-
         this.$root.user = user;
+
+        window.localStorage.setItem("user_name", user.name);
 
         this.$router.push({
           name: Level.ROUTE_LEVEL[user.level]
