@@ -1,18 +1,35 @@
 <template>
   <el-aside class="main-sidebar">
     <el-menu background-color="#1565C0" text-color="#FFF" active-text-color="#FFF" :router="true">
-      <el-menu-item index="/admin">DASHBOARD</el-menu-item>
-      <el-menu-item index="/admin/inbound">INBOUND</el-menu-item>
-      <el-menu-item index="/admin/invoices">INVOICES</el-menu-item>
-      <!-- <el-menu-item index="/admin/orders">ORDERS</el-menu-item> -->
+      <el-menu-item index="/admin">
+        <ios-contact-icon w="24px" h="24px" class="ionicon"/>
+        <span>Username</span>
+      </el-menu-item>
+
+      <el-menu-item index="/admin">
+        <ios-analytics-icon w="24px" h="24px" class="ionicon"/>
+        <span>DASHBOARD</span>
+      </el-menu-item>
+
+      <el-menu-item index="/admin/inbound">
+        <ios-list-box-icon w="24px" h="24px" class="ionicon"/>
+        <span>INBOUND</span>
+      </el-menu-item>
+
+      <el-menu-item index="/admin/invoices">
+        <ios-paper-icon w="24px" h="24px" class="ionicon"/>
+        <span>INVOICES</span>
+      </el-menu-item>
+
       <el-submenu index="/admin">
         <template slot="title">
+          <ios-filing-icon w="24px" h="24px" class="ionicon"/>
           <span>MASTER DATA</span>
         </template>
         <el-menu-item index="/admin/master/categories">Categories</el-menu-item>
         <el-menu-item index="/admin/master/warehouses">Warehouses</el-menu-item>
         <el-menu-item index="/admin/master/exchange-rates">Exchange Rates</el-menu-item>
-        <!-- <el-menu-item index="/admin/master/area">Area</el-menu-item> -->
+
         <el-submenu index="/admin/area">
           <template slot="title">
             <span>Area</span>
@@ -23,14 +40,18 @@
           <el-menu-item index="/admin/master/area/code">Location Codes</el-menu-item>
         </el-submenu>
       </el-submenu>
+
       <el-submenu index="/admin/reports">
         <template slot="title">
+          <ios-archive-icon w="24px" h="24px" class="ionicon"/>
           <span>REPORT</span>
         </template>
         <el-menu-item index="/admin/reports/sales">SALES</el-menu-item>
       </el-submenu>
+
       <el-submenu index="/admin/users">
         <template slot="title">
+          <ios-contacts-icon w="24px" h="24px" class="ionicon"/>
           <span>USERS</span>
         </template>
         <el-menu-item index="/admin/users/regular">Regular</el-menu-item>
@@ -39,8 +60,21 @@
         <el-menu-item index="/admin/users/admin">Admin</el-menu-item>
         <el-menu-item index="/admin/user/create">Add User</el-menu-item>
       </el-submenu>
-      <el-menu-item v-if="level == 0" index="/admin/pages">PAGES</el-menu-item>
-      <el-menu-item v-if="level == 0" index="/admin/settings">SETTINGS</el-menu-item>
+
+      <el-menu-item v-if="level == 0" index="/admin/pages">
+        <ios-apps-icon w="24px" h="24px" class="ionicon"/>
+        <span>PAGES</span>
+      </el-menu-item>
+
+      <el-menu-item v-if="level == 0" index="/admin/settings">
+        <ios-settings-icon w="24px" h="24px" class="ionicon"/>
+        <span>SETTINGS</span>
+      </el-menu-item>
+
+      <el-menu-item>
+        <ios-undo-icon w="24px" h="24px" class="ionicon"/>
+        <span @click.prevent="__logout">LOGOUT</span>
+      </el-menu-item>
     </el-menu>
   </el-aside>
 </template>
@@ -48,7 +82,6 @@
 <script>
 export default {
   name: "main-sidebar",
-
   props: {
     level: {
       type: Number,
@@ -63,6 +96,14 @@ export default {
   .el-menu {
     height: 100%;
   }
+}
+
+.el-aside {
+  width: 200px !important;
+}
+
+.ionicon {
+  margin-right: 1rem;
 }
 
 @media screen and (min-width: 300px) and (max-width: 720px) {
