@@ -1,9 +1,28 @@
 <template>
-  <div>
-    <h1>Dashboard Admin</h1>
-    <div class="uk-grid">
-      <base-chart :title="'Order masuk'" :labels="dates" :graphdata="total"></base-chart>
-      <base-chart :title="'Payment'" :labels="dates" :graphdata="amount"></base-chart>
+  <div class="uk-card uk-card-default">
+    <!-- Header -->
+    <div class="uk-card-header app--card-header">
+      <div uk-grid>
+        <div class="uk-width-auto">
+          <div class="app--card-header__icon">
+            <ios-analytics-icon w="24px" h="24px" class="ionicon"/>
+          </div>
+        </div>
+        <div class="uk-width-expand">
+          <div class="app--card-header_title">
+            <h3>Dashboard</h3>
+          </div>
+        </div>
+        <div class="uk-width-auto"></div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="uk-card-body uk-card small">
+      <div class="uk-grid">
+        <base-chart :title="'Order masuk'" :labels="dates" :graphdata="total"></base-chart>
+        <base-chart :title="'Payment'" :labels="dates" :graphdata="amount"></base-chart>
+      </div>
     </div>
   </div>
 </template>
