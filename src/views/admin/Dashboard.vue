@@ -1,21 +1,7 @@
 <template>
   <div class="uk-card uk-card-default">
     <!-- Header -->
-    <div class="uk-card-header app--card-header">
-      <div uk-grid>
-        <div class="uk-width-auto">
-          <div class="app--card-header__icon">
-            <ios-analytics-icon w="24px" h="24px" class="ionicon"/>
-          </div>
-        </div>
-        <div class="uk-width-expand">
-          <div class="app--card-header_title">
-            <h3>Dashboard</h3>
-          </div>
-        </div>
-        <div class="uk-width-auto"></div>
-      </div>
-    </div>
+    <PageTitle title="Dashboard"/>
 
     <!-- Content -->
     <el-card>
@@ -36,12 +22,14 @@
 </template>
 
 <script>
+import PageTitle from "@/components/PageTitle";
 import ChartBar from "@/components/charts/ChartBar";
 import ChartDoughnut from "@/components/charts/ChartDoughnut";
 import moment from "moment";
 
 export default {
   components: {
+    PageTitle,
     ChartBar,
     ChartDoughnut
   },
