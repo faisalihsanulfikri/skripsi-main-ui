@@ -67,6 +67,7 @@
             :visible.sync="dialogInput.visible"
             :edit="dialogInput.edit"
             :address="dialogInput.address"
+            :user_code="input.code"
             @close="onInputClose"
           />
 
