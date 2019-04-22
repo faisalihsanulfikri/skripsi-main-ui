@@ -3,7 +3,14 @@
     <el-menu background-color="#1565C0" text-color="#FFF" active-text-color="#FFF" :router="true">
       <el-menu-item index="/admin">DASHBOARD</el-menu-item>
       <el-menu-item index="/admin/inbound">INBOUND</el-menu-item>
-      <el-menu-item index="/admin/invoices">INVOICES</el-menu-item>
+      <!-- <el-menu-item index="/admin/invoices">INVOICES</el-menu-item> -->
+      <el-submenu index="/admin/inv">
+        <template slot="title">
+          <span>INVOICES</span>
+        </template>
+        <el-menu-item index="/admin/invoices">Order Kirimin</el-menu-item>
+        <el-menu-item index="/admin/minvoices">Membership</el-menu-item>
+      </el-submenu>
       <!-- <el-menu-item index="/admin/orders">ORDERS</el-menu-item> -->
       <el-submenu index="/admin">
         <template slot="title">
