@@ -126,6 +126,9 @@ export default {
     edit: {
       default: false
     },
+    user_code: {
+      default: ""
+    },
     address: {
       default: () => {
         return {};
@@ -135,6 +138,7 @@ export default {
   data() {
     return {
       input: {
+        user: "",
         alias: "",
         code: "",
         name: "",
@@ -300,8 +304,10 @@ export default {
       this.errorMessage = "";
       this.validationErrors = {};
 
+      this.input.user = this.user_code;
+
       await this.$authHttp
-        .post(`/user/addresses`, this.input)
+        .post(`/admin/user/addresses`, this.input)
         .then(res => {
           this.$notify({
             title: "SUCCESS",
@@ -311,7 +317,7 @@ export default {
 
           this.input = this.$options.data().input;
 
-          this.$emit("saved", res.data.data);
+          // this.$emit("saved", res.data.data);
         })
         .catch(err => {
           if (err.response) {
