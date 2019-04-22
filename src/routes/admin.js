@@ -3,6 +3,7 @@ import Main from "../views/admin/Main";
 import AwbShow from '../views/agent/awb/Show'
 import Dashboard from '../views/admin/Dashboard'
 import Invoice from '../views/admin/invoice/Index'
+import mInvoice from '../views/admin/invoice/Membership'
 import Inbound from '../views/admin/order/Inbound'
 import Category from '../views/admin/category/Index'
 import CategoryCreate from '../views/admin/category/Create'
@@ -66,6 +67,15 @@ export default {
       path: "invoices",
       name: "admin-invoice",
       component: Invoice,
+      meta: {
+        auth: true,
+        level: [ADMIN, SUPER_ADMIN]
+      }
+    },
+    {
+      path: "minvoices",
+      name: "admin-minvoice",
+      component: mInvoice,
       meta: {
         auth: true,
         level: [ADMIN, SUPER_ADMIN]

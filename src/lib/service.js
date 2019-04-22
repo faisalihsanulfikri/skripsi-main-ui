@@ -121,6 +121,11 @@ const invoice = {
       params
     });
   },
+  getM(params = {}, page) {
+    return Vue.authHttp().get("/minvoices?page=" + page, {
+      params
+    });
+  },
   find(id) {
     return Vue.authHttp().get(`/invoices/${id}`);
   },

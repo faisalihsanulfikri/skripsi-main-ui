@@ -9,7 +9,7 @@
         </div>
         <div class="uk-width-expand">
           <div class="app--card-header_title">
-            <h3>Invoices</h3>
+            <h3>Memberships</h3>
           </div>
         </div>
         <div class="uk-width-auto"></div>
@@ -64,10 +64,10 @@
                 </td>
                 <td>{{ moment(invoice.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
                 <td>{{ invoice.code }}</td>
-                <td>{{ invoice.user.code }} - {{ invoice.user.name }}</td>
+                <td>{{ invoice.created_by }}</td>
                 <td
                   class="uk-text-right"
-                >{{ invoice.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
+                >{{ invoice.price | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
                 <td class="uk-text-center">
                   <el-tag v-if="invoice.paid === 1" type="success" size="mini">Paid</el-tag>
                   <el-tag v-else type="danger" size="mini">Unpaid</el-tag>
@@ -84,7 +84,7 @@
                         <p>No payment confirmed.</p>
                       </div>
                     </div>
-                    <!-- 25 -->
+
                     <table v-else class="uk-table uk-table-small uk-text-small uk-margin-small">
                       <thead>
                         <tr>
@@ -134,10 +134,10 @@
                               type="danger"
                               size="mini"
                               @click="centerDialogReject = true"
-                            >Send Notif</el-button>
+                            >Reject</el-button>
 
                             <el-dialog
-                              title="Message"
+                              title="Rejected Message"
                               :visible.sync="centerDialogReject"
                               class="reject-message"
                               center
@@ -154,20 +154,13 @@
                                   type="danger"
                                   size="mini"
                                   @click="updatePaymentStatus(payment, 'rejected',reject_message)"
-                                >Send</el-button>
+                                >Reject</el-button>
                               </div>
                             </el-dialog>
                           </td>
                         </tr>
                       </tbody>
                     </table>
-                  </div>
-
-                  <hr>
-
-                  <div class="uk-margin-small">
-                    <h5 class="uk-margin-remove">Note Issues</h5>
-                    {{invoice.order.note_issues}}
                   </div>
                 </td>
               </tr>
@@ -270,7 +263,7 @@ export default {
       this.pagination.page = page;
 
       try {
-        let res = await this.$service.invoice.get(
+        let res = await this.$service.invoice.getM(
           {
             search: this.filter.search,
             time: this.filter.time
@@ -326,7 +319,6 @@ export default {
         });
 
         this.centerDialogReject = false;
-        this.fetchInvoices(this.pagination.page);
       } catch (err) {
         this.__handleError(this, err, true);
       }
