@@ -241,6 +241,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .align-right {
-  text-align: right;
+    text-align: right;
+}
+.uk-table-expand.min-width {
+    min-width: 125px;
 }
 </style>
