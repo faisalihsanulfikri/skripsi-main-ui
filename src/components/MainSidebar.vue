@@ -15,11 +15,15 @@
         <ios-list-box-icon w="24px" h="24px" class="ionicon"/>
         <span>INBOUND</span>
       </el-menu-item>
-
-      <el-menu-item index="/admin/invoices">
-        <ios-paper-icon w="24px" h="24px" class="ionicon"/>
-        <span>INVOICES</span>
-      </el-menu-item>
+      
+      <el-submenu index="/admin/inv">
+        <template slot="title">
+          <ios-paper-icon w="24px" h="24px" class="ionicon"/>
+          <span>INVOICES</span>
+        </template>
+        <el-menu-item index="/admin/invoices">Order Kirimin</el-menu-item>
+        <el-menu-item index="/admin/minvoices">Membership</el-menu-item>
+      </el-submenu>
 
       <el-submenu index="/admin">
         <template slot="title">
