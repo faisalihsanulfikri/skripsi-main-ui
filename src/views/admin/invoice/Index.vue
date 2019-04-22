@@ -315,6 +315,8 @@ export default {
 
           return invoice;
         });
+
+        this.centerDialogReject = false;
       } catch (err) {
         this.__handleError(this, err, true);
       }

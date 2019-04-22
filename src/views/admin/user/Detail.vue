@@ -3,238 +3,323 @@
     <div class="uk-card-header app--card-header">
       <div uk-grid>
         <div class="uk-width-auto">
-          <div class="app--card-header__icon">
-            <font-awesome-icon icon="user"></font-awesome-icon>
+          <div class="app--card-header__back">
+            <!-- <router-link :to="{ name: 'admin-user', params: { level: input.level } }">
+              <font-awesome-icon icon="chevron-left"></font-awesome-icon>
+            </router-link>-->
+            <!-- <a href="/admin/users/${input.level}"> -->
+            <!-- <a href="/admin/users/" onclick="location.href=this.href+input.level;return false;">
+              <font-awesome-icon icon="chevron-left"></font-awesome-icon>
+            </a>-->
           </div>
         </div>
         <div class="uk-width-expand">
           <div class="app--card-header_title">
-            <h3>
-              <span>Detail User</span>
-              <!-- <el-tag
-                class="uk-margin-small-left"
-                size="small"
-              >{{ $route.params.level.toUpperCase() }}</el-tag>-->
-            </h3>
+            <h3>{{title}} {{input.userLevel}}</h3>
           </div>
         </div>
       </div>
     </div>
+
     <div class="uk-card-body">
-      <div class="uk-margin">
-        <div class="uk-grid-small" uk-grid>
-          <div class="uk-width-1-3">
-            <el-select v-model="filter.verified" class="uk-width-1-1" multiple>
-              <el-option
-                v-for="(item, index) in options.verified"
-                :key="index"
-                :value="item.value"
-                :label="item.label"
-              ></el-option>
-            </el-select>
+      <div uk-grid>
+        <div class="uk-width-1-1">
+          <div class="uk-margin">
+            <table class="detail">
+              <tr>
+                <th>Code</th>
+                <td>: {{input.code}}</td>
+              </tr>
+              <tr>
+                <th>Name</th>
+                <td>: {{input.name}}</td>
+              </tr>
+              <tr>
+                <th>Email</th>
+                <td>: {{input.email}}</td>
+              </tr>
+              <tr>
+                <th>Phone Number</th>
+                <td>: {{input.phone}}</td>
+              </tr>
+              <tr>
+                <th>Level</th>
+                <td>: {{input.userLevel}}</td>
+              </tr>
+              <tr>
+                <th>Active</th>
+                <td>: {{input.userActive}}</td>
+              </tr>
+            </table>
           </div>
-          <div class="uk-width-1-3">
-            <el-input v-model="filter.keyword" placeholder="Search..."></el-input>
+
+          <hr>
+
+          <div class="uk-margin">
+            <div class="head-address">
+              <span class="title">Alamat</span>
+              <button class="btn" @click="createAddress">+</button>
+            </div>
           </div>
-          <div class="uk-width-auto">
-            <el-button type="primary" @click="fetchUsers">Filter</el-button>
-          </div>
-          <div class="uk-width-auto">
-            <router-link :to="{ name: 'admin-user-create', params: { level: this.level } }">
-              <el-button type="primary">Add</el-button>
-            </router-link>
-          </div>
-        </div>
-      </div>
-      <div class="uk-overflow-auto">
-        <table class="uk-table uk-table-divider uk-table-small">
-          <thead>
-            <tr>
-              <th>
-                <column-sort
-                  title="Name"
-                  field="name"
-                  :active-field="filter.sortField"
-                  @change="onSortChange"
-                ></column-sort>
-              </th>
-              <th>
-                <column-sort
-                  title="Email"
-                  field="email"
-                  :active-field="filter.sortField"
-                  @change="onSortChange"
-                ></column-sort>
-              </th>
-              <th>
-                <column-sort
-                  title="Mobile"
-                  field="phone"
-                  :active-field="filter.sortField"
-                  @change="onSortChange"
-                ></column-sort>
-              </th>
-              <th class="uk-text-center">
-                <column-sort
-                  title="Verified"
-                  field="active"
-                  :active-field="filter.sortField"
-                  @change="onSortChange"
-                ></column-sort>
-              </th>
-              <th class="uk-text-center" style="vertical-align: middle;">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="user in users" :key="user.id">
-              <td>{{ user.name }}</td>
-              <td>{{ user.email }}</td>
-              <td>{{ user.phone }}</td>
-              <td class="uk-text-center">
-                <el-tag v-if="user.active" type="success" size="small">Yes</el-tag>
-                <el-tag v-else type="danger" size="small">No</el-tag>
-              </td>
-              <td class="uk-text-center" style="vertical-align: middle;">
-                <div class="uk-grid-small" uk-grid>
-                  <div class="uk-width-1-2">
-                    <router-link :to="{ name: 'admin-user-edit', params: { id: user.id } }">
-                      <font-awesome-icon icon="info"></font-awesome-icon>
-                    </router-link>
-                  </div>
-                  <div class="uk-width-1-2">
-                    <router-link :to="{ name: 'admin-user-edit', params: { id: user.id } }">
-                      <font-awesome-icon icon="edit"></font-awesome-icon>
-                    </router-link>
+
+          <dialog-input-address
+            :title="dialogInput.title"
+            :visible.sync="dialogInput.visible"
+            :edit="dialogInput.edit"
+            :address="dialogInput.address"
+            @close="onInputClose"
+          />
+
+          <div
+            class="uk-grid uk-grid-small uk-child-width"
+            uk-grid
+            uk-height-match="target: .uk-card-body"
+          >
+            <div v-for="(address, index) in addresses" :key="address.id">
+              <div class="uk-card uk-card-default uk-card-small">
+                <div v-if="index === 0" class="is-favorite">
+                  <div class="uk-card-body">
+                    <div class="marker">
+                      <img src="/img/set-favorite-address-icon.png" alt="set favorite address icon">
+                    </div>
+                    <h4>{{ address.alias }}</h4>
+                    <p>{{ `${address.province}, ${address.city}, ${address.sub_district}, ${address.address}, ${address.postal_code}` }}</p>
+                    <p>{{ `${address.name} - ${address.phone}` }}</p>
                   </div>
                 </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                <div v-else>
+                  <div class="uk-card-body">
+                    <h4>{{ address.alias }}</h4>
+                    <p>{{ `${address.province}, ${address.city}, ${address.sub_district}, ${address.address}, ${address.postal_code}` }}</p>
+                    <p>{{ `${address.name} - ${address.phone}` }}</p>
+                  </div>
+                </div>
+                <div class="uk-card-footer uk-text-right">
+                  <el-tooltip
+                    :content="address.primary ? 'Alamat Utama': 'Set Alamat Utama'"
+                    placement="top"
+                  >
+                    <a
+                      :class="address.primary ? 'primary-address': 'non-primary-address'"
+                      href="#"
+                      @click.prevent="setPrimaryAddress(index)"
+                    >
+                      <font-awesome-icon icon="star" class="icon"/>
+                    </a>
+                  </el-tooltip>
+                  <el-tooltip content="Ubah" placement="top">
+                    <a class="uk-margin-left" href="#" @click.prevent="editAddress(index)">
+                      <font-awesome-icon icon="edit" class="icon"/>
+                    </a>
+                  </el-tooltip>
+                  <el-tooltip content="Hapus" placement="top">
+                    <a
+                      class="uk-text-danger uk-margin-left"
+                      href="#"
+                      @click.prevent="showConfirmDelete(index)"
+                    >
+                      <font-awesome-icon icon="trash-alt" class="icon"/>
+                    </a>
+                  </el-tooltip>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <el-alert v-if="error" title="ERROR" type="error" :description="errorMessage" show-icon></el-alert>
+
+          <div class="uk-card-footer uk-text-right">
+            <!-- <el-button type="primary" @click="save">SAVE</el-button> -->
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="uk-card-footer uk-text-center">
-      <el-pagination
-        layout="prev, pager, next"
-        :page-size="pagination.per_page"
-        :page-count="pagination.last_page"
-        :total="pagination.total"
-        @current-change="onChangePage"
-      ></el-pagination>
     </div>
   </div>
 </template>
 
 <script>
-import ColumnSort from "../../../components/ColumnSort";
+import DialogInputAddress from "@/components/DialogInputAddress";
 
 export default {
   components: {
-    ColumnSort
+    DialogInputAddress
   },
 
   data() {
     return {
-      level: "",
-      users: [],
-      pagination: {
-        current_page: 1,
-        per_page: 25,
-        total: 0
+      dialogInput: {
+        title: "Tambah Alamat",
+        visible: false,
+        edit: false,
+        address: {}
       },
-      filter: {
-        keyword: "",
-        verified: [1, 0],
-        sortField: "active",
-        sortOrder: "desc"
+      index: "",
+      route_name: "",
+      edit: false,
+      title: "Detail User",
+      input: {
+        code: "",
+        name: "",
+        email: "",
+        password: "",
+        passwordConfirmation: "",
+        phone: "",
+        gender: "",
+        birthdate: "",
+        birthdateSplited: {
+          year: "",
+          month: "",
+          day: ""
+        },
+        active: "",
+        active_name: "",
+        level: "",
+        userLevel: "",
+        userActive: ""
       },
-      options: {
-        verified: [
-          {
-            value: 1,
-            label: "Verified"
-          },
-          {
-            value: 0,
-            label: "Unverified"
-          }
-        ]
-      }
+      addresses: [],
+      selectedAddress: {},
+      error: false,
+      errorMessage: ""
     };
   },
 
-  watch: {
-    $route: {
-      handler: "fetchUsers"
-    }
-  },
-
   async created() {
-    this.__startLoading();
+    if (this.$route.params.id) {
+      this.title = "Detail User";
 
-    // await this.fetchUsers();
-
-    this.__stopLoading();
+      this.fetchUsers();
+      this.fetchAddresses();
+    }
   },
 
   methods: {
-    async onChangePage(page) {
-      this.pagination.current_page = page;
-
-      this.__startLoading();
-
-      await this.fetchUsers();
-
-      this.__stopLoading();
-    },
-    async onSortChange(payload) {
-      this.filter.sortField = payload.field;
-      this.filter.sortOrder = payload.order;
-
-      this.__startLoading();
-
-      await this.fetchUsers();
-
-      this.__stopLoading();
-    },
     async fetchUsers() {
+      this.__startLoading();
+
+      this.error = false;
+      this.errorMessage = "";
+
       try {
-        let res = await this.$service.user.getByLevel(
-          this.$route.params.level,
-          {
-            page: this.pagination.current_page,
-            sort: [this.filter.sortField, this.filter.sortOrder],
-            active: this.filter.verified,
-            search: this.filter.keyword
-          }
-        );
+        let res = await this.$service.user.getUserData(this.$route.params.id);
 
-        this.users = res.data.data;
-        this.pagination = res.data;
-
-        switch (this.$route.params.level) {
-          case "regular":
-            this.level = "2";
-            break;
-          case "premium":
-            this.level = "3";
-            break;
-          case "agent":
-            this.level = "4";
-            break;
-          case "admin":
-            this.level = "1";
-            break;
-        }
-
-        console.log(this.users);
-
-        delete this.pagination.data;
-        delete this.pagination.filter;
+        this.input = res.data;
       } catch (err) {
         this.__handleError(this, err, true);
       }
+
+      this.__stopLoading();
+    },
+    async onInputClose() {
+      this.dialogInput.visible = false;
+      this.__startLoading();
+
+      await this.fetchAddresses();
+
+      this.__stopLoading();
+    },
+
+    async fetchAddresses() {
+      let res = await this.$service.user.getAddressesById(
+        this.$route.params.id
+      );
+
+      this.addresses = res.data;
+
+      console.log(this.addresses);
+    },
+    createAddress() {
+      this.dialogInput.title = "Tambah Alamat";
+      this.dialogInput.visible = true;
+      this.dialogInput.edit = false;
+      // this.dialogInput.address = {};
     }
+    // editAddress(index) {
+    //   this.dialogInput.title = "Ubah Alamat";
+    //   this.dialogInput.visible = true;
+    //   this.dialogInput.edit = true;
+    //   this.dialogInput.address = this.addresses[index];
+    // },
+    // async deleteAddress() {
+    //   this.__startLoading();
+
+    //   await this.$authHttp
+    //     .delete(`/user/addresses/${this.selectedAddress.id}`)
+    //     .then(res => {
+    //       this.fetchAddresses();
+
+    //       this.$notify({
+    //         title: "SUCCESS",
+    //         message: res.data.message,
+    //         type: "success"
+    //       });
+    //     })
+    //     .catch(err => {
+    //       if (err.response) {
+    //         this.$notify({
+    //           title: "ERROR",
+    //           message: err.response.data.message,
+    //           type: "error"
+    //         });
+    //       }
+    //     });
+
+    //   this.__stopLoading();
+    // },
+    // async setPrimaryAddress(index) {
+    //   let address = this.addresses[index];
+
+    //   if (address.primary) return;
+
+    //   this.__startLoading();
+
+    //   await this.$authHttp
+    //     .put(`/user/addresses/${address.id}/primary`)
+    //     .then(res => {
+    //       this.fetchAddresses();
+
+    //       this.$notify({
+    //         title: "SUCCESS",
+    //         message: res.data.message,
+    //         type: "success"
+    //       });
+    //     })
+    //     .catch(err => {
+    //       if (err.response) {
+    //         this.$notify({
+    //           title: "ERROR",
+    //           message: err.response.data.message,
+    //           type: "error"
+    //         });
+    //       }
+    //     });
+
+    //   this.__stopLoading();
+    // }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.req-doc {
+  padding-top: 10px;
+  .btn-r {
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+}
+.detail {
+  th {
+    text-align: left;
+  }
+}
+
+.head-address {
+  .title {
+    font-weight: 700;
+  }
+  .btn {
+    margin-left: 10px;
+  }
+}
+</style>
