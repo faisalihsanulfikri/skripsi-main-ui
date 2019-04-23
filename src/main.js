@@ -5,20 +5,19 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store/index";
 import util from "./utils";
+import moment from "moment";
+import AllIosIcon from "vue-ionicons/dist/ionicons-ios.js";
 
 import "./mixins";
-
 import "./lib/http";
 import "./lib/auth";
 import "./lib/service";
-
 import "./plugins/fontawesome";
 import "./plugins/element-ui";
 import "./plugins/google-analytic";
 import "./plugins/sentry";
 import "./plugins/uikit";
 import "./plugins/vue-tinymce";
-import moment from "moment";
 
 Vue.prototype.moment = moment;
 Vue.use(Vue2Filters);
@@ -26,6 +25,7 @@ Vue.use(VeeValidate, {
   events: "blur"
 });
 Vue.use(util);
+Vue.use(AllIosIcon);
 
 Vue.config.productionTip = false;
 
