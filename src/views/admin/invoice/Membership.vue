@@ -67,7 +67,7 @@
                 <td>{{ invoice.created_by }}</td>
                 <td
                   class="uk-text-right"
-                >{{ invoice.price | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
+                >{{ invoice.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
                 <td class="uk-text-center">
                   <el-tag v-if="invoice.paid === 1" type="success" size="mini">Paid</el-tag>
                   <el-tag v-else type="danger" size="mini">Unpaid</el-tag>
@@ -127,7 +127,7 @@
                               v-if="payment.status === 'new' || payment.status === 'reject'"
                               type="primary"
                               size="mini"
-                              @click="confirmPayment(payment.id)"
+                              @click="confirmPayment(payment)"
                             >Confirm</el-button>
                             <el-button
                               v-if="payment.status === 'new' || payment.status === 'confirmed'"
@@ -292,17 +292,15 @@ export default {
     async updatePaymentStatus(payment, status, message) {
       this.__startLoading();
 
-      // console.log("1", payment.id, status, message);
-      // console.log("2", payment);
-
-      // return this.__stopLoading();
-
       try {
-        let res = await this.$service.payment.updateStatus(payment.id, {
-          payment: payment,
-          status: status,
-          message: message
-        });
+        let res = await this.$service.payment.membershipUpdateStatus(
+          payment.id,
+          {
+            payment: payment,
+            status: status,
+            message: message
+          }
+        );
 
         this.$notify({
           title: "SUCCESS",
@@ -310,13 +308,7 @@ export default {
           type: "success"
         });
 
-        this.invoices = this.invoices.map(invoice => {
-          if (invoice.id === res.data.data.id) {
-            return res.data.data;
-          }
-
-          return invoice;
-        });
+        await this.fetchInvoices;
 
         this.centerDialogReject = false;
       } catch (err) {
@@ -326,8 +318,10 @@ export default {
       this.__stopLoading();
     },
     openPreview(payment) {
+      console.log(payment.id);
+
       this.centerDialogVisible = true;
-      this.previewLink = `${this.linkdownload}/receipt/${payment.id}/${
+      this.previewLink = `${this.linkdownload}/m-receipt/${payment.id}/${
         payment.filename
       }/download`;
     }
