@@ -3,10 +3,61 @@
     <!-- Header -->
     <PageTitle title="Inbound" :paginationTotal="pagination.total"/>
 
+    <!-- Content -->
+    <el-card>
+      <!-- Filter & Search -->
+      <el-row class="row-filter-and-search" type="flex" justify="space-between">
+        <el-col :span="6">
+          <div class="filter-order">
+            <el-date-picker
+              class="filter-order"
+              v-model="filter.time"
+              type="daterange"
+              format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd"
+              range-separator="To"
+              start-placeholder="Start date"
+              end-placeholder="End date"
+            ></el-date-picker>
+            <el-button slot="append" icon="el-icon-search" @click="fetchOrders"></el-button>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="search-order">
+            <el-input v-model="filter.search" placeholder="Search..." @keyup.enter="fetchOrders">
+              <el-button slot="append" icon="el-icon-search" @click="fetchOrders"></el-button>
+            </el-input>
+          </div>
+        </el-col>
+      </el-row>
+
+      <!-- Order Table v2 -->
+      <!-- <el-table style="width:100%; margin-top:2rem;" :data="tableData">
+        <el-table-column fixed type="expand">
+          <template>
+            <el-tabs v-model="activeName" @tab-click="handleClick">
+              <el-tab-pane label="User" name="first">User</el-tab-pane>
+              <el-tab-pane label="Config" name="second">Config</el-tab-pane>
+              <el-tab-pane label="Role" name="third">Role</el-tab-pane>
+              <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
+            </el-tabs>
+          </template>
+        </el-table-column>
+        <el-table-column prop="date" label="Date" width="150"></el-table-column>
+        <el-table-column prop="code" label="Code" width="150"></el-table-column>
+        <el-table-column prop="reference" label="Reference"></el-table-column>
+        <el-table-column prop="customer" label="customer"></el-table-column>
+        <el-table-column prop="amount" label="Amount (IDR)"></el-table-column>
+        <el-table-column prop="status" label="Status"></el-table-column>
+      </el-table>-->
+    </el-card>
+
+    <!-- Content v1 -->
     <div class="uk-card-body uk-card-small">
       <div class="uk-margin uk-grid-small" uk-grid>
         <div class="uk-width-auto">
           <el-date-picker
+            class="filter-order"
             v-model="filter.time"
             type="daterange"
             format="yyyy-MM-dd"
@@ -263,7 +314,7 @@
 
 <script>
 import PageTitle from "@/components/PageTitle";
-import CalculatorResult from "../../../components/CalculatorResult";
+import CalculatorResult from "@/components/CalculatorResult";
 
 export default {
   components: {
@@ -295,20 +346,13 @@ export default {
       filter: {
         time: [],
         search: ""
-      }
+      },
+      tableData: [],
+      activeName: "first"
     };
   },
 
   async created() {
-    // this.filter.time = [
-    //   moment()
-    //     .startOf("month")
-    //     .format("YYYY-MM-DD"),
-    //   moment()
-    //     .endOf("month")
-    //     .format("YYYY-MM-DD")
-    // ];
-
     this.fetchOrders(this.pagination.page);
     this.user = await this.$auth.getUser();
   },
@@ -358,13 +402,26 @@ export default {
             return this.mappingItems(order, items);
           });
           order.items = this.mappingItems(order, order.items);
-
           return order;
         });
 
-        console.log(this.orders);
-
-        // this.input.province =
+        const data = res.data.data;
+        console.log({ items });
+        this.tableData = data.map((el, i) => {
+          return {
+            date: moment(el.created_at).format("MMM DD YYYY, HH:mm:ss"),
+            code: el.items[0].order_code,
+            reference: el.items[0].reference,
+            customer: el.created_by,
+            amount: el.amount,
+            status: el.status,
+            warehouse: el.warehouse.name,
+            destination: el.detail.destination,
+            cost: el.detail.cost,
+            receiver: el.receiver
+          };
+        });
+        console.log(this.tableData);
 
         this.pagination = res.data;
 
@@ -438,6 +495,9 @@ export default {
 
       this.addressEditDialog = false;
       this.fetchOrders(this.pagination.page);
+    },
+    handleClick(tab, event) {
+      console.log(tab, event);
     }
   }
 };
@@ -453,6 +513,73 @@ export default {
 
   .li-ref {
     list-style: none;
+  }
+}
+
+// Style Content V2
+
+@media screen and (min-width: 320px) {
+  .row-filter-and-search {
+    flex-direction: column;
+    .filter-order,
+    .search-order {
+      width: 240px;
+    }
+    .filter-order {
+      display: flex;
+    }
+    .search-order {
+      margin-top: 1rem;
+    }
+  }
+}
+
+@media (min-width: 360px) {
+  .row-filter-and-search {
+    .filter-order,
+    .search-order {
+      width: 280px !important;
+    }
+  }
+}
+
+@media (min-width: 375px) {
+  .row-filter-and-search {
+    .filter-order,
+    .search-order {
+      width: 294px !important;
+    }
+  }
+}
+
+@media (min-width: 411px) {
+  .row-filter-and-search {
+    .filter-order,
+    .search-order {
+      width: 326px !important;
+    }
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .row-filter-and-search {
+    .filter-order,
+    .search-order {
+      width: 486px !important;
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .row-filter-and-search {
+    flex-direction: row;
+    .el-col-6 {
+      width: 100%;
+    }
+    .search-order {
+      margin-top: 0;
+      margin-left: auto;
+    }
   }
 }
 </style>
