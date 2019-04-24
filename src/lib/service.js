@@ -193,6 +193,12 @@ const payment = {
       `/payments/${id}/status?status=${data.status}`,
       data
     );
+  },
+  membershipUpdateStatus(id = null, data = {}) {
+    return Vue.authHttp().put(
+      `/m-payments/${id}/status?status=${data.status}`,
+      data
+    );
   }
 };
 
