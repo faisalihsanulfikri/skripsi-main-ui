@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <navbar-mobile/>
+    <MainSidebarMobile/>
     <main-sidebar :level="level"/>
 
     <el-main>
@@ -11,7 +11,7 @@
 
 <script>
 import MainSidebar from "@/components/MainSidebar";
-import NavbarMobile from "@/components/NavbarMobile";
+import MainSidebarMobile from "@/components/main/MainSidebarMobile";
 
 export default {
   data() {
@@ -21,7 +21,7 @@ export default {
   },
   components: {
     MainSidebar,
-    NavbarMobile
+    MainSidebarMobile
   },
 
   computed: {
