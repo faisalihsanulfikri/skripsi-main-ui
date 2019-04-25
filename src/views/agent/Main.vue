@@ -1,74 +1,28 @@
 <template>
   <el-container>
-    <el-aside style="width:15%">
-      <el-menu background-color="#1565C0" text-color="#FFF" active-text-color="#FFF" :router="true">
-        <el-menu-item index="/agent">DASHBOARD</el-menu-item>
-        <el-menu-item index="/agent/orders/create">ENTRY ORDER</el-menu-item>
-
-        <el-submenu index="/agent/orders">
-          <template slot="title">
-            <span>INBOUND</span>
-          </template>
-          <el-menu-item index="/agent/inbound/simplified">SIMPLIFIED</el-menu-item>
-          <el-menu-item index="/agent/inbound/advanced">ADVANCED</el-menu-item>
-          <el-menu-item index="/agent/inbound/import">IMPORT ORDER</el-menu-item>
-          <el-menu-item index="/agent/inbound/export">EXPORT ORDER</el-menu-item>
-        </el-submenu>
-
-        <el-submenu index="/agent/order">
-          <template slot="title">
-            <span>OUTBOUND</span>
-          </template>
-          <el-menu-item index="/agent/outbound/scan-awb">SCAN AWB</el-menu-item>
-        </el-submenu>
-
-        <el-submenu index="/agent/report">
-          <template slot="title">
-            <span>REPORT</span>
-          </template>
-          <el-menu-item index="/agent/reports/order">ORDER</el-menu-item>
-          <el-menu-item index="/agent/reports/air-waybill">AIR WAYBILL</el-menu-item>
-          <el-menu-item index="/agent/reports/manifest">MANIFEST</el-menu-item>
-        </el-submenu>
-
-      </el-menu>
-    </el-aside>
-    <el-container>
-      <el-header>
-        <nav uk-navbar="mode: click">
-          <div class="uk-navbar-right">
-            <ul class="uk-navbar-nav">
-              <li>
-                <a href="#">
-                  <font-awesome-icon icon="user" />
-                  <span class="uk-margin-small-left">{{ $root.user.name }}</span>
-                </a>
-                <div class="uk-navbar-dropdown">
-                  <ul class="uk-nav uk-navbar-dropdown-nav">
-                    <li>
-                      <a href="#" @click.prevent="__logout">Logout</a>
-                    </li>
-                  </ul>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </el-header>
-      <el-main>
-        <router-view></router-view>
-      </el-main>
-    </el-container>
+    <MainSidebarMobile/>
+    <MainSidebarAgent/>
+    <el-main>
+      <router-view></router-view>
+    </el-main>
   </el-container>
 </template>
 
-<style lang="scss" scoped>
-  .el-header {
-    background-color: #FFF;
-    height: 80px !important;
+<script>
+import MainSidebarAgent from "@/components/main/MainSidebarAgent";
+import MainSidebarMobile from "@/components/main/MainSidebarMobile";
+export default {
+  components: {
+    MainSidebarAgent,
+    MainSidebarMobile
   }
+};
+</script>
 
-  .el-menu {
-    min-height: 100%;
+<style lang="scss" scoped>
+@media screen and (min-width: 300px) and (max-width: 720px) {
+  .el-main {
+    margin-top: 3rem;
   }
+}
 </style>
