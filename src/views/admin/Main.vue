@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <MainSidebarMobile/>
-    <main-sidebar :level="level"/>
+    <MainSidebarAdmin :level="level"/>
 
     <el-main>
       <router-view></router-view>
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import MainSidebar from "@/components/MainSidebar";
+import MainSidebarAdmin from "@/components/main/MainSidebarAdmin";
 import MainSidebarMobile from "@/components/main/MainSidebarMobile";
 
 export default {
@@ -20,7 +20,7 @@ export default {
     };
   },
   components: {
-    MainSidebar,
+    MainSidebarAdmin,
     MainSidebarMobile
   },
 
