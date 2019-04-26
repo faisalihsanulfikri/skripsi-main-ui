@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar-mobile">
+  <nav class="main-sidebar-mobile">
     <div class="username">
       <ios-contact-icon w="24px" h="24px" class="ionicon"/>
       <span>{{ user.name }}</span>
@@ -45,7 +45,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.navbar-mobile {
+.main-sidebar-mobile {
   position: fixed;
   width: 100%;
   display: flex;
@@ -76,12 +76,12 @@ export default {
 }
 
 @media screen and (min-width: 721px) {
-  .navbar-mobile {
+  .main-sidebar-mobile {
     display: none;
   }
 }
 @media screen and (min-width: 300px) and (max-width: 720px) {
-  .navbar-mobile {
+  .main-sidebar-mobile {
     display: flex;
   }
 }

@@ -15,7 +15,7 @@
         <ios-list-box-icon w="24px" h="24px" class="ionicon"/>
         <span>INBOUND</span>
       </el-menu-item>
-      
+
       <el-submenu index="/admin/inv">
         <template slot="title">
           <ios-paper-icon w="24px" h="24px" class="ionicon"/>
