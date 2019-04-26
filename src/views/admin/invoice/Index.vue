@@ -123,21 +123,25 @@
                             </el-dialog>
                           </td>
                           <td class="uk-text-center">
+                            <!-- confirm -->
                             <el-button
                               v-if="payment.status === 'new' || payment.status === 'reject'"
                               type="primary"
                               size="mini"
                               @click="confirmPayment(payment.id)"
                             >Confirm</el-button>
+
+                            <!-- reject -->
+                            <!-- btn -->
                             <el-button
                               v-if="payment.status === 'new' || payment.status === 'confirmed'"
                               type="danger"
                               size="mini"
                               @click="centerDialogReject = true"
-                            >Send Notif</el-button>
-
+                            >Reject</el-button>
+                            <!-- dialogue -->
                             <el-dialog
-                              title="Message"
+                              title="Rejected Message"
                               :visible.sync="centerDialogReject"
                               class="reject-message"
                               center
@@ -157,6 +161,35 @@
                                 >Send</el-button>
                               </div>
                             </el-dialog>
+
+                            <!-- send notif -->
+                            <!-- btn -->
+                            <el-button
+                              type="danger"
+                              size="mini"
+                              @click="centerDialogIssues = true"
+                            >Send Notif</el-button>
+                            <!-- dialogue -->
+                            <el-dialog
+                              title="Note Issue Message"
+                              :visible.sync="centerDialogIssues"
+                              class="reject-message"
+                              center
+                            >
+                              <div style="text-align:center;">
+                                <el-input
+                                  v-model="note_issues"
+                                  type="textarea"
+                                  class="text-message"
+                                ></el-input>
+                                <br>
+                                <el-button
+                                  type="danger"
+                                  size="mini"
+                                  @click="sendNotification(payment, note_issues)"
+                                >Send</el-button>
+                              </div>
+                            </el-dialog>
                           </td>
                         </tr>
                       </tbody>
@@ -166,7 +199,7 @@
                   <hr>
 
                   <div class="uk-margin-small">
-                    <h5 class="uk-margin-remove">Note Issues</h5>
+                    <h5 class="uk-margin-remove">Rejected Message</h5>
                     {{invoice.order.note_issues}}
                   </div>
                 </td>
@@ -214,6 +247,7 @@ export default {
   data() {
     return {
       reject_message: "",
+      note_issues: "",
       totalPages: ["1"],
       pagination: {
         total: 0,
@@ -229,6 +263,7 @@ export default {
       },
       centerDialogVisible: false,
       centerDialogReject: false,
+      centerDialogIssues: false,
       previewLink: ""
     };
   },
@@ -264,6 +299,33 @@ export default {
         })
         .catch(() => {});
     },
+    async sendNotification(payment, note_issues) {
+      this.__startLoading();
+      // console.log("payment", payment);
+      // console.log("note", note_issues);
+
+      try {
+        let res = await this.$service.payment.sendNotification(payment.id, {
+          payment: payment,
+          message: note_issues
+        });
+
+        console.log(res);
+
+        this.$notify({
+          title: "SUCCESS",
+          message: res.data.message,
+          type: "success"
+        });
+
+        // this.centerDialogIssues = false;
+        this.fetchInvoices(this.pagination.page);
+      } catch (err) {
+        this.__handleError(this, err, true);
+      }
+
+      this.__stopLoading();
+    },
     async fetchInvoices(page) {
       this.__startLoading();
 
@@ -288,8 +350,6 @@ export default {
 
           return invoice;
         });
-
-        console.log(this.invoices);
       } catch (err) {
         this.__handleError(this, err, true);
       }
@@ -298,11 +358,6 @@ export default {
     },
     async updatePaymentStatus(payment, status, message) {
       this.__startLoading();
-
-      // console.log("1", payment.id, status, message);
-      // console.log("2", payment);
-
-      // return this.__stopLoading();
 
       try {
         let res = await this.$service.payment.updateStatus(payment.id, {
@@ -315,14 +370,6 @@ export default {
           title: "SUCCESS",
           message: res.data.message,
           type: "success"
-        });
-
-        this.invoices = this.invoices.map(invoice => {
-          if (invoice.id === res.data.data.id) {
-            return res.data.data;
-          }
-
-          return invoice;
         });
 
         this.centerDialogReject = false;

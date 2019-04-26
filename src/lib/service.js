@@ -199,7 +199,13 @@ const payment = {
       `/m-payments/${id}/status?status=${data.status}`,
       data
     );
-  }
+  },
+  sendNotification(id = null, data = {}) {
+    return Vue.authHttp().post(
+      `/payments/${id}/notification`,
+      data
+    );
+  },
 };
 
 const report = {
