@@ -128,7 +128,7 @@
                               v-if="payment.status === 'new' || payment.status === 'reject'"
                               type="primary"
                               size="mini"
-                              @click="confirmPayment(payment.id)"
+                              @click="confirmPayment(payment)"
                             >Confirm</el-button>
 
                             <!-- reject -->
