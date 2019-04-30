@@ -87,7 +87,7 @@
         <div v-if="awb.order" class="uk-text-center">
           <img
             class="barcode-image"
-            :src="`${$web.defaults.baseURL}/barcode/${awb.order.code}?w=300&h=75`"
+            :src="`${$web.defaults.baseURL}/barcode/${awb.order.code}?w=800&h=130`"
           >
           <h5 class="uk-margin-small-top">{{ awb.order.code }}</h5>
         </div>
