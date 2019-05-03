@@ -35,11 +35,12 @@
       <el-table style="width:100%; margin-top:2rem;" :data="orders">
         <el-table-column fixed type="expand">
           <template slot-scope="props">
-            <el-tabs v-model="activeName" @tab-click="handleClick">
+            <el-tabs v-model="activeName">
               <!-- Detail -->
               <el-tab-pane label="Detail" name="first">
                 <OrderDetail :order="props.row"/>
               </el-tab-pane>
+
               <!-- Destination -->
               <el-tab-pane label="Location" name="second">
                 <OrderDestination :receiver="props.row.receiver"/>
@@ -47,8 +48,44 @@
                   v-if="user.level == 0"
                   type="primary"
                   size="mini"
-                  @click="onUpdateAddressDialog(props.row.code)"
+                  @click="onUpdateAddressDialog(props.row.code, props.$index)"
                 >Edit</el-button>
+
+                <!-- Dialog: Update Address -->
+                <el-dialog
+                  title="Edit Address"
+                  :visible.sync="addressEditDialog"
+                  class="edit-address"
+                  center
+                >
+                  <div class="uk-card-body">
+                    <div class="uk-margin">
+                      <label class="uk-form-label">Province</label>
+                      <el-input v-model="input.province" disabled></el-input>
+                    </div>
+                    <div class="uk-margin">
+                      <label class="uk-form-label">City</label>
+                      <el-input v-model="input.city" disabled></el-input>
+                    </div>
+                    <div class="uk-margin">
+                      <label class="uk-form-label">Sub District</label>
+                      <el-input v-model="input.subdistrict_name" disabled></el-input>
+                    </div>
+                    <div class="uk-margin">
+                      <label class="uk-form-label">Address</label>
+                      <el-input v-model="input.address"></el-input>
+                    </div>
+                    <div class="uk-margin">
+                      <label class="uk-form-label">Postal Code</label>
+                      <el-input v-model="input.postal_code" disabled></el-input>
+                    </div>
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      @click="updateAddress(props.row.id)"
+                    >Update</el-button>
+                  </div>
+                </el-dialog>
               </el-tab-pane>
               <!-- Cost -->
               <el-tab-pane label="Cost" name="third">
@@ -238,9 +275,6 @@ export default {
 
       this.addressEditDialog = false;
       this.fetchOrders(this.pagination.page);
-    },
-    handleClick(tab, event) {
-      // console.log(tab, event);
     }
   }
 };
