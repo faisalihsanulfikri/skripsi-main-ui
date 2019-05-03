@@ -22,11 +22,7 @@
     <div class="uk-card-body uk-card-small">
       <div class="uk-margin uk-grid-small" uk-grid>
         <div class="uk-width-auto">
-          <el-input
-            v-model="filter.search"
-            placeholder="Search by customer ID"
-            @keyup.enter="onSearchEnter"
-          >
+          <el-input v-model="filter.search" placeholder="Search" @keyup.enter="onSearchEnter">
             <el-button slot="append" icon="el-icon-search" @click="onSearchclick"></el-button>
           </el-input>
         </div>
