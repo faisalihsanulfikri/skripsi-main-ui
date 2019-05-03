@@ -147,11 +147,7 @@
                               center
                             >
                               <div style="text-align:center;">
-                                <el-input
-                                  v-model="reject_message"
-                                  type="textarea"
-                                  class="text-message"
-                                ></el-input>
+                                <textarea class="text-message" :value="reject_message"></textarea>
                                 <br>
                                 <el-button
                                   v-if="payment.status === 'new' || payment.status === 'confirmed'"
@@ -177,11 +173,7 @@
                               center
                             >
                               <div style="text-align:center;">
-                                <el-input
-                                  v-model="note_issues"
-                                  type="textarea"
-                                  class="text-message"
-                                ></el-input>
+                                <textarea class="text-message" :value="note_issues"></textarea>
                                 <br>
                                 <el-button
                                   type="danger"
@@ -301,8 +293,6 @@ export default {
     },
     async sendNotification(payment, note_issues) {
       this.__startLoading();
-      // console.log("payment", payment);
-      // console.log("note", note_issues);
 
       try {
         let res = await this.$service.payment.sendNotification(payment.id, {
@@ -318,7 +308,7 @@ export default {
           type: "success"
         });
 
-        // this.centerDialogIssues = false;
+        this.centerDialogIssues = false;
         this.fetchInvoices(this.pagination.page);
       } catch (err) {
         this.__handleError(this, err, true);
@@ -329,6 +319,7 @@ export default {
     async fetchInvoices(page) {
       this.__startLoading();
 
+      this.note_issues = "";
       this.pagination.page = page;
 
       try {
@@ -396,6 +387,14 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
+}
+
+.text-message {
+  height: 125px;
+  width: 100%;
+  border: 1px solid grey;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
 .payment-preview {
