@@ -147,11 +147,7 @@
                               center
                             >
                               <div style="text-align:center;">
-                                <el-input
-                                  v-model="reject_message"
-                                  type="textarea"
-                                  class="text-message"
-                                ></el-input>
+                                <textarea class="text-message" :value="reject_message"></textarea>
                                 <br>
                                 <el-button
                                   v-if="payment.status === 'new' || payment.status === 'confirmed'"
@@ -177,11 +173,7 @@
                               center
                             >
                               <div style="text-align:center;">
-                                <el-input
-                                  v-model="note_issues"
-                                  type="textarea"
-                                  class="text-message"
-                                ></el-input>
+                                <textarea class="text-message" :value="note_issues"></textarea>
                                 <br>
                                 <el-button
                                   type="danger"
@@ -395,6 +387,14 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
+}
+
+.text-message {
+  height: 125px;
+  width: 100%;
+  border: 1px solid grey;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
 .payment-preview {
