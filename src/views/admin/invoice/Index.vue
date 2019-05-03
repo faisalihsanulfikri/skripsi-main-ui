@@ -301,8 +301,6 @@ export default {
     },
     async sendNotification(payment, note_issues) {
       this.__startLoading();
-      // console.log("payment", payment);
-      // console.log("note", note_issues);
 
       try {
         let res = await this.$service.payment.sendNotification(payment.id, {
@@ -318,7 +316,7 @@ export default {
           type: "success"
         });
 
-        // this.centerDialogIssues = false;
+        this.centerDialogIssues = false;
         this.fetchInvoices(this.pagination.page);
       } catch (err) {
         this.__handleError(this, err, true);
@@ -329,6 +327,7 @@ export default {
     async fetchInvoices(page) {
       this.__startLoading();
 
+      this.note_issues = "";
       this.pagination.page = page;
 
       try {
