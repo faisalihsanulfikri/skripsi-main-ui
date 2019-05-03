@@ -25,6 +25,8 @@ import UserEdit from '../views/admin/user/Edit'
 import UserDetail from '../views/admin/user/Detail'
 import Sales from '../views/admin/report/Sales'
 import Setting from '../views/admin/setting/Index'
+import PromoCode from '../views/admin/master/promo-code/Index'
+import PromoCodeCreate from '../views/admin/master/promo-code/Create'
 
 
 
@@ -147,7 +149,24 @@ export default {
         level: [ADMIN, SUPER_ADMIN]
       }
     },
-
+    {
+      path: "master/promo-codes",
+      name: "admin-promo-codes",
+      component: PromoCode,
+      meta: {
+        auth: true,
+        level: [ADMIN, SUPER_ADMIN]
+      }
+    },
+    {
+      path: "master/promo-codes/create",
+      name: "admin-promo-codes-create",
+      component: PromoCodeCreate,
+      meta: {
+        auth: true,
+        level: [ADMIN, SUPER_ADMIN]
+      }
+    },
     {
       path: "master/categories/:id/edit",
       name: "admin-category-edit",

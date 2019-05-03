@@ -39,6 +39,26 @@ const calculator = {
   }
 };
 
+const promoCode = {
+  get(params = {}, page) {
+    return Vue.authHttp().get('/promo-codes?page=' + page, {
+      params
+    });
+  },
+  find(id) {
+    return Vue.authHttp().get(`/categories/${id}`);
+  },
+  create(data = {}) {
+    return Vue.authHttp().post("/categories/", data);
+  },
+  update(id = null, data = {}) {
+    return Vue.authHttp().put(`/categories/${id}`, data);
+  },
+  delete(id) {
+    return Vue.authHttp().delete(`/categories/${id}`);
+  }
+};
+
 const category = {
   get(params = {}, page) {
     return Vue.http().get('/categories?page=' + page, {
@@ -393,7 +413,8 @@ const services = {
   importExcel,
   exchangerates,
   area,
-  level
+  level,
+  promoCode
 };
 
 Object.defineProperties(Vue.prototype, {
