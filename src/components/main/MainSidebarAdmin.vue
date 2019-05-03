@@ -30,6 +30,7 @@
           <ios-filing-icon w="24px" h="24px" class="ionicon"/>
           <span>MASTER DATA</span>
         </template>
+        <el-menu-item index="/admin/master/promo-codes">Promo Codes</el-menu-item>
         <el-menu-item index="/admin/master/categories">Categories</el-menu-item>
         <el-menu-item index="/admin/master/warehouses">Warehouses</el-menu-item>
         <el-menu-item index="/admin/master/exchange-rates">Exchange Rates</el-menu-item>
