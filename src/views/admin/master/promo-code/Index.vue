@@ -55,7 +55,8 @@
               <td>{{ promo.status }}</td>
               <td>{{ promo.start_date }}</td>
               <td>{{ promo.end_date }}</td>
-              <td>{{ promo.unlimited }}</td>
+              <td v-if="promo.unlimited == 1">Yes</td>
+              <td v-else>No</td>
               <td>{{ promo.capacity }}</td>
               <td>{{ promo.in_used }}</td>
               <td>{{ promo.promo_type }}</td>

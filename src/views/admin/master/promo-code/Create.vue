@@ -33,13 +33,37 @@
           </select>
         </div>
       </div>
-      <div class="uk-margin">
+      <!-- <div class="uk-margin">
         <label class="uk-form-label">Start Date</label>
         <el-input v-model="input.start_date"></el-input>
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">End Date</label>
         <el-input v-model="input.end_date"></el-input>
+      </div>-->
+      <div class="filter-order uk-margin">
+        <label class="uk-form-label">Start Date</label>
+        <br>
+        <el-date-picker
+          class="filter-order"
+          v-model="input.start_date"
+          type="date"
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
+          placeholder="Start Date"
+        ></el-date-picker>
+      </div>
+      <div class="filter-order uk-margin">
+        <label class="uk-form-label">End Date</label>
+        <br>
+        <el-date-picker
+          class="filter-order"
+          v-model="input.end_date"
+          type="date"
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
+          placeholder="End Date"
+        ></el-date-picker>
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Description</label>
@@ -56,7 +80,7 @@
               v-model="input.unlimited"
               class="uk-radio"
               type="radio"
-              value="true"
+              value="1"
               @click="onUnlimitedChanged"
             >
             <span class="uk-margin-small-left">True</span>
@@ -67,7 +91,7 @@
               v-model="input.unlimited"
               class="uk-radio"
               type="radio"
-              value="false"
+              value="0"
               @click="onUnlimitedChanged"
             >
             <span class="uk-margin-small-left">False</span>
@@ -158,9 +182,6 @@ export default {
   created() {
     this.setOptions();
 
-    // console.log("master", this.master.statuses);
-    // console.log("options", this.options.status);
-
     if (this.$route.params.id) {
       this.edit = true;
       this.title = "Edit Promo Code";
@@ -225,13 +246,6 @@ export default {
       this.input.promo_type = promo_types.value;
     },
 
-    // onUnlimitedChanged() {
-    //   let status = this.master.statuses.find(status => {
-    //     return statuses.value === this.input.status;
-    //   });
-
-    //   this.input.status = statuses.value;
-    // },
     onUnlimitedChanged() {
       if (this.input.length > 0) {
         this.input.unlimited = "";
@@ -267,12 +281,12 @@ export default {
       this.error = false;
       this.errorMessage = "";
 
-      console.log(this.input);
+      // console.log(this.input);
 
-      return this.__stopLoading();
+      // return this.__stopLoading();
 
       try {
-        let res = await this.$service.category.create(this.input);
+        let res = await this.$service.promoCode.create(this.input);
 
         this.$notify({
           title: "SUCCESS",
@@ -280,7 +294,7 @@ export default {
           type: "success"
         });
 
-        this.$router.push({ name: "admin-category" });
+        this.$router.push({ name: "admin-promo-codes" });
       } catch (err) {
         this.__handleError(this, err, true);
       }
