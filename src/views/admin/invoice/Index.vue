@@ -68,7 +68,7 @@
                 <td
                   class="uk-text-right"
                 >{{ invoice.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
-                <td class="uk-text-center">
+                <td>
                   <el-tag v-if="invoice.paid === 1" type="success" size="mini">Paid</el-tag>
                   <el-tag v-else type="danger" size="mini">Unpaid</el-tag>
                 </td>
@@ -88,22 +88,23 @@
                     <table v-else class="uk-table uk-table-small uk-text-small uk-margin-small">
                       <thead>
                         <tr>
-                          <th>Date</th>
-                          <th>Bank</th>
-                          <th class="uk-text-right" width="200">Amount (IDR)</th>
-                          <th class="uk-text-center" width="150">Status</th>
-                          <th>Payment Receipt</th>
-                          <th class="uk-text-center" width="200">Actions</th>
+                          <th width="10%">Date</th>
+                          <th width="5%">Bank</th>
+                          <th width="10%">Amount (IDR)</th>
+                          <th width="5%">Status</th>
+                          <th width="5%">Preview</th>
+                          <th width="23%">Actions</th>
+                          <th width="10">Reject Message</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr v-for="(payment, index) in invoice.payments" :key="index">
                           <td>{{ payment.date }}</td>
                           <td>{{ payment.channel }}</td>
-                          <td
-                            class="uk-text-right"
-                          >{{ payment.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
-                          <td class="uk-text-center">{{ payment.status }}</td>
+                          <td>{{ payment.amount | currency('', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
+                          <td>
+                            <el-tag type="info">{{ payment.status }}</el-tag>
+                          </td>
                           <td>
                             <el-button
                               type="primary"
@@ -122,13 +123,14 @@
                               </div>
                             </el-dialog>
                           </td>
-                          <td class="uk-text-center">
+                          <td>
                             <!-- confirm -->
                             <el-button
                               v-if="payment.status === 'new' || payment.status === 'reject'"
                               type="primary"
                               size="mini"
                               @click="confirmPayment(payment)"
+                              tyle="margin-right:0.5rem"
                             >Confirm</el-button>
 
                             <!-- reject -->
@@ -138,6 +140,7 @@
                               type="danger"
                               size="mini"
                               @click="centerDialogReject = true"
+                              style="margin-right:0.5rem"
                             >Reject</el-button>
                             <!-- dialogue -->
                             <el-dialog
@@ -146,7 +149,7 @@
                               class="reject-message"
                               center
                             >
-                              <div style="text-align:center;">
+                              <div>
                                 <textarea class="text-message" v-model="reject_message"></textarea>
                                 <br>
                                 <el-button
@@ -161,7 +164,7 @@
                             <!-- send notif -->
                             <!-- btn -->
                             <el-button
-                              type="danger"
+                              type="warning"
                               size="mini"
                               @click="centerDialogIssues = true"
                             >Send Notif</el-button>
@@ -183,16 +186,10 @@
                               </div>
                             </el-dialog>
                           </td>
+                          <td>{{ payment.reject_message ? payment.reject_message : '-' }}</td>
                         </tr>
                       </tbody>
                     </table>
-                  </div>
-
-                  <hr>
-
-                  <div class="uk-margin-small">
-                    <h5 class="uk-margin-remove">Rejected Message</h5>
-                    {{invoice.order.note_issues}}
                   </div>
                 </td>
               </tr>
