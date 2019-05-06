@@ -147,7 +147,7 @@
                               center
                             >
                               <div style="text-align:center;">
-                                <textarea class="text-message" :value="reject_message"></textarea>
+                                <textarea class="text-message" v-model="reject_message"></textarea>
                                 <br>
                                 <el-button
                                   v-if="payment.status === 'new' || payment.status === 'confirmed'"
@@ -173,12 +173,12 @@
                               center
                             >
                               <div style="text-align:center;">
-                                <textarea class="text-message" :value="note_issues"></textarea>
+                                <textarea class="text-message" v-model="notification"></textarea>
                                 <br>
                                 <el-button
                                   type="danger"
                                   size="mini"
-                                  @click="sendNotification(payment, note_issues)"
+                                  @click="sendNotification(payment, notification)"
                                 >Send</el-button>
                               </div>
                             </el-dialog>
@@ -239,7 +239,7 @@ export default {
   data() {
     return {
       reject_message: "",
-      note_issues: "",
+      notification: "",
       totalPages: ["1"],
       pagination: {
         total: 0,
@@ -291,16 +291,14 @@ export default {
         })
         .catch(() => {});
     },
-    async sendNotification(payment, note_issues) {
+    async sendNotification(payment, notification) {
       this.__startLoading();
 
       try {
         let res = await this.$service.payment.sendNotification(payment.id, {
           payment: payment,
-          message: note_issues
+          message: notification
         });
-
-        console.log(res);
 
         this.$notify({
           title: "SUCCESS",

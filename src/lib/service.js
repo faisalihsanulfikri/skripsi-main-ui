@@ -49,7 +49,7 @@ const promoCode = {
     return Vue.authHttp().get(`/categories/${id}`);
   },
   create(data = {}) {
-    return Vue.authHttp().post("/categories/", data);
+    return Vue.authHttp().post("/promo-codes/", data);
   },
   update(id = null, data = {}) {
     return Vue.authHttp().put(`/categories/${id}`, data);
