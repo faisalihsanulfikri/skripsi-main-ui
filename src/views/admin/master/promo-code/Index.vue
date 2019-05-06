@@ -61,7 +61,7 @@
               <td>{{ promo.in_used }}</td>
               <td>{{ promo.promo_type }}</td>
               <td>
-                <router-link :to="{ name: '', params: { id: promo.id } }">
+                <router-link :to="{ name: 'admin-promo-codes-edit', params: { id: promo.id } }">
                   <font-awesome-icon icon="edit"></font-awesome-icon>
                 </router-link>
                 <a
@@ -125,7 +125,6 @@ export default {
     };
   },
   created() {
-    // this.fetchProvinces()
     this.fetchPromoCode(this.pagination.page);
   },
   methods: {
@@ -146,8 +145,6 @@ export default {
           page
         );
 
-        // console.log(res.data);
-
         this.pagination.last_page = res.data.last_page;
         this.totalPages = res.data.pages;
         this.current_page = page;
@@ -159,24 +156,24 @@ export default {
 
       this.__stopLoading();
     },
-    // deleteConfirmation(id) {
-    //   this.$confirm("Are you sure to delete this?", "Waning", {
-    //     type: "warning",
-    //     confirmButtonText: "Yes",
-    //     cancelButtonText: "No"
-    //   })
-    //     .then(() => {
-    //       this.delete(id);
-    //     })
-    //     .catch(() => {});
-    // },
+    deleteConfirmation(id) {
+      this.$confirm("Are you sure to delete this?", "Waning", {
+        type: "warning",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No"
+      })
+        .then(() => {
+          this.delete(id);
+        })
+        .catch(() => {});
+    },
 
     delete(id) {
       this.error = false;
       this.errorMessage = "";
 
       this.$authHttp
-        .delete(`/exchangepromo/${id}`)
+        .delete(`/promo-code/${id}`)
         .then(res => {
           this.$notify({
             title: "SUCCESS",
@@ -184,7 +181,7 @@ export default {
             type: "success"
           });
 
-          this.fetchExchangeRates(this.pagination.page);
+          this.fetchPromoCode(this.pagination.page);
         })
         .catch(err => {
           if (err.response) {
