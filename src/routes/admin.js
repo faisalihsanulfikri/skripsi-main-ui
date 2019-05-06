@@ -168,6 +168,15 @@ export default {
       }
     },
     {
+      path: "master/promo-codes/:id/edit",
+      name: "admin-promo-codes-edit",
+      component: PromoCodeCreate,
+      meta: {
+        auth: true,
+        level: [ADMIN, SUPER_ADMIN]
+      }
+    },
+    {
       path: "master/categories/:id/edit",
       name: "admin-category-edit",
       component: CategoryCreate,
