@@ -46,13 +46,13 @@ const promoCode = {
     });
   },
   find(id) {
-    return Vue.authHttp().get(`/categories/${id}`);
+    return Vue.authHttp().get(`/promo-code/${id}`);
   },
   create(data = {}) {
     return Vue.authHttp().post("/promo-codes/", data);
   },
   update(id = null, data = {}) {
-    return Vue.authHttp().put(`/categories/${id}`, data);
+    return Vue.authHttp().put(`/promo-code/${id}`, data);
   },
   delete(id) {
     return Vue.authHttp().delete(`/categories/${id}`);

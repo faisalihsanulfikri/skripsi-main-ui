@@ -158,7 +158,7 @@ export default {
         description: "",
         unlimited: "",
         capacity: "",
-        in_used: "",
+        in_used: 0,
         promo_type: "",
         value_fixed: "",
         value_percentage: "",
@@ -186,7 +186,7 @@ export default {
       this.edit = true;
       this.title = "Edit Promo Code";
 
-      // this.getCategory();
+      this.getPromoCode();
     }
 
     console.log(this.$route.params.id);
@@ -251,23 +251,22 @@ export default {
         this.input.unlimited = "";
       }
     },
-    // async getCategory() {
-    //   this.__startLoading();
+    async getPromoCode() {
+      this.__startLoading();
 
-    //   this.error = false;
-    //   this.errorMessage = "";
+      this.error = false;
+      this.errorMessage = "";
 
-    //   try {
-    //     let res = await this.$service.category.find(this.$route.params.id);
+      try {
+        let res = await this.$service.promoCode.find(this.$route.params.id);
 
-    //     this.input.name = res.data.name;
-    //     this.input.description = res.data.description;
-    //   } catch (err) {
-    //     this.__handleError(this, err, true);
-    //   }
+        this.input = res.data;
+      } catch (err) {
+        this.__handleError(this, err, true);
+      }
 
-    //   this.__stopLoading();
-    // },
+      this.__stopLoading();
+    },
     save() {
       if (this.edit) {
         this.update();
@@ -282,7 +281,6 @@ export default {
       this.errorMessage = "";
 
       // console.log(this.input);
-
       // return this.__stopLoading();
 
       try {
@@ -307,8 +305,22 @@ export default {
       this.error = false;
       this.errorMessage = "";
 
+      // console.log(this.input);
+      // return this.__stopLoading();
+
       try {
-        let res = await this.$service.category.update(
+        if (this.input.promo_type == "fixed") {
+          this.input.value_percentage = 0;
+          this.input.value_point = 0;
+        } else if (this.input.promo_type == "percentage") {
+          this.input.value_fixed = 0;
+          this.input.value_point = 0;
+        } else {
+          this.input.value_percentage = 0;
+          this.input.value_fixed = 0;
+        }
+
+        let res = await this.$service.promoCode.update(
           this.$route.params.id,
           this.input
         );
@@ -319,7 +331,7 @@ export default {
           type: "success"
         });
 
-        this.$router.push({ name: "admin-category" });
+        this.$router.push({ name: "admin-promo-codes" });
       } catch (err) {
         this.__handleError(this, err, true);
       }
