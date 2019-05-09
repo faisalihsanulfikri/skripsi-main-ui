@@ -313,6 +313,21 @@ const warehouse = {
   }
 };
 
+const memberships ={
+  get() {
+    return Vue.authHttp().get(`/memberships`);
+  },
+  getMembershipsData(id) {
+    return Vue.authHttp().get(`/memberships/${id}`);
+  },
+  update(id = null, data = {}) {
+    return Vue.authHttp().put(`/memberships/${id}`, data);
+  },
+  delete(id) {
+    return Vue.authHttp().delete(`/memberships/${id}`);
+  }
+}
+
 const area = {
   provinces(params = {}, page) {
     return Vue.authHttp().get("/province/list?page=" + page, {
@@ -379,6 +394,7 @@ const services = {
   category,
   chart,
   config,
+  memberships,
   forgot,
   invoice,
   manifest,

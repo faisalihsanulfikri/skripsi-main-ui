@@ -177,11 +177,13 @@
                               center
                             >
                               <div style="text-align:center;">
-                                <el-input
+                                <!-- <el-input
                                   v-model="note_issues"
                                   type="textarea"
                                   class="text-message"
-                                ></el-input>
+                                ></el-input> -->
+
+                                <textarea :value="note_issues"></textarea>
                                 <br>
                                 <el-button
                                   type="danger"

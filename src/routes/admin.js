@@ -25,6 +25,9 @@ import UserEdit from '../views/admin/user/Edit'
 import UserDetail from '../views/admin/user/Detail'
 import Sales from '../views/admin/report/Sales'
 import Setting from '../views/admin/setting/Index'
+import Membership from '../views/admin/Membership/Index'
+import MembershipCreate from '../views/admin/Membership/Create'
+import MemberShipedit from '../views/admin/Membership/Edit'
 
 
 
@@ -283,6 +286,44 @@ export default {
         level: [ADMIN, SUPER_ADMIN]
       }
     },
+
+    {
+      path: "membershipcreate",
+      name: "membership-create",
+      component: MembershipCreate,
+      meta: {
+        auth: true,
+        level: [SUPER_ADMIN]
+      }
+    },
+    {
+       path: "Memberships/:id/edit",
+       name: "membership-edit",
+       component: MemberShipedit,
+       meta: {
+         auth: true,
+         level: [SUPER_ADMIN]
+       }
+     },
+    {
+      path: "membership",
+      name: "membership",
+      component: Membership,
+      meta: {
+        auth: true,
+        level: [SUPER_ADMIN]
+      }
+    },
+
+    //  {
+    //    path: "membershipstore",
+    //    name: "membership-store",
+    //    component: Membership,
+    //    meta: {
+    //      auth: true,
+    //      level: [SUPER_ADMIN]
+    //    }
+    //  },
 
     {
       path: "settings",
