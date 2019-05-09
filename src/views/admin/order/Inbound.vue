@@ -19,13 +19,17 @@
               start-placeholder="Start date"
               end-placeholder="End date"
             ></el-date-picker>
-            <el-button slot="append" icon="el-icon-search" @click="fetchOrders"></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="fetchOrders(pagination.page)"></el-button>
           </div>
         </el-col>
         <el-col :span="6">
           <div class="search-order">
-            <el-input v-model="filter.search" placeholder="Search..." @keyup.enter="fetchOrders">
-              <el-button slot="append" icon="el-icon-search" @click="fetchOrders"></el-button>
+            <el-input
+              v-model="filter.search"
+              placeholder="Search..."
+              @keypress.enter="fetchOrders(pagination.page)"
+            >
+              <el-button slot="append" icon="el-icon-search" @click="fetchOrders(pagination.page)"></el-button>
             </el-input>
           </div>
         </el-col>
@@ -103,11 +107,11 @@
           </template>
         </el-table-column>
         <el-table-column prop="created_at" label="Date" width="150"></el-table-column>
-        <el-table-column prop="code" label="Code" width="150"></el-table-column>
+        <el-table-column prop="code" label="Code" width="200"></el-table-column>
         <el-table-column prop="items[0].reference" label="Reference"></el-table-column>
         <el-table-column prop="created_by" label="customer"></el-table-column>
         <el-table-column prop="amount" label="Amount (IDR)"></el-table-column>
-        <el-table-column prop="status" label="Status"></el-table-column>
+        <el-table-column prop="status" label="Status" width="80"></el-table-column>
       </el-table>
     </el-card>
   </div>
@@ -115,7 +119,6 @@
 
 <script>
 import PageTitle from "@/components/PageTitle";
-import CalculatorResult from "@/components/CalculatorResult";
 import OrderDestination from "@/components/inbound/OrderDestination";
 import OrderDetail from "@/components/inbound/OrderDetail";
 import OrderCost from "@/components/inbound/OrderCost";
@@ -124,7 +127,6 @@ import OrderPacket from "@/components/inbound/OrderPacket";
 
 export default {
   components: {
-    CalculatorResult,
     PageTitle,
     OrderDestination,
     OrderDetail,
@@ -158,7 +160,6 @@ export default {
         time: [],
         search: ""
       },
-      tableData: [],
       activeName: "first"
     };
   },
@@ -187,7 +188,7 @@ export default {
 
       return $items;
     },
-    async fetchOrders(page) {
+    async fetchOrders(page = 1) {
       this.__startLoading();
 
       this.pagination.page = page;
