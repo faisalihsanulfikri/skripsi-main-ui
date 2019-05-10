@@ -16,9 +16,9 @@
           <ios-list-box-icon w="24px" h="24px" class="ionicon"/>
           <span>INBOUND</span>
         </template>
-        <el-menu-item index="/admin/invoices">New</el-menu-item>
-        <el-menu-item index="/admin/minvoices">Consolidate</el-menu-item>
-        <el-menu-item index="/admin/invoices">In Progres</el-menu-item>
+        <el-menu-item index="/admin/new">New</el-menu-item>
+        <el-menu-item index="/admin/consolidate">Consolidate</el-menu-item>
+        <el-menu-item index="/admin/inprogres">In Progres</el-menu-item>
       </el-submenu>
 
       <el-submenu index="/admin/inv">
