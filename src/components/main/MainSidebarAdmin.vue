@@ -11,15 +11,10 @@
         <span>DASHBOARD</span>
       </el-menu-item>
 
-      <el-submenu index="/admin/inbound">
-        <template slot="title">
-          <ios-list-box-icon w="24px" h="24px" class="ionicon"/>
-          <span>INBOUND</span>
-        </template>
-        <el-menu-item index="/admin/invoices">New</el-menu-item>
-        <el-menu-item index="/admin/minvoices">Consolidate</el-menu-item>
-        <el-menu-item index="/admin/invoices">In Progres</el-menu-item>
-      </el-submenu>
+      <el-menu-item index="/admin/inbound">
+        <ios-list-box-icon w="24px" h="24px" class="ionicon"/>
+        <span>INBOUND</span>
+      </el-menu-item>
 
       <el-submenu index="/admin/inv">
         <template slot="title">
