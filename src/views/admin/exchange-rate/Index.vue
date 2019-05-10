@@ -20,7 +20,7 @@
           <el-input
             v-model="filter.search"
             placeholder="Search..."
-            @keyup.enter="fetchExchangeRates"
+            @keypress.enter.native="fetchExchangeRates"
           >
             <el-button slot="append" icon="el-icon-search" @click="fetchExchangeRates"></el-button>
           </el-input>

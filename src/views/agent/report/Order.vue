@@ -38,7 +38,7 @@
             <el-input
               v-model="filter.search"
               placeholder="Search..."
-              @keyup.enter="fetchOrderReport"
+              @keypress.enter.native="fetchOrderReport"
             >
               <el-button slot="append" icon="el-icon-search" @click="fetchOrderReport"></el-button>
             </el-input>

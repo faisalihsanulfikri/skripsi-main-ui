@@ -31,7 +31,7 @@
           <el-input
             v-model="filter.search"
             placeholder="Search..."
-            @keyup.enter="fetchSubDistricts"
+            @keypress.enter.native="fetchSubDistricts"
           >
             <el-button slot="append" icon="el-icon-search" @click="fetchSubDistricts"></el-button>
           </el-input>

@@ -27,7 +27,7 @@
             <el-input
               v-model="filter.search"
               placeholder="Search..."
-              @keypress.enter="fetchOrders(pagination.page)"
+              @keypress.enter.native="fetchOrders(pagination.page)"
             >
               <el-button slot="append" icon="el-icon-search" @click="fetchOrders(pagination.page)"></el-button>
             </el-input>
