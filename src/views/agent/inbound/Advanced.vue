@@ -25,9 +25,9 @@
           <el-input
             v-model="filter.search"
             placeholder="Search"
-            @keypress.enter.native="onSearchEnter"
+            @keypress.enter.native="fetchOrders"
           >
-            <el-button slot="append" icon="el-icon-search" @click="onSearchclick"></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="fetchOrders"></el-button>
           </el-input>
         </div>
         <div class="uk-width-auto uk-margin-auto-left">
@@ -411,6 +411,16 @@ export default {
       this.__startLoading();
 
       this.pagination.page = page;
+
+      if (this.filter.search == "") {
+        this.$notify({
+          title: "Notification",
+          message: "Search cannot be empty",
+          type: "warning"
+        });
+
+        return this.__stopLoading();
+      }
 
       try {
         let res = await this.$service.order.get(

@@ -31,7 +31,11 @@
           <el-button slot="append" icon="el-icon-search" @click="fetchInvoices"></el-button>
         </div>
         <div class="uk-width-1-3 uk-margin-auto-left">
-          <el-input v-model="filter.search" placeholder="Search..." @keyup.enter="fetchInvoices">
+          <el-input
+            v-model="filter.search"
+            placeholder="Search..."
+            @keypress.enter.native="fetchInvoices"
+          >
             <el-button slot="append" icon="el-icon-search" @click="fetchInvoices"></el-button>
           </el-input>
         </div>
