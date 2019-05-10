@@ -33,7 +33,11 @@
           <el-button slot="append" icon="el-icon-search" @click="fetchOrders"></el-button>
         </div>
         <div class="uk-width-1-3 uk-margin-auto-left">
-          <el-input v-model="filter.search" placeholder="Search..." @keyup.enter="fetchOrders">
+          <el-input
+            v-model="filter.search"
+            placeholder="Search..."
+            @keypress.enter.native="fetchOrders"
+          >
             <el-button slot="append" icon="el-icon-search" @click="fetchOrders"></el-button>
           </el-input>
         </div>

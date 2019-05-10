@@ -34,7 +34,11 @@
             </el-select>
           </div>
           <div class="uk-width-1-3">
-            <el-input v-model="filter.keyword" placeholder="Search..." @keyup.enter="fetchUsers"></el-input>
+            <el-input
+              v-model="filter.keyword"
+              placeholder="Search..."
+              @keypress.enter.native="fetchUsers"
+            ></el-input>
           </div>
           <div class="uk-width-auto">
             <el-button type="primary" @click="fetchUsers">Filter</el-button>

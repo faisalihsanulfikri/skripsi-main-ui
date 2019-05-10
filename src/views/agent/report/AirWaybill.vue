@@ -38,7 +38,7 @@
             <el-input
               v-model="filter.search"
               placeholder="Search..."
-              @keyup.enter="fetchAirWaybills"
+              @keypress.enter.native="fetchAirWaybills"
             >
               <el-button slot="append" icon="el-icon-search" @click="fetchAirWaybills"></el-button>
             </el-input>

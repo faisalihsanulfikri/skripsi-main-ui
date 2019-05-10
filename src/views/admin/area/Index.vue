@@ -17,7 +17,11 @@
     <div class="uk-card-body">
       <div class="uk-margin uk-grid-small" uk-grid>
         <div class="uk-width-1-3 uk-margin-auto-left">
-          <el-input v-model="filter.search" placeholder="Search..." @keyup.enter="fetchProvinces">
+          <el-input
+            v-model="filter.search"
+            placeholder="Search..."
+            @keypress.enter.native="fetchProvinces"
+          >
             <el-button slot="append" icon="el-icon-search" @click="fetchProvinces"></el-button>
           </el-input>
         </div>

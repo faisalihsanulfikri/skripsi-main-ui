@@ -35,7 +35,11 @@
             <el-button type="default" @click="getManifest">Filter</el-button>
           </div>
           <div class="uk-width-1-3 uk-margin-auto-left">
-            <el-input v-model="filter.search" placeholder="Search..." @keyup.enter="getManifest">
+            <el-input
+              v-model="filter.search"
+              placeholder="Search..."
+              @keypress.enter.native="getManifest"
+            >
               <el-button slot="append" icon="el-icon-search" @click="getManifest"></el-button>
             </el-input>
           </div>

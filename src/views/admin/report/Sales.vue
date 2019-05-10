@@ -38,7 +38,7 @@
             <el-input
               v-model="filter.search"
               placeholder="Search..."
-              @keyup.enter="fetchOrderReport"
+              @keypress.enter.native="fetchOrderReport"
             >
               <el-button slot="append" icon="el-icon-search" @click="fetchOrderReport"></el-button>
             </el-input>
@@ -241,9 +241,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .align-right {
-    text-align: right;
+  text-align: right;
 }
 .uk-table-expand.min-width {
-    min-width: 125px;
+  min-width: 125px;
 }
 </style>
