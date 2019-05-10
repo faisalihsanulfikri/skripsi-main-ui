@@ -173,6 +173,20 @@ Vue.mixin({
           });
       });
     },
+
+    __fetchMemberships() {
+      return new Promise((resolve, reject) => {
+        Vue.authHttp('/admin/memberships')
+          .get("/admin/memberships")
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
+
     __fetchProvincesLocationCode() {
       return new Promise((resolve, reject) => {
         Vue.authHttp()

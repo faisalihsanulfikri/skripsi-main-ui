@@ -279,6 +279,7 @@
 </template>
 
 <script>
+const code = localStorage.getItem('code');
 // import moment from "moment";
 import CalculatorResult from "../../../components/CalculatorResult";
 import DialogCreateAwb from "../../../components/DialogCreateAwb";
