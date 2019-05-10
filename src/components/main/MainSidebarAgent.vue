@@ -45,9 +45,9 @@
         <el-menu-item index="/agent/reports/manifest">MANIFEST</el-menu-item>
       </el-submenu>
 
-      <el-menu-item>
+      <el-menu-item @click="__logout">
         <ios-undo-icon w="24px" h="24px" class="ionicon"/>
-        <span @click.prevent="__logout">LOGOUT</span>
+        <span>LOGOUT</span>
       </el-menu-item>
     </el-menu>
   </el-aside>
