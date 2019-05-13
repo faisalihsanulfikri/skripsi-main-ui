@@ -231,6 +231,10 @@ export default {
     this.linkdownload = process.env.VUE_APP_ROOT_API;
   },
 
+  mounted() {
+    this.fetchInvoices(this.pagination.page);
+  },
+
   methods: {
     onChangePagination(i) {
       this.fetchInvoices(i + 1);
@@ -281,8 +285,6 @@ export default {
 
           return invoice;
         });
-
-        console.log(this.invoices);
       } catch (err) {
         this.__handleError(this, err, true);
       }
@@ -293,6 +295,7 @@ export default {
       this.__startLoading();
 
       try {
+        // update (confirm or reject)
         let res = await this.$service.payment.membershipUpdateStatus(
           payment.id,
           {
@@ -308,14 +311,14 @@ export default {
           type: "success"
         });
 
-        await this.fetchInvoices;
-
         this.centerDialogReject = false;
       } catch (err) {
         this.__handleError(this, err, true);
       }
 
       this.__stopLoading();
+
+      this.fetchInvoices(this.pagination.page);
     },
     openPreview(payment) {
       console.log(payment.id);
