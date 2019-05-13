@@ -83,6 +83,17 @@
           class="uk-text-right"
         >{{ cost.npwp | currency('- ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
       </tr>
+
+      <!-- display on inbound page (ADMIN) -->
+      <tr v-if="discount > 0" class="uk-text-danger calcu-total">
+        <td>
+          <div>Potongan Promo</div>
+        </td>
+        <td>Rp.</td>
+        <td
+          class="uk-text-right"
+        >{{discount | currency('- ', 2, { thousandsSeparator: '.', decimalSeparator: ',' }) }}</td>
+      </tr>
       <tr style="font-weight:bold">
         <td>Estimasi Biaya Pengiriman</td>
         <td>Rp.</td>
@@ -98,7 +109,17 @@
 import { mapState } from "vuex";
 export default {
   name: "OrderCost",
-  props: ["cost", "final"],
+  props: {
+    final: {
+      default: false
+    },
+    cost: {
+      type: Object
+    },
+    discount: {
+      default: 0
+    }
+  },
   data: () => ({
     input: {
       npwp: false

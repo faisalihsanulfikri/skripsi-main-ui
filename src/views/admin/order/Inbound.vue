@@ -93,7 +93,11 @@
               </el-tab-pane>
               <!-- Cost -->
               <el-tab-pane label="Cost" name="third">
-                <OrderCost :final="true" :cost="props.row.detail.cost"/>
+                <OrderCost
+                  :final="true"
+                  :cost="props.row.detail.cost"
+                  :discount="props.row.discount"
+                />
               </el-tab-pane>
               <!-- Packet -->
               <el-tab-pane label="Packet" name="fourth">
