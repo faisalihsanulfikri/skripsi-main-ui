@@ -130,11 +130,6 @@
           <el-alert v-if="error" title="ERROR" type="error" :description="errorMessage" show-icon></el-alert>
 
           <div class="uk-card-footer uk-text-right">
-            <dialog-confirm-delete
-              :visible.sync="dialogDelete.visible"
-              @close="onConfirmDeleteClose"
-              @confirm="onConfirmDelete"
-            />
             <!-- <el-button type="primary" @click="save">SAVE</el-button> -->
           </div>
         </div>
@@ -145,7 +140,6 @@
 
 <script>
 import DialogInputAddress from "@/components/DialogInputAddress";
-import DialogConfirmDelete from "@/components/DialogConfirmDelete";
 
 export default {
   components: {
@@ -154,9 +148,6 @@ export default {
 
   data() {
     return {
-      dialogDelete: {
-        visible: false
-      },
       dialogInput: {
         title: "Tambah Alamat",
         visible: false,
@@ -235,8 +226,6 @@ export default {
       );
 
       this.addresses = res.data;
-
-      console.log(this.addresses);
     },
     createAddress() {
       this.dialogInput.title = "Tambah Alamat";
@@ -251,24 +240,26 @@ export default {
       this.dialogInput.address = this.addresses[index];
     },
     showConfirmDelete(index) {
-      this.selectedAddress = this.addresses[index];
-      this.dialogDelete.visible = true;
+      this.$confirm("You are sure to delete this address ?", "Confirm", {
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
+        type: "warning"
+      })
+        .then(async () => {
+          this.deleteAddress(index);
+        })
+        .catch(() => {
+          console.log("canceled");
+        });
     },
-    onConfirmDeleteClose() {
-      this.selectedAddress = {};
-      this.dialogDelete.visible = false;
-    },
-    onConfirmDelete() {
-      this.deleteAddress();
 
-      this.selectedAddress = {};
-      this.dialogDelete.visible = false;
-    },
-    async deleteAddress() {
+    async deleteAddress(index) {
       this.__startLoading();
 
+      let idx = this.addresses[index].id;
+
       await this.$authHttp
-        .delete(`/admin/user/addresses/${this.selectedAddress.id}`)
+        .delete(`/admin/user/addresses/${idx}`)
         .then(res => {
           this.fetchAddresses();
 
