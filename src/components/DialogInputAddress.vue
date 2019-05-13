@@ -316,8 +316,6 @@ export default {
           });
 
           this.input = this.$options.data().input;
-
-          // this.$emit("saved", res.data.data);
         })
         .catch(err => {
           if (err.response) {
@@ -346,7 +344,7 @@ export default {
       this.errorMessage = "";
 
       await this.$authHttp
-        .put(`/user/addresses/${this.input.id}`, this.input)
+        .put(`/admin/user/addresses/${this.input.id}`, this.input)
         .then(res => {
           this.$notify({
             title: "SUCCESS",
