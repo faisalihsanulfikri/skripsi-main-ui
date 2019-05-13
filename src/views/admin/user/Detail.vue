@@ -226,8 +226,6 @@ export default {
       );
 
       this.addresses = res.data;
-
-      console.log(this.addresses);
     },
     createAddress() {
       this.dialogInput.title = "Tambah Alamat";
@@ -240,33 +238,49 @@ export default {
       this.dialogInput.visible = true;
       this.dialogInput.edit = true;
       this.dialogInput.address = this.addresses[index];
+    },
+    showConfirmDelete(index) {
+      this.$confirm("You are sure to delete this address ?", "Confirm", {
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
+        type: "warning"
+      })
+        .then(async () => {
+          this.deleteAddress(index);
+        })
+        .catch(() => {
+          console.log("canceled");
+        });
+    },
+
+    async deleteAddress(index) {
+      this.__startLoading();
+
+      let idx = this.addresses[index].id;
+
+      await this.$authHttp
+        .delete(`/admin/user/addresses/${idx}`)
+        .then(res => {
+          this.fetchAddresses();
+
+          this.$notify({
+            title: "SUCCESS",
+            message: res.data.message,
+            type: "success"
+          });
+        })
+        .catch(err => {
+          if (err.response) {
+            this.$notify({
+              title: "ERROR",
+              message: err.response.data.message,
+              type: "error"
+            });
+          }
+        });
+
+      this.__stopLoading();
     }
-    // async deleteAddress() {
-    //   this.__startLoading();
-
-    //   await this.$authHttp
-    //     .delete(`/user/addresses/${this.selectedAddress.id}`)
-    //     .then(res => {
-    //       this.fetchAddresses();
-
-    //       this.$notify({
-    //         title: "SUCCESS",
-    //         message: res.data.message,
-    //         type: "success"
-    //       });
-    //     })
-    //     .catch(err => {
-    //       if (err.response) {
-    //         this.$notify({
-    //           title: "ERROR",
-    //           message: err.response.data.message,
-    //           type: "error"
-    //         });
-    //       }
-    //     });
-
-    //   this.__stopLoading();
-    // }
     // async setPrimaryAddress(index) {
     //   let address = this.addresses[index];
 
