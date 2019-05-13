@@ -130,6 +130,11 @@
           <el-alert v-if="error" title="ERROR" type="error" :description="errorMessage" show-icon></el-alert>
 
           <div class="uk-card-footer uk-text-right">
+            <dialog-confirm-delete
+              :visible.sync="dialogDelete.visible"
+              @close="onConfirmDeleteClose"
+              @confirm="onConfirmDelete"
+            />
             <!-- <el-button type="primary" @click="save">SAVE</el-button> -->
           </div>
         </div>
@@ -140,6 +145,7 @@
 
 <script>
 import DialogInputAddress from "@/components/DialogInputAddress";
+import DialogConfirmDelete from "@/components/DialogConfirmDelete";
 
 export default {
   components: {
@@ -148,6 +154,9 @@ export default {
 
   data() {
     return {
+      dialogDelete: {
+        visible: false
+      },
       dialogInput: {
         title: "Tambah Alamat",
         visible: false,
@@ -240,33 +249,47 @@ export default {
       this.dialogInput.visible = true;
       this.dialogInput.edit = true;
       this.dialogInput.address = this.addresses[index];
+    },
+    showConfirmDelete(index) {
+      this.selectedAddress = this.addresses[index];
+      this.dialogDelete.visible = true;
+    },
+    onConfirmDeleteClose() {
+      this.selectedAddress = {};
+      this.dialogDelete.visible = false;
+    },
+    onConfirmDelete() {
+      this.deleteAddress();
+
+      this.selectedAddress = {};
+      this.dialogDelete.visible = false;
+    },
+    async deleteAddress() {
+      this.__startLoading();
+
+      await this.$authHttp
+        .delete(`/admin/user/addresses/${this.selectedAddress.id}`)
+        .then(res => {
+          this.fetchAddresses();
+
+          this.$notify({
+            title: "SUCCESS",
+            message: res.data.message,
+            type: "success"
+          });
+        })
+        .catch(err => {
+          if (err.response) {
+            this.$notify({
+              title: "ERROR",
+              message: err.response.data.message,
+              type: "error"
+            });
+          }
+        });
+
+      this.__stopLoading();
     }
-    // async deleteAddress() {
-    //   this.__startLoading();
-
-    //   await this.$authHttp
-    //     .delete(`/user/addresses/${this.selectedAddress.id}`)
-    //     .then(res => {
-    //       this.fetchAddresses();
-
-    //       this.$notify({
-    //         title: "SUCCESS",
-    //         message: res.data.message,
-    //         type: "success"
-    //       });
-    //     })
-    //     .catch(err => {
-    //       if (err.response) {
-    //         this.$notify({
-    //           title: "ERROR",
-    //           message: err.response.data.message,
-    //           type: "error"
-    //         });
-    //       }
-    //     });
-
-    //   this.__stopLoading();
-    // }
     // async setPrimaryAddress(index) {
     //   let address = this.addresses[index];
 
