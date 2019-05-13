@@ -94,11 +94,13 @@
                         <tr>
                           <th width="10%">Date</th>
                           <th width="5%">Bank</th>
-                          <th width="10%">Amount (IDR)</th>
+                          <th width="12%">
+                            Amount
+                            <small>(IDR)</small>
+                          </th>
                           <th width="5%">Status</th>
-                          <th width="5%">Preview</th>
-                          <th width="23%">Actions</th>
-                          <th width="10">Reject Message</th>
+                          <th width="auto">Reject Message</th>
+                          <th width="35%">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -109,12 +111,15 @@
                           <td>
                             <el-tag type="info">{{ payment.status }}</el-tag>
                           </td>
+                          <td>{{ payment.reject_message ? payment.reject_message : '-' }}</td>
                           <td>
+                            <!-- Show Receipt Button -->
                             <el-button
-                              type="primary"
+                              type="success"
                               size="mini"
                               @click="openPreview(payment)"
-                            >Preview</el-button>
+                              style="margin-right:0.5rem;margin-left:0"
+                            >Show Receipt</el-button>
 
                             <el-dialog
                               title="Preview Payment"
@@ -126,27 +131,24 @@
                                 <img :src="previewLink">
                               </div>
                             </el-dialog>
-                          </td>
-                          <td>
-                            <!-- confirm -->
+
+                            <!-- Confirm Button -->
                             <el-button
                               v-if="payment.status === 'new' || payment.status === 'reject'"
                               type="primary"
                               size="mini"
                               @click="confirmPayment(payment)"
-                              tyle="margin-right:0.5rem"
+                              style="margin-right:0.5rem;margin-left:0"
                             >Confirm</el-button>
 
-                            <!-- reject -->
-                            <!-- btn -->
+                            <!-- Reject Button -->
                             <el-button
                               v-if="payment.status === 'new' || payment.status === 'confirmed'"
                               type="danger"
                               size="mini"
                               @click="centerDialogReject = true"
-                              style="margin-right:0.5rem"
+                              style="margin-right:0.5rem;margin-left:0"
                             >Reject</el-button>
-                            <!-- dialogue -->
                             <el-dialog
                               title="Rejected Message"
                               :visible.sync="centerDialogReject"
@@ -165,14 +167,12 @@
                               </div>
                             </el-dialog>
 
-                            <!-- send notif -->
-                            <!-- btn -->
+                            <!-- Send Notif Button -->
                             <el-button
                               type="warning"
                               size="mini"
                               @click="centerDialogIssues = true"
                             >Send Notif</el-button>
-                            <!-- dialogue -->
                             <el-dialog
                               title="Note Issue Message"
                               :visible.sync="centerDialogIssues"
@@ -190,7 +190,6 @@
                               </div>
                             </el-dialog>
                           </td>
-                          <td>{{ payment.reject_message ? payment.reject_message : '-' }}</td>
                         </tr>
                       </tbody>
                     </table>
