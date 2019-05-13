@@ -100,7 +100,7 @@
                           </th>
                           <th width="5%">Status</th>
                           <th width="auto">Reject Message</th>
-                          <th width="38%">Actions</th>
+                          <th width="35%">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
