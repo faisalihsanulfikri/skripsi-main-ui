@@ -94,11 +94,13 @@
                         <tr>
                           <th width="10%">Date</th>
                           <th width="5%">Bank</th>
-                          <th width="10%">Amount (IDR)</th>
+                          <th width="15%">
+                            Amount
+                            <small>(IDR)</small>
+                          </th>
                           <th width="5%">Status</th>
-                          <th width="5%">Preview</th>
-                          <th width="23%">Actions</th>
-                          <th width="10">Reject Message</th>
+                          <th width="auto">Reject Message</th>
+                          <th width="21%">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -109,88 +111,90 @@
                           <td>
                             <el-tag type="info">{{ payment.status }}</el-tag>
                           </td>
-                          <td>
-                            <el-button
-                              type="primary"
-                              size="mini"
-                              @click="openPreview(payment)"
-                            >Preview</el-button>
-
-                            <el-dialog
-                              title="Preview Payment"
-                              :visible.sync="centerDialogVisible"
-                              class="payment-preview"
-                              center
-                            >
-                              <div style="text-align:center">
-                                <img :src="previewLink">
-                              </div>
-                            </el-dialog>
-                          </td>
-                          <td>
-                            <!-- confirm -->
-                            <el-button
-                              v-if="payment.status === 'new' || payment.status === 'reject'"
-                              type="primary"
-                              size="mini"
-                              @click="confirmPayment(payment)"
-                              tyle="margin-right:0.5rem"
-                            >Confirm</el-button>
-
-                            <!-- reject -->
-                            <!-- btn -->
-                            <el-button
-                              v-if="payment.status === 'new' || payment.status === 'confirmed'"
-                              type="danger"
-                              size="mini"
-                              @click="centerDialogReject = true"
-                              style="margin-right:0.5rem"
-                            >Reject</el-button>
-                            <!-- dialogue -->
-                            <el-dialog
-                              title="Rejected Message"
-                              :visible.sync="centerDialogReject"
-                              class="reject-message"
-                              center
-                            >
-                              <div>
-                                <textarea class="text-message" v-model="reject_message"></textarea>
-                                <br>
-                                <el-button
-                                  v-if="payment.status === 'new' || payment.status === 'confirmed'"
-                                  type="danger"
-                                  size="mini"
-                                  @click="updatePaymentStatus(payment, 'rejected',reject_message)"
-                                >Send</el-button>
-                              </div>
-                            </el-dialog>
-
-                            <!-- send notif -->
-                            <!-- btn -->
-                            <el-button
-                              type="warning"
-                              size="mini"
-                              @click="centerDialogIssues = true"
-                            >Send Notif</el-button>
-                            <!-- dialogue -->
-                            <el-dialog
-                              title="Note Issue Message"
-                              :visible.sync="centerDialogIssues"
-                              class="reject-message"
-                              center
-                            >
-                              <div style="text-align:center;">
-                                <textarea class="text-message" v-model="notification"></textarea>
-                                <br>
-                                <el-button
-                                  type="danger"
-                                  size="mini"
-                                  @click="sendNotification(payment, notification)"
-                                >Send</el-button>
-                              </div>
-                            </el-dialog>
-                          </td>
                           <td>{{ payment.reject_message ? payment.reject_message : '-' }}</td>
+                          <td>
+                            <!-- Button Row 1 -->
+                            <div style="margin-bottom: 0.5rem">
+                              <!-- Show Receipt Button -->
+                              <el-button
+                                type="success"
+                                size="mini"
+                                @click="openPreview(payment)"
+                              >Show Receipt</el-button>
+
+                              <el-dialog
+                                title="Preview Payment"
+                                :visible.sync="centerDialogVisible"
+                                class="payment-preview"
+                                center
+                              >
+                                <div style="text-align:center">
+                                  <img :src="previewLink">
+                                </div>
+                              </el-dialog>
+
+                              <!-- Confirm Button -->
+                              <el-button
+                                v-if="payment.status === 'new' || payment.status === 'reject'"
+                                type="primary"
+                                size="mini"
+                                @click="confirmPayment(payment)"
+                                style="margin-left:0.5rem"
+                              >Confirm</el-button>
+                            </div>
+
+                            <!-- Button Row 2 -->
+                            <div style="margin-top:0">
+                              <!-- Reject Button -->
+                              <el-button
+                                v-if="payment.status === 'new' || payment.status === 'confirmed'"
+                                type="danger"
+                                size="mini"
+                                @click="centerDialogReject = true"
+                                style="margin-right:0.5rem"
+                              >Reject</el-button>
+                              <el-dialog
+                                title="Rejected Message"
+                                :visible.sync="centerDialogReject"
+                                class="reject-message"
+                                center
+                              >
+                                <div>
+                                  <textarea class="text-message" v-model="reject_message"></textarea>
+                                  <br>
+                                  <el-button
+                                    v-if="payment.status === 'new' || payment.status === 'confirmed'"
+                                    type="danger"
+                                    size="mini"
+                                    @click="updatePaymentStatus(payment, 'rejected',reject_message)"
+                                  >Send</el-button>
+                                </div>
+                              </el-dialog>
+
+                              <!-- Send Notif Button -->
+                              <el-button
+                                type="warning"
+                                size="mini"
+                                @click="centerDialogIssues = true"
+                              >Send Notif</el-button>
+                              <el-dialog
+                                title="Note Issue Message"
+                                :visible.sync="centerDialogIssues"
+                                class="reject-message"
+                                center
+                              >
+                                <div style="text-align:center;">
+                                  <textarea class="text-message" v-model="notification"></textarea>
+                                  <br>
+                                  <el-button
+                                    type="danger"
+                                    size="mini"
+                                    @click="sendNotification(payment, notification)"
+                                  >Send</el-button>
+                                </div>
+                              </el-dialog>
+                            </div>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
