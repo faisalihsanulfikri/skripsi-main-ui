@@ -65,15 +65,15 @@
                   <div class="uk-card-body">
                     <div class="uk-margin">
                       <label class="uk-form-label">Province</label>
-                      <el-input v-model="input.province" disabled></el-input>
+                      <el-input v-model="input.province"></el-input>
                     </div>
                     <div class="uk-margin">
                       <label class="uk-form-label">City</label>
-                      <el-input v-model="input.city" disabled></el-input>
+                      <el-input v-model="input.city"></el-input>
                     </div>
                     <div class="uk-margin">
                       <label class="uk-form-label">Sub District</label>
-                      <el-input v-model="input.subdistrict_name" disabled></el-input>
+                      <el-input v-model="input.subdistrict_name"></el-input>
                     </div>
                     <div class="uk-margin">
                       <label class="uk-form-label">Address</label>
@@ -81,7 +81,7 @@
                     </div>
                     <div class="uk-margin">
                       <label class="uk-form-label">Postal Code</label>
-                      <el-input v-model="input.postal_code" disabled></el-input>
+                      <el-input v-model="input.postal_code"></el-input>
                     </div>
                     <el-button
                       type="primary"
