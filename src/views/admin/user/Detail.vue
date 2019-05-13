@@ -234,13 +234,13 @@ export default {
       this.dialogInput.visible = true;
       this.dialogInput.edit = false;
       // this.dialogInput.address = {};
+    },
+    editAddress(index) {
+      this.dialogInput.title = "Ubah Alamat";
+      this.dialogInput.visible = true;
+      this.dialogInput.edit = true;
+      this.dialogInput.address = this.addresses[index];
     }
-    // editAddress(index) {
-    //   this.dialogInput.title = "Ubah Alamat";
-    //   this.dialogInput.visible = true;
-    //   this.dialogInput.edit = true;
-    //   this.dialogInput.address = this.addresses[index];
-    // },
     // async deleteAddress() {
     //   this.__startLoading();
 
@@ -266,7 +266,7 @@ export default {
     //     });
 
     //   this.__stopLoading();
-    // },
+    // }
     // async setPrimaryAddress(index) {
     //   let address = this.addresses[index];
 
