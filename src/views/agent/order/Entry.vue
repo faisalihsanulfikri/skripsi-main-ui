@@ -61,7 +61,8 @@
             <div class="uk-margin-small">
               <div class="uk-grid-small" uk-grid>
                 <div style="width:50%">
-                  <label class="uk-form-label">Name of goods
+                  <label class="uk-form-label">
+                    Name of goods
                     <el-tooltip class="item" effect="dark" content="Barang" placement="top">
                       <font-awesome-icon icon="info-circle"></font-awesome-icon>
                     </el-tooltip>
@@ -75,7 +76,8 @@
                   >
                 </div>
                 <div style="width:13%">
-                  <label class="uk-form-label">Total
+                  <label class="uk-form-label">
+                    Total
                     <el-tooltip class="item" effect="dark" content="Jumlah barang" placement="top">
                       <font-awesome-icon icon="info-circle"></font-awesome-icon>
                     </el-tooltip>
@@ -96,7 +98,8 @@
                 </div>
 
                 <div style="width:13%">
-                  <label class="uk-form-label">Unit
+                  <label class="uk-form-label">
+                    Unit
                     <el-tooltip
                       class="item"
                       effect="dark"
@@ -139,7 +142,8 @@
               </div>
             </div>
             <div class="uk-margin">
-              <label class="uk-form-label">Package Contents
+              <label class="uk-form-label">
+                Package Contents
                 <el-tooltip class="item" effect="dark" content="Isi Paket" placement="top">
                   <font-awesome-icon icon="info-circle"></font-awesome-icon>
                 </el-tooltip>
@@ -162,7 +166,8 @@
             </div>
             <hr>
             <div class="uk-margin-small">
-              <label class="uk-form-label">Reference (ex. Invoice#, SO#)
+              <label class="uk-form-label">
+                Reference (ex. Invoice#, SO#)
                 <el-tooltip class="item" effect="dark" content="Referensi" placement="top">
                   <font-awesome-icon icon="info-circle"></font-awesome-icon>
                 </el-tooltip>
@@ -412,7 +417,7 @@
         </div>
       </div>
 
-      <div class="uk-card-footer uk-text-right">\
+      <div class="uk-card-footer uk-text-right">
         <button
           class="uk-button uk-button-primary"
           :disabled="input.items.length < 1"
@@ -877,7 +882,6 @@ export default {
       if (this.application.loading) return;
 
       this.__startLoading();
-
 
       try {
         let res = await this.$service.order.createKiriminFromAgent(this.input);
