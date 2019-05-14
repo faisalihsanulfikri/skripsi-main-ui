@@ -47,7 +47,10 @@
 
               <!-- Destination -->
               <el-tab-pane label="Location" name="second">
-                <OrderDestination :receiver="props.row.receiver"/>
+                <OrderDestination
+                  :receiver="props.row.receiver"
+                  :warehouse="props.row.detail.warehouse"
+                />
                 <el-button
                   v-if="user.level == 0"
                   type="primary"
