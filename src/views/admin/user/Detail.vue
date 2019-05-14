@@ -280,37 +280,39 @@ export default {
         });
 
       this.__stopLoading();
+    },
+    async setPrimaryAddress(index) {
+      let address = this.addresses[index];
+
+      console.log("address", address);
+
+      if (address.primary) return;
+
+      this.__startLoading();
+
+      await this.$authHttp
+        .put(`/admin/user/addresses/${address.id}/primary`)
+        .then(res => {
+          this.fetchAddresses();
+
+          this.$notify({
+            title: "SUCCESS",
+            message: res.data.message,
+            type: "success"
+          });
+        })
+        .catch(err => {
+          if (err.response) {
+            this.$notify({
+              title: "ERROR",
+              message: err.response.data.message,
+              type: "error"
+            });
+          }
+        });
+
+      this.__stopLoading();
     }
-    // async setPrimaryAddress(index) {
-    //   let address = this.addresses[index];
-
-    //   if (address.primary) return;
-
-    //   this.__startLoading();
-
-    //   await this.$authHttp
-    //     .put(`/user/addresses/${address.id}/primary`)
-    //     .then(res => {
-    //       this.fetchAddresses();
-
-    //       this.$notify({
-    //         title: "SUCCESS",
-    //         message: res.data.message,
-    //         type: "success"
-    //       });
-    //     })
-    //     .catch(err => {
-    //       if (err.response) {
-    //         this.$notify({
-    //           title: "ERROR",
-    //           message: err.response.data.message,
-    //           type: "error"
-    //         });
-    //       }
-    //     });
-
-    //   this.__stopLoading();
-    // }
   }
 };
 </script>
@@ -336,5 +338,13 @@ export default {
   .btn {
     margin-left: 10px;
   }
+}
+
+.primary-address {
+  color: #ffc107;
+}
+
+.non-primary-address {
+  color: #b0bec5;
 }
 </style>
