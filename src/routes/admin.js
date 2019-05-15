@@ -323,7 +323,7 @@ export default {
       component: Inboundnew,
       meta: {
         auth: true,
-        level: [SUPER_ADMIN]
+        level: [SUPER_ADMIN,ADMIN]
       }
     },
 
