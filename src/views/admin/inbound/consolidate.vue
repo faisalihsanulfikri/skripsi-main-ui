@@ -1,224 +1,161 @@
 <template>
   <div class="uk-card uk-card-default">
-    <div class="uk-card-header app--card-header">
-      <div uk-grid>
-        <div class="uk-width-auto">
-          <div class="app--card-header__icon">
-            <font-awesome-icon icon="file-alt"></font-awesome-icon>
+    <!-- Header -->
+    <PageTitle title="Consolidate" :paginationTotal="pagination.total"/>
+
+    <!-- Content -->
+    <el-card>
+      <!-- Filter & Search -->
+      <el-row class="row-filter-and-search" type="flex" justify="space-between">
+        <el-col :span="6">
+          <div class="filter-order">
+            <el-date-picker
+              class="filter-order"
+              v-model="filter.time"
+              type="daterange"
+              format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd"
+              range-separator="To"
+              start-placeholder="Start date"
+              end-placeholder="End date"
+            ></el-date-picker>
+            <el-button slot="append" icon="el-icon-search" @click="fetchInbound(pagination.page)"></el-button>
           </div>
-        </div>
-        <div class="uk-width-expand">
-          <div class="app--card-header_title">
-            <h3>
-              <span>Consolidate</span>
-              <el-badge :value="pagination.total"></el-badge>
-            </h3>
+        </el-col>
+        <el-col :span="6">
+          <div class="search-order">
+            <el-input
+              v-model="filter.search"
+              placeholder="Search..."
+              @keypress.enter.native="fetchInbound(pagination.page)"
+            >
+              <el-button slot="append" icon="el-icon-search" @click="fetchInbound(pagination.page)"></el-button>
+            </el-input>
           </div>
-        </div>
-        <div class="uk-width-auto"></div>
-      </div>
-    </div>
-    <div class="uk-card-body uk-card-small">
-      <div class="uk-margin uk-grid-small" uk-grid>
-        <div class="uk-width-auto">
-          <el-date-picker
-            v-model="filter.time"
-            type="daterange"
-            format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd"
-            range-separator="To"
-            start-placeholder="Start date"
-            end-placeholder="End date"
-          ></el-date-picker>
-          <el-button slot="append" icon="el-icon-search" @click="fetchConsolidate"></el-button>
-        </div>
-        <div class="uk-width-1-3 uk-margin-auto-left">
-          <el-input v-model="filter.search" placeholder="Search..." @keyup.enter="fetchConsolidate">
-            <el-button slot="append" icon="el-icon-search" @click="fetchConsolidate"></el-button>
-          </el-input>
-        </div>
-      </div>
-      <div class="uk-overflow-auto">
-        <table class="uk-table uk-table-divider uk-table-small">
-          <thead>
-            <tr>
-              <th></th>
-              <th width="150">Date</th>
-              <th width="150">Code</th>
-              <th>Reference</th>
-              <th>Customer</th>
-              <th class="uk-text-center" width="150">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <template v-for="(order, orderIndex) in orders">
-              <tr :key="orderIndex">
-                <td
-                  class="app--table-column__collapse-toggle"
-                  @click.prevent="collapseToggle(orderIndex)"
+        </el-col>
+      </el-row>
+
+      <!-- Order Table v2 -->
+      <el-table style="width:100%; margin-top:2rem;" :data="orders">
+        <el-table-column fixed type="expand">
+          <template slot-scope="props">
+            <el-tabs v-model="activeName">
+              <!-- Detail -->
+              <el-tab-pane label="Detail" name="first">
+                <OrderDetail :order="props.row"/>
+              </el-tab-pane>
+
+              <!-- Destination -->
+              <el-tab-pane label="Location" name="second">
+                <OrderDestination
+                  :receiver="props.row.receiver"
+                  :warehouse="props.row.detail.warehouse"
+                />
+                <el-button
+                  v-if="user.level == 0"
+                  type="primary"
+                  size="mini"
+                  @click="onUpdateAddressDialog(props.row.code, props.$index)"
+                >Edit</el-button>
+
+                <!-- Dialog: Update Address -->
+                <el-dialog
+                  title="Edit Address"
+                  :visible.sync="addressEditDialog"
+                  class="edit-address"
+                  center
                 >
-                  <a href="#">
-                    <font-awesome-icon v-if="order.collapse" icon="angle-right"></font-awesome-icon>
-                    <font-awesome-icon v-else icon="angle-down"></font-awesome-icon>
-                  </a>
-                </td>
-                <td>{{ moment(order.created_at).format('MMM DD YYYY, HH:mm:ss') }}</td>
-                <td
-                  class="app--table-column__collapse-toggle"
-                  @click.prevent="collapseToggle(orderIndex)"
-                >
-                  <a href="#!" class="custom-link-black">{{ order.code }}</a>
-                </td>
-                <td>
-                  <!-- start -->
-                  <template v-for="(items, groupIndex) in order.item_groups">
-                    <ul :key="groupIndex" class="ul-ref">
-                      <li class="li-ref">{{ items[0].reference }}</li>
-                    </ul>
-                  </template>
-                  <!-- end -->
-                </td>
-                <td>{{ order.user.code }} - {{ order.user.name }}</td>
-                <td class="uk-text-center">{{ order.status }}</td>
-              </tr>
-              <tr v-show="!order.collapse" :key="`${orderIndex}_info`">
-                <td></td>
-                <td colspan="5">
-                  <div class="uk-grid-small" uk-grid>
-                    <div class="uk-width-1-2">
-                      <h5 class="uk-margin-small">
-                        <font-awesome-icon icon="globe-asia"></font-awesome-icon>
-                        <span class="uk-margin-small-left">{{ order.detail.warehouse.name }}</span>
-                      </h5>
-                      <h5 class="uk-margin-remove">
-                        <font-awesome-icon icon="truck"></font-awesome-icon>
-                        <span class="uk-margin-small-left">Destination Address</span>
-                      </h5>
-                      <div class="uk-padding-small">
-                        <div class="app--list-text">{{ order.receiver.name }}</div>
-                        <div class="app--list-text">{{ order.receiver.address }}</div>
-                        <div
-                          class="app--list-text"
-                        >{{ order.receiver.sub_district }}, {{ order.receiver.city }} {{ order.receiver.postal_code }}</div>
-                        <div class="app--list-text">{{ order.receiver.province }}</div>
-                        <div class="app--list-text">{{ order.receiver.phone }}</div>
-                      </div>
+                  <div class="uk-card-body">
+                    <div class="uk-margin">
+                      <label class="uk-form-label">Province</label>
+                      <el-input v-model="input.province"></el-input>
                     </div>
-                  </div>
-
-                  <hr>
-
-                  <div class="uk-margin-small">
-                    <h5 class="uk-margin-remove">
-                      <font-awesome-icon icon="cubes"></font-awesome-icon>
-                      <span class="uk-margin-small-left">{{ order.item_groups.length }}</span>
-                      <span class="uk-margin-small-left">Package`s</span>
-                      <el-tag
-                        v-if="order.consolidate === 1"
-                        class="uk-margin-small-left"
-                        type="success"
-                        size="mini"
-                      >Consolidate</el-tag>
-                    </h5>
-                    <div class="uk-overflow-auto">
-                      <table
-                        class="uk-table uk-table-small uk-table-divider uk-table-middle uk-text-small"
-                      >
-                        <tbody>
-                          <template v-for="(items, groupIndex) in order.item_groups">
-                            <tr :key="groupIndex">
-                              <td>
-                                <a href="#">{{ items[0].category.name }}</a>
-                              </td>
-                              <td class="uk-text-center" width="300">
-                                {{ `${items[0].stringWeight}
-                                ${order.detail.formula.weight_unit} - ${items[0].stringLength} x
-                                ${items[0].stringWidth} x ${items[0].stringLength} ${order.detail.formula.volume_unit}`
-                                }}
-                              </td>
-                              <td class="uk-text-right" width="200">IDR {{ items[0].stringPrice }}</td>
-                            </tr>
-                            <tr :key="`${groupIndex}_goods`">
-                              <td colspan="3">
-                                <table class="uk-table uk-table-small">
-                                  <tr>
-                                    <td colspan="5">
-                                      <div class="app--list-label">Reference</div>
-                                      <div class="app--list-text">{{ items[0].reference }}</div>
-                                    </td>
-                                  </tr>
-                                </table>
-                              </td>
-                            </tr>
-                          </template>
-                        </tbody>
-                      </table>
+                    <div class="uk-margin">
+                      <label class="uk-form-label">City</label>
+                      <el-input v-model="input.city"></el-input>
                     </div>
+                    <div class="uk-margin">
+                      <label class="uk-form-label">Sub District</label>
+                      <el-input v-model="input.subdistrict_name"></el-input>
+                    </div>
+                    <div class="uk-margin">
+                      <label class="uk-form-label">Address</label>
+                      <el-input v-model="input.address"></el-input>
+                    </div>
+                    <div class="uk-margin">
+                      <label class="uk-form-label">Postal Code</label>
+                      <el-input v-model="input.postal_code"></el-input>
+                    </div>
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      @click="updateAddress(props.row.id)"
+                    >Update</el-button>
                   </div>
-                </td>
-              </tr>
-            </template>
-          </tbody>
-        </table>
-
-        <!-- pagination -->
-        <div v-if="this.totalPages.length < 2"></div>
-
-        <div v-else class="uk-card-footer uk-text-center">
-          <ul class="uk-pagination" uk-margin>
-            <li>
-              <a href="#">
-                <span uk-pagination-previous></span>
-              </a>
-            </li>
-            <li v-for="(page, i) in totalPages" :key="i">
-              <div v-if="current_page-1 == i">
-                <a href="#" style="color:red" @click.prevent="onChangePagination(i)">{{i+1}}</a>
-              </div>
-              <div v-else>
-                <a href="#" @click.prevent="onChangePagination(i)">{{i+1}}</a>
-              </div>
-            </li>
-            <li>
-              <a href="#">
-                <span uk-pagination-next></span>
-              </a>
-            </li>
-          </ul>
-        </div>
-        <!-- end pagination -->
-      </div>
-    </div>
-
-    <dialog-create-awb
-      :visible="dialogCreateAwb.visible"
-      :order="dialogCreateAwb.data"
-      @close="closeCreateAwbDialog"
-      @done="onAwbCreated"
-    ></dialog-create-awb>
+                </el-dialog>
+              </el-tab-pane>
+              <!-- Cost -->
+              <el-tab-pane label="Cost" name="third">
+                <OrderCost
+                  :final="true"
+                  :cost="props.row.detail.cost"
+                  :discount="props.row.discount"
+                />
+              </el-tab-pane>
+              <!-- Packet -->
+              <el-tab-pane label="Packet" name="fourth">
+                <OrderPacket :order="props.row"/>
+              </el-tab-pane>
+              <!-- Air Waybills -->
+              <el-tab-pane label="Air Waybills" name="fifth">
+                <OrderAirwaybills :airwaybills="props.row.air_waybills"/>
+              </el-tab-pane>
+            </el-tabs>
+          </template>
+        </el-table-column>
+        <el-table-column prop="created_at" label="Date" width="150"></el-table-column>
+        <el-table-column prop="code" label="Code" width="200"></el-table-column>
+        <el-table-column prop="items[0].reference" label="Reference"></el-table-column>
+        <el-table-column prop="created_by" label="customer"></el-table-column>
+        <el-table-column prop="amount" label="Amount (IDR)"></el-table-column>
+        <el-table-column prop="status" label="Status" width="80"></el-table-column>
+      </el-table>
+    </el-card>
   </div>
 </template>
 
 <script>
-const code = localStorage.getItem('code');
-// import moment from "moment";
-import CalculatorResult from "../../../components/CalculatorResult";
-import DialogCreateAwb from "../../../components/DialogCreateAwb";
+import PageTitle from "@/components/PageTitle";
+import OrderDestination from "@/components/inbound/OrderDestination";
+import OrderDetail from "@/components/inbound/OrderDetail";
+import OrderCost from "@/components/inbound/OrderCost";
+import OrderAirwaybills from "@/components/inbound/OrderAirwaybills";
+import OrderPacket from "@/components/inbound/OrderPacket";
 
 export default {
   components: {
-    CalculatorResult,
-    DialogCreateAwb
+    PageTitle,
+    OrderDestination,
+    OrderDetail,
+    OrderCost,
+    OrderAirwaybills,
+    OrderPacket
   },
 
   data() {
     return {
-      dialogCreateAwb: {
-        visible: false,
-        data: {}
+      detail: {},
+      receiver: {},
+      user: "",
+      input: {
+        province: "",
+        city: "",
+        subdistrict_name: "",
+        address: "a",
+        postal_code: "p"
       },
+      addressEditDialog: false,
       orders: [],
-      awb: [],
       totalPages: ["1"],
       pagination: {
         total: 0,
@@ -229,141 +166,36 @@ export default {
       filter: {
         time: [],
         search: ""
-      }
+      },
+      activeName: "first"
     };
   },
 
-  created() {
-    // this.filter.time = [
-    //   moment()
-    //     .startOf("month")
-    //     .format("YYYY-MM-DD"),
-    //   moment()
-    //     .endOf("month")
-    //     .format("YYYY-MM-DD")
-    // ];
-
-    this.fetchConsolidate(this.pagination.page);
+  async created() {
+    this.fetchInbound(this.pagination.page);
+    this.user = await this.$auth.getUser();
   },
 
   methods: {
     onChangePagination(i) {
-      this.fetchConsolidate(i + 1);
-    },
-
-    onLoadDataPagination() {},
-    openCreateAwbDialog(index) {
-      this.dialogCreateAwb.data = this.orders[index];
-      this.dialogCreateAwb.visible = true;
-    },
-    closeCreateAwbDialog() {
-      this.dialogCreateAwb.data = {};
-      this.dialogCreateAwb.visible = false;
-    },
-    async onAwbCreated(res) {
-      this.closeCreateAwbDialog();
-      this.orders = this.orders.map(order => {
-        if (order.id === res.data.data.id) {
-          let $order = res.data.data;
-
-          $order["collapse"] = false;
-          $order.item_groups = $order.item_groups.map(items => {
-            return this.mappingItems($order, items);
-          });
-          $order.items = this.mappingItems($order, $order.items);
-
-          return $order;
-        }
-
-        return order;
-      });
-      var lenght = res.data.data.air_waybills.length;
-      this.printAwb(res.data.data.air_waybills[lenght - 1].awb);
+      this.fetchInbound(i + 1);
     },
     collapseToggle(index) {
       this.orders[index].collapse = !this.orders[index].collapse;
-    },
-    countSelectedItems(index) {
-      let order = this.orders[index];
-      let items = order.item_groups.flat();
-
-      return items.filter(item => item.selected).length;
-    },
-    canCreateAwb(index) {
-      let order = this.orders[index];
-      let items = order.item_groups.flat();
-      let selectedItems = items.filter(item => item.selected);
-      let invalidItems = selectedItems.filter(item => {
-        let { item_status: itemStatus } = this.$store.state.kirimin.status;
-
-        let isWaiting = item.status === itemStatus.WAITING;
-        let isRejected = item.status === itemStatus.REJECTED;
-        let isShipping = item.status === itemStatus.SHIPPING;
-
-        return isWaiting || isRejected || isShipping;
-      });
-
-      if (selectedItems.length > 0 && invalidItems.length === 0) return true;
-
-      return false;
-    },
-    receivedItem(orderCode, itemId) {
-      this.$confirm("Are you sure to confirm this item?", "Confirm", {
-        type: "warning"
-      })
-        .then(() => {
-          this.updateItemStatus(
-            orderCode,
-            itemId,
-            this.$store.state.kirimin.status.item_status.RECEIVED
-          );
-        })
-        .catch(() => {});
-    },
-    rejectItem(orderCode, itemId) {
-      this.$confirm("Are you sure to reject this payment?", "Confirm", {
-        type: "warning"
-      })
-        .then(() => {
-          this.updateItemStatus(
-            orderCode,
-            itemId,
-            this.$store.state.kirimin.status.item_status.REJECTED
-          );
-        })
-        .catch(() => {});
     },
     printAwb(code) {
       window.open(
         `/print-awb/${code}`,
         "Kirimin - Print AWB",
-        "directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=0,resizable=0,width=800"
+        "directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=800"
       );
     },
     mappingItems(order, items) {
-      let $items = this.$util.orderItem.stringCurrency(items).map(item => {
-        let {
-          order_status: orderStatus,
-          item_status: itemStatus
-        } = this.$store.state.kirimin.status;
-
-        let isCancelOrder = order.status === orderStatus.CANCEL;
-
-        let isWaiting = item.status === itemStatus.WAITING;
-        let isRejected = item.status === itemStatus.REJECTED;
-        let isReceived = item.status === itemStatus.RECEIVED;
-
-        item["selected"] = false;
-        item["showReceivedButton"] =
-          !isCancelOrder && (isWaiting || isRejected);
-        item["showRejectButton"] = !isCancelOrder && (isWaiting || isReceived);
-
-        return item;
-      });
+      let $items = this.$util.orderItem.stringCurrency(items);
 
       return $items;
     },
-    async fetchConsolidate(page) {
+    async fetchInbound(page = 1) {
       this.__startLoading();
 
       this.pagination.page = page;
@@ -388,7 +220,6 @@ export default {
             return this.mappingItems(order, items);
           });
           order.items = this.mappingItems(order, order.items);
-
           return order;
         });
 
@@ -401,55 +232,142 @@ export default {
 
       this.__stopLoading();
     },
-    async updateItemStatus(orderCode, itemId, status) {
-      this.__startLoading();
+    onUpdateAddressDialog(id, i) {
+      this.addressEditDialog = true;
+      this.input.address = this.orders[i].receiver.address;
+      this.input.postal_code = this.orders[i].receiver.postal_code;
+      this.input.province = this.orders[i].detail.destination.province;
+      this.input.city = this.orders[i].detail.destination.city;
+      this.input.subdistrict_name = this.orders[
+        i
+      ].detail.destination.subdistrict_name;
 
-      try {
-        let res = await this.$service.order.updateItemStatus(
-          orderCode,
-          itemId,
-          {
-            status: status
+      this.detail = this.orders[i].detail;
+      this.receiver = this.orders[i].receiver;
+    },
+    updateAddress(id) {
+      // destination
+      this.detail.destination.province = this.input.province;
+      this.detail.destination.city = this.input.city;
+      this.detail.destination.subdistrict_name = this.input.subdistrict_name;
+
+      //receiver
+      this.receiver.address = this.input.address;
+      this.receiver.province = this.input.province;
+      this.receiver.city = this.input.city;
+      this.receiver.sub_district = this.input.subdistrict_name;
+      this.receiver.postal_code = this.input.postal_code;
+      this.update(id);
+    },
+    update(id) {
+      this.$authHttp
+        .put(`/order/addresses/${id}`, {
+          detail: this.detail,
+          receiver: this.receiver
+        })
+        .then(res => {
+          this.$notify({
+            title: "SUCCESS",
+            message: res.data.message,
+            type: "success"
+          });
+        })
+        .catch(err => {
+          if (err.response) {
+            this.error = true;
+            this.errorMessage = err.response.data.message
+              ? err.response.data.message
+              : err.response.statusText;
           }
-        );
-
-        this.$notify({
-          title: "SUCCESS",
-          message: res.data.message,
-          type: "success"
         });
 
-        this.orders = this.orders.map(order => {
-          if (order.id === res.data.data.id) {
-            let $order = res.data.data;
-
-            $order["collapse"] = false;
-            $order.item_groups = $order.item_groups.map(items => {
-              return this.mappingItems($order, items);
-            });
-            $order.items = this.mappingItems($order, $order.items);
-
-            return $order;
-          }
-
-          return order;
-        });
-      } catch (err) {
-        this.__handleError(this, err, true);
-      }
-
-      this.__stopLoading();
+      this.addressEditDialog = false;
+      this.fetchInbound(this.pagination.page);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.edit-address {
+  z-index: 3000 !important;
+}
+
 .ul-ref {
   padding-left: 0px;
 
   .li-ref {
     list-style: none;
+  }
+}
+
+// Style Content V2
+
+@media screen and (min-width: 320px) {
+  .row-filter-and-search {
+    flex-direction: column;
+    .filter-order,
+    .search-order {
+      width: 240px;
+    }
+    .filter-order {
+      display: none;
+    }
+    .search-order {
+      margin-top: 1rem;
+    }
+  }
+}
+
+@media (min-width: 360px) {
+  .row-filter-and-search {
+    .filter-order,
+    .search-order {
+      width: 280px !important;
+    }
+  }
+}
+
+@media (min-width: 375px) {
+  .row-filter-and-search {
+    .filter-order,
+    .search-order {
+      width: 294px !important;
+    }
+  }
+}
+
+@media (min-width: 411px) {
+  .row-filter-and-search {
+    .filter-order,
+    .search-order {
+      width: 326px !important;
+    }
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .row-filter-and-search {
+    .filter-order,
+    .search-order {
+      width: 486px !important;
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .row-filter-and-search {
+    flex-direction: row;
+    .el-col-6 {
+      width: 100%;
+    }
+    .search-order {
+      margin-top: 0;
+      margin-left: auto;
+    }
+    .filter-order {
+      display: flex;
+    }
   }
 }
 </style>
