@@ -10,7 +10,7 @@
         <div class="uk-width-expand">
           <div class="app--card-header_title">
             <h3>
-              <span>Inbound Simplefield</span>
+              <span>In Progres</span>
               <el-badge :value="pagination.total"></el-badge>
             </h3>
           </div>
@@ -30,11 +30,11 @@
             start-placeholder="Start date"
             end-placeholder="End date"
           ></el-date-picker>
-          <el-button slot="append" icon="el-icon-search" @click="fetchInbound"></el-button>
+          <el-button slot="append" icon="el-icon-search" @click="fetchInprogres"></el-button>
         </div>
         <div class="uk-width-1-3 uk-margin-auto-left">
-          <el-input v-model="filter.search" placeholder="Search..." @keyup.enter="fetchInbound">
-            <el-button slot="append" icon="el-icon-search" @click="fetchInbound"></el-button>
+          <el-input v-model="filter.search" placeholder="Search..." @keyup.enter="fetchInprogres">
+            <el-button slot="append" icon="el-icon-search" @click="fetchInprogres"></el-button>
           </el-input>
         </div>
       </div>
@@ -243,12 +243,12 @@ export default {
     //     .format("YYYY-MM-DD")
     // ];
 
-    this.fetchInbound(this.pagination.page);
+    this.fetchInprogres(this.pagination.page);
   },
 
   methods: {
     onChangePagination(i) {
-      this.fetchInbound(i + 1);
+      this.fetchInprogres(i + 1);
     },
 
     onLoadDataPagination() {},
@@ -363,13 +363,13 @@ export default {
 
       return $items;
     },
-    async fetchInbound(page) {
+    async fetchInprogres(page) {
       this.__startLoading();
 
       this.pagination.page = page;
 
       try {
-        let res = await this.$service.inbound.getNew(
+        let res = await this.$service.inbound.getInprogres(
           {
             search: this.filter.search,
             time: this.filter.time

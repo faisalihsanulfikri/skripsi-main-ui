@@ -10,7 +10,7 @@
         <div class="uk-width-expand">
           <div class="app--card-header_title">
             <h3>
-              <span>Inbound Simplefield</span>
+              <span>With Issue</span>
               <el-badge :value="pagination.total"></el-badge>
             </h3>
           </div>
@@ -30,11 +30,11 @@
             start-placeholder="Start date"
             end-placeholder="End date"
           ></el-date-picker>
-          <el-button slot="append" icon="el-icon-search" @click="fetchInbound"></el-button>
+          <el-button slot="append" icon="el-icon-search" @click="fetchNoteissues"></el-button>
         </div>
         <div class="uk-width-1-3 uk-margin-auto-left">
-          <el-input v-model="filter.search" placeholder="Search..." @keyup.enter="fetchInbound">
-            <el-button slot="append" icon="el-icon-search" @click="fetchInbound"></el-button>
+          <el-input v-model="filter.search" placeholder="Search..." @keyup.enter="fetchNoteissues">
+            <el-button slot="append" icon="el-icon-search" @click="fetchNoteissues"></el-button>
           </el-input>
         </div>
       </div>
@@ -142,9 +142,13 @@
                               <td colspan="3">
                                 <table class="uk-table uk-table-small">
                                   <tr>
-                                    <td colspan="5">
+                                    <td colspan="2">
                                       <div class="app--list-label">Reference</div>
                                       <div class="app--list-text">{{ items[0].reference }}</div>
+                                    </td>
+                                    <td colspan="2">
+                                    <div class="app--list-label">Issue</div>
+                                    <div class="app--list-text">{{order.note_issues}}</div>
                                     </td>
                                   </tr>
                                 </table>
@@ -243,12 +247,12 @@ export default {
     //     .format("YYYY-MM-DD")
     // ];
 
-    this.fetchInbound(this.pagination.page);
+    this.fetchNoteissues(this.pagination.page);
   },
 
   methods: {
     onChangePagination(i) {
-      this.fetchInbound(i + 1);
+      this.fetchNoteissues(i + 1);
     },
 
     onLoadDataPagination() {},
@@ -363,13 +367,13 @@ export default {
 
       return $items;
     },
-    async fetchInbound(page) {
+    async fetchNoteissues(page) {
       this.__startLoading();
 
       this.pagination.page = page;
 
       try {
-        let res = await this.$service.inbound.getNew(
+        let res = await this.$service.inbound.getNoteissues(
           {
             search: this.filter.search,
             time: this.filter.time
@@ -401,45 +405,6 @@ export default {
 
       this.__stopLoading();
     },
-    async updateItemStatus(orderCode, itemId, status) {
-      this.__startLoading();
-
-      try {
-        let res = await this.$service.order.updateItemStatus(
-          orderCode,
-          itemId,
-          {
-            status: status
-          }
-        );
-
-        this.$notify({
-          title: "SUCCESS",
-          message: res.data.message,
-          type: "success"
-        });
-
-        this.orders = this.orders.map(order => {
-          if (order.id === res.data.data.id) {
-            let $order = res.data.data;
-
-            $order["collapse"] = false;
-            $order.item_groups = $order.item_groups.map(items => {
-              return this.mappingItems($order, items);
-            });
-            $order.items = this.mappingItems($order, $order.items);
-
-            return $order;
-          }
-
-          return order;
-        });
-      } catch (err) {
-        this.__handleError(this, err, true);
-      }
-
-      this.__stopLoading();
-    }
   }
 };
 </script>

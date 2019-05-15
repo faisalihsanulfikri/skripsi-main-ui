@@ -367,6 +367,43 @@ const area = {
 
 };
 
+const inbound ={
+  getNew(params = {}, page) {
+    return Vue.authHttp().get("/admin/inbound?page=" + page, {
+      params
+    });
+  },
+  getInprogres(params = {}, page) {
+    return Vue.authHttp().get("/admin/inbound/inprogres?page=" + page, {
+      params
+    });
+  },
+  getConsolidate(params = {}, page) {
+    return Vue.authHttp().get("/admin/inbound/consolidate?page=" + page, {
+      params
+    });
+  },
+  getNoteissues(params = {}, page) {
+    return Vue.authHttp().get("/admin/inbound/noteissues?page=" + page, {
+      params
+    });
+  },
+  find(code) {
+    return Vue.authHttp().get(`/orders/${code}`);
+  },
+  createKirimin(data = {}) {
+    return Vue.authHttp().post("/orders/kirimin", data);
+  },
+  createKiriminFromAgent(data = {}) {
+    return Vue.authHttp().post("/agent/orders/kirimin", data);
+  },
+  updateItemStatus(orderCode = null, itemId = null, data = {}) {
+    return Vue.authHttp().put(
+      `/orders/${orderCode}/items/${itemId}/status`,
+      data
+    );
+  }
+}
 
 const importExcel = {
   store(data = {}) {
@@ -398,6 +435,7 @@ const services = {
   forgot,
   invoice,
   manifest,
+  inbound,
   order,
   orderAirWaybill,
   payment,
