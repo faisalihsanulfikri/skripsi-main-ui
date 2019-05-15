@@ -467,6 +467,7 @@ export default {
         volumeUnits: "cm"
       },
       input: {
+        user_id: "",
         customer: "",
         customerName: "",
         customerString: "",
@@ -862,11 +863,14 @@ export default {
       this.check();
     },
     async check() {
+      console.log(this.input.customer);
+
       if (this.application.loading) return;
 
       this.__startLoading();
 
       try {
+        this.input.user_id = this.input.customer;
         let res = await this.$service.calculator.check(this.input);
 
         this.cost = res.data.result.cost;
