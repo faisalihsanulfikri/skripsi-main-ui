@@ -21,6 +21,10 @@
         <td style="width:100px">Status</td>
         <td>{{ order.status }}</td>
       </tr>
+      <tr>
+        <td style="width:100px">With Issue</td>
+        <td>{{ order.note_issues }}</td>
+      </tr>
     </table>
   </div>
 </template>

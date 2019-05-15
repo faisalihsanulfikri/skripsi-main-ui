@@ -187,6 +187,58 @@ Vue.mixin({
       });
     },
 
+    __fetchInbound() {
+      return new Promise((resolve, reject) => {
+        Vue.authHttp('/admin/inbound')
+          .get("/admin/inbound")
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
+
+    __fetchInprogres() {
+      return new Promise((resolve, reject) => {
+        Vue.authHttp('/admin/inbound/inprogres')
+          .get("/admin/inbound/inprogres")
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
+
+    __fetchConsolidate() {
+      return new Promise((resolve, reject) => {
+        Vue.authHttp('/admin/inbound/consolidate')
+          .get("/admin/inbound/consolidate")
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
+
+    __fetchNoteissues() {
+      return new Promise((resolve, reject) => {
+        Vue.authHttp('/admin/inbound/noteissues')
+          .get("/admin/inbound/noteissues")
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
+
     __fetchProvincesLocationCode() {
       return new Promise((resolve, reject) => {
         Vue.authHttp()
