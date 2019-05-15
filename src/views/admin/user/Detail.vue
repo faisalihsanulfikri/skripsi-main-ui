@@ -76,19 +76,51 @@
             uk-grid
             uk-height-match="target: .uk-card-body"
           >
+            <!-- primary address -->
             <div v-for="(address, index) in addresses" :key="address.id">
-              <div class="uk-card uk-card-default uk-card-small">
-                <div v-if="index === 0" class="is-favorite">
+              <div v-if="address.primary == 1" class="uk-card uk-card-default uk-card-small">
+                <div class="is-favorite">
                   <div class="uk-card-body">
-                    <div class="marker">
-                      <img src="/img/set-favorite-address-icon.png" alt="set favorite address icon">
-                    </div>
+                    <p>Primary Address</p>
                     <h4>{{ address.alias }}</h4>
                     <p>{{ `${address.province}, ${address.city}, ${address.sub_district}, ${address.address}, ${address.postal_code}` }}</p>
                     <p>{{ `${address.name} - ${address.phone}` }}</p>
                   </div>
                 </div>
-                <div v-else>
+                <div class="uk-card-footer uk-text-right">
+                  <el-tooltip
+                    :content="address.primary ? 'Alamat Utama': 'Set Alamat Utama'"
+                    placement="top"
+                  >
+                    <a
+                      :class="address.primary ? 'primary-address': 'non-primary-address'"
+                      href="#"
+                      @click.prevent="setPrimaryAddress(index)"
+                    >
+                      <font-awesome-icon icon="star" class="icon"/>
+                    </a>
+                  </el-tooltip>
+                  <el-tooltip content="Ubah" placement="top">
+                    <a class="uk-margin-left" href="#" @click.prevent="editAddress(index)">
+                      <font-awesome-icon icon="edit" class="icon"/>
+                    </a>
+                  </el-tooltip>
+                  <el-tooltip content="Hapus" placement="top">
+                    <a
+                      class="uk-text-danger uk-margin-left"
+                      href="#"
+                      @click.prevent="showConfirmDelete(index)"
+                    >
+                      <font-awesome-icon icon="trash-alt" class="icon"/>
+                    </a>
+                  </el-tooltip>
+                </div>
+              </div>
+            </div>
+            <!-- list -->
+            <div v-for="(address, index) in addresses" :key="address.id">
+              <div v-if="address.primary == 0" class="uk-card uk-card-default uk-card-small">
+                <div>
                   <div class="uk-card-body">
                     <h4>{{ address.alias }}</h4>
                     <p>{{ `${address.province}, ${address.city}, ${address.sub_district}, ${address.address}, ${address.postal_code}` }}</p>
@@ -296,7 +328,7 @@ export default {
           this.fetchAddresses();
 
           this.$notify({
-            title: "SUCCESS",
+            title: "SUCCESS", /// wkwkwkwkkwwhahhaha
             message: res.data.message,
             type: "success"
           });
