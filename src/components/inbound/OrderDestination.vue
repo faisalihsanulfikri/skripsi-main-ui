@@ -1,6 +1,6 @@
 <template>
   <div class="order-location">
-    <h5>Hongkong</h5>
+    <h5>{{ warehouse.name }}</h5>
     <h6>Destination Address:</h6>
     <address>
       <span>{{ receiver.name }}</span>
@@ -20,9 +20,8 @@
 export default {
   name: "OrderLocation",
   props: {
-    receiver: {
-      type: Object
-    }
+    receiver: { type: Object },
+    warehouse: { type: Object }
   }
 };
 </script>
