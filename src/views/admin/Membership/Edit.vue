@@ -17,12 +17,16 @@
     </div>
     <div class="uk-card-body">
       <div class="uk-margin">
-        <label class="uk-form-label">Nama Paket</label>
-        <el-input v-model="input.nama_paket" name="nama_paket"></el-input>
+        <label class="uk-form-label">Name</label>
+        <el-input v-model="input.name" name="name" readonly></el-input>
       </div>
       <div class="uk-margin">
-        <label class="uk-form-label">Harga Paket</label>
-        <el-input v-model="input.harga_paket" name="harga_paket"></el-input>
+        <label class="uk-form-label">Base Price</label>
+        <el-input v-model="input.base_price" name="base_price"></el-input>
+      </div>
+      <div class="uk-margin">
+        <label class="uk-form-label">Base factory</label>
+        <el-input v-model="input.base_factor" name="base_factor"></el-input>
       </div>
     </div>
     <div class="uk-card-footer uk-text-right">
@@ -38,8 +42,9 @@ export default {
       edit: false,
       title: "New Memberships",
       input: {
-        nama_paket: "",
-        harga_paket: ""
+        name: "",
+        base_price: "",
+        base_factor: "",
       },
       error: false,
       errorMessage: ""
