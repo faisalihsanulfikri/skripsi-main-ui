@@ -16,7 +16,7 @@
           <ios-list-box-icon w="24px" h="24px" class="ionicon"/>
           <span>INBOUND</span>
         </template>
-        <el-menu-item index="/admin/inbound/new">All</el-menu-item>
+        <el-menu-item index="/admin/inbound">All</el-menu-item>
         <el-menu-item index="/admin/inbound/consolidate">Consolidate</el-menu-item>
         <el-menu-item index="/admin/inbound/inprogres">In Progress</el-menu-item>
         <el-menu-item index="/admin/inbound/noteissues">With Issue</el-menu-item>
@@ -70,7 +70,7 @@
         <el-menu-item index="/admin/users/agent">Agent</el-menu-item>
         <el-menu-item index="/admin/users/admin">Admin</el-menu-item>
         <el-menu-item index="/admin/user/create">Add User</el-menu-item>
-        <el-menu-item index="/admin/membership">MemberShip</el-menu-item>
+        <el-menu-item index="/admin/membership">Level</el-menu-item>
       </el-submenu>
 
       <el-menu-item v-if="level == 0" index="/admin/pages">
