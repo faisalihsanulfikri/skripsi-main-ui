@@ -70,7 +70,7 @@
         <el-menu-item index="/admin/users/agent">Agent</el-menu-item>
         <el-menu-item index="/admin/users/admin">Admin</el-menu-item>
         <el-menu-item index="/admin/user/create">Add User</el-menu-item>
-        <el-menu-item index="/admin/membership">Level</el-menu-item>
+        <el-menu-item v-if="level == 0" index="/admin/membership">Level</el-menu-item>
       </el-submenu>
 
       <el-menu-item v-if="level == 0" index="/admin/pages">
