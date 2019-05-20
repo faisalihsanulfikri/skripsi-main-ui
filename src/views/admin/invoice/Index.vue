@@ -273,21 +273,21 @@ export default {
     collapseToggle(index) {
       this.invoices[index].collapse = !this.invoices[index].collapse;
     },
-    confirmPayment(paymentId) {
+    confirmPayment(payment) {
       this.$confirm("Are you sure to confirm this payment?", "Confirm", {
         type: "warning"
       })
         .then(() => {
-          this.updatePaymentStatus(paymentId, "confirmed");
+          this.updatePaymentStatus(payment, "confirmed");
         })
         .catch(() => {});
     },
-    rejectPayment(paymentId) {
+    rejectPayment(payment) {
       this.$confirm("Are you sure to reject this payment?", "Confirm", {
         type: "warning"
       })
         .then(() => {
-          this.updatePaymentStatus(paymentId, "rejected");
+          this.updatePaymentStatus(payment, "rejected");
         })
         .catch(() => {});
     },
