@@ -44,7 +44,7 @@ export default {
       input: {
         name: "",
         base_price: "",
-        base_factor: "",
+        base_factor: ""
       },
       error: false,
       errorMessage: ""
