@@ -339,6 +339,8 @@ export default {
     async update() {
       this.__startLoading();
 
+      console.log(this.input.level_name);
+
       this.error = false;
       this.errorMessage = "";
 
@@ -350,12 +352,12 @@ export default {
 
         this.$notify({
           title: "SUCCESS",
-          message: res.data.message,
+          message: res.data.url.message,
           type: "success"
         });
 
         this.$router.push({
-          path: "/admin"
+          path: res.data.url
         });
       } catch (err) {
         this.__handleError(this, err, true);
