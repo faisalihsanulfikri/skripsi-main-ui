@@ -107,6 +107,22 @@
             >{{ errors.first('level') }}</small>
           </div>
 
+                    <div class="uk-margin">
+            <label class="uk-form-label">Base Factor (vip special treatment)</label>
+            <input
+              v-model="input.base_factor"
+              v-validate="rules.base_factor"
+              name="base_factor"
+              class="uk-input"
+              type="text"
+              placeholder="Berat per gram"
+            >
+            <small
+              v-if="errors.first('base_factor')"
+              class="uk-margin-small uk-text-danger"
+            >{{ errors.first('base_factor') }}</small>
+          </div>
+
           <div class="uk-margin">
             <label class="uk-form-label">Active</label>
             <div class="req-doc">
@@ -165,6 +181,7 @@ export default {
         password: "",
         passwordConfirmation: "",
         phone: "",
+        base_factor:"",
         gender: "",
         birthdate: "",
         birthdateSplited: {
