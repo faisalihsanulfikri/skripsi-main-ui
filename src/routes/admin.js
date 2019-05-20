@@ -30,6 +30,10 @@ import PromoCodeCreate from '../views/admin/master/promo-code/Create'
 import Membership from '../views/admin/Membership/Index'
 import MembershipCreate from '../views/admin/Membership/Create'
 import MemberShipedit from '../views/admin/Membership/Edit'
+import Inboundnew from '../views/admin/inbound/new'
+import Inboundinprogres from '../views/admin/inbound/inprogres'
+import Inboundconsolidate from '../views/admin/inbound/consolidate'
+import Inboundnoteissues from '../views/admin/inbound/noteissues'
 
 import {
   ADMIN,
@@ -310,6 +314,46 @@ export default {
       meta: {
         auth: true,
         level: [ADMIN, SUPER_ADMIN]
+      }
+    },
+    
+    {
+      path: "inbound/new",
+      name: "inbound-new",
+      component: Inboundnew,
+      meta: {
+        auth: true,
+        level: [SUPER_ADMIN,ADMIN]
+      }
+    },
+
+    {
+      path: "inbound/consolidate",
+      name: "inbound-consolidate",
+      component: Inboundconsolidate,
+      meta: {
+        auth: true,
+        level: [SUPER_ADMIN,ADMIN]
+      }
+    },
+
+    {
+      path: "inbound/inprogres",
+      name: "inbound-inprogres",
+      component: Inboundinprogres,
+      meta: {
+        auth: true,
+        level: [SUPER_ADMIN,ADMIN]
+      }
+    },
+
+    {
+      path: "inbound/noteissues",
+      name: "inbound-noteissues",
+      component: Inboundnoteissues,
+      meta: {
+        auth: true,
+        level: [SUPER_ADMIN,ADMIN]
       }
     },
 
