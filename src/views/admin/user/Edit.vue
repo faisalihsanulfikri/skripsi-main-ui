@@ -111,7 +111,6 @@
             <label class="uk-form-label">Base Factor (vip special treatment)</label>
             <input
               v-model="input.base_factor"
-              v-validate="rules.base_factor"
               name="base_factor"
               class="uk-input"
               type="text"
