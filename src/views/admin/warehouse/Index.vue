@@ -31,6 +31,7 @@
               <th>Name</th>
               <th class="uk-text-right">Price (USD)</th>
               <th class="uk-text-center" width="100">Actions</th>
+              <th class="uk-text-center" width="100">Status</th>
             </tr>
           </thead>
           <tbody>
@@ -62,6 +63,14 @@
                     <font-awesome-icon icon="trash-alt"></font-awesome-icon>
                   </a>
                 </td>
+                <td class="uk-text-center">
+                  <el-switch
+                    v-model="warehouse.isEnable"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    @change="updateWarehouseStatus(index)"
+                  ></el-switch>
+                </td>
               </tr>
               <tr v-show="!warehouse.collapse" :key="`d${index}`">
                 <td></td>
@@ -91,14 +100,45 @@ export default {
     this.fetchWareHouses();
   },
   methods: {
-    fetchWareHouses() {
-      this.$authHttp.get(`/warehouses`).then(res => {
-        this.warehouses = res.data.data.map(warehouse => {
-          warehouse["collapse"] = true;
+    /**
+     * Update warehouse status: Disable atau Enable
+     */
+    async updateWarehouseStatus(index) {
+      const wsData = this.warehouses[index];
+      const wsCode = wsData.code;
 
-          return warehouse;
+      wsData.status = wsData.isEnable ? "enable" : "disable";
+
+      return this.$service.warehouse
+        .update(wsCode, wsData)
+        .then(res => {
+          this.$notify({
+            type: "success",
+            title: "Success",
+            message: res.data.message
+          });
+        })
+        .catch(err => {
+          this.$notify({
+            type: "error",
+            title: "Error",
+            message: err.message
+          });
         });
-      });
+    },
+    fetchWareHouses() {
+      this.$authHttp
+        .get(`/warehouses`)
+        .then(res => {
+          this.warehouses = res.data.data.map(warehouse => {
+            warehouse["collapse"] = true;
+            warehouse["isEnable"] = warehouse.status == "enable" ? true : false;
+            return warehouse;
+          });
+        })
+        .catch(err => {
+          this.__handleError(this, err, true);
+        });
     },
     async delete(id) {
       this.error = false;
