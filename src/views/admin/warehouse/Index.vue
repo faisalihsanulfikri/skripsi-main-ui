@@ -100,32 +100,6 @@ export default {
     this.fetchWareHouses();
   },
   methods: {
-    /**
-     * Update warehouse status: Disable atau Enable
-     */
-    async updateWarehouseStatus(index) {
-      const wsData = this.warehouses[index];
-      const wsCode = wsData.code;
-
-      wsData.status = wsData.isEnable ? "enable" : "disable";
-
-      return this.$service.warehouse
-        .update(wsCode, wsData)
-        .then(res => {
-          this.$notify({
-            type: "success",
-            title: "Success",
-            message: res.data.message
-          });
-        })
-        .catch(err => {
-          this.$notify({
-            type: "error",
-            title: "Error",
-            message: err.message
-          });
-        });
-    },
     fetchWareHouses() {
       this.$authHttp
         .get(`/warehouses`)
@@ -171,6 +145,34 @@ export default {
     },
     collapseToggle(index) {
       this.warehouses[index].collapse = !this.warehouses[index].collapse;
+    },
+
+    /**
+     * Update warehouse status: Disable or Enable
+     * @param {Number} index
+     */
+    async updateWarehouseStatus(index) {
+      const wsData = this.warehouses[index];
+      const wsCode = wsData.code;
+
+      wsData.status = wsData.isEnable ? "enable" : "disable";
+
+      return this.$service.warehouse
+        .update(wsCode, wsData)
+        .then(res => {
+          this.$notify({
+            type: "success",
+            title: "Success",
+            message: res.data.message
+          });
+        })
+        .catch(err => {
+          this.$notify({
+            type: "error",
+            title: "Error",
+            message: err.message
+          });
+        });
     }
   }
 };
