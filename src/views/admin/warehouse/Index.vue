@@ -105,8 +105,12 @@ export default {
         .get(`/warehouses`)
         .then(res => {
           this.warehouses = res.data.data.map(warehouse => {
+            let priceConfig = warehouse.priceConfig;
+
             warehouse["collapse"] = true;
             warehouse["isEnable"] = warehouse.status == "enable" ? true : false;
+            warehouse["price_config"] = JSON.parse(priceConfig);
+
             return warehouse;
           });
         })
