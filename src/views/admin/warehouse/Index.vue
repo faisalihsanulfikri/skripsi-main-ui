@@ -29,7 +29,7 @@
               <th></th>
               <th width="100">Code</th>
               <th>Name</th>
-              <th class="uk-text-right">Price (USD)</th>
+              <th class="uk-text-right">Price VIP</th>
               <th class="uk-text-center" width="100">Actions</th>
             </tr>
           </thead>
@@ -47,7 +47,7 @@
                 </td>
                 <td>{{ warehouse.code }}</td>
                 <td>{{ warehouse.name }}</td>
-                <td class="uk-text-right">{{ warehouse.price }}</td>
+                <td class="uk-text-right">{{ warehouse.price_config.vip }}</td>
                 <td class="uk-text-center">
                   <router-link
                     :to="{ name: 'admin-warehouse-edit', params: { id: warehouse.code } }"
