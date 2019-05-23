@@ -29,8 +29,8 @@
               <th></th>
               <th width="100">Code</th>
               <th>Name</th>
-              <!-- <th class="uk-text-right">Price VIP</th>
-              <th class="uk-text-right">Price Regular</th>-->
+              <th class="uk-text-right" width="100">Price VIP</th>
+              <th class="uk-text-right" width="100">Price Regular</th>
               <th class="uk-text-center" width="100">Actions</th>
               <th class="uk-text-center" width="100">Status</th>
             </tr>
@@ -49,8 +49,8 @@
                 </td>
                 <td>{{ warehouse.code }}</td>
                 <td>{{ warehouse.name }}</td>
-                <!-- <td class="uk-text-right">{{ warehouse.price_config.vip }}</td>
-                <td class="uk-text-right">{{ warehouse.price_config.regular }}</td>-->
+                <td class="uk-text-right">${{ warehouse.price_config.vip }}</td>
+                <td class="uk-text-right">${{ warehouse.price_config.regular }}</td>
                 <td class="uk-text-center">
                   <router-link
                     :to="{ name: 'admin-warehouse-edit', params: { id: warehouse.code } }"
@@ -107,11 +107,11 @@ export default {
         .get(`/warehouses`)
         .then(res => {
           this.warehouses = res.data.data.map(warehouse => {
-            // let priceConfig = warehouse.price_config;
+            let priceConfig = warehouse.price_config;
 
             warehouse["collapse"] = true;
             warehouse["isEnable"] = warehouse.status == "enable" ? true : false;
-            // warehouse["price_config"] = JSON.parse(priceConfig);
+            warehouse["price_config"] = JSON.parse(priceConfig);
 
             return warehouse;
           });
