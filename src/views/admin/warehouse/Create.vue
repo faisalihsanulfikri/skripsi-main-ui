@@ -19,7 +19,7 @@
     <div class="uk-card-body">
       <div class="uk-margin">
         <label class="uk-form-label">Code</label>
-        <el-input v-model="input.code" :disabled="this.$route.params.id"></el-input>
+        <el-input v-model="input.code" :disabled="this.$route.params.id ? true : false"></el-input>
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Name</label>
@@ -34,8 +34,24 @@
         <el-input v-model="input.address" type="textarea" rows="5"></el-input>
       </div>
       <div class="uk-margin">
+        <label class="uk-form-label">City</label>
+        <el-input v-model="input.city"></el-input>
+      </div>
+      <div class="uk-margin">
+        <label class="uk-form-label">State</label>
+        <el-input v-model="input.state"></el-input>
+      </div>
+      <div class="uk-margin">
+        <label class="uk-form-label">Country</label>
+        <el-input v-model="input.country"></el-input>
+      </div>
+      <div class="uk-margin">
         <label class="uk-form-label">Zip Code</label>
         <el-input v-model="input.zip_code"></el-input>
+      </div>
+      <div class="uk-margin">
+        <label class="uk-form-label">Phone</label>
+        <el-input v-model="input.phone" type="tel"></el-input>
       </div>
       <el-alert v-if="error" title="ERROR" type="error" :description="errorMessage" show-icon></el-alert>
     </div>
@@ -56,7 +72,11 @@ export default {
         name: "",
         price: "",
         address: "",
-        zip_code: ""
+        city: "",
+        state: "",
+        zip_code: "",
+        phone: "",
+        country: ""
       },
       error: false,
       errorMessage: ""

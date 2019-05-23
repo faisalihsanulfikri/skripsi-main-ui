@@ -29,8 +29,10 @@
               <th></th>
               <th width="100">Code</th>
               <th>Name</th>
-              <th class="uk-text-right">Price (USD)</th>
+              <th class="uk-text-right" width="100">Price VIP</th>
+              <th class="uk-text-right" width="100">Price Regular</th>
               <th class="uk-text-center" width="100">Actions</th>
+              <th class="uk-text-center" width="100">Status</th>
             </tr>
           </thead>
           <tbody>
@@ -47,7 +49,8 @@
                 </td>
                 <td>{{ warehouse.code }}</td>
                 <td>{{ warehouse.name }}</td>
-                <td class="uk-text-right">{{ warehouse.price }}</td>
+                <td class="uk-text-right">${{ warehouse.price_config.vip }}</td>
+                <td class="uk-text-right">${{ warehouse.price_config.regular }}</td>
                 <td class="uk-text-center">
                   <router-link
                     :to="{ name: 'admin-warehouse-edit', params: { id: warehouse.code } }"
@@ -61,6 +64,14 @@
                   >
                     <font-awesome-icon icon="trash-alt"></font-awesome-icon>
                   </a>
+                </td>
+                <td class="uk-text-center">
+                  <el-switch
+                    v-model="warehouse.isEnable"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    @change="updateWarehouseStatus(index)"
+                  ></el-switch>
                 </td>
               </tr>
               <tr v-show="!warehouse.collapse" :key="`d${index}`">
@@ -92,13 +103,22 @@ export default {
   },
   methods: {
     fetchWareHouses() {
-      this.$authHttp.get(`/warehouses`).then(res => {
-        this.warehouses = res.data.data.map(warehouse => {
-          warehouse["collapse"] = true;
+      this.$authHttp
+        .get(`/warehouses`)
+        .then(res => {
+          this.warehouses = res.data.data.map(warehouse => {
+            let priceConfig = warehouse.price_config;
 
-          return warehouse;
+            warehouse["collapse"] = true;
+            warehouse["isEnable"] = warehouse.status == "enable" ? true : false;
+            warehouse["price_config"] = JSON.parse(priceConfig);
+
+            return warehouse;
+          });
+        })
+        .catch(err => {
+          this.__handleError(this, err, true);
         });
-      });
     },
     async delete(id) {
       this.error = false;
@@ -131,6 +151,34 @@ export default {
     },
     collapseToggle(index) {
       this.warehouses[index].collapse = !this.warehouses[index].collapse;
+    },
+
+    /**
+     * Update warehouse status: Disable or Enable
+     * @param {Number} index
+     */
+    async updateWarehouseStatus(index) {
+      const wsData = this.warehouses[index];
+      const wsCode = wsData.code;
+
+      wsData.status = wsData.isEnable ? "enable" : "disable";
+
+      return this.$service.warehouse
+        .update(wsCode, wsData)
+        .then(res => {
+          this.$notify({
+            type: "success",
+            title: "Success",
+            message: res.data.message
+          });
+        })
+        .catch(err => {
+          this.$notify({
+            type: "error",
+            title: "Error",
+            message: err.message
+          });
+        });
     }
   }
 };
