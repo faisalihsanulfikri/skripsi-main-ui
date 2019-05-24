@@ -162,6 +162,7 @@ export default {
       const wsCode = wsData.code;
 
       wsData.status = wsData.isEnable ? "enable" : "disable";
+      wsData.price_config = JSON.stringify(wsData.price_config);
 
       return this.$service.warehouse
         .update(wsCode, wsData)
