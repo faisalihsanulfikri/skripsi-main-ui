@@ -34,6 +34,10 @@
         <el-input v-model="input.address" type="textarea" rows="5"></el-input>
       </div>
       <div class="uk-margin">
+        <label class="uk-form-label">Native Address</label>
+        <el-input v-model="input.native_address" type="textarea" rows="5"></el-input>
+      </div>
+      <div class="uk-margin">
         <label class="uk-form-label">City</label>
         <el-input v-model="input.city"></el-input>
       </div>
