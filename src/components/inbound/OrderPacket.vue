@@ -14,19 +14,46 @@
             <td class="uk-text-right" width="200">Rp. {{ items[0].stringPrice }}</td>
           </tr>
           <tr :key="`${groupIndex}_goods`">
-            <td colspan="3">
+            <td colspan="6">
               <table class="uk-table uk-table-small">
-                <tr>
-                  <td colspan="3">
-                    <div class="app--list-label">Reference</div>
-                    <div class="app--list-text">{{ items[0].reference }}</div>
-                  </td>
-                </tr>
-                <tr v-for="(item, itemIndex) in items" :key="itemIndex">
-                  <td>{{ item.name }}</td>
-                  <td width="100">{{ item.stringQuantity }} {{ item.unit }}</td>
-                  <td class="uk-text-center" width="100">{{ item.status }}</td>
-                </tr>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th class="uk-text-center">Price</th>
+                    <th class="uk-text-center">Qty</th>
+                    <th class="uk-text-center">Unit</th>
+                    <th class="uk-text-center">Total Price</th>
+                    <th class="uk-text-center">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, itemIndex) in items" :key="itemIndex">
+                    <td>{{ item.name }}</td>
+                    <td class="uk-text-right">
+                      Rp.
+                      {{ item.price_user | currency('', 2, { thousandsSeparator: '.',
+                      decimalSeparator:
+                      ',' }) }}
+                    </td>
+                    <td class="uk-text-center">{{ item.quantity }}</td>
+                    <td class="uk-text-center" width="100">{{ item.stringQuantity }} {{ item.unit }}</td>
+                    <td class="uk-text-right">
+                      Rp.
+                      {{ item.price | currency('', 2, { thousandsSeparator: '.',
+                      decimalSeparator:
+                      ',' }) }}
+                    </td>
+                    <td class="uk-text-center" width="100">{{ item.status }}</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr>
+                    <td colspan="6">
+                      <div class="app--list-label">Reference</div>
+                      <div class="app--list-text">{{ items[0].reference }}</div>
+                    </td>
+                  </tr>
+                </tbody>
               </table>
             </td>
           </tr>
