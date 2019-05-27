@@ -330,6 +330,9 @@ const warehouse = {
   },
   delete(id) {
     return Vue.authHttp().delete(`/warehouses/${id}`);
+  },
+  updateStatus(code = null, data = {}) {
+    return Vue.authHttp().put(`/warehouses/${code}/status`, data);
   }
 };
 

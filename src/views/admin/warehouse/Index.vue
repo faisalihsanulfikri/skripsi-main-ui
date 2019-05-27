@@ -160,12 +160,12 @@ export default {
     async updateWarehouseStatus(index) {
       const wsData = this.warehouses[index];
       const wsCode = wsData.code;
+      const wsStatus = wsData.isEnable ? "enable" : "disable";
 
-      wsData.status = wsData.isEnable ? "enable" : "disable";
-      wsData.price_config = JSON.stringify(wsData.price_config);
+      console.log(wsCode, wsStatus);
 
-      return this.$service.warehouse
-        .update(wsCode, wsData)
+      return this.$service
+        .put(wsCode, { status: wsStatus })
         .then(res => {
           this.$notify({
             type: "success",
