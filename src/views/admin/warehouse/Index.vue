@@ -55,7 +55,7 @@
                   <router-link
                     :to="{ name: 'admin-warehouse-edit', params: { id: warehouse.code } }"
                   >
-                    <font-awesome-icon icon="edit"></font-awesome-icon>
+                    <font-awesome-icon icon="edit" @change="updateWarehouse(index)"></font-awesome-icon>
                   </router-link>
                   <a
                     class="uk-margin-small-left uk-text-danger"
@@ -151,6 +151,9 @@ export default {
     },
     collapseToggle(index) {
       this.warehouses[index].collapse = !this.warehouses[index].collapse;
+    },
+    async updateWarehouse(index) {
+      const wh = this.warehouses[index];
     },
 
     /**
