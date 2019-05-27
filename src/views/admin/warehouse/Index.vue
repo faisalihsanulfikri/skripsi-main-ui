@@ -167,8 +167,8 @@ export default {
 
       console.log(wsCode, wsStatus);
 
-      return this.$service
-        .put(wsCode, { status: wsStatus })
+      return this.$service.warehouse
+        .updateStatus(wsCode, { status: wsStatus })
         .then(res => {
           this.$notify({
             type: "success",
