@@ -346,6 +346,11 @@ const memberships ={
   update(id = null, data = {}) {
     return Vue.authHttp().put(`/memberships/${id}`, data);
   },
+  updatePrice(id = null, data = {}) {
+    return Vue.authHttp().put(`/warehouse/config_price/${id}`, {
+      price_config: this.price_config
+    });
+  },
   delete(id) {
     return Vue.authHttp().delete(`/memberships/${id}`);
   }
