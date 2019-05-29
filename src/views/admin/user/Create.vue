@@ -114,6 +114,20 @@
               class="uk-margin-small uk-text-danger"
             >{{ errors.first('phone') }}</small>
           </div>
+                              <div class="uk-margin">
+            <label class="uk-form-label">Base Factor (vip special treatment)</label>
+            <input
+              v-model="input.base_factor"
+              name="base_factor"
+              class="uk-input"
+              type="text"
+              placeholder="Berat per gram"
+            >
+            <small
+              v-if="errors.first('base_factor')"
+              class="uk-margin-small uk-text-danger"
+            >{{ errors.first('base_factor') }}</small>
+          </div>
 
           <el-alert v-if="error" title="ERROR" type="error" :description="errorMessage" show-icon></el-alert>
 
@@ -139,6 +153,7 @@ export default {
         email: "",
         password: "",
         passwordConfirmation: "",
+        base_factor:"",
         phone: "",
         active: "1",
         level: "",
