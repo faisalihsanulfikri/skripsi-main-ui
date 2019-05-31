@@ -26,10 +26,6 @@
         <el-input v-model="input.name"></el-input>
       </div>
       <div class="uk-margin">
-        <label class="uk-form-label">Price</label>
-        <el-input v-model="input.price"></el-input>
-      </div>
-      <div class="uk-margin">
         <label class="uk-form-label">Address</label>
         <el-input v-model="input.address" type="textarea" rows="5"></el-input>
       </div>
@@ -57,6 +53,16 @@
         <label class="uk-form-label">Phone</label>
         <el-input v-model="input.phone" type="tel"></el-input>
       </div>
+    <div>
+      <div class="uk-margin">
+        <label class="uk-form-label">Price VIP</label>
+        <el-input v-model="input.vip" ></el-input>
+      </div>
+      <div class="uk-margin">
+        <label class="uk-form-label">Price Regular</label>
+        <el-input v-model="input.regular" ></el-input>
+      </div>
+    </div>
       <el-alert v-if="error" title="ERROR" type="error" :description="errorMessage" show-icon></el-alert>
     </div>
     <div class="uk-card-footer uk-text-right">
@@ -69,6 +75,7 @@
 export default {
   data() {
     return {
+      price_config: {},
       edit: false,
       title: "New Warehouse",
       input: {
@@ -80,8 +87,11 @@ export default {
         state: "",
         zip_code: "",
         phone: "",
-        country: ""
+        country: "",
+        vip:"",
+        regular: ""
       },
+      warehouses: [],
       error: false,
       errorMessage: ""
     };
@@ -90,23 +100,36 @@ export default {
     if (this.$route.params.id) {
       this.edit = true;
       this.title = "Edit Warehouse";
+    console.log(this.warehouses);
 
       this.getWareHouse();
     }
   },
   methods: {
-    async getWareHouse() {
+    collapseToggle(index) {
+      this.warehouses[index].collapse = !this.warehouses[index].collapse;
+    },
+    async getWareHouse(i) {
       this.__startLoading();
 
       this.error = false;
       this.errorMessage = "";
 
       try {
-        let res = await this.$service.warehouse.find(this.$route.params.id);
+        let id = this.$route.params.id
+        let res = await this.$service.warehouse.find(id);
+        let warehouse = res.data 
+        let priceConfig = JSON.parse(warehouse.price_config);
 
-        console.log(res.data);
+        warehouse.regular = priceConfig.regular
+        warehouse.vip = priceConfig.vip
 
-        this.input = res.data;
+        this.input = warehouse
+        this.warehouses = res.data.data.map(wh => {
+          wh["collapse"] = true;
+        });
+        this.input.vip = this.warehouses[i].warehouse.vip;
+        this.input.regular =this.warehouses[i].warehouse.regular;
       } catch (err) {
         this.__handleError(this, err, true);
       }
@@ -149,19 +172,21 @@ export default {
       this.error = false;
       this.errorMessage = "";
 
+
       try {
         let res = await this.$service.warehouse.update(
           this.$route.params.id,
           this.input
         );
+          this.price_config.vip = this.input.vip;
+          this.price_config.regular = this.input.regular;
 
         this.$notify({
           title: "SUCCESS",
           message: res.data.message,
           type: "success"
         });
-
-        this.$router.push({ name: "admin-warehouse" });
+      this.$router.push({ name: "admin-warehouse" });
       } catch (err) {
         this.__handleError(this, err, true);
       }
