@@ -19,7 +19,11 @@
     <div class="uk-card-body">
       <div class="uk-margin">
         <label class="uk-form-label">Code</label>
-        <el-input v-model="input.code"></el-input>
+        <el-input v-model="input.code" v-validate="rules.code" name="code"></el-input>
+        <small
+          v-if="errors.first('code')"
+          class="uk-margin-small uk-text-danger"
+        >{{ errors.first('code') }}</small>
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Status</label>
@@ -33,14 +37,7 @@
           </select>
         </div>
       </div>
-      <!-- <div class="uk-margin">
-        <label class="uk-form-label">Start Date</label>
-        <el-input v-model="input.start_date"></el-input>
-      </div>
-      <div class="uk-margin">
-        <label class="uk-form-label">End Date</label>
-        <el-input v-model="input.end_date"></el-input>
-      </div>-->
+
       <div class="filter-order uk-margin">
         <label class="uk-form-label">Start Date</label>
         <br>
@@ -101,7 +98,11 @@
       <!--  -->
       <div class="uk-margin">
         <label class="uk-form-label">Capacity</label>
-        <el-input v-model="input.capacity"></el-input>
+        <el-input v-model="input.capacity" v-validate="rules.capacity" name="capacity"></el-input>
+        <small
+          v-if="errors.first('capacity')"
+          class="uk-margin-small uk-text-danger"
+        >{{ errors.first('capacity') }}</small>
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Promo Type</label>
@@ -156,7 +157,7 @@ export default {
         start_date: "",
         end_date: "",
         description: "",
-        unlimited: "",
+        unlimited: "0",
         capacity: "",
         in_used: 0,
         promo_type: "",
@@ -174,9 +175,22 @@ export default {
         promo_type: [],
         unlimited: []
       },
+      rules: {
+        code: "required",
+        capacity: "required",
+        value_fixed: "",
+        value_percentage: "",
+        value_point: ""
+      },
       error: false,
       errorMessage: ""
     };
+  },
+
+  watch: {
+    value_fixed() {
+      return this.promo_type == "fixed" ? "required" : "";
+    }
   },
 
   created() {
@@ -188,8 +202,6 @@ export default {
 
       this.getPromoCode();
     }
-
-    console.log(this.$route.params.id);
   },
 
   methods: {
