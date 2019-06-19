@@ -29,6 +29,7 @@
               <th>Name</th>
               <th>Description</th>
               <th class="uk-text-center" width="100">Actions</th>
+              <th class="uk-text-center" width="100">Default Selected</th>
             </tr>
           </thead>
           <tbody>
@@ -47,6 +48,14 @@
                   <font-awesome-icon icon="trash-alt"></font-awesome-icon>
                 </a>
               </td>
+              <td class="uk-text-center">
+                  <el-switch
+                    v-model="category.isTrue"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    @change="updateDefaultSelected(category.id)"
+                  ></el-switch>
+                </td>
             </tr>
           </tbody>
         </table>
@@ -100,6 +109,7 @@ export default {
 
   created() {
     this.fetchCategories(this.pagination.page);
+    console.log(this.categories);
   },
 
   methods: {
@@ -126,6 +136,13 @@ export default {
         let res = await this.$service.category.get({}, page);
 
         this.pagination.last_page = res.data.last_page;
+
+        this.categories = res.data.data.map(category => {
+
+        category["isTrue"] = category.default_selected == "true" ? true : false;
+
+        return category;
+        });
 
         this.totalPages = res.data.pages;
         this.current_page = page;
@@ -158,6 +175,31 @@ export default {
       } catch (err) {
         this.__handleError(this, err, true);
       }
+    },
+    async updateDefaultSelected(id = category.id) {
+      console.log(id);
+      const Cdata = this.categories[id];
+      const Cid = Cdata.id;
+      const default_selected = Cdata.isTrue ? "true" : "false";
+
+      console.log(Cid, default_selected);
+
+      return this.$service.category
+        .updateDefault(Cid, { default_selected: default_selected })
+        .then(res => {
+          this.$notify({
+            type: "success",
+            title: "Success",
+            message: res.data.message
+          });
+        })
+        .catch(err => {
+          this.$notify({
+            type: "error",
+            title: "Error",
+            message: err.message
+          });
+        });
     }
   }
 };
