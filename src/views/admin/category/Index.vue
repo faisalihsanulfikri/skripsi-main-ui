@@ -181,28 +181,26 @@ export default {
     },
     async updateDefaultSelected(category) {
       const Cdata = category;
-
       const Cid = Cdata.id;
-
       const default_selected = Cdata.isTrue ? "true" : "false";
 
       let res = this.$service.category
         .updateDefault(Cid, { default_selected: default_selected })
         .then(res => {
-          this.fetchCategories(this.pagination.page);
           this.$notify({
             type: "success",
             title: "Success",
             message: res.data.message
           });
+          this.fetchCategories(this.pagination.page);
         })
         .catch(err => {
-          this.fetchCategories(this.pagination.page);
           this.$notify({
             type: "warning",
             title: "Peringatan",
             message: err.response.data.message
           });
+          this.fetchCategories(this.pagination.page);
         });
     }
   }
