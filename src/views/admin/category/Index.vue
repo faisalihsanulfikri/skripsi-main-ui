@@ -109,7 +109,6 @@ export default {
 
   created() {
     this.fetchCategories(this.pagination.page);
-    console.log(this.categories);
   },
 
   // mounted() {
