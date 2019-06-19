@@ -79,6 +79,9 @@ const category = {
   update(id = null, data = {}) {
     return Vue.authHttp().put(`/categories/${id}`, data);
   },
+  updateDefault(id = null, data = {}) {
+    return Vue.authHttp().put(`/categories/${id}/default_selected`, data);
+  },
   delete(id) {
     return Vue.authHttp().delete(`/categories/${id}`);
   }
