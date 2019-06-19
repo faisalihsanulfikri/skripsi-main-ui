@@ -111,10 +111,6 @@ export default {
     this.fetchCategories(this.pagination.page);
   },
 
-  // mounted() {
-  //   this.fetchCategories(this.pagination.page);
-  // },
-
   methods: {
     onChangePagination(i) {
       this.fetchCategories(i + 1);
