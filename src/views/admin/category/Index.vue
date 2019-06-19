@@ -49,13 +49,13 @@
                 </a>
               </td>
               <td class="uk-text-center">
-                  <el-switch
-                    v-model="category.isTrue"
-                    active-color="#13ce66"
-                    inactive-color="#ff4949"
-                    @change="updateDefaultSelected(category.id)"
-                  ></el-switch>
-                </td>
+                <el-switch
+                  v-model="category.isTrue"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949"
+                  @change="updateDefaultSelected(category)"
+                ></el-switch>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -112,6 +112,10 @@ export default {
     console.log(this.categories);
   },
 
+  // mounted() {
+  //   this.fetchCategories(this.pagination.page);
+  // },
+
   methods: {
     onChangePagination(i) {
       this.fetchCategories(i + 1);
@@ -138,10 +142,10 @@ export default {
         this.pagination.last_page = res.data.last_page;
 
         this.categories = res.data.data.map(category => {
+          category["isTrue"] =
+            category.default_selected == "true" ? true : false;
 
-        category["isTrue"] = category.default_selected == "true" ? true : false;
-
-        return category;
+          return category;
         });
 
         this.totalPages = res.data.pages;
@@ -176,17 +180,23 @@ export default {
         this.__handleError(this, err, true);
       }
     },
-    async updateDefaultSelected(id = category.id) {
-      console.log(id);
-      const Cdata = this.categories[id];
+    async updateDefaultSelected(category) {
+      console.log("its categty", category);
+
+      const Cdata = category;
+
+      // console.log(Cdata);
+
       const Cid = Cdata.id;
+
       const default_selected = Cdata.isTrue ? "true" : "false";
 
-      console.log(Cid, default_selected);
+      console.log("ini", Cid, default_selected);
 
-      return this.$service.category
+      let res = this.$service.category
         .updateDefault(Cid, { default_selected: default_selected })
         .then(res => {
+          this.fetchCategories(this.pagination.page);
           this.$notify({
             type: "success",
             title: "Success",
@@ -194,10 +204,11 @@ export default {
           });
         })
         .catch(err => {
+          this.fetchCategories(this.pagination.page);
           this.$notify({
-            type: "error",
-            title: "Error",
-            message: err.message
+            type: "warning",
+            title: "Peringatan",
+            message: err.response.data.message
           });
         });
     }
