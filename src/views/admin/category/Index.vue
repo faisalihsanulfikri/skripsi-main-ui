@@ -109,7 +109,6 @@ export default {
 
   created() {
     this.fetchCategories(this.pagination.page);
-    console.log(this.categories);
   },
 
   // mounted() {
@@ -181,17 +180,11 @@ export default {
       }
     },
     async updateDefaultSelected(category) {
-      console.log("its categty", category);
-
       const Cdata = category;
-
-      // console.log(Cdata);
 
       const Cid = Cdata.id;
 
       const default_selected = Cdata.isTrue ? "true" : "false";
-
-      console.log("ini", Cid, default_selected);
 
       let res = this.$service.category
         .updateDefault(Cid, { default_selected: default_selected })
