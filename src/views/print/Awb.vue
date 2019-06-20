@@ -133,8 +133,8 @@ export default {
 
   methods: {
     print() {
-      // window.print();
-      // window.close();
+       window.print();
+       window.close();
     },
     async getAirWaybill() {
       try {
