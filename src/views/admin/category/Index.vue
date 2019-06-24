@@ -126,10 +126,11 @@ export default {
         })
         .catch(() => {});
     },
-    async fetchCategories(page) {
+    async fetchCategories(page = 1) {
       this.__startLoading();
 
       this.pagination.page = page;
+      console.log("page", page);
 
       try {
         let res = await this.$service.category.get({}, page);
