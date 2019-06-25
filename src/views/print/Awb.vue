@@ -50,12 +50,16 @@
               <h5 class="uk-margin-remove uk-text-bold">COST WEIGHT DIMENSION</h5>
             </div>
 
-            <div class="goods">
+            <div class="goods" v-for="(item, index) in awb.items" :key="index">
               <template v-if="awb.detail && awb.detail.packet_info">
                 <span
                   class="uk-margin-small-right"
                   style="font-size:10px"
                 >{{ `IDR ${awb.detail.packet_info.stringPrice}` }}</span>
+                <span
+                  class="uk-margin-small-right"
+                  style="font-size:10px"
+                >{{ `IDR ${item.price_user}` }}</span>
                 <span
                   class="uk-margin-small-right"
                   style="font-size:10px"
@@ -129,8 +133,8 @@ export default {
 
   methods: {
     print() {
-      window.print();
-      window.close();
+       window.print();
+       window.close();
     },
     async getAirWaybill() {
       try {

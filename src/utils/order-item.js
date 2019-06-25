@@ -4,6 +4,7 @@ const orderItemUtil = {
   stringCurrency (items) {
     return items.map(item => {
       item['stringPrice'] = Vue.options.filters.currency(item.price, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
+      item['stringPriceUser'] = Vue.options.filters.currency(item.price_user, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
       item['stringQuantity'] = Vue.options.filters.currency(item.quantity, '', 0, { thousandsSeparator: '.', decimalSeparator: ',' })
       item['stringWeight'] = Vue.options.filters.currency(item.weight, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
       item['stringLength'] = Vue.options.filters.currency(item.length, '', 2, { thousandsSeparator: '.', decimalSeparator: ',' })
