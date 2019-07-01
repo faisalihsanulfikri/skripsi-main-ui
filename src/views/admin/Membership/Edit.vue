@@ -29,7 +29,11 @@
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Membership Days</label>
-        <el-input v-model="input.membership_days" name="base_factor"></el-input>
+        <el-input v-model="input.membership_days" name="membership_days" type="number"></el-input>
+      </div>
+      <div class="uk-margin">
+        <label class="uk-form-label">Membership Discount %</label>
+        <el-input v-model="input.membership_discount" name="membership_discount" type="number"></el-input>
       </div>
     </div>
     <div class="uk-card-footer uk-text-right">
@@ -48,7 +52,8 @@ export default {
         name: "",
         base_price: "",
         base_factor: "",
-        membership_days: ""
+        membership_days: "",
+        membership_discount: ""
       },
       error: false,
       errorMessage: ""
