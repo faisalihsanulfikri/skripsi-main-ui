@@ -10,8 +10,7 @@
           </div>
         </div>
         <div class="uk-width-expand">
-          <div class="app--card-header_title">
-          </div>
+          <div class="app--card-header_title"></div>
         </div>
       </div>
     </div>
@@ -27,6 +26,10 @@
       <div class="uk-margin">
         <label class="uk-form-label">Base factory</label>
         <el-input v-model="input.base_factor" name="base_factor"></el-input>
+      </div>
+      <div class="uk-margin">
+        <label class="uk-form-label">Membership Days</label>
+        <el-input v-model="input.membership_days" name="base_factor"></el-input>
       </div>
     </div>
     <div class="uk-card-footer uk-text-right">
@@ -44,7 +47,8 @@ export default {
       input: {
         name: "",
         base_price: "",
-        base_factor: ""
+        base_factor: "",
+        membership_days: ""
       },
       error: false,
       errorMessage: ""
@@ -65,7 +69,7 @@ export default {
         this.input.active = "";
       }
     },
-    
+
     async fetchMemberships() {
       this.__startLoading();
 
@@ -73,7 +77,9 @@ export default {
       this.errorMessage = "";
 
       try {
-        let res = await this.$service.memberships.getMembershipsData(this.$route.params.id);
+        let res = await this.$service.memberships.getMembershipsData(
+          this.$route.params.id
+        );
 
         this.input = res.data;
       } catch (err) {
@@ -107,7 +113,7 @@ export default {
           type: "success"
         });
 
-        this.$router.push('/admin/membership');
+        this.$router.push("/admin/membership");
       } catch (err) {
         this.__handleError(this, err, true);
       }
