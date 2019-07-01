@@ -22,6 +22,7 @@
               <th>Name</th>
               <th>Base Price</th>
               <th>Base Factor</th>
+              <th>Membership Days</th>
               <th class="uk-text-center" width="100">Actions</th>
             </tr>
           </thead>
@@ -30,6 +31,7 @@
               <td>{{ membership.name }}</td>
               <td>{{ membership.base_price }}</td>
               <td>{{ membership.base_factor }}</td>
+              <td>{{ membership.membership_days }}</td>
               <td class="uk-text-center">
                 <router-link :to="{ name: 'membership-edit', params: { id: membership.id } }">
                   <font-awesome-icon icon="edit"></font-awesome-icon>
@@ -47,43 +49,36 @@
 export default {
   data() {
     return {
-      memberships: [],
+      memberships: []
     };
   },
 
   async created() {
-    // const memberships = await this. __fetchMemberships()
-    // const data = membserships.data.data
-    // this.memberships = data
-    // console.log(memberships.data.data)
     this.__startLoading();
-    // const res = await this.$autHttp.get('/admin/memberships')
-    // const memberships = await this.__fetchMemberships()
-    // let res = await this.memberships.get
-    // // console.log(memberships.data.data)
-    // this.memberships =memberships.data.data
-    this.fetchMemberships()
+
+    this.fetchMemberships();
+
     this.__stopLoading();
   },
-    methods: {
-    fetchMemberships () {
-    this.__startLoading();
-      this.$authHttp.get('/admin/memberships').then(res => {
-        this.memberships = res.data
-    this.__stopLoading();
-      })
-    },
+  methods: {
+    fetchMemberships() {
+      this.__startLoading();
+      this.$authHttp.get("/admin/memberships").then(res => {
+        this.memberships = res.data;
+        this.__stopLoading();
+      });
+    }
   },
   async fetchMemberships() {
-      try {
-        let res = await this.$service.memberships.getMemberShipsData(
-          this.$route.params,
-        );
+    try {
+      let res = await this.$service.memberships.getMemberShipsData(
+        this.$route.params
+      );
 
-        this.Memberships = res.data.data;
-      } catch (err) {
-        this.__handleError(this, err, true);
-      }
+      this.Memberships = res.data.data;
+    } catch (err) {
+      this.__handleError(this, err, true);
     }
+  }
 };
 </script>
