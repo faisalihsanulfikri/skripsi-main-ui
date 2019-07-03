@@ -35,6 +35,10 @@
         <label class="uk-form-label">Membership Discount %</label>
         <el-input v-model="input.membership_discount" name="membership_discount" type="number"></el-input>
       </div>
+      <div class="uk-margin">
+        <label class="uk-form-label">Membership  Commission</label>
+        <el-input v-model="input.membership_commission" name="membership_commission" type="number"></el-input>
+      </div>
     </div>
     <div class="uk-card-footer uk-text-right">
       <el-button type="primary" @click="save">SAVE</el-button>
