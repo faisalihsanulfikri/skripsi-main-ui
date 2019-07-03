@@ -108,6 +108,18 @@ Vue.mixin({
           });
       });
     },
+    __fetchbusiness(id) {
+      return new Promise((resolve, reject) => {
+        Vue.authHttp()
+          .get(`/user/business/${id}`)
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
     __fetchCitiesByProvince(id) {
       return new Promise((resolve, reject) => {
         Vue.http()

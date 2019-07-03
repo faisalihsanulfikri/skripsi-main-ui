@@ -216,7 +216,22 @@
                             <th width="50"></th>
                           </tr>
                         </thead>
-                        <tbody>
+                        <tbody v-if="order.user.level == 2">
+                          <tr v-for="(awb, index) in order.air_waybills" :key="index">
+                            <td>
+                              <router-link
+                                :to="{ name: 'agent-awb-show', params: { code: awb.awb } }"
+                              >{{ awb.awb }}</router-link>
+                            </td>
+                            <td>{{ awb.created_at }}</td>
+                            <td class="uk-text-center">
+                              <el-button type="primary" size="mini" @click="printAwb(awb.awb)">
+                                <font-awesome-icon icon="print"></font-awesome-icon>
+                              </el-button>
+                            </td>
+                          </tr>
+                        </tbody>
+                        <tbody v-if="order.user.level == 3">
                           <tr v-for="(awb, index) in order.air_waybills" :key="index">
                             <td>
                               <router-link

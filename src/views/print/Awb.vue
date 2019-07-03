@@ -1,9 +1,23 @@
 <template>
   <div class="print-wrapper">
     <div class="print-content">
-      <div class="uk-grid uk-grid-small">
+      <div class="uk-grid uk-grid-small" v-if="awb.order.user.level == 2">
         <div class="uk-width-expand">
           <img src="../../assets/logo-kirimin.jpg" width="100">
+        </div>
+      </div>
+      <div class="uk-grid uk-grid-small" v-if="awb.order.user.level == 3 && business.isBusiness == 'disable' ">
+        <div class="uk-width-expand">
+          <img src="../../assets/logo-kirimin.jpg" width="100">
+        </div>
+      </div>
+      <div class="uk-grid uk-grid-small" v-if="awb.order.user.level == 3 && business.isBusiness =='enable' " enctype="multipart/form-data">
+        <div class="uk-width-expand">
+          <img
+            class="preview"
+            :src="imgPreview"
+            width="50px"
+            height="30px">
         </div>
       </div>
 
@@ -15,12 +29,27 @@
 
       <div class="uk-grid-small uk-grid-divider" uk-grid>
         <div class="uk-width-expand">
-          <div class="uk-margin">
+           <div class="uk-margin" v-if="awb.order.user.level == 2">
             <h5 class="uk-margin-remove uk-text-bold">SHIPPER</h5>
             <div v-if="awb.detail" class="uk-padding-small">
               <div>{{ `${awb.detail.shipper_name} - ${awb.detail.shipper_phone}` }}</div>
               <div>{{ `${awb.detail.shipper_address}, ${awb.detail.shipper_city} ${awb.detail.shipper_zip_code}` }}</div>
               <div>{{ awb.detail.shipper_region }}</div>
+            </div>
+          </div>
+           <div class="uk-margin" v-if="awb.order.user.level == 3 && business.isBusiness == 'disable' ">
+            <h5 class="uk-margin-remove uk-text-bold">SHIPPER</h5>
+            <div v-if="awb.detail" class="uk-padding-small">
+              <div>{{ `${awb.detail.shipper_name} - ${awb.detail.shipper_phone}` }}</div>
+              <div>{{ `${awb.detail.shipper_address}, ${awb.detail.shipper_city} ${awb.detail.shipper_zip_code}` }}</div>
+              <div>{{ awb.detail.shipper_region }}</div>
+            </div>
+          </div>
+          <div class="uk-margin" v-if="awb.order.user.level == 3 && business.isBusiness =='enable' ">
+            <h5 class="uk-margin-remove uk-text-bold">SHIPPER</h5>
+            <div class="uk-padding-small">
+              <div>{{ `${business.name}` }}</div>
+              <div>{{ `${business.address}` }}</div>
             </div>
           </div>
           <div class="uk-margin">
@@ -46,12 +75,11 @@
             </div>
           </div>
           <div v-if="awb.items" class="uk-margin">
-            <div class="uk-width-expand">
+            <div class="uk-width-expand" v-if="awb.order.user.level == 2">
               <h5 class="uk-margin-remove uk-text-bold">COST WEIGHT DIMENSION</h5>
             </div>
-
             <div class="goods" v-for="(item, index) in awb.items" :key="index">
-              <template v-if="awb.detail && awb.detail.packet_info">
+              <template v-if="awb.detail && awb.detail.packet_info && awb.order.user.level == 2">
                 <span
                   class="uk-margin-small-right"
                   style="font-size:10px"
@@ -59,7 +87,17 @@
                 <span
                   class="uk-margin-small-right"
                   style="font-size:10px"
-                >{{ `IDR ${item.price_user}` }}</span>
+                >{{ `${awb.detail.packet_info.stringWeight} ${awb.detail.packet_info.weight_unit}` }}</span>
+                <span
+                  style="font-size:10px"
+                >{{ `${awb.detail.packet_info.stringLength} x ${awb.detail.packet_info.stringWidth} x ${awb.detail.packet_info.stringHeight} ${awb.detail.packet_info.volume_unit}` }}</span>
+              </template>
+            </div>
+            <div class="uk-width-expand" v-if="awb.order.user.level == 3">
+              <h5 class="uk-margin-remove uk-text-bold">WEIGHT DIMENSION</h5>
+            </div>
+            <div class="goods" v-for="(item, index) in awb.items" :key="index">
+              <template v-if="awb.detail && awb.detail.packet_info && awb.order.user.level == 3">
                 <span
                   class="uk-margin-small-right"
                   style="font-size:10px"
@@ -111,12 +149,17 @@
 export default {
   data() {
     return {
-      awb: {}
+      awb: {},
+      business:{},
+      imgPreview:""
     };
   },
-
   async created() {
     await this.getAirWaybill();
+    console.log(this.imgPreview)
+    // await this.getbusiness();
+    console.log(this.awb);
+    console.log(this.business);
 
     let images = document.querySelectorAll(".barcode-image");
     let totalImages = images.length;
@@ -133,8 +176,8 @@ export default {
 
   methods: {
     print() {
-       window.print();
-       window.close();
+      //  window.print();
+      //  window.close();
     },
     async getAirWaybill() {
       try {
@@ -185,11 +228,21 @@ export default {
           2,
           { thousandsSeparator: ".", decimalSeparator: "," }
         );
+
+      const id = this.awb.order.user.id;
+      const endpoint = `/business/awb/${id}`;
+
+      return this.$authHttp
+        .get(endpoint)
+        .then(respond => {
+          this.business = respond.data;
+          this.imgPreview = this.business.imglocation;
+        });
       } catch (err) {
         this.__handleError(this, err, true);
       }
     }
-  }
+  },
 };
 </script>
 
