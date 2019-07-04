@@ -28,6 +28,18 @@
     <div class="uk-card-footer uk-text-right">
       <el-button type="primary" @click="save">SAVE</el-button>
     </div>
+    <div class="uk-margin">
+        <label class="uk-form-label">Membership Days</label>
+        <el-input v-model="input.membership_days" name="membership_days" type="number"></el-input>
+      </div>
+      <div class="uk-margin">
+        <label class="uk-form-label">Membership Discount %</label>
+        <el-input v-model="input.membership_discount" name="membership_discount" type="number"></el-input>
+      </div>
+      <div class="uk-margin">
+        <label class="uk-form-label">Membership Discount </label>
+        <el-input v-model="input.membership_commision" name="membership_commission" type="number"></el-input>
+      </div>
   </div>
 </template>
 
@@ -39,7 +51,9 @@ export default {
       title: "New Memberships",
       input: {
         nama_paket: "",
-        harga_paket: ""
+        harga_paket: "",
+        membership_days: "",
+        membership_discount: ""
       },
       error: false,
       errorMessage: ""
