@@ -24,6 +24,7 @@
               <th>Base Factor</th>
               <th>Membership Days</th>
               <th>Membership Discount</th>
+              <th>Membership Commission</th>
               <th class="uk-text-center" width="100">Actions</th>
             </tr>
           </thead>
@@ -34,6 +35,7 @@
               <td>{{ membership.base_factor }}</td>
               <td>{{ membership.membership_days }}</td>
               <td>{{ membership.membership_discount }} %</td>
+              <td>{{ membership.membership_commission }}</td>
               <td class="uk-text-center">
                 <router-link :to="{ name: 'membership-edit', params: { id: membership.id } }">
                   <font-awesome-icon icon="edit"></font-awesome-icon>
