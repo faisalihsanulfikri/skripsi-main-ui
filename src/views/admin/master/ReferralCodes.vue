@@ -77,11 +77,17 @@ export default {
         .then(res => {
           const users = res.data.user;
           const refCodeUsers = res.data.referral_code;
+          // console.log(refCodeUsers);
+
           const referralCodeUsers = users.map(el => {
             let referrals = refCodeUsers
               .filter(ref => ref.user_id == el.user_id)
               .map(el => {
-                return { code: el.referral_code, isActive: el.is_active };
+                return {
+                  id: el.id,
+                  code: el.referral_code,
+                  isActive: el.is_active
+                };
               });
 
             return {

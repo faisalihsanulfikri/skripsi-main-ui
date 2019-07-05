@@ -21,7 +21,7 @@
             <el-button
               type="error"
               size="small"
-              @click="deleteReferralCode"
+              @click="deleteReferralCode(el.id)"
               :disabled="isDisabled(el.code)"
             >DELETE</el-button>
           </td>
@@ -60,8 +60,18 @@ export default {
     editReferralCode() {
       console.log("editReferralCode");
     },
-    deleteReferralCode() {
-      console.log("deleteReferralCode");
+    deleteReferralCode(id) {
+      const endpoint = `/referral-code/${id}`;
+      return this.$authHttp
+        .delete(endpoint)
+        .then(res => {
+          this.$notify({
+            title: "SUCCESS",
+            message: res.data.message,
+            type: "success"
+          });
+        })
+        .catch(err => console.log(err));
     },
     changeReferralStatus(val) {
       console.log("changeReferralStatus", val);
