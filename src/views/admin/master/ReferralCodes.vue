@@ -29,8 +29,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, i) in referralData" :key="i">
-              <td>{{ item.userId }}</td>
+            <tr v-for="(item, i) in referralCodeUsers" :key="i">
+              <td>{{ item.userCode }}</td>
               <td>{{ item.userName }}</td>
               <td>{{ item.expired }}</td>
               <td>
@@ -52,9 +52,12 @@ export default {
   data() {
     return {
       value2: true,
+      referralCodeUsers: [],
+
+      // Dummy
       referralData: [
         {
-          userId: "K004",
+          userCode: "K004",
           userName: "Willy Nugraha",
           expired: "2019-12-21",
           referrals: [
@@ -67,15 +70,35 @@ export default {
     };
   },
   methods: {
-    // editReferralCode() {
-    //   console.log("editReferralCode");
-    // },
-    // deleteReferralCode() {
-    //   console.log("deleteReferralCode");
-    // },
-    // changeReferralStatus(val) {
-    //   console.log("changeReferralStatus", val);
-    // }
+    fetchReferralCodeUsers() {
+      const endpoint = `/referral-codes`;
+      return this.$authHttp
+        .get(endpoint)
+        .then(res => {
+          const users = res.data.user;
+          const refCodeUsers = res.data.referral_code;
+          const referralCodeUsers = users.map(el => {
+            let referrals = refCodeUsers
+              .filter(ref => ref.user_id == el.user_id)
+              .map(el => {
+                return { code: el.referral_code, isActive: el.is_active };
+              });
+
+            return {
+              userCode: el.code,
+              userName: el.user_name,
+              expired: el.expire_date,
+              referrals
+            };
+          });
+
+          this.referralCodeUsers = referralCodeUsers;
+        })
+        .catch(err => console.log(err));
+    }
+  },
+  created() {
+    this.fetchReferralCodeUsers();
   }
 };
 </script>

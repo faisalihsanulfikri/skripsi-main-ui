@@ -37,7 +37,7 @@
         </tr>
       </tbody>
     </table>
-    <el-button v-show="false" type="primary" @click="addNewReferral" size="small">Add New Refferal</el-button>
+    <el-button v-show="true" type="primary" @click="addNewReferral" size="small">Add New Referral</el-button>
   </div>
 </template>
 
@@ -67,7 +67,6 @@ export default {
       console.log("changeReferralStatus", val);
     },
     isDisabled(val) {
-      console.log("isDisabled", val);
       return val == "-" || val == null || val == undefined ? true : false;
     }
   }
