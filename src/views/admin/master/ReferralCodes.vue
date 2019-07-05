@@ -81,7 +81,13 @@ export default {
             let referrals = refCodeUsers
               .filter(ref => ref.user_id == el.user_id)
               .map(el => {
-                return { code: el.referral_code, isActive: el.is_active };
+                return {
+                  id: el.id,
+                  code: el.referral_code,
+                  isActive: el.is_active,
+                  user_id: el.user_id,
+                  isActive: el.is_active == "yes" ? true : false
+                };
               });
 
             return {
