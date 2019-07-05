@@ -61,6 +61,17 @@ export default {
       console.log("editReferralCode");
     },
     deleteReferralCode(id) {
+      this.$confirm("Are you sure to delete this?", "Waning", {
+        type: "warning",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No"
+      })
+        .then(() => {
+          this.delete(id);
+        })
+        .catch(() => {});
+    },
+    delete(id) {
       const endpoint = `/referral-code/${id}`;
       return this.$authHttp
         .delete(endpoint)
