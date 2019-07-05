@@ -227,6 +227,15 @@ export default {
       }
     },
     {
+      path: "master/referral-codes",
+      name: "admin-referral-codes",
+      component: () => import('@/views/admin/master/ReferralCodes'),
+      meta: {
+        auth: true,
+        level: [ADMIN, SUPER_ADMIN]
+      }
+    },
+    {
       path: "master/exchange-rates/:id/edit",
       name: "admin-exchange-rate-edit",
       component: ExchangeCreate,
@@ -316,7 +325,7 @@ export default {
         level: [ADMIN, SUPER_ADMIN]
       }
     },
-    
+
     {
       path: "inbound/new",
       name: "inbound-new",
