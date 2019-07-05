@@ -86,7 +86,7 @@ export default {
                 return {
                   id: el.id,
                   code: el.referral_code,
-                  isActive: el.is_active
+                  isActive: el.is_active == "yes" ? true : false
                 };
               });
 

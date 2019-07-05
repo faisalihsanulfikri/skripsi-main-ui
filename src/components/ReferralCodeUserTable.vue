@@ -31,7 +31,7 @@
               active-color="#13ce66"
               inactive-color="#ff4949"
               :disabled="isDisabled(el.code)"
-              @change="changeReferralStatus"
+              @change="changeReferralStatus(i,el.id)"
             ></el-switch>
           </td>
         </tr>
@@ -84,8 +84,27 @@ export default {
         })
         .catch(err => console.log(err));
     },
-    changeReferralStatus(val) {
-      console.log("changeReferralStatus", val);
+    changeReferralStatus(i, id) {
+      let isActive = this.referralCodes[i].isActive;
+      console.log("val", isActive);
+      console.log("id", id);
+
+      let status = isActive == true ? "yes" : "no";
+      const payload = {
+        active: status
+      };
+      console.log("status", status);
+      const endpoint = `/referral-code/status/${id}`;
+      return this.$authHttp
+        .put(endpoint, payload)
+        .then(res => {
+          this.$notify({
+            title: "SUCCESS",
+            message: res.data.message,
+            type: "success"
+          });
+        })
+        .catch(err => console.log(err));
     },
     isDisabled(val) {
       return val == "-" || val == null || val == undefined ? true : false;
