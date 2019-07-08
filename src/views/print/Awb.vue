@@ -6,8 +6,8 @@
           <img
             class="preview"
             :src="imgPreview"
-            width="50px"
-            height="30px">
+            width="100"
+            >
         </div>
       </div>
       <div class="uk-grid uk-grid-small" v-else>
@@ -133,18 +133,34 @@ export default {
     // await this.getbusiness();
     console.log(this.awb);
     console.log(this.business);
+if(this.awb.order.user.level === 3){
 
-    let images = document.querySelectorAll(".barcode-image");
-    let totalImages = images.length;
-    let loadedImages = 0;
+  let images = document.querySelectorAll(".preview");
+  let totalImages = images.length;
+  let loadedImages = 0;
 
-    images.forEach(image => {
-      image.onload = () => {
-        loadedImages += 1;
+  images.forEach(image => {
+    image.onload = () => {
+      loadedImages += 1;
 
-        if (totalImages === loadedImages) this.print();
-      };
-    });
+      if (totalImages === loadedImages) this.print();
+    };
+  });
+}else{
+
+  let images = document.querySelectorAll(".barcode-image");
+  let totalImages = images.length;
+  let loadedImages = 0;
+
+  images.forEach(image => {
+    image.onload = () => {
+      loadedImages += 1;
+
+      if (totalImages === loadedImages) this.print();
+    };
+  });
+}
+
   },
 
   methods: {
@@ -201,16 +217,18 @@ export default {
           2,
           { thousandsSeparator: ".", decimalSeparator: "," }
         );
+if(this.awb.order.user.level == 3){
 
-      const id = this.awb.order.user.id;
-      const endpoint = `/business/awb/${id}`;
+  const id = this.awb.order.user.id;
+  const endpoint = `/business/awb/${id}`;
 
-      return this.$authHttp
-        .get(endpoint)
-        .then(respond => {
-          this.business = respond.data;
-          this.imgPreview = this.business.imglocation;
-        });
+  return this.$authHttp
+    .get(endpoint)
+    .then(respond => {
+      this.business = respond.data;
+      this.imgPreview = this.business.imglocation;
+    });
+}
       } catch (err) {
         this.__handleError(this, err, true);
       }
