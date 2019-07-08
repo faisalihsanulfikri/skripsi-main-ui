@@ -6,7 +6,8 @@
           <img
             class="preview"
             :src="imgPreview"
-            width="100"
+            width="80px"
+            heigt="80px"
             >
         </div>
       </div>
@@ -129,10 +130,7 @@ export default {
   },
   async created() {
     await this.getAirWaybill();
-    console.log(this.imgPreview)
-    // await this.getbusiness();
-    console.log(this.awb);
-    console.log(this.business);
+    
 if(this.awb.order.user.level === 3){
 
   let images = document.querySelectorAll(".preview");
