@@ -89,7 +89,8 @@
             <div class="goods">
               <ul class="uk-list uk-list uk-margin-remove">
                 <li v-for="(itemref, indexref) in awb.items" :key="indexref">
-                  <font size="2">{{ `${itemref.reference}` }}</font>
+                  <font size="2" v-if=" awb.items[0].reference != null">{{ `${itemref.reference}` }}</font>
+                  <font size="2" v-else></font>
                 </li>
               </ul>
             </div>
