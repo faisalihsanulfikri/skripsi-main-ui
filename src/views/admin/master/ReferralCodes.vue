@@ -6,7 +6,7 @@
         <div uk-grid>
           <div class="uk-width-auto">
             <div class="app--card-header__icon">
-              <font-awesome-icon icon="map"></font-awesome-icon>
+              <font-awesome-icon icon="tags"></font-awesome-icon>
             </div>
           </div>
           <div class="uk-width-expand">
@@ -14,66 +14,79 @@
               <h3>Referral Codes</h3>
             </div>
           </div>
+          <div class="uk-width-auto">
+            <div class="app--card-header__link">
+              <a @click="showAddReferralDialog">
+                <font-awesome-icon icon="plus"></font-awesome-icon>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Body -->
       <div class="uk-card-body">
+        <!-- <ReferrralCodeUserTable2 /> -->
         <table class="uk-table uk-table-middle uk-table-divider">
           <thead>
             <tr>
-              <th class="uk-width-small">USER CODE</th>
-              <th class="uk-width-small">NAME</th>
-              <th class="uk-width-small">EXPIRED</th>
-              <th>REFERRAL CODES</th>
+              <th class="uk-width-small">REFERRAL CODE</th>
+              <th class="uk-width-small">KODE USER</th>
+              <th class="uk-width-large">NAMA USER</th>
+              <th class="uk-width-small">EXPIRE</th>
+              <th>ACTION</th>
             </tr>
           </thead>
-          <tbody v-for="(item, i) in referralCodeUsers" :key="i">
-            <tr>
-              <td rowspan="2">{{ item.userCode }}</td>
-              <td rowspan="2">{{ item.userName }}</td>
-              <td rowspan="2">{{ item.expired }}</td>
+          <tbody>
+            <tr v-for="(item, i) in referrals" :key="i">
+              <td>{{ item.referral_code }}</td>
+              <td>{{ item.user_id }}</td>
+              <td>{{ item.user_name }}</td>
+              <td>{{ item.expire_date }}</td>
               <td>
-                <ReferralCodeUserTable
-                  :referral-codes="item.referrals"
-                  @fetchReferralCodeUsers="fetchReferralCodeUsers"
-                />
-              </td>
-              <!-- <td>
-                <el-button v-show="true" type="primary" @click="addNewReferral" size="small">Add</el-button>
-              </td> !-->
-            </tr>
-            <tr>
-              <td>
-                <el-button
-                  v-show="true"
-                  type="primary"
-                  @click="showAddReferralDialog(i)"
-                  size="small"
-                >Add New Referral</el-button>
+                <!-- Button Edit -->
+                <el-button type="primary" size="small" @click="showEditReferralDialog(i)">EDIT</el-button>
 
-                <!-- Dialog Add referral code -->
-                <el-dialog title="Add Referral Code" :visible.sync="dialogAddReferral">
-                  <!-- payload: id_user, referral_code, active[yes/no] -->
-
+                <!-- Tampilkan dialogEditReferral ini ketika menekan tombol EDIT -->
+                <el-dialog
+                  title="Edit Referral Code"
+                  :visible.sync="dialogEditReferral"
+                  width="25%"
+                >
                   <div class="form-group">
                     <label for="user_id">USER ID</label>
-                    <el-input placeholder="Please input" v-model="input.id_user" disabled></el-input>
+                    <el-input v-model="item.user_id" placeholder="Please input" disabled></el-input>
                   </div>
                   <div class="form-group">
                     <label for="referral_code">REFERRAL CODE</label>
-                    <el-input placeholder="Please input" v-model="input.referral_code"></el-input>
+                    <el-input v-model="item.referral_code" placeholder="Please input"></el-input>
                   </div>
                   <div class="form-group">
                     <label for="referral_code">ACTIVE STATUS</label>
-                    <el-switch v-model="input.active" active-text="YES" inactive-text="NO"></el-switch>
+                    <el-switch v-model="item.status" active-text="YES" inactive-text="NO"></el-switch>
                   </div>
-
                   <span slot="footer" class="dialog-footer">
-                    <el-button @click="dialogAddReferral = false">Cancel</el-button>
-                    <el-button type="primary" @click="addNewReferral(i)">Confirm</el-button>
+                    <el-button @click="dialogEditReferral = false">Cancel</el-button>
+                    <el-button type="primary" @click="editReferralCode(el.id)">Confirm</el-button>
                   </span>
                 </el-dialog>
+
+                <!-- Button Delete -->
+                <el-button
+                  style="margin-left:1rem;"
+                  type="error"
+                  size="small"
+                  @click="deleteReferralCode(item.code)"
+                >DELETE</el-button>
+
+                <!-- Change Referral Status -->
+                <el-switch
+                  style="margin-left:1rem"
+                  v-model="item.status"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949"
+                  @change="changeReferralStatus(i, item.code)"
+                ></el-switch>
               </td>
             </tr>
           </tbody>
@@ -85,6 +98,7 @@
 
 <script>
 import ReferralCodeUserTable from "@/components/ReferralCodeUserTable";
+import { mapMutations, mapActions, mapGetters, mapState } from "vuex";
 export default {
   name: "ReferralCodes",
   components: { ReferralCodeUserTable },
@@ -92,19 +106,18 @@ export default {
     return {
       value2: true,
       dialogAddReferral: false,
+      dialogEditReferral: false,
       referralCodeUsers: [],
 
-      // Dummy
-      referralData: [
+      // Dummy 2
+      referrals: [
         {
-          userCode: "K004",
-          userName: "Willy Nugraha",
-          expired: "2019-12-21",
-          referrals: [
-            { code: "REF01", isActive: true },
-            { code: "REF02", isActive: false },
-            { code: "-", isActive: false }
-          ]
+          code: "K0004",
+          expire_date: "2020-04-15",
+          is_active: "yes",
+          referral_code: "K0004",
+          user_id: "4",
+          user_name: "PT. SEJAHTERAaaaaa"
         }
       ],
 
@@ -116,6 +129,88 @@ export default {
     };
   },
   methods: {
+    editReferralCode(id) {
+      const endpoint = "/referral-code/" + id;
+      const payload = {
+        user_id: "",
+        referral_code: "",
+        is_active: ""
+      };
+
+      this.$authHttp
+        .put(endpoint, payload)
+        .then(res => {
+          this.$emit("fetchReferralCodeUsers");
+          this.$notify({
+            title: "SUCCESS",
+            message: res.data.message,
+            type: "success"
+          });
+        })
+        .catch(err => {
+          this.$notify({
+            title: "WARNING",
+            message: err.response.data.message,
+            type: "warning"
+          });
+        });
+    },
+    changeReferralStatus(i, id) {
+      let isActive = this.referralCodes[i].isActive;
+      console.log("val", isActive);
+      console.log("id", id);
+
+      let status = isActive == true ? "yes" : "no";
+      const payload = {
+        active: status
+      };
+      console.log("status", status);
+      const endpoint = `/referral-code/status/${id}`;
+      return this.$authHttp
+        .put(endpoint, payload)
+        .then(res => {
+          this.$emit("fetchReferralCodeUsers");
+          this.$notify({
+            title: "SUCCESS",
+            message: res.data.message,
+            type: "success"
+          });
+        })
+        .catch(err => console.log(err));
+    },
+    showEditReferralDialog(i) {
+      this.dialogEditReferral = true;
+
+      // let refCode = this.referralCodes[i];
+
+      // this.input.id_code = refCode.id;
+      // this.input.id_user = refCode.user_id;
+      // this.input.referral_code = refCode.code;
+      // this.input.active = refCode.isActive;
+
+      // console.log(this.input);
+    },
+    deleteReferralCode(id) {
+      this.$confirm("Are you sure to delete this?", "Warning", {
+        type: "warning",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No"
+      }).then(() => this.onDeleteReferralCode(id));
+    },
+    onDeleteReferralCode(id) {
+      const endpoint = `/referral-code/${id}`;
+      return this.$authHttp
+        .delete(endpoint)
+        .then(res => {
+          this.$emit("fetchReferralCodeUsers");
+          this.$notify({
+            title: "SUCCESS",
+            message: res.data.message,
+            type: "success"
+          });
+        })
+        .catch(err => console.log(err));
+    },
     showAddReferralDialog(i) {
       this.dialogAddReferral = true;
 
@@ -163,32 +258,13 @@ export default {
       return this.$authHttp
         .get(endpoint)
         .then(res => {
-          const users = res.data.user;
-          const refCodeUsers = res.data.referral_code;
-          // console.log(refCodeUsers);
-
-          const referralCodeUsers = users.map(el => {
-            let referrals = refCodeUsers
-              .filter(ref => ref.user_id == el.user_id)
-              .map(el => {
-                return {
-                  id: el.id,
-                  code: el.referral_code,
-                  user_id: el.user_id,
-                  isActive: el.is_active == "yes" ? true : false
-                };
-              });
-
+          const mapRefferals = res.data.data.map(ref => {
             return {
-              userId: el.user_id,
-              userCode: el.code,
-              userName: el.user_name,
-              expired: el.expire_date,
-              referrals
+              ...ref,
+              status: res.data.data.is_active == "yes" ? true : false
             };
           });
-
-          this.referralCodeUsers = referralCodeUsers;
+          this.referrals = mapRefferals;
         })
         .catch(err => console.log(err));
     }
