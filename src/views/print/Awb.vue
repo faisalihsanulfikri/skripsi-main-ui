@@ -132,7 +132,7 @@ export default {
   async created() {
     await this.getAirWaybill();
     
-if(this.awb.order.user.level === 3){
+if(this.awb.order.user.level === 3 && this.business.isBusiness === 'enable'){
 
   let images = document.querySelectorAll(".preview");
   let totalImages = images.length;
@@ -216,7 +216,7 @@ if(this.awb.order.user.level === 3){
           2,
           { thousandsSeparator: ".", decimalSeparator: "," }
         );
-if(this.awb.order.user.level == 3){
+if(this.awb.order.user.level == 3 && this.business.isBusiness == 'enable'){
 
   const id = this.awb.order.user.id;
   const endpoint = `/business/awb/${id}`;
