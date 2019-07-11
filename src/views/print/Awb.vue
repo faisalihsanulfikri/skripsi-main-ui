@@ -1,22 +1,17 @@
 <template>
   <div class="print-wrapper">
     <div class="print-content">
-      <div class="uk-grid uk-grid-small" v-if="awb.order.user.level == 3 && business.isBusiness =='enable' " enctype="multipart/form-data">
+      <div class="uk-grid uk-grid-small">
         <div class="uk-width-expand">
-          <img
+          <img src="../../assets/logo-kirimin.jpg" width="100" height="34">
+          <img v-if="awb.order.user.level == 3 && business.isBusiness =='enable'"
             class="preview"
             :src="imgPreview"
-            width="80px"
-            heigt="80px"
+            style="max-height: 34px;"
             >
         </div>
       </div>
-      <div class="uk-grid uk-grid-small" v-else>
-        <div class="uk-width-expand">
-          <img src="../../assets/logo-kirimin.jpg" width="100">
-        </div>
-      </div>
-
+      
       <div v-if="awb.order" class="uk-margin">
         <h6 class="uk-heading-line uk-text-left">
           <span>{{ awb.order.user.code }}</span>
@@ -145,6 +140,8 @@ if(this.awb.order.user.level === 3 && this.business.isBusiness === 'enable'){
       if (totalImages === loadedImages) this.print();
     };
   });
+}else if(this.awb.order.user.level == 3 && this.business.isBusiness === 'disable'){
+  this.print();
 }else{
 
   let images = document.querySelectorAll(".barcode-image");
@@ -216,7 +213,7 @@ if(this.awb.order.user.level === 3 && this.business.isBusiness === 'enable'){
           2,
           { thousandsSeparator: ".", decimalSeparator: "," }
         );
-if(this.awb.order.user.level == 3 && this.business.isBusiness == 'enable'){
+if(this.awb.order.user.level == 3){
 
   const id = this.awb.order.user.id;
   const endpoint = `/business/awb/${id}`;
