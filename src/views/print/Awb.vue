@@ -126,37 +126,36 @@ export default {
   },
   async created() {
     await this.getAirWaybill();
-    
-if(this.awb.order.user.level === 3 && this.business.isBusiness === 'enable'){
+    if(this.awb.order.user.level === 3){
+      if (this.business.isBusiness === 'enable' && this.business.imglocation!=null){
 
-  let images = document.querySelectorAll(".preview");
-  let totalImages = images.length;
-  let loadedImages = 0;
+        let images = document.querySelectorAll(".preview");
+        let totalImages = images.length;
+        let loadedImages = 0;
 
-  images.forEach(image => {
-    image.onload = () => {
-      loadedImages += 1;
+        images.forEach(image => {
+          image.onload = () => {
+            loadedImages += 1;
 
-      if (totalImages === loadedImages) this.print();
-    };
-  });
-}else if(this.awb.order.user.level == 3 && this.business.isBusiness === 'disable'){
-  this.print();
-}else{
+            if (totalImages === loadedImages) this.print();
+          };
+        });
+      }else{
+        this.print();
+      }
+    }else{
+      let images = document.querySelectorAll(".barcode-image");
+      let totalImages = images.length;
+      let loadedImages = 0;
 
-  let images = document.querySelectorAll(".barcode-image");
-  let totalImages = images.length;
-  let loadedImages = 0;
+      images.forEach(image => {
+        image.onload = () => {
+          loadedImages += 1;
 
-  images.forEach(image => {
-    image.onload = () => {
-      loadedImages += 1;
-
-      if (totalImages === loadedImages) this.print();
-    };
-  });
-}
-
+          if (totalImages === loadedImages) this.print();
+        };
+      });
+    }
   },
 
   methods: {
@@ -222,7 +221,9 @@ if(this.awb.order.user.level == 3){
     .get(endpoint)
     .then(respond => {
       this.business = respond.data;
-      this.imgPreview = this.business.imglocation;
+      if (respond.data.imglocation!=null){
+        this.imgPreview = this.business.imglocation;
+      }
     });
 }
       } catch (err) {
