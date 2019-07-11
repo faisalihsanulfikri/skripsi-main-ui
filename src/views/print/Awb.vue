@@ -7,7 +7,7 @@
           <img v-if="awb.order.user.level == 3 && business.isBusiness =='enable'"
             class="preview"
             :src="imgPreview"
-            style="max-width: 100px;max-height: 34px;"
+            width="100"
             >
         </div>
       </div>
@@ -233,7 +233,7 @@ if(this.awb.order.user.level == 3){
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" scoped media="print">
 .print-wrapper {
   background-color: #fff;
   height: 100%;
@@ -245,6 +245,11 @@ if(this.awb.order.user.level == 3){
     padding: 2mm;
     border: solid 1px #e5e5e5;
     font-size: 0.5rem;
+
+    .preview {
+      max-width: 100px;
+      max-height: 34px;
+    }
 
     h5 {
       font-size: 0.6rem;
