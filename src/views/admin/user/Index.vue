@@ -86,6 +86,14 @@
                   @change="onSortChange"
                 ></column-sort>
               </th>
+              <th>
+                <column-sort
+                  title="Kode Referral"
+                  field="referral_code"
+                  :active-field="filter.sortField"
+                  @change="onSortChange"
+                ></column-sort>
+              </th>
               <th class="uk-text-center" style="vertical-align: middle;">Action</th>
             </tr>
           </thead>
@@ -98,6 +106,7 @@
                 <el-tag v-if="user.active" type="success" size="small">Yes</el-tag>
                 <el-tag v-else type="danger" size="small">No</el-tag>
               </td>
+              <td>{{ user.referral_code }}</td>
               <td class="uk-text-center" style="vertical-align: middle;">
                 <div class="uk-grid-small" uk-grid>
                   <div class="uk-width-1-2">

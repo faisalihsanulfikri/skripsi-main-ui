@@ -148,19 +148,7 @@ export default {
       dialogEditReferral: false,
       referralCodeUsers: [],
 
-      // Dummy 2
-      referrals: [
-        {
-          referral_id: "1",
-          code: "K0004",
-          expire_date: "2020-04-15",
-          is_active: "yes",
-          referral_code: "K0004",
-          user_id: "4",
-          user_name: "PT. SEJAHTERAaaaaa",
-          status: true
-        }
-      ],
+      referrals: [],
 
       input: {
         id_user: "",
