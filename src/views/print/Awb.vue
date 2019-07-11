@@ -7,7 +7,7 @@
           <img v-if="awb.order.user.level == 3 && business.isBusiness =='enable'"
             class="preview"
             :src="imgPreview"
-            style="max-height: 34px;"
+            style="max-width: 100px;max-height: 34px;"
             >
         </div>
       </div>
