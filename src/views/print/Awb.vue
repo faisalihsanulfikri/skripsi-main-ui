@@ -262,6 +262,10 @@ if(this.awb.order.user.level == 3){
 
   .goods {
     margin-top: 5px;
+
+    .uk-list li font {
+      font-size: 10px;
+    }
   }
 }
 </style>
