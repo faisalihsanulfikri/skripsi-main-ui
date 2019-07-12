@@ -34,7 +34,7 @@
               filterable
               remote
               reserve-keyword
-              placeholder="Cari alamat disini..."
+              placeholder="Cari kode atau nama user"
               :remote-method="remoteMethod"
               :loading="searchLoading"
               class="autocomplete"
@@ -65,24 +65,28 @@
 
       <!-- Body -->
       <div class="uk-card-body">
-        <!-- <ReferrralCodeUserTable2 /> -->
+        <el-autocomplete
+          v-model="state"
+          :fetch-suggestions="querySearchAsync"
+          placeholder="Please input"
+          @select="handleSelect"
+        ></el-autocomplete>
+
         <table class="uk-table uk-table-middle uk-table-divider">
           <thead>
             <tr>
-              <th class="uk-width-small">REFERRAL CODE</th>
-              <th class="uk-width-small">USER ID</th>
-              <th class="uk-width-small">USER NAME</th>
-              <th class="uk-width-small">EXPIRE</th>
-              <th>ACTION</th>
+              <th>REFERRAL CODE</th>
+              <th>USER CODE</th>
+              <th>USER NAME</th>
+              <th style="text-align:center;">ACTION</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(item, i) in referrals" :key="i">
               <td>{{ item.referral_code }}</td>
-              <td>{{ item.user_id }}</td>
+              <td>{{ item.user_code }}</td>
               <td>{{ item.user_name }}</td>
-              <td>{{ item.expire_date }}</td>
-              <td>
+              <td style="text-align:center;">
                 <!-- Button Edit -->
                 <el-button type="primary" size="small" @click="showEditReferralDialog(i)">EDIT</el-button>
 
@@ -162,7 +166,11 @@ export default {
       searchList: [],
       searchValue: "",
       searchLoading: false,
-      searchOptions: []
+      searchOptions: [],
+
+      links: [],
+      state: "",
+      timeout: null
     };
   },
   methods: {
@@ -310,6 +318,10 @@ export default {
             };
           });
           this.referrals = mapRefferals;
+          this.links = this.referrals.map(el => ({
+            value: el.referral_code,
+            link: el.referral_code
+          }));
         })
         .catch(err => console.log(err));
     },
@@ -345,11 +357,63 @@ export default {
       } else {
         this.searchOptions = [];
       }
+    },
+    // loadAll() {
+    //   // let referrals = this.referrals.map(el => ({
+    //   //   value: el.referral_code,
+    //   //   link: el.referral_code
+    //   // }));
+    //   // return referrals;
+
+    //   return [
+    //     { value: "vue", link: "https://github.com/vuejs/vue" },
+    //     { value: "element", link: "https://github.com/ElemeFE/element" },
+    //     { value: "cooking", link: "https://github.com/ElemeFE/cooking" },
+    //     { value: "mint-ui", link: "https://github.com/ElemeFE/mint-ui" },
+    //     { value: "vuex", link: "https://github.com/vuejs/vuex" },
+    //     { value: "vue-router", link: "https://github.com/vuejs/vue-router" },
+    //     { value: "babel", link: "https://github.com/babel/babel" }
+    //   ];
+    // },
+    querySearchAsync(queryString, cb) {
+      var links = this.links;
+      var results = queryString
+        ? links.filter(this.createFilter(queryString))
+        : links;
+
+      clearTimeout(this.timeout);
+      this.timeout = setTimeout(() => {
+        cb(results);
+      }, 2000 * Math.random());
+    },
+    createFilter(queryString) {
+      return link => {
+        return (
+          link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+        );
+      };
+    },
+    handleSelect(item) {
+      let endpoint = `/referral-codes?search=${item.value}`;
+
+      return this.$authHttp
+        .get(endpoint)
+        .then(res => {
+          this.referrals = res.data.data.map(ref => {
+            return {
+              ...ref,
+              status: ref.is_active == "yes"
+            };
+          });
+        })
+        .catch(err => console.log(err));
     }
   },
+  // mounted() {
+  //   // this.links = this.loadAll();
+  // },
   created() {
     this.fetchUserPremium();
-
     this.fetchReferralCodeUsers();
   }
 };
