@@ -31,11 +31,21 @@
           <tbody>
             <tr v-for="membership in memberships" :key="membership.id">
               <td>{{ membership.name }}</td>
-              <td>{{ membership.base_price }}</td>
-              <td>{{ membership.base_factor }}</td>
-              <td>{{ membership.membership_days }}</td>
-              <td>{{ membership.membership_discount }} %</td>
-              <td>{{ membership.membership_commission }}</td>
+              <td>{{ membership.base_price | currency('', 2, { thousandsSeparator: '.',
+                              decimalSeparator:
+                              ',' }) }}</td>
+              <td>{{ membership.base_factor | currency('', 2, { thousandsSeparator: '.',
+                              decimalSeparator:
+                              ',' }) }}</td>
+              <td>{{ membership.membership_days| currency('', 2, { thousandsSeparator: '.',
+                              decimalSeparator:
+                              ',' })  }}</td>
+              <td>{{ membership.membership_discount | currency('', 2, { thousandsSeparator: '.',
+                              decimalSeparator:
+                              ',' }) }} %</td>
+              <td>{{ membership.membership_commission | currency('', 2, { thousandsSeparator: '.',
+                              decimalSeparator:
+                              ',' }) }}</td>
               <td class="uk-text-center">
                 <router-link :to="{ name: 'membership-edit', params: { id: membership.id } }">
                   <font-awesome-icon icon="edit"></font-awesome-icon>

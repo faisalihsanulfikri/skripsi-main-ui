@@ -2,18 +2,18 @@
   <el-aside class="main-sidebar">
     <el-menu background-color="#1565C0" text-color="#FFF" active-text-color="#FFF" :router="true">
       <el-menu-item>
-        <ios-contact-icon w="24px" h="24px" class="ionicon"/>
+        <ios-contact-icon w="24px" h="24px" class="ionicon" />
         <span>{{ username() }}</span>
       </el-menu-item>
 
       <el-menu-item index="/admin">
-        <ios-analytics-icon w="24px" h="24px" class="ionicon"/>
+        <ios-analytics-icon w="24px" h="24px" class="ionicon" />
         <span>DASHBOARD</span>
       </el-menu-item>
 
       <el-submenu index="/admin/inbound">
         <template slot="title">
-          <ios-list-box-icon w="24px" h="24px" class="ionicon"/>
+          <ios-list-box-icon w="24px" h="24px" class="ionicon" />
           <span>INBOUND</span>
         </template>
         <el-menu-item index="/admin/inbound">All</el-menu-item>
@@ -24,7 +24,7 @@
 
       <el-submenu index="/admin/inv">
         <template slot="title">
-          <ios-paper-icon w="24px" h="24px" class="ionicon"/>
+          <ios-paper-icon w="24px" h="24px" class="ionicon" />
           <span>INVOICES</span>
         </template>
         <el-menu-item index="/admin/invoices">Order Kirimin</el-menu-item>
@@ -33,13 +33,14 @@
 
       <el-submenu index="/admin">
         <template slot="title">
-          <ios-filing-icon w="24px" h="24px" class="ionicon"/>
+          <ios-filing-icon w="24px" h="24px" class="ionicon" />
           <span>MASTER DATA</span>
         </template>
         <el-menu-item index="/admin/master/promo-codes">Promo Codes</el-menu-item>
         <el-menu-item index="/admin/master/categories">Categories</el-menu-item>
         <el-menu-item index="/admin/master/warehouses">Warehouses</el-menu-item>
         <el-menu-item index="/admin/master/exchange-rates">Exchange Rates</el-menu-item>
+        <el-menu-item index="/admin/master/referral-codes">Referral Codes</el-menu-item>
 
         <el-submenu index="/admin/area">
           <template slot="title">
@@ -54,7 +55,7 @@
 
       <el-submenu index="/admin/reports">
         <template slot="title">
-          <ios-archive-icon w="24px" h="24px" class="ionicon"/>
+          <ios-archive-icon w="24px" h="24px" class="ionicon" />
           <span>REPORT</span>
         </template>
         <el-menu-item index="/admin/reports/sales">SALES</el-menu-item>
@@ -62,7 +63,7 @@
 
       <el-submenu index="/admin/users">
         <template slot="title">
-          <ios-contacts-icon w="24px" h="24px" class="ionicon"/>
+          <ios-contacts-icon w="24px" h="24px" class="ionicon" />
           <span>USERS</span>
         </template>
         <el-menu-item index="/admin/users/regular">Regular</el-menu-item>
@@ -74,17 +75,17 @@
       </el-submenu>
 
       <el-menu-item v-if="level == 0" index="/admin/pages">
-        <ios-apps-icon w="24px" h="24px" class="ionicon"/>
+        <ios-apps-icon w="24px" h="24px" class="ionicon" />
         <span>PAGES</span>
       </el-menu-item>
 
       <el-menu-item v-if="level == 0" index="/admin/settings">
-        <ios-settings-icon w="24px" h="24px" class="ionicon"/>
+        <ios-settings-icon w="24px" h="24px" class="ionicon" />
         <span>SETTINGS</span>
       </el-menu-item>
 
       <el-menu-item @click="__logout">
-        <ios-undo-icon w="24px" h="24px" class="ionicon"/>
+        <ios-undo-icon w="24px" h="24px" class="ionicon" />
         <span>LOGOUT</span>
       </el-menu-item>
     </el-menu>

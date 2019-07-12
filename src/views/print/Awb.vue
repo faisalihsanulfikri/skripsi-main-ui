@@ -1,21 +1,17 @@
 <template>
   <div class="print-wrapper">
     <div class="print-content">
-      <div class="uk-grid uk-grid-small" v-if="awb.order.user.level == 3 && business.isBusiness =='enable' " enctype="multipart/form-data">
+      <div class="uk-grid uk-grid-small">
         <div class="uk-width-expand">
-          <img
+          <img src="../../assets/logo-kirimin.jpg" width="100" height="34">
+          <img v-if="awb.order.user.level == 3 && business.isBusiness =='enable'"
             class="preview"
             :src="imgPreview"
-            width="50px"
-            height="30px">
+            width="100"
+            >
         </div>
       </div>
-      <div class="uk-grid uk-grid-small" v-else>
-        <div class="uk-width-expand">
-          <img src="../../assets/logo-kirimin.jpg" width="100">
-        </div>
-      </div>
-
+      
       <div v-if="awb.order" class="uk-margin">
         <h6 class="uk-heading-line uk-text-left">
           <span>{{ awb.order.user.code }}</span>
@@ -88,7 +84,8 @@
             <div class="goods">
               <ul class="uk-list uk-list uk-margin-remove">
                 <li v-for="(itemref, indexref) in awb.items" :key="indexref">
-                  <font size="2">{{ `${itemref.reference}` }}</font>
+                  <font size="2" v-if=" awb.items[0].reference != null">{{ `${itemref.reference}` }}</font>
+                  <font size="2" v-else></font>
                 </li>
               </ul>
             </div>
@@ -129,22 +126,36 @@ export default {
   },
   async created() {
     await this.getAirWaybill();
-    console.log(this.imgPreview)
-    // await this.getbusiness();
-    console.log(this.awb);
-    console.log(this.business);
+    if(this.awb.order.user.level === 3){
+      if (this.business.isBusiness === 'enable' && this.business.imglocation!=null){
 
-    let images = document.querySelectorAll(".barcode-image");
-    let totalImages = images.length;
-    let loadedImages = 0;
+        let images = document.querySelectorAll(".preview");
+        let totalImages = images.length;
+        let loadedImages = 0;
 
-    images.forEach(image => {
-      image.onload = () => {
-        loadedImages += 1;
+        images.forEach(image => {
+          image.onload = () => {
+            loadedImages += 1;
 
-        if (totalImages === loadedImages) this.print();
-      };
-    });
+            if (totalImages === loadedImages) this.print();
+          };
+        });
+      }else{
+        this.print();
+      }
+    }else{
+      let images = document.querySelectorAll(".barcode-image");
+      let totalImages = images.length;
+      let loadedImages = 0;
+
+      images.forEach(image => {
+        image.onload = () => {
+          loadedImages += 1;
+
+          if (totalImages === loadedImages) this.print();
+        };
+      });
+    }
   },
 
   methods: {
@@ -201,16 +212,20 @@ export default {
           2,
           { thousandsSeparator: ".", decimalSeparator: "," }
         );
+if(this.awb.order.user.level == 3){
 
-      const id = this.awb.order.user.id;
-      const endpoint = `/business/awb/${id}`;
+  const id = this.awb.order.user.id;
+  const endpoint = `/business/awb/${id}`;
 
-      return this.$authHttp
-        .get(endpoint)
-        .then(respond => {
-          this.business = respond.data;
-          this.imgPreview = this.business.imglocation;
-        });
+  return this.$authHttp
+    .get(endpoint)
+    .then(respond => {
+      this.business = respond.data;
+      if (respond.data.imglocation!=null){
+        this.imgPreview = this.business.imglocation;
+      }
+    });
+}
       } catch (err) {
         this.__handleError(this, err, true);
       }
@@ -219,7 +234,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" scoped media="print">
 .print-wrapper {
   background-color: #fff;
   height: 100%;
@@ -232,6 +247,11 @@ export default {
     border: solid 1px #e5e5e5;
     font-size: 0.5rem;
 
+    .preview {
+      max-width: 100px;
+      max-height: 34px;
+    }
+
     h5 {
       font-size: 0.6rem;
     }
@@ -243,6 +263,10 @@ export default {
 
   .goods {
     margin-top: 5px;
+
+    .uk-list li font {
+      font-size: 10px;
+    }
   }
 }
 </style>
