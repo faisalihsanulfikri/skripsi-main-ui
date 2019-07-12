@@ -69,20 +69,18 @@
         <table class="uk-table uk-table-middle uk-table-divider">
           <thead>
             <tr>
-              <th class="uk-width-small">REFERRAL CODE</th>
-              <th class="uk-width-small">USER ID</th>
-              <th class="uk-width-small">USER NAME</th>
-              <th class="uk-width-small">EXPIRE</th>
-              <th>ACTION</th>
+              <th>REFERRAL CODE</th>
+              <th>USER CODE</th>
+              <th>USER NAME</th>
+              <th style="text-align:center;">ACTION</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(item, i) in referrals" :key="i">
               <td>{{ item.referral_code }}</td>
-              <td>{{ item.user_id }}</td>
+              <td>{{ item.user_code }}</td>
               <td>{{ item.user_name }}</td>
-              <td>{{ item.expire_date }}</td>
-              <td>
+              <td style="text-align:center;">
                 <!-- Button Edit -->
                 <el-button type="primary" size="small" @click="showEditReferralDialog(i)">EDIT</el-button>
 
