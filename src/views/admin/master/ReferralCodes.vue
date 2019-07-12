@@ -34,7 +34,7 @@
               filterable
               remote
               reserve-keyword
-              placeholder="Cari alamat disini..."
+              placeholder="Cari kode atau nama user"
               :remote-method="remoteMethod"
               :loading="searchLoading"
               class="autocomplete"
