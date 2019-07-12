@@ -65,7 +65,13 @@
 
       <!-- Body -->
       <div class="uk-card-body">
-        <!-- <ReferrralCodeUserTable2 /> -->
+        <el-autocomplete
+          v-model="state"
+          :fetch-suggestions="querySearchAsync"
+          placeholder="Please input"
+          @select="handleSelect"
+        ></el-autocomplete>
+
         <table class="uk-table uk-table-middle uk-table-divider">
           <thead>
             <tr>
@@ -172,7 +178,11 @@ export default {
       searchList: [],
       searchValue: "",
       searchLoading: false,
-      searchOptions: []
+      searchOptions: [],
+
+      links: [],
+      state: "",
+      timeout: null
     };
   },
   methods: {
@@ -320,6 +330,10 @@ export default {
             };
           });
           this.referrals = mapRefferals;
+          this.links = this.referrals.map(el => ({
+            value: el.referral_code,
+            link: el.referral_code
+          }));
         })
         .catch(err => console.log(err));
     },
@@ -355,11 +369,63 @@ export default {
       } else {
         this.searchOptions = [];
       }
+    },
+    // loadAll() {
+    //   // let referrals = this.referrals.map(el => ({
+    //   //   value: el.referral_code,
+    //   //   link: el.referral_code
+    //   // }));
+    //   // return referrals;
+
+    //   return [
+    //     { value: "vue", link: "https://github.com/vuejs/vue" },
+    //     { value: "element", link: "https://github.com/ElemeFE/element" },
+    //     { value: "cooking", link: "https://github.com/ElemeFE/cooking" },
+    //     { value: "mint-ui", link: "https://github.com/ElemeFE/mint-ui" },
+    //     { value: "vuex", link: "https://github.com/vuejs/vuex" },
+    //     { value: "vue-router", link: "https://github.com/vuejs/vue-router" },
+    //     { value: "babel", link: "https://github.com/babel/babel" }
+    //   ];
+    // },
+    querySearchAsync(queryString, cb) {
+      var links = this.links;
+      var results = queryString
+        ? links.filter(this.createFilter(queryString))
+        : links;
+
+      clearTimeout(this.timeout);
+      this.timeout = setTimeout(() => {
+        cb(results);
+      }, 2000 * Math.random());
+    },
+    createFilter(queryString) {
+      return link => {
+        return (
+          link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+        );
+      };
+    },
+    handleSelect(item) {
+      let endpoint = `/referral-codes?search=${item.value}`;
+
+      return this.$authHttp
+        .get(endpoint)
+        .then(res => {
+          this.referrals = res.data.data.map(ref => {
+            return {
+              ...ref,
+              status: ref.is_active == "yes"
+            };
+          });
+        })
+        .catch(err => console.log(err));
     }
   },
+  // mounted() {
+  //   // this.links = this.loadAll();
+  // },
   created() {
     this.fetchUserPremium();
-
     this.fetchReferralCodeUsers();
   }
 };
