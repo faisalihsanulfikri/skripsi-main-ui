@@ -1,22 +1,17 @@
 <template>
   <div class="print-wrapper">
     <div class="print-content">
-      <div class="uk-grid uk-grid-small" v-if="awb.order.user.level == 3 && business.isBusiness =='enable' " enctype="multipart/form-data">
+      <div class="uk-grid uk-grid-small">
         <div class="uk-width-expand">
-          <img
+          <img src="../../assets/logo-kirimin.jpg" width="100" height="34">
+          <img v-if="awb.order.user.level == 3 && business.isBusiness =='enable'"
             class="preview"
             :src="imgPreview"
-            width="80px"
-            heigt="80px"
+            width="100"
             >
         </div>
       </div>
-      <div class="uk-grid uk-grid-small" v-else>
-        <div class="uk-width-expand">
-          <img src="../../assets/logo-kirimin.jpg" width="100">
-        </div>
-      </div>
-
+      
       <div v-if="awb.order" class="uk-margin">
         <h6 class="uk-heading-line uk-text-left">
           <span>{{ awb.order.user.code }}</span>
@@ -131,35 +126,36 @@ export default {
   },
   async created() {
     await this.getAirWaybill();
-    
-if(this.awb.order.user.level === 3 && this.business.isBusiness === 'enable'){
+    if(this.awb.order.user.level === 3){
+      if (this.business.isBusiness === 'enable' && this.business.imglocation!=null){
 
-  let images = document.querySelectorAll(".preview");
-  let totalImages = images.length;
-  let loadedImages = 0;
+        let images = document.querySelectorAll(".preview");
+        let totalImages = images.length;
+        let loadedImages = 0;
 
-  images.forEach(image => {
-    image.onload = () => {
-      loadedImages += 1;
+        images.forEach(image => {
+          image.onload = () => {
+            loadedImages += 1;
 
-      if (totalImages === loadedImages) this.print();
-    };
-  });
-}else{
+            if (totalImages === loadedImages) this.print();
+          };
+        });
+      }else{
+        this.print();
+      }
+    }else{
+      let images = document.querySelectorAll(".barcode-image");
+      let totalImages = images.length;
+      let loadedImages = 0;
 
-  let images = document.querySelectorAll(".barcode-image");
-  let totalImages = images.length;
-  let loadedImages = 0;
+      images.forEach(image => {
+        image.onload = () => {
+          loadedImages += 1;
 
-  images.forEach(image => {
-    image.onload = () => {
-      loadedImages += 1;
-
-      if (totalImages === loadedImages) this.print();
-    };
-  });
-}
-
+          if (totalImages === loadedImages) this.print();
+        };
+      });
+    }
   },
 
   methods: {
@@ -216,7 +212,7 @@ if(this.awb.order.user.level === 3 && this.business.isBusiness === 'enable'){
           2,
           { thousandsSeparator: ".", decimalSeparator: "," }
         );
-if(this.awb.order.user.level == 3 && this.business.isBusiness == 'enable'){
+if(this.awb.order.user.level == 3){
 
   const id = this.awb.order.user.id;
   const endpoint = `/business/awb/${id}`;
@@ -225,7 +221,9 @@ if(this.awb.order.user.level == 3 && this.business.isBusiness == 'enable'){
     .get(endpoint)
     .then(respond => {
       this.business = respond.data;
-      this.imgPreview = this.business.imglocation;
+      if (respond.data.imglocation!=null){
+        this.imgPreview = this.business.imglocation;
+      }
     });
 }
       } catch (err) {
@@ -236,7 +234,7 @@ if(this.awb.order.user.level == 3 && this.business.isBusiness == 'enable'){
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" scoped media="print">
 .print-wrapper {
   background-color: #fff;
   height: 100%;
@@ -249,6 +247,11 @@ if(this.awb.order.user.level == 3 && this.business.isBusiness == 'enable'){
     border: solid 1px #e5e5e5;
     font-size: 0.5rem;
 
+    .preview {
+      max-width: 100px;
+      max-height: 34px;
+    }
+
     h5 {
       font-size: 0.6rem;
     }
@@ -260,6 +263,10 @@ if(this.awb.order.user.level == 3 && this.business.isBusiness == 'enable'){
 
   .goods {
     margin-top: 5px;
+
+    .uk-list li font {
+      font-size: 10px;
+    }
   }
 }
 </style>
