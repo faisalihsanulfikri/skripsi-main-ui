@@ -24,7 +24,7 @@
     <div class="uk-card-body">
       <div uk-grid>
         <div class="uk-width-1-2">
-          <div class="uk-margin">
+          <div class="uk-margin" v-if="user_level.level == 0">
             <label class="uk-form-label">Code</label>
             <input
               v-model="input.code"
@@ -32,7 +32,22 @@
               name="code"
               class="uk-input"
               type="text"
-              placeholder="Name"
+              placeholder="Code User"
+            >
+            <small
+              v-if="errors.first('name')"
+              class="uk-margin-small uk-text-danger"
+            >{{ errors.first('name') }}</small>
+          </div>
+          <div class="uk-margin" v-else>
+            <label class="uk-form-label">Code</label>
+            <input
+              v-model="input.code"
+              v-validate="rules.code"
+              name="code"
+              class="uk-input"
+              type="text"
+              placeholder="Code User"
               disabled
             >
             <small
@@ -200,6 +215,7 @@ export default {
         passwordConfirmation: "required|confirmed:password",
         phone: "required|min:10"
       },
+      user_level:{},
       error: false,
       errorMessage: "",
 
@@ -229,6 +245,8 @@ export default {
       this.fetchUsers();
     }
 
+    this.user_level = this.$root.user.level;
+    console.log(this.user_level);
     // console.log("input", this.input);
 
     // this.onUserCreate();
