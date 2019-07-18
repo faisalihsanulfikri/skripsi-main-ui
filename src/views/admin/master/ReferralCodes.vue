@@ -65,12 +65,14 @@
 
       <!-- Body -->
       <div class="uk-card-body">
-        <el-autocomplete
-          v-model="state"
-          :fetch-suggestions="querySearchAsync"
-          placeholder="Please input"
-          @select="handleSelect"
-        ></el-autocomplete>
+        <!-- Search Referral Code -->
+        <el-input
+          placeholder="Search and enter referral code here..."
+          v-model="searchReferralValue"
+          @change="onSearchReferralCodes"
+        >
+          <el-button slot="append" icon="el-icon-search"></el-button>
+        </el-input>
 
         <table class="uk-table uk-table-middle uk-table-divider">
           <thead>
@@ -152,7 +154,18 @@ export default {
       dialogEditReferral: false,
       referralCodeUsers: [],
 
-      referrals: [],
+      referrals: [
+        {
+          referral_id: "",
+          code: "",
+          expire_date: "",
+          is_active: "",
+          referral_code: "",
+          user_id: "",
+          user_name: "",
+          status: true
+        }
+      ],
 
       input: {
         id_user: "",
@@ -167,10 +180,7 @@ export default {
       searchValue: "",
       searchLoading: false,
       searchOptions: [],
-
-      links: [],
-      state: "",
-      timeout: null
+      searchReferralValue: ""
     };
   },
   methods: {
@@ -318,10 +328,6 @@ export default {
             };
           });
           this.referrals = mapRefferals;
-          this.links = this.referrals.map(el => ({
-            value: el.referral_code,
-            link: el.referral_code
-          }));
         })
         .catch(err => console.log(err));
     },
@@ -358,60 +364,26 @@ export default {
         this.searchOptions = [];
       }
     },
-    // loadAll() {
-    //   // let referrals = this.referrals.map(el => ({
-    //   //   value: el.referral_code,
-    //   //   link: el.referral_code
-    //   // }));
-    //   // return referrals;
 
-    //   return [
-    //     { value: "vue", link: "https://github.com/vuejs/vue" },
-    //     { value: "element", link: "https://github.com/ElemeFE/element" },
-    //     { value: "cooking", link: "https://github.com/ElemeFE/cooking" },
-    //     { value: "mint-ui", link: "https://github.com/ElemeFE/mint-ui" },
-    //     { value: "vuex", link: "https://github.com/vuejs/vuex" },
-    //     { value: "vue-router", link: "https://github.com/vuejs/vue-router" },
-    //     { value: "babel", link: "https://github.com/babel/babel" }
-    //   ];
-    // },
-    querySearchAsync(queryString, cb) {
-      var links = this.links;
-      var results = queryString
-        ? links.filter(this.createFilter(queryString))
-        : links;
-
-      clearTimeout(this.timeout);
-      this.timeout = setTimeout(() => {
-        cb(results);
-      }, 2000 * Math.random());
-    },
-    createFilter(queryString) {
-      return link => {
-        return (
-          link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
-        );
-      };
-    },
-    handleSelect(item) {
-      let endpoint = `/referral-codes?search=${item.value}`;
+    /**
+     * Mencari data referral berdasarken kode referral
+     * @return {Array}
+     */
+    onSearchReferralCodes() {
+      let searchValue = this.searchReferralValue;
+      let endpoint = `/referral-codes?search=${searchValue}`;
 
       return this.$authHttp
         .get(endpoint)
         .then(res => {
-          this.referrals = res.data.data.map(ref => {
-            return {
-              ...ref,
-              status: ref.is_active == "yes"
-            };
-          });
+          this.referrals = res.data.data.map(ref => ({
+            ...ref,
+            status: ref.is_active == "yes"
+          }));
         })
-        .catch(err => console.log(err));
+        .catch(err => this.__handleError(this, err, false));
     }
   },
-  // mounted() {
-  //   // this.links = this.loadAll();
-  // },
   created() {
     this.fetchUserPremium();
     this.fetchReferralCodeUsers();
