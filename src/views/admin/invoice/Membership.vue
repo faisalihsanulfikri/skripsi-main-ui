@@ -128,7 +128,7 @@
                           </td>
                           <td class="uk-text-center">
                             <el-button
-                              v-if="payment.status === 'new' || payment.status === 'reject'"
+                              v-if="payment.status === 'new'"
                               type="primary"
                               size="mini"
                               @click="confirmPayment(payment)"
