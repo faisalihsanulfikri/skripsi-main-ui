@@ -40,7 +40,7 @@
 
       <div class="filter-order uk-margin">
         <label class="uk-form-label">Start Date</label>
-        <br>
+        <br />
         <el-date-picker
           class="filter-order"
           v-model="input.start_date"
@@ -52,7 +52,7 @@
       </div>
       <div class="filter-order uk-margin">
         <label class="uk-form-label">End Date</label>
-        <br>
+        <br />
         <el-date-picker
           class="filter-order"
           v-model="input.end_date"
@@ -79,7 +79,7 @@
               type="radio"
               value="1"
               @click="onUnlimitedChanged"
-            >
+            />
             <span class="uk-margin-small-left">True</span>
           </label>
 
@@ -90,7 +90,7 @@
               type="radio"
               value="0"
               @click="onUnlimitedChanged"
-            >
+            />
             <span class="uk-margin-small-left">False</span>
           </label>
         </div>
@@ -104,6 +104,27 @@
           class="uk-margin-small uk-text-danger"
         >{{ errors.first('capacity') }}</small>
       </div>
+
+      <div class="uk-margin">
+        <label class="uk-form-label" style="display:block;margin-bottom:.3rem">Masukan Promo Code</label>
+        <el-radio-group v-model="insertPromoCode" size="small">
+          <el-radio-button label="Yes"></el-radio-button>
+          <el-radio-button label="No"></el-radio-button>
+        </el-radio-group>
+      </div>
+      <div class="uk-margin" v-if="showPromoCodeInput">
+        <label class="uk-form-label">Promo Referral Code</label>
+        <!-- <el-input v-model="input.promo_code" name="promo_code"></el-input> -->
+        <div style="diplay:block;margin-top:0.3rem">
+          <el-autocomplete
+            v-model="input.referral_code"
+            :fetch-suggestions="fetchPromoReferralCode"
+            placeholder="Please input"
+            @select="selectedPromoReferralCode"
+          ></el-autocomplete>
+        </div>
+      </div>
+
       <div class="uk-margin">
         <label class="uk-form-label">Promo Type</label>
         <div>
@@ -163,7 +184,9 @@ export default {
         promo_type: "",
         value_fixed: "",
         value_percentage: "",
-        value_point: ""
+        value_point: "",
+        promo_referral: "0",
+        referral_code: ""
       },
       master: {
         statuses: [],
@@ -183,13 +206,34 @@ export default {
         value_point: ""
       },
       error: false,
-      errorMessage: ""
+      errorMessage: "",
+      insertPromoCode: "No",
+      showPromoCodeInput: false
     };
   },
 
   watch: {
     value_fixed() {
       return this.promo_type == "fixed" ? "required" : "";
+    },
+
+    /**
+     * Menentukan nilai input.promo_referral. Jika nilai promoCode adalah "Yes" maka
+     * ubah nilai promo_referral menjadi "1", vice versa.
+     */
+    insertPromoCode(value) {
+      switch (value) {
+        case "Yes":
+          this.input.promo_referral = "1";
+          this.showPromoCodeInput = true;
+          break;
+
+        case "No":
+          this.input.promo_referral = "0";
+          this.showPromoCodeInput = false;
+          this.input.referral_code = null;
+          break;
+      }
     }
   },
 
@@ -205,6 +249,74 @@ export default {
   },
 
   methods: {
+    /**
+     * Mengambil data promo referral code dari database,
+     * lalu kembalikan dalam bentuk array dengan menambahkan
+     * property value pada setiap elementnya.
+     * @param {String} queryString
+     * @param {Function} callback
+     * @return {Array}
+     */
+    async fetchPromoReferralCode(queryString, callback) {
+      let endpoint = "/promo-referral-code";
+      let res = await this.$authHttp.get(endpoint);
+
+      let codes = res.data.data.map(code => {
+        let value = code.referral_code;
+        return { ...code, value };
+      });
+
+      let result = queryString
+        ? codes.filter(this.createFilter(queryString))
+        : codes;
+
+      callback(codes);
+    },
+
+    /**
+     * Memfilter promo referral codes yang terpilih/selected
+     * @param {String} queryString
+     * @return {Array}
+     */
+    createFilter(queryString) {
+      return element => {
+        let value = element.value.toLowerCase();
+        return value.indexOf(queryString.toLowerCase()) === 0;
+      };
+    },
+
+    /**
+     * Mengubah nilai input referral_code dengan nilai
+     * yand didapat dari autocomplate
+     */
+    selectedPromoReferralCode(item) {
+      this.input.referral_code = item.referral_code;
+    },
+
+    /**
+     * Validate promo referral code input,
+     * Jika nilai insertPromoCode sama dengan "Yes",
+     * tapi user tidak menginputakan nilai pada input.referral_code
+     * maka proses update/save jangan diteruskan
+     */
+    validetePromoReferralCodeInput() {
+      let referralCode = this.input.referral_code;
+      let insertPromoCode = this.insertPromoCode;
+      console.log(referralCode, insertPromoCode);
+      return new Promise((resolve, reject) => {
+        if (insertPromoCode == "Yes" && referralCode == null) {
+          console.log("reject");
+          reject();
+        } else if (insertPromoCode == "Yes" && referralCode != null) {
+          console.log("resolve");
+          resolve();
+        } else {
+          console.log("resolve");
+          resolve();
+        }
+      });
+    },
+
     setOptions() {
       // masters
       this.master.statuses = [
@@ -273,6 +385,22 @@ export default {
         let res = await this.$service.promoCode.find(this.$route.params.id);
 
         this.input = res.data;
+
+        /**
+         * Jika res.data.referral_code tidak kosong,
+         * maka ubah nilai showPromoCodeInput jadi true,
+         * begitu juga nilai insertCode menjadi "Yes"
+         */
+        let rc = this.input.referral_code;
+        let referralCodeIsNull = rc == "" || rc == null || rc == undefined;
+
+        if (!referralCodeIsNull) {
+          this.showPromoCodeInput = true;
+          this.insertPromoCode = "Yes";
+        } else {
+          this.showPromoCodeInput = false;
+          this.insertPromoCode = "No";
+        }
       } catch (err) {
         this.__handleError(this, err, true);
       }
@@ -280,11 +408,23 @@ export default {
       this.__stopLoading();
     },
     save() {
-      if (this.edit) {
-        this.update();
-      } else {
-        this.store();
-      }
+      // Check referral code validation
+      this.validetePromoReferralCodeInput()
+        .then(res => {
+          if (this.edit) {
+            this.update();
+          } else {
+            this.store();
+          }
+        })
+        .catch(err => {
+          this.$notify({
+            title: "Warning",
+            type: "warning",
+            message: "Please input referral code"
+          });
+          return;
+        });
     },
     async store() {
       this.__startLoading();
