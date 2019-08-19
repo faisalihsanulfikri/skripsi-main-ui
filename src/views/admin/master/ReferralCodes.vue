@@ -88,28 +88,89 @@
               <td>{{ item.referral_code }}</td>
               <td>{{ item.user_code }}</td>
               <td>{{ item.user_name }}</td>
-              <td style="text-align:center;">
+              <td style="text-align:left;">
                 <!-- Button Edit -->
                 <el-button type="primary" size="small" @click="showEditReferralDialog(i)">EDIT</el-button>
 
-                <!-- Tampilkan dialogEditReferral ini ketika menekan tombol EDIT -->
+                <!-- Dialog Edit Referral Code -->
                 <el-dialog
                   title="Edit Referral Code"
                   :visible.sync="dialogEditReferral"
-                  width="25%"
+                  width="30%"
                 >
+                  <!-- User Id Input -->
                   <div class="form-group">
                     <label for="user_id">USER ID</label>
                     <el-input v-model="input.id_user" placeholder="Please input" disabled></el-input>
                   </div>
+
+                  <!-- Referral Code Input -->
                   <div class="form-group">
                     <label for="referral_code">REFERRAL CODE</label>
                     <el-input v-model="input.referral_code" placeholder="Please input"></el-input>
                   </div>
-                  <div class="form-group">
-                    <label for="referral_code">ACTIVE STATUS</label>
-                    <el-switch v-model="input.active" active-text="YES" inactive-text="NO"></el-switch>
+
+                  <div class="form-group" style="display:flex;justify-content:space-between;">
+                    <!-- Active Input -->
+                    <div>
+                      <label for="referral_code">ACTIVE STATUS</label>
+                      <div style="text-align:right">
+                        <el-switch v-model="input.active" active-text="YES" inactive-text="NO"></el-switch>
+                      </div>
+                    </div>
+
+                    <div>
+                      <!-- Set As Promo Code Radio -->
+                      <div class="form-group">
+                        <label>SET AS PROMO REFERRAL?</label>
+                        <el-radio-group
+                          style="display:block;text-align:right;"
+                          v-model="setAsPromoCode"
+                          size="small"
+                        >
+                          <el-radio-button label="Yes"></el-radio-button>
+                          <el-radio-button label="No"></el-radio-button>
+                        </el-radio-group>
+                      </div>
+                    </div>
                   </div>
+
+                  <div v-if="showAdditionalInput">
+                    <!-- Capacity Input -->
+                    <div class="form-group">
+                      <label for="capacity">CAPACITIES</label>
+                      <el-input v-model="input.capacity" placeholder="Please input"></el-input>
+                    </div>
+
+                    <!-- Start Date Input -->
+                    <div class="form-group">
+                      <label>START DATE</label>
+                      <el-date-picker
+                        style="width:100%;"
+                        v-model="input.start_date"
+                        type="date"
+                        format="yyyy-MM-dd"
+                        value-format="yyyy-MM-dd"
+                        placeholder="Start Date"
+                        align="center"
+                      ></el-date-picker>
+                    </div>
+
+                    <!-- End Date Input -->
+                    <div class="form-group">
+                      <label>END DATE</label>
+                      <el-date-picker
+                        style="width:100%;"
+                        v-model="input.end_date"
+                        type="date"
+                        format="yyyy-MM-dd"
+                        value-format="yyyy-MM-dd"
+                        placeholder="End Date"
+                        align="center"
+                      ></el-date-picker>
+                    </div>
+                  </div>
+
                   <span slot="footer" class="dialog-footer">
                     <el-button @click="dialogEditReferral = false">Cancel</el-button>
                     <el-button type="primary" @click="editReferralCode(input.referral_id)">Confirm</el-button>
@@ -153,7 +214,6 @@ export default {
       dialogAddReferral: false,
       dialogEditReferral: false,
       referralCodeUsers: [],
-
       referrals: [
         {
           referral_id: "",
@@ -166,22 +226,45 @@ export default {
           status: true
         }
       ],
-
       input: {
         id_user: "",
         referral_code: "",
         referral_id: "",
-        active: false
+        active: false,
+        promo_referral: "0",
+        capacity: null,
+        start_date: null,
+        end_date: null,
+        in_used: 0
       },
-
       user: [],
-
       searchList: [],
       searchValue: "",
       searchLoading: false,
       searchOptions: [],
-      searchReferralValue: ""
+      searchReferralValue: "",
+      setAsPromoCode: "No",
+      showAdditionalInput: false
     };
+  },
+  watch: {
+    /**
+     * Set nilai untuk data berkut:
+     * promo_referral, start_date, end_date, dan capicity
+     * jika nilai setAsPromoCode adalah "Yes".
+     */
+    setAsPromoCode(val) {
+      this.showAdditionalInput = val == "Yes";
+
+      if (val == "No") {
+        this.input.promo_referral = "0";
+        this.input.start_date = null;
+        this.input.end_date = null;
+        this.input.capacity = null;
+      } else {
+        this.input.promo_referral = "1";
+      }
+    }
   },
   methods: {
     editReferralCode(id) {
@@ -189,7 +272,12 @@ export default {
       const payload = {
         id_user: this.input.id_user,
         referral_code: this.input.referral_code,
-        active: this.input.active ? "yes" : "no"
+        active: this.input.active ? "yes" : "no",
+        promo_referral: this.input.promo_referral,
+        start_date: this.input.start_date,
+        end_date: this.input.end_date,
+        capacity: this.input.capacity,
+        in_used: this.input.in_used
       };
 
       this.$authHttp
@@ -235,6 +323,7 @@ export default {
     },
     showEditReferralDialog(i) {
       this.dialogEditReferral = true;
+      this.setAsPromoCode = "No";
 
       let refCode = this.referrals[i];
 
@@ -396,8 +485,9 @@ export default {
   box-sizing: border-box;
 }
 label {
-  display: block;
+  display: inline-block;
   margin-bottom: 0.5rem;
+  text-align: left;
 }
 .form-group {
   margin-bottom: 1rem;
