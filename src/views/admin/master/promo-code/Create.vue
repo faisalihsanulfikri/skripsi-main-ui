@@ -257,43 +257,26 @@ export default {
     async setPromoReferralCodesOption() {
       let res = await this.$authHttp.get("/promo-referral-code");
       let referralCodes = res.data.data.map(el => ({
-        value: el.referral_code,
+        value: el.id,
         label: el.referral_code
       }));
       this.promoReferralCodesOption = referralCodes;
     },
 
     /**
-     * Memfilter promo referral codes yang terpilih/selected
-     * @param {String} queryString
-     * @return {Array}
-     */
-    // createFilter(queryString) {
-    //   return element => {
-    //     let value = element.value.toLowerCase();
-    //     return value.indexOf(queryString.toLowerCase()) === 0;
-    //   };
-    // },
-
-    /**
-     * Validate promo referral code input,
+     * Validate promo referral codes input,
      * Jika nilai insertPromoCode sama dengan "Yes",
-     * tapi user tidak menginputakan nilai pada input.referral_code
+     * tapi user tidak menginputakan nilai pada input.referral_codes
      * maka proses update/save jangan diteruskan
      */
-    validetePromoReferralCodeInput() {
-      let referralCode = this.input.referral_code;
+    validatePromoReferralCodeInput() {
+      let referralCodes = this.input.referral_codes;
       let insertPromoCode = this.insertPromoCode;
-      console.log(referralCode, insertPromoCode);
+
       return new Promise((resolve, reject) => {
-        if (insertPromoCode == "Yes" && referralCode == null) {
-          console.log("reject");
+        if (insertPromoCode == "Yes" && referralCodes.length == 0) {
           reject();
-        } else if (insertPromoCode == "Yes" && referralCode != null) {
-          console.log("resolve");
-          resolve();
         } else {
-          console.log("resolve");
           resolve();
         }
       });
@@ -397,7 +380,7 @@ export default {
      */
     save() {
       // check inputan promo referral code sebelum di store/edit
-      this.validetePromoReferralCodeInput()
+      this.validatePromoReferralCodeInput()
         .then(res => {
           if (this.edit) return this.update();
           return this.store();
