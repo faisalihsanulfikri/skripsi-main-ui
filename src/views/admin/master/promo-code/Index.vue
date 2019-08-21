@@ -22,18 +22,6 @@
       </div>
     </div>
     <div class="uk-card-body">
-      <!-- <div class="uk-margin uk-grid-small" uk-grid>
-        <div class="uk-width-1-3 uk-margin-auto-left">
-          <el-input
-            v-model="filter.search"
-            placeholder="Search..."
-            @keyup.enter="fetchExchangeRates"
-          >
-            <el-button slot="append" icon="el-icon-search" @click="fetchExchangeRates"></el-button>
-          </el-input>
-        </div>
-      </div>-->
-
       <div class="uk-overflow-auto">
         <table class="uk-table uk-table-divider uk-table-small">
           <thead>
@@ -149,7 +137,7 @@ export default {
         this.totalPages = res.data.pages;
         this.current_page = page;
 
-        this.promoCode = res.data.data;
+        this.promoCode = res.data.data.reverse();
       } catch (err) {
         this.__handleError(this, err, true);
       }
