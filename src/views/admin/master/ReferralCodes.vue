@@ -139,7 +139,7 @@
                     <!-- Capacity Input -->
                     <div class="form-group">
                       <label for="capacity">CAPACITIES</label>
-                      <el-input v-model="input.capacity" placeholder="Please input"></el-input>
+                      <el-input v-model="input.capacity" placeholder="Please input" type="number"></el-input>
                     </div>
 
                     <!-- Start Date Input -->
