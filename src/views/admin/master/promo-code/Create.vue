@@ -98,7 +98,12 @@
       <!--  -->
       <div class="uk-margin">
         <label class="uk-form-label">Capacity</label>
-        <el-input v-model="input.capacity" v-validate="rules.capacity" name="capacity"></el-input>
+        <el-input
+          v-model="input.capacity"
+          v-validate="rules.capacity"
+          name="capacity"
+          type="number"
+        ></el-input>
         <small
           v-if="errors.first('capacity')"
           class="uk-margin-small uk-text-danger"
@@ -156,17 +161,17 @@
 
       <div class="uk-margin" v-if="input.promo_type == 'fixed'">
         <label class="uk-form-label">Value {{input.promo_type}}</label>
-        <el-input v-model="input.value_fixed"></el-input>
+        <el-input v-model="input.value_fixed" type="number"></el-input>
       </div>
 
       <div class="uk-margin" v-else-if="input.promo_type == 'percentage'">
         <label class="uk-form-label">Value {{input.promo_type}}</label>
-        <el-input v-model="input.value_percentage"></el-input>
+        <el-input v-model="input.value_percentage" type="number"></el-input>
       </div>
 
       <div class="uk-margin" v-else-if="input.promo_type == 'point'">
         <label class="uk-form-label">Value {{input.promo_type}}</label>
-        <el-input v-model="input.value_point"></el-input>
+        <el-input v-model="input.value_point" type="number"></el-input>
       </div>
 
       <el-alert v-if="error" title="ERROR" type="error" :description="errorMessage" show-icon></el-alert>
@@ -193,9 +198,9 @@ export default {
         capacity: "",
         in_used: 0,
         promo_type: "",
-        value_fixed: "",
-        value_percentage: "",
-        value_point: "",
+        value_fixed: 0,
+        value_percentage: 0,
+        value_point: 0,
         promo_referral: "0",
         referral_codes: []
       },
@@ -375,10 +380,41 @@ export default {
     },
 
     /**
+     * Check validasi value_fixed, value_percentage dan value_point
+     * @return {Boolean}
+     */
+    isFixedPercentagePointNull() {
+      let isValueFixedNull =
+        this.input.value_fixed == "" ||
+        typeof this.input.value_fixed == "string";
+      let isValuePercentage =
+        this.input.value_percentage == "" ||
+        typeof this.input.value_fixed == "string";
+      let isValuePointNull =
+        this.input.value_point == "" ||
+        typeof this.input.value_fixed == "string";
+
+      return isValueFixedNull || isValuePercentage || isValuePointNull;
+    },
+
+    /**
      * Membuat atau Updating Promo Code.
      * @return {Void}
      */
     save() {
+      // Check validasi value_fixed, value_percentage dan value_point
+      if (this.isFixedPercentagePointNull()) {
+        this.input.value_point = 0;
+        this.input.value_fixed = 0;
+        this.input.value_percentage = 0;
+
+        return this.$notify({
+          title: "Warning",
+          type: "warning",
+          message: "Please input value " + this.input.promo_type
+        });
+      }
+
       // check inputan promo referral code sebelum di store/edit
       this.validatePromoReferralCodeInput()
         .then(res => {
