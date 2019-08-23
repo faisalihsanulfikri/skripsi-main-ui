@@ -373,12 +373,39 @@ export default {
       this.setAsPromoCode = "No";
 
       // Ketika menampilkan dialog add referral, reset data input seperti dibawah:
-      this.input = { promo_referral: "0" };
+      this.input = { promo_referral: "0", user_name: "", id_user: "" };
+
+      console.log(this.input);
 
       // Tampilkan dialogAddReferral
       this.dialogAddReferral = true;
     },
     addNewReferral() {
+      let validates =
+        this.input.promo_referral == "1"
+          ? [
+              "user_name",
+              "id_user",
+              "referral_code",
+              "capacity",
+              "start_date",
+              "end_date"
+            ]
+          : ["user_name", "id_user", "referral_code"];
+
+      for (let i = 0; i < validates.length; i++) {
+        if (this.isNull(validates[i])) {
+          console.log(validates[i]);
+
+          return this.$notify({
+            title: "Warning",
+            type: "warning",
+            message: `Please input ${validates[i]}`
+          });
+          break;
+        }
+      }
+
       const endpoint = "/referral-code/";
 
       this.input.referral_code = this.input.referral_code.toUpperCase();
@@ -493,6 +520,15 @@ export default {
 
     isNull(inputName) {
       switch (inputName) {
+        case "user_name":
+          return this.input.user_name == null;
+          break;
+        case "id_user":
+          return this.input.id_user == null;
+          break;
+        case "referral_code":
+          return this.input.referral_code == null;
+          break;
         case "capacity":
           return this.input.capacity == null;
           break;
