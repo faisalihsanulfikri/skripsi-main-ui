@@ -28,7 +28,6 @@
         <el-dialog title="Add Referral Code" :visible.sync="dialogAddReferral" width="25%">
           <div class="form-group">
             <label for="user_id">USER</label>
-            <!-- <el-input v-model="input.id_user" placeholder="Please input" disabled></el-input> -->
             <el-select
               v-model="searchUser"
               filterable
@@ -52,10 +51,34 @@
             <label for="referral_code">REFERRAL CODE</label>
             <el-input v-model="input.referral_code" placeholder="Please input"></el-input>
           </div>
-          <div class="form-group">
-            <label for="referral_code">ACTIVE STATUS</label>
-            <el-switch v-model="input.active" active-text="YES" inactive-text="NO"></el-switch>
+          <div class="form-group" style="display:flex;justify-content:space-between;">
+            <!-- Active Input -->
+            <div>
+              <label for="referral_code">ACTIVE STATUS</label>
+              <div style="text-align:right">
+                <el-switch v-model="input.active" active-text="YES" inactive-text="NO"></el-switch>
+              </div>
+            </div>
+
+            <div>
+              <!-- Set As Promo Code Radio -->
+              <div class="form-group">
+                <label>SET AS PROMO REFERRAL?</label>
+                <el-radio-group
+                  style="display:block;text-align:right;"
+                  v-model="setAsPromoCode"
+                  size="small"
+                >
+                  <el-radio-button label="Yes"></el-radio-button>
+                  <el-radio-button label="No"></el-radio-button>
+                </el-radio-group>
+              </div>
+            </div>
           </div>
+
+          <!-- Addition Input: Promo Code Form -->
+          <PromoCodeForm v-if="showAdditionalInput" :input="input"></PromoCodeForm>
+
           <span slot="footer" class="dialog-footer">
             <el-button @click="dialogAddReferral = false">Cancel</el-button>
             <el-button type="primary" @click="addNewReferral">Confirm</el-button>
@@ -74,7 +97,7 @@
           <el-button slot="append" icon="el-icon-search"></el-button>
         </el-input>
 
-        <table class="uk-table uk-table-middle uk-table-divider">
+        <table class="uk-table uk-table-middle uk-table-divider" v-loading="isLoadReferralTable">
           <thead>
             <tr>
               <th>REFERRAL CODE</th>
@@ -88,28 +111,57 @@
               <td>{{ item.referral_code }}</td>
               <td>{{ item.user_code }}</td>
               <td>{{ item.user_name }}</td>
-              <td style="text-align:center;">
+              <td style="text-align:left;">
                 <!-- Button Edit -->
                 <el-button type="primary" size="small" @click="showEditReferralDialog(i)">EDIT</el-button>
 
-                <!-- Tampilkan dialogEditReferral ini ketika menekan tombol EDIT -->
+                <!-- Dialog Edit Referral Code -->
                 <el-dialog
                   title="Edit Referral Code"
                   :visible.sync="dialogEditReferral"
                   width="25%"
                 >
-                  <div class="form-group">
-                    <label for="user_id">USER ID</label>
-                    <el-input v-model="input.id_user" placeholder="Please input" disabled></el-input>
+                  <!-- User Id Input -->
+                  <div class="form-group" style="margin-bottom:0">
+                    <label for="user_id">USER</label>
+                    <el-input v-model="input.user_name" disabled></el-input>
+                    <el-input v-model="input.id_user" placeholder="Please input" disabled hidden></el-input>
                   </div>
+
+                  <!-- Referral Code Input -->
                   <div class="form-group">
                     <label for="referral_code">REFERRAL CODE</label>
                     <el-input v-model="input.referral_code" placeholder="Please input"></el-input>
                   </div>
-                  <div class="form-group">
-                    <label for="referral_code">ACTIVE STATUS</label>
-                    <el-switch v-model="input.active" active-text="YES" inactive-text="NO"></el-switch>
+
+                  <div class="form-group" style="display:flex;justify-content:space-between;">
+                    <!-- Active Input -->
+                    <div>
+                      <label for="referral_code">ACTIVE STATUS</label>
+                      <div style="text-align:right">
+                        <el-switch v-model="input.active" active-text="YES" inactive-text="NO"></el-switch>
+                      </div>
+                    </div>
+
+                    <div>
+                      <!-- Set As Promo Code Radio -->
+                      <div class="form-group">
+                        <label>SET AS PROMO REFERRAL?</label>
+                        <el-radio-group
+                          style="display:block;text-align:right;"
+                          v-model="setAsPromoCode"
+                          size="small"
+                        >
+                          <el-radio-button label="Yes"></el-radio-button>
+                          <el-radio-button label="No"></el-radio-button>
+                        </el-radio-group>
+                      </div>
+                    </div>
                   </div>
+
+                  <!-- Addition Input: Promo Code Form -->
+                  <PromoCodeForm v-if="showAdditionalInput" :input="input"></PromoCodeForm>
+
                   <span slot="footer" class="dialog-footer">
                     <el-button @click="dialogEditReferral = false">Cancel</el-button>
                     <el-button type="primary" @click="editReferralCode(input.referral_id)">Confirm</el-button>
@@ -143,8 +195,12 @@
 
 <script>
 import { mapMutations, mapActions, mapGetters, mapState } from "vuex";
+import PromoCodeForm from "@/components/referral-codes/PromoCodeForm";
+
 export default {
   name: "ReferralCodes",
+
+  components: { PromoCodeForm },
 
   data() {
     return {
@@ -153,7 +209,6 @@ export default {
       dialogAddReferral: false,
       dialogEditReferral: false,
       referralCodeUsers: [],
-
       referrals: [
         {
           referral_id: "",
@@ -166,37 +221,81 @@ export default {
           status: true
         }
       ],
-
       input: {
         id_user: "",
         referral_code: "",
         referral_id: "",
-        active: false
+        active: false,
+        promo_referral: "0",
+        capacity: null,
+        start_date: null,
+        end_date: null,
+        in_used: null,
+        user_name: ""
       },
-
       user: [],
-
       searchList: [],
       searchValue: "",
       searchLoading: false,
       searchOptions: [],
-      searchReferralValue: ""
+      searchReferralValue: "",
+      setAsPromoCode: "No",
+      showAdditionalInput: false,
+      isLoadReferralTable: true
     };
+  },
+  watch: {
+    /**
+     * Set nilai untuk data berkut:
+     * promo_referral, start_date, end_date, dan capicity
+     * jika nilai setAsPromoCode adalah "Yes".
+     */
+    setAsPromoCode(val) {
+      this.showAdditionalInput = val == "Yes";
+
+      if (val == "No") {
+        this.input.promo_referral = "0";
+        this.input.start_date = null;
+        this.input.end_date = null;
+        this.input.capacity = null;
+      } else {
+        this.input.in_used = 0;
+        this.input.promo_referral = "1";
+      }
+    }
   },
   methods: {
     editReferralCode(id) {
+      if (this.input.promo_referral == "1") {
+        let validates = ["capacity", "start_date", "end_date"];
+        for (let i = 0; i < validates.length; i++) {
+          if (this.isNull(validates[i])) {
+            return this.$notify({
+              title: "Warning",
+              type: "warning",
+              message: `Please input ${validates[i]}`
+            });
+            break;
+          }
+        }
+      }
+
       const endpoint = "/referral-code/" + id;
       const payload = {
         id_user: this.input.id_user,
         referral_code: this.input.referral_code,
-        active: this.input.active ? "yes" : "no"
+        active: this.input.active ? "yes" : "no",
+        promo_referral: this.input.promo_referral,
+        start_date: this.input.start_date,
+        end_date: this.input.end_date,
+        capacity: this.input.capacity,
+        in_used: this.input.in_used
       };
 
       this.$authHttp
         .put(endpoint, payload)
         .then(res => {
           this.fetchReferralCodeUsers();
-          this.input = {};
           this.$notify({
             title: "SUCCESS",
             message: res.data.message,
@@ -231,18 +330,21 @@ export default {
             type: "success"
           });
         })
-        .catch(err => console.log(err));
+        .catch(err => this.__handleError(this, err, false));
     },
     showEditReferralDialog(i) {
       this.dialogEditReferral = true;
+      this.setAsPromoCode = "No";
 
       let refCode = this.referrals[i];
 
-      this.input.id_code = refCode.id;
-      this.input.id_user = refCode.user_id;
-      this.input.referral_code = refCode.referral_code;
-      this.input.active = refCode.status;
-      this.input.referral_id = refCode.referral_id;
+      if (refCode.promo_referral == "1") this.setAsPromoCode = "Yes";
+
+      this.input = {
+        ...refCode,
+        id_user: refCode.user_id,
+        active: refCode.status
+      };
     },
     deleteReferralCode(id) {
       this.$confirm("Are you sure to delete this?", "Warning", {
@@ -264,16 +366,46 @@ export default {
             type: "success"
           });
         })
-        .catch(err => console.log(err));
+        .catch(err => this.__handleError(this, err, false));
     },
     showAddReferralDialog(i) {
+      // Selalu ubah menjadi "No" untuk nilai "setAsPromoCode" ketika method ini dipanggil.
+      this.setAsPromoCode = "No";
+
+      // Ketika menampilkan dialog add referral, reset data input seperti dibawah:
+      this.input = { promo_referral: "0", user_name: "", id_user: "" };
+
+      console.log(this.input);
+
+      // Tampilkan dialogAddReferral
       this.dialogAddReferral = true;
-
-      // let refCode = this.referralCodeUsers[i];
-
-      // this.input.id_user = refCode.userId;
     },
     addNewReferral() {
+      let validates =
+        this.input.promo_referral == "1"
+          ? [
+              "user_name",
+              "id_user",
+              "referral_code",
+              "capacity",
+              "start_date",
+              "end_date"
+            ]
+          : ["user_name", "id_user", "referral_code"];
+
+      for (let i = 0; i < validates.length; i++) {
+        if (this.isNull(validates[i])) {
+          console.log(validates[i]);
+
+          return this.$notify({
+            title: "Warning",
+            type: "warning",
+            message: `Please input ${validates[i]}`
+          });
+          break;
+        }
+      }
+
       const endpoint = "/referral-code/";
 
       this.input.referral_code = this.input.referral_code.toUpperCase();
@@ -327,9 +459,11 @@ export default {
               status: ref.is_active == "yes"
             };
           });
+
           this.referrals = mapRefferals;
+          this.isLoadReferralTable = false;
         })
-        .catch(err => console.log(err));
+        .catch(err => this.__handleError(this, err, false));
     },
     fetchUserPremium() {
       const endpoint = `/referral-code/users`;
@@ -346,7 +480,7 @@ export default {
             };
           });
         })
-        .catch(err => console.log(err));
+        .catch(err => this.__handleError(this, err, false));
     },
     changeUser(id) {
       this.input.id_user = id;
@@ -382,6 +516,32 @@ export default {
           }));
         })
         .catch(err => this.__handleError(this, err, false));
+    },
+
+    isNull(inputName) {
+      switch (inputName) {
+        case "user_name":
+          return this.input.user_name == null;
+          break;
+        case "id_user":
+          return this.input.id_user == null;
+          break;
+        case "referral_code":
+          return this.input.referral_code == null;
+          break;
+        case "capacity":
+          return this.input.capacity == null;
+          break;
+        case "start_date":
+          return this.input.start_date == null;
+          break;
+        case "end_date":
+          return this.input.end_date == null;
+          break;
+        default:
+          return true;
+          break;
+      }
     }
   },
   created() {
@@ -396,8 +556,9 @@ export default {
   box-sizing: border-box;
 }
 label {
-  display: block;
+  display: inline-block;
   margin-bottom: 0.5rem;
+  text-align: left;
 }
 .form-group {
   margin-bottom: 1rem;
