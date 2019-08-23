@@ -252,6 +252,7 @@ export default {
      */
     setAsPromoCode(val) {
       this.showAdditionalInput = val == "Yes";
+      console.log("setAsPromoCode", val);
 
       if (val == "No") {
         this.input.promo_referral = "0";
@@ -266,6 +267,20 @@ export default {
   },
   methods: {
     editReferralCode(id) {
+      if (this.input.promo_referral == "1") {
+        let validates = ["capacity", "start_date", "end_date"];
+        for (let i = 0; i < validates.length; i++) {
+          if (this.isNull(validates[i])) {
+            return this.$notify({
+              title: "Warning",
+              type: "warning",
+              message: `Please input ${validates[i]}`
+            });
+            break;
+          }
+        }
+      }
+
       const endpoint = "/referral-code/" + id;
       const payload = {
         id_user: this.input.id_user,
@@ -360,9 +375,7 @@ export default {
       this.setAsPromoCode = "No";
 
       // Ketika menampilkan dialog add referral, reset data input seperti dibawah:
-      this.input = {
-        promo_referral: "0"
-      };
+      this.input = { promo_referral: "0" };
 
       // Tampilkan dialogAddReferral
       this.dialogAddReferral = true;
@@ -480,6 +493,23 @@ export default {
           }));
         })
         .catch(err => this.__handleError(this, err, false));
+    },
+
+    isNull(inputName) {
+      switch (inputName) {
+        case "capacity":
+          return this.input.capacity == null;
+          break;
+        case "start_date":
+          return this.input.start_date == null;
+          break;
+        case "end_date":
+          return this.input.end_date == null;
+          break;
+        default:
+          return true;
+          break;
+      }
     }
   },
   created() {
