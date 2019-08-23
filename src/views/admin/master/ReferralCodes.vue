@@ -122,9 +122,10 @@
                   width="25%"
                 >
                   <!-- User Id Input -->
-                  <div class="form-group">
-                    <label for="user_id">USER ID</label>
-                    <el-input v-model="input.id_user" placeholder="Please input" disabled></el-input>
+                  <div class="form-group" style="margin-bottom:0">
+                    <label for="user_id">USER</label>
+                    <el-input v-model="input.user_name" disabled></el-input>
+                    <el-input v-model="input.id_user" placeholder="Please input" disabled hidden></el-input>
                   </div>
 
                   <!-- Referral Code Input -->
@@ -229,7 +230,8 @@ export default {
         capacity: null,
         start_date: null,
         end_date: null,
-        in_used: null
+        in_used: null,
+        user_name: ""
       },
       user: [],
       searchList: [],
@@ -321,20 +323,14 @@ export default {
       this.setAsPromoCode = "No";
 
       let refCode = this.referrals[i];
+      console.log({ refCode });
 
       if (refCode.promo_referral == "1") this.setAsPromoCode = "Yes";
 
       this.input = {
-        id_code: refCode.id,
+        ...refCode,
         id_user: refCode.user_id,
-        referral_code: refCode.referral_code,
-        active: refCode.status,
-        referral_id: refCode.referral_id,
-        promo_referral: refCode.promo_referral,
-        start_date: refCode.start_date,
-        end_date: refCode.end_date,
-        capacity: refCode.capacity,
-        in_used: refCode.in_used
+        active: refCode.status
       };
     },
     deleteReferralCode(id) {
@@ -425,6 +421,8 @@ export default {
               status: ref.is_active == "yes"
             };
           });
+
+          console.log("fetchReferralCodeUsers", mapRefferals);
 
           this.referrals = mapRefferals;
           this.isLoadReferralTable = false;
