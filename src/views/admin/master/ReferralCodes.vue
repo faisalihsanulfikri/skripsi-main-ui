@@ -363,6 +363,11 @@ export default {
       // Selalu ubah menjadi "No" untuk nilai "setAsPromoCode" ketika method ini dipanggil.
       this.setAsPromoCode = "No";
 
+      // Ketika menampilkan dialog add referral, reset data input seperti dibawah:
+      this.input = {
+        promo_referral: "0"
+      };
+
       // Tampilkan dialogAddReferral
       this.dialogAddReferral = true;
     },
