@@ -43,24 +43,38 @@
         <br />
         <el-date-picker
           class="filter-order"
+          style="display:block"
           v-model="input.start_date"
+          v-validate="rules.start_date"
+          name="start_date"
           type="date"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
           placeholder="Start Date"
         ></el-date-picker>
+        <small
+          v-if="errors.first('start_date')"
+          class="uk-margin-small uk-text-danger"
+        >{{ errors.first('start_date') }}</small>
       </div>
       <div class="filter-order uk-margin">
         <label class="uk-form-label">End Date</label>
         <br />
         <el-date-picker
           class="filter-order"
+          style="display:block"
           v-model="input.end_date"
+          v-validate="rules.end_date"
+          name="end_date"
           type="date"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
           placeholder="End Date"
         ></el-date-picker>
+        <small
+          v-if="errors.first('end_date')"
+          class="uk-margin-small uk-text-danger"
+        >{{ errors.first('end_date') }}</small>
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Description</label>
@@ -161,20 +175,45 @@
 
       <div class="uk-margin" v-if="input.promo_type == 'fixed'">
         <label class="uk-form-label">Value {{input.promo_type}}</label>
-        <el-input v-model="input.value_fixed" type="number"></el-input>
+        <el-input
+          v-model="input.value_fixed"
+          type="number"
+          v-validate="rules.value_fixed"
+          name="value_fixed"
+        ></el-input>
+        <small
+          v-if="errors.first('value_fixed')"
+          class="uk-margin-small uk-text-danger"
+        >{{ errors.first('value_fixed') }}</small>
       </div>
 
       <div class="uk-margin" v-else-if="input.promo_type == 'percentage'">
         <label class="uk-form-label">Value {{input.promo_type}}</label>
-        <el-input v-model="input.value_percentage" type="number"></el-input>
+        <el-input
+          v-model="input.value_percentage"
+          type="number"
+          v-validate="rules.value_percentage"
+          name="value_percentage"
+        ></el-input>
+        <small
+          v-if="errors.first('value_percentage')"
+          class="uk-margin-small uk-text-danger"
+        >{{ errors.first('value_percentage') }}</small>
       </div>
 
       <div class="uk-margin" v-else-if="input.promo_type == 'point'">
         <label class="uk-form-label">Value {{input.promo_type}}</label>
-        <el-input v-model="input.value_point" type="number"></el-input>
+        <el-input
+          v-model="input.value_point"
+          type="number"
+          v-validate="rules.value_point"
+          name="value_point"
+        ></el-input>
+        <small
+          v-if="errors.first('value_point')"
+          class="uk-margin-small uk-text-danger"
+        >{{ errors.first('value_point') }}</small>
       </div>
-
-      <el-alert v-if="error" title="ERROR" type="error" :description="errorMessage" show-icon></el-alert>
     </div>
     <div class="uk-card-footer uk-text-right">
       <el-button type="primary" @click="save">SAVE</el-button>
@@ -217,9 +256,11 @@ export default {
       rules: {
         code: "required",
         capacity: "required",
-        value_fixed: "",
-        value_percentage: "",
-        value_point: ""
+        value_fixed: "required",
+        value_percentage: "required",
+        value_point: "required",
+        start_date: "required",
+        end_date: "required"
       },
       error: false,
       errorMessage: "",
@@ -384,15 +425,9 @@ export default {
      * @return {Boolean}
      */
     isFixedPercentagePointNull() {
-      let isValueFixedNull =
-        this.input.value_fixed == "" ||
-        typeof this.input.value_fixed == "string";
-      let isValuePercentage =
-        this.input.value_percentage == "" ||
-        typeof this.input.value_fixed == "string";
-      let isValuePointNull =
-        this.input.value_point == "" ||
-        typeof this.input.value_fixed == "string";
+      let isValueFixedNull = typeof this.input.value_fixed == "string";
+      let isValuePercentage = typeof this.input.value_percentage == "string";
+      let isValuePointNull = typeof this.input.value_point == "string";
 
       return isValueFixedNull || isValuePercentage || isValuePointNull;
     },
@@ -447,7 +482,7 @@ export default {
 
         this.$router.push({ name: "admin-promo-codes" });
       } catch (err) {
-        this.__handleError(this, err, true);
+        this.__handleError(this, err, false);
       }
 
       this.__stopLoading();
@@ -483,7 +518,7 @@ export default {
 
         this.$router.push({ name: "admin-promo-codes" });
       } catch (err) {
-        this.__handleError(this, err, true);
+        this.__handleError(this, err, false);
       }
 
       this.__stopLoading();
