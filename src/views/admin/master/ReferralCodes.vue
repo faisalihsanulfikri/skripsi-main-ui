@@ -252,7 +252,6 @@ export default {
      */
     setAsPromoCode(val) {
       this.showAdditionalInput = val == "Yes";
-      console.log("setAsPromoCode", val);
 
       if (val == "No") {
         this.input.promo_referral = "0";
@@ -331,14 +330,13 @@ export default {
             type: "success"
           });
         })
-        .catch(err => console.log(err));
+        .catch(err => this.__handleError(this, err, false));
     },
     showEditReferralDialog(i) {
       this.dialogEditReferral = true;
       this.setAsPromoCode = "No";
 
       let refCode = this.referrals[i];
-      console.log({ refCode });
 
       if (refCode.promo_referral == "1") this.setAsPromoCode = "Yes";
 
@@ -368,7 +366,7 @@ export default {
             type: "success"
           });
         })
-        .catch(err => console.log(err));
+        .catch(err => this.__handleError(this, err, false));
     },
     showAddReferralDialog(i) {
       // Selalu ubah menjadi "No" untuk nilai "setAsPromoCode" ketika method ini dipanggil.
@@ -435,8 +433,6 @@ export default {
             };
           });
 
-          console.log("fetchReferralCodeUsers", mapRefferals);
-
           this.referrals = mapRefferals;
           this.isLoadReferralTable = false;
         })
@@ -457,7 +453,7 @@ export default {
             };
           });
         })
-        .catch(err => console.log(err));
+        .catch(err => this.__handleError(this, err, false));
     },
     changeUser(id) {
       this.input.id_user = id;
