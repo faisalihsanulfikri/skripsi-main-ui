@@ -379,6 +379,20 @@ export default {
       this.dialogAddReferral = true;
     },
     addNewReferral() {
+      if (this.input.promo_referral == "1") {
+        let validates = ["capacity", "start_date", "end_date"];
+        for (let i = 0; i < validates.length; i++) {
+          if (this.isNull(validates[i])) {
+            return this.$notify({
+              title: "Warning",
+              type: "warning",
+              message: `Please input ${validates[i]}`
+            });
+            break;
+          }
+        }
+      }
+
       const endpoint = "/referral-code/";
 
       this.input.referral_code = this.input.referral_code.toUpperCase();
