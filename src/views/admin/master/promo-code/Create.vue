@@ -520,6 +520,10 @@ export default {
           this.showPromoCodeInput = false;
           this.insertPromoCode = "No";
         }
+
+        if (this.input.one_time == "1") this.isOneTimePromo = "Yes";
+        if (this.input.new_user == "1") this.isNewUser = "Yes";
+        if (this.input.unique == "1") this.isUniquePromo = "Yes";
       } catch (err) {
         this.__handleError(this, err, true);
       }
