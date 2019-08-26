@@ -421,32 +421,6 @@ export default {
     },
 
     /**
-     * TODO: DEFRECATED
-     * Check validasi value_fixed, value_percentage dan value_point
-     * @return {Boolean}
-     */
-    // isFixedPercentagePointNull() {
-    //   const vFixed = this.input.value_fixed;
-    //   const vPercentage = this.input.value_percentage;
-    //   const vPoint = this.input.value_point;
-
-    //   let isValueFixedNull = vFixed == "" || vFixed < 0;
-    //   let isValuePercentageNull = vPercentage == "" || vPercentage < 0;
-    //   let isValuePointNull = vPoint == "" || vPoint < 0;
-
-    //   console.table({
-    //     vFixed,
-    //     vPercentage,
-    //     vPoint,
-    //     isValueFixedNull,
-    //     isValuePercentageNull,
-    //     isValuePointNull
-    //   });
-
-    //   return isValueFixedNull || isValuePercentageNull || isValuePointNull;
-    // },
-
-    /**
      * Membuat atau Updating Promo Code.
      * @return {Void}
      */
