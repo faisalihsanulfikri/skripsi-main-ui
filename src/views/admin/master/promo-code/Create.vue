@@ -280,15 +280,9 @@ export default {
         value_point: 0,
         promo_referral: "0",
         referral_codes: [],
-<<<<<<< HEAD
-        one_time: 0,
-        new_user: 0,
-        unique: 0
-=======
         one_time: "0",
         new_user: "0",
         unique: "0"
->>>>>>> 502cc619275da94d8571afea6cf5de62157fdfa0
       },
       master: {
         statuses: [],
