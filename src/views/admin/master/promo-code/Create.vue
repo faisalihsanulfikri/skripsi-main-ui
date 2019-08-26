@@ -289,6 +289,7 @@ export default {
         case "No":
           this.input.promo_referral = "0";
           this.showPromoCodeInput = false;
+          this.input.referral_codes = [];
           break;
       }
     }
@@ -421,34 +422,19 @@ export default {
     },
 
     /**
-     * Check validasi value_fixed, value_percentage dan value_point
-     * @return {Boolean}
-     */
-    isFixedPercentagePointNull() {
-      let isValueFixedNull = typeof this.input.value_fixed == "string";
-      let isValuePercentage = typeof this.input.value_percentage == "string";
-      let isValuePointNull = typeof this.input.value_point == "string";
-
-      return isValueFixedNull || isValuePercentage || isValuePointNull;
-    },
-
-    /**
      * Membuat atau Updating Promo Code.
      * @return {Void}
      */
-    save() {
-      // Check validasi value_fixed, value_percentage dan value_point
-      if (this.isFixedPercentagePointNull()) {
-        this.input.value_point = 0;
-        this.input.value_fixed = 0;
-        this.input.value_percentage = 0;
-
+    async save() {
+      if (!(await this.$validator.validate())) {
         return this.$notify({
           title: "Warning",
           type: "warning",
           message: "Please input value " + this.input.promo_type
         });
       }
+
+      this.$validator.errors.clear();
 
       // check inputan promo referral code sebelum di store/edit
       this.validatePromoReferralCodeInput()
