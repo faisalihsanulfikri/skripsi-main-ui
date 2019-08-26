@@ -280,9 +280,9 @@ export default {
         value_point: 0,
         promo_referral: "0",
         referral_codes: [],
-        one_time: false,
-        new_user: false,
-        unique: false
+        one_time: 0,
+        new_user: 0,
+        unique: 0
       },
       master: {
         statuses: [],
@@ -349,14 +349,14 @@ export default {
     isOneTimePromo(value) {
       switch (value) {
         case "Yes":
-          this.input.one_time = true;
+          this.input.one_time = 1;
           this.isUniquePromo = "No";
           this.isNewUser = "No";
           this.insertPromoCode = "No";
           break;
 
         case "No":
-          this.input.one_time = false;
+          this.input.one_time = 0;
           break;
       }
     },
@@ -369,14 +369,14 @@ export default {
     isNewUser(value) {
       switch (value) {
         case "Yes":
-          this.input.new_user = true;
+          this.input.new_user = 1;
           this.isUniquePromo = "No";
           this.isOneTimePromo = "No";
           this.insertPromoCode = "No";
           break;
 
         case "No":
-          this.input.new_user = false;
+          this.input.new_user = 0;
           break;
       }
     },
@@ -389,14 +389,14 @@ export default {
     isUniquePromo(value) {
       switch (value) {
         case "Yes":
-          this.input.unique = true;
+          this.input.unique = 1;
           this.isNewUser = "No";
           this.isOneTimePromo = "No";
           this.insertPromoCode = "No";
           break;
 
         case "No":
-          this.input.unique = false;
+          this.input.unique = 0;
           break;
       }
     },
