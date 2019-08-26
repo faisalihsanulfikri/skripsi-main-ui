@@ -289,6 +289,7 @@ export default {
         case "No":
           this.input.promo_referral = "0";
           this.showPromoCodeInput = false;
+          this.input.referral_codes = [];
           break;
       }
     }
