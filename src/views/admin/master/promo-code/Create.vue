@@ -125,14 +125,52 @@
       </div>
 
       <div class="uk-margin">
-        <label
-          class="uk-form-label"
-          style="display:block;margin-bottom:.3rem"
-        >Masukan Promo Referral Code</label>
-        <el-radio-group v-model="insertPromoCode" size="small">
-          <el-radio-button label="Yes"></el-radio-button>
-          <el-radio-button label="No"></el-radio-button>
-        </el-radio-group>
+        <div style="display:flex">
+          <!-- Masukan Promo Referral Code -->
+          <div style="margin-right:2rem;">
+            <label
+              class="uk-form-label"
+              style="display:block;margin-bottom:.3rem"
+            >Masukan Promo Referral Code</label>
+            <el-radio-group v-model="insertPromoCode" size="small">
+              <el-radio-button label="Yes"></el-radio-button>
+              <el-radio-button label="No"></el-radio-button>
+            </el-radio-group>
+          </div>
+
+          <!-- Is One Time Promo -->
+          <div style="margin-right:2rem;">
+            <label
+              class="uk-form-label"
+              style="display:block;margin-bottom:.3rem"
+            >Is One Time Promo?</label>
+            <el-radio-group v-model="isOneTimePromo" size="small">
+              <el-radio-button label="Yes"></el-radio-button>
+              <el-radio-button label="No"></el-radio-button>
+            </el-radio-group>
+          </div>
+
+          <!-- Is One Time Promo -->
+          <div style="margin-right:2rem;">
+            <label class="uk-form-label" style="display:block;margin-bottom:.3rem">Is New User?</label>
+            <el-radio-group v-model="isNewUser" size="small">
+              <el-radio-button label="Yes"></el-radio-button>
+              <el-radio-button label="No"></el-radio-button>
+            </el-radio-group>
+          </div>
+
+          <!-- Is Unique Promo Code -->
+          <div style="margin-right:2rem;">
+            <label
+              class="uk-form-label"
+              style="display:block;margin-bottom:.3rem"
+            >Is Unique Promo Code?</label>
+            <el-radio-group v-model="isUniquePromo" size="small">
+              <el-radio-button label="Yes"></el-radio-button>
+              <el-radio-button label="No"></el-radio-button>
+            </el-radio-group>
+          </div>
+        </div>
       </div>
       <div class="uk-margin" v-if="showPromoCodeInput">
         <label class="uk-form-label">Promo Referral Code</label>
@@ -241,7 +279,10 @@ export default {
         value_percentage: 0,
         value_point: 0,
         promo_referral: "0",
-        referral_codes: []
+        referral_codes: [],
+        one_time: "0",
+        new_user: "0",
+        unique: "0"
       },
       master: {
         statuses: [],
@@ -266,7 +307,10 @@ export default {
       errorMessage: "",
       insertPromoCode: "No",
       showPromoCodeInput: false,
-      promoReferralCodesOption: []
+      promoReferralCodesOption: [],
+      isOneTimePromo: "No",
+      isNewUser: "No",
+      isUniquePromo: "No"
     };
   },
 
@@ -284,12 +328,75 @@ export default {
         case "Yes":
           this.input.promo_referral = "1";
           this.showPromoCodeInput = true;
+          this.isOneTimePromo = "No";
+          this.isNewUser = "No";
+          this.isUniquePromo = "No";
           break;
 
         case "No":
           this.input.promo_referral = "0";
           this.showPromoCodeInput = false;
           this.input.referral_codes = [];
+          break;
+      }
+    },
+
+    /**
+     * Menentukan nilai input.one_time yang nilainya tergantung pada
+     * nilai isOneTimePromo. Jika nilai isOneTimePromo == "Yes" berarti
+     * nilai untuk input.one_time = 1
+     */
+    isOneTimePromo(value) {
+      switch (value) {
+        case "Yes":
+          this.input.one_time = "1";
+          this.isUniquePromo = "No";
+          this.isNewUser = "No";
+          this.insertPromoCode = "No";
+          break;
+
+        case "No":
+          this.input.one_time = "0";
+          break;
+      }
+    },
+
+    /**
+     * Menentukan nilai input.new_user yang nilainya tergantung pada
+     * nilai isNewUser. Jika nilai isNewUser == "Yes" berarti
+     * nilai untuk input.new_user = 1
+     */
+    isNewUser(value) {
+      switch (value) {
+        case "Yes":
+          this.input.new_user = "1";
+          this.isUniquePromo = "No";
+          this.isOneTimePromo = "No";
+          this.insertPromoCode = "No";
+          break;
+
+        case "No":
+          this.input.new_user = "0";
+          break;
+      }
+    },
+
+    /**
+     * Menentukan nilai input.unique yang nilainya tergantung pada
+     * nilai isUniquePromo. Jika nilai isUniquePromo == "Yes" berarti
+     * nilai untuk input.unique = 1
+     */
+    isUniquePromo(value) {
+      switch (value) {
+        case "Yes":
+          this.input.unique = "1";
+          this.isNewUser = "No";
+          this.isOneTimePromo = "No";
+          this.insertPromoCode = "No";
+          break;
+
+        case "No":
+          this.input.unique = "0";
           break;
       }
     }
@@ -397,7 +504,6 @@ export default {
         let res = await this.$service.promoCode.find(id);
 
         this.input = res.data;
-        console.log("getPromoCode", res.data);
 
         /**
          * Jika res.data.referral_codes tidak kosong,
@@ -414,6 +520,10 @@ export default {
           this.showPromoCodeInput = false;
           this.insertPromoCode = "No";
         }
+
+        if (this.input.one_time == "1") this.isOneTimePromo = "Yes";
+        if (this.input.new_user == "1") this.isNewUser = "Yes";
+        if (this.input.unique == "1") this.isUniquePromo = "Yes";
       } catch (err) {
         this.__handleError(this, err, true);
       }
