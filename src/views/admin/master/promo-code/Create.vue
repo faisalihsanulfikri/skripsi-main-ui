@@ -131,7 +131,7 @@
             <label
               class="uk-form-label"
               style="display:block;margin-bottom:.3rem"
-            >Masukan Promo Referral Code</label>
+            >Is Referral Code Promo?</label>
             <el-radio-group v-model="insertPromoCode" size="small">
               <el-radio-button label="Yes"></el-radio-button>
               <el-radio-button label="No"></el-radio-button>
@@ -173,7 +173,7 @@
         </div>
       </div>
       <div class="uk-margin" v-if="showPromoCodeInput">
-        <label class="uk-form-label">Promo Referral Code</label>
+        <label class="uk-form-label">Referral Codes</label>
 
         <!-- Add Multiple Promo Referral Codes  -->
         <el-select
