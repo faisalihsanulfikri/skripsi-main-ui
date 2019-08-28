@@ -40,27 +40,41 @@
 
       <div class="filter-order uk-margin">
         <label class="uk-form-label">Start Date</label>
-        <br>
+        <br />
         <el-date-picker
           class="filter-order"
+          style="display:block"
           v-model="input.start_date"
+          v-validate="rules.start_date"
+          name="start_date"
           type="date"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
           placeholder="Start Date"
         ></el-date-picker>
+        <small
+          v-if="errors.first('start_date')"
+          class="uk-margin-small uk-text-danger"
+        >{{ errors.first('start_date') }}</small>
       </div>
       <div class="filter-order uk-margin">
         <label class="uk-form-label">End Date</label>
-        <br>
+        <br />
         <el-date-picker
           class="filter-order"
+          style="display:block"
           v-model="input.end_date"
+          v-validate="rules.end_date"
+          name="end_date"
           type="date"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
           placeholder="End Date"
         ></el-date-picker>
+        <small
+          v-if="errors.first('end_date')"
+          class="uk-margin-small uk-text-danger"
+        >{{ errors.first('end_date') }}</small>
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Description</label>
@@ -79,7 +93,7 @@
               type="radio"
               value="1"
               @click="onUnlimitedChanged"
-            >
+            />
             <span class="uk-margin-small-left">True</span>
           </label>
 
@@ -90,7 +104,7 @@
               type="radio"
               value="0"
               @click="onUnlimitedChanged"
-            >
+            />
             <span class="uk-margin-small-left">False</span>
           </label>
         </div>
@@ -98,12 +112,87 @@
       <!--  -->
       <div class="uk-margin">
         <label class="uk-form-label">Capacity</label>
-        <el-input v-model="input.capacity" v-validate="rules.capacity" name="capacity"></el-input>
+        <el-input
+          v-model="input.capacity"
+          v-validate="rules.capacity"
+          name="capacity"
+          type="number"
+        ></el-input>
         <small
           v-if="errors.first('capacity')"
           class="uk-margin-small uk-text-danger"
         >{{ errors.first('capacity') }}</small>
       </div>
+
+      <div class="uk-margin">
+        <div style="display:flex">
+          <!-- Masukan Promo Referral Code -->
+          <div style="margin-right:2rem;">
+            <label
+              class="uk-form-label"
+              style="display:block;margin-bottom:.3rem"
+            >Is Referral Code Promo?</label>
+            <el-radio-group v-model="insertPromoCode" size="small">
+              <el-radio-button label="Yes"></el-radio-button>
+              <el-radio-button label="No"></el-radio-button>
+            </el-radio-group>
+          </div>
+
+          <!-- Is One Time Promo -->
+          <div style="margin-right:2rem;">
+            <label
+              class="uk-form-label"
+              style="display:block;margin-bottom:.3rem"
+            >Is One Time Promo?</label>
+            <el-radio-group v-model="isOneTimePromo" size="small">
+              <el-radio-button label="Yes"></el-radio-button>
+              <el-radio-button label="No"></el-radio-button>
+            </el-radio-group>
+          </div>
+
+          <!-- Is One Time Promo -->
+          <div style="margin-right:2rem;">
+            <label class="uk-form-label" style="display:block;margin-bottom:.3rem">Is New User?</label>
+            <el-radio-group v-model="isNewUser" size="small">
+              <el-radio-button label="Yes"></el-radio-button>
+              <el-radio-button label="No"></el-radio-button>
+            </el-radio-group>
+          </div>
+
+          <!-- Is Unique Promo Code -->
+          <div style="margin-right:2rem;">
+            <label
+              class="uk-form-label"
+              style="display:block;margin-bottom:.3rem"
+            >Is Unique Promo Code?</label>
+            <el-radio-group v-model="isUniquePromo" size="small">
+              <el-radio-button label="Yes"></el-radio-button>
+              <el-radio-button label="No"></el-radio-button>
+            </el-radio-group>
+          </div>
+        </div>
+      </div>
+      <div class="uk-margin" v-if="showPromoCodeInput">
+        <label class="uk-form-label">Referral Codes</label>
+
+        <!-- Add Multiple Promo Referral Codes  -->
+        <el-select
+          v-model="input.referral_codes"
+          multiple
+          filterable
+          default-first-option
+          placeholder="Choose one or more referral codes..."
+          style="width:100%;"
+        >
+          <el-option
+            v-for="item in promoReferralCodesOption"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </div>
+
       <div class="uk-margin">
         <label class="uk-form-label">Promo Type</label>
         <div>
@@ -124,20 +213,45 @@
 
       <div class="uk-margin" v-if="input.promo_type == 'fixed'">
         <label class="uk-form-label">Value {{input.promo_type}}</label>
-        <el-input v-model="input.value_fixed"></el-input>
+        <el-input
+          v-model="input.value_fixed"
+          type="number"
+          v-validate="rules.value_fixed"
+          name="value_fixed"
+        ></el-input>
+        <small
+          v-if="errors.first('value_fixed')"
+          class="uk-margin-small uk-text-danger"
+        >{{ errors.first('value_fixed') }}</small>
       </div>
 
       <div class="uk-margin" v-else-if="input.promo_type == 'percentage'">
         <label class="uk-form-label">Value {{input.promo_type}}</label>
-        <el-input v-model="input.value_percentage"></el-input>
+        <el-input
+          v-model="input.value_percentage"
+          type="number"
+          v-validate="rules.value_percentage"
+          name="value_percentage"
+        ></el-input>
+        <small
+          v-if="errors.first('value_percentage')"
+          class="uk-margin-small uk-text-danger"
+        >{{ errors.first('value_percentage') }}</small>
       </div>
 
       <div class="uk-margin" v-else-if="input.promo_type == 'point'">
         <label class="uk-form-label">Value {{input.promo_type}}</label>
-        <el-input v-model="input.value_point"></el-input>
+        <el-input
+          v-model="input.value_point"
+          type="number"
+          v-validate="rules.value_point"
+          name="value_point"
+        ></el-input>
+        <small
+          v-if="errors.first('value_point')"
+          class="uk-margin-small uk-text-danger"
+        >{{ errors.first('value_point') }}</small>
       </div>
-
-      <el-alert v-if="error" title="ERROR" type="error" :description="errorMessage" show-icon></el-alert>
     </div>
     <div class="uk-card-footer uk-text-right">
       <el-button type="primary" @click="save">SAVE</el-button>
@@ -161,9 +275,14 @@ export default {
         capacity: "",
         in_used: 0,
         promo_type: "",
-        value_fixed: "",
-        value_percentage: "",
-        value_point: ""
+        value_fixed: 0,
+        value_percentage: 0,
+        value_point: 0,
+        promo_referral: "0",
+        referral_codes: [],
+        one_time: "0",
+        new_user: "0",
+        unique: "0"
       },
       master: {
         statuses: [],
@@ -178,33 +297,145 @@ export default {
       rules: {
         code: "required",
         capacity: "required",
-        value_fixed: "",
-        value_percentage: "",
-        value_point: ""
+        value_fixed: "required",
+        value_percentage: "required",
+        value_point: "required",
+        start_date: "required",
+        end_date: "required"
       },
       error: false,
-      errorMessage: ""
+      errorMessage: "",
+      insertPromoCode: "No",
+      showPromoCodeInput: false,
+      promoReferralCodesOption: [],
+      isOneTimePromo: "No",
+      isNewUser: "No",
+      isUniquePromo: "No"
     };
   },
 
   watch: {
     value_fixed() {
       return this.promo_type == "fixed" ? "required" : "";
-    }
-  },
+    },
 
-  created() {
-    this.setOptions();
+    /**
+     * Menentukan nilai input.promo_referral. Jika nilai promoCode adalah "Yes" maka
+     * ubah nilai promo_referral menjadi "1", vice versa.
+     */
+    insertPromoCode(value) {
+      switch (value) {
+        case "Yes":
+          this.input.promo_referral = "1";
+          this.showPromoCodeInput = true;
+          this.isOneTimePromo = "No";
+          this.isNewUser = "No";
+          this.isUniquePromo = "No";
+          break;
 
-    if (this.$route.params.id) {
-      this.edit = true;
-      this.title = "Edit Promo Code";
+        case "No":
+          this.input.promo_referral = "0";
+          this.showPromoCodeInput = false;
+          this.input.referral_codes = [];
+          break;
+      }
+    },
 
-      this.getPromoCode();
+    /**
+     * Menentukan nilai input.one_time yang nilainya tergantung pada
+     * nilai isOneTimePromo. Jika nilai isOneTimePromo == "Yes" berarti
+     * nilai untuk input.one_time = 1
+     */
+    isOneTimePromo(value) {
+      switch (value) {
+        case "Yes":
+          this.input.one_time = "1";
+          this.isUniquePromo = "No";
+          this.isNewUser = "No";
+          this.insertPromoCode = "No";
+          break;
+
+        case "No":
+          this.input.one_time = "0";
+          break;
+      }
+    },
+
+    /**
+     * Menentukan nilai input.new_user yang nilainya tergantung pada
+     * nilai isNewUser. Jika nilai isNewUser == "Yes" berarti
+     * nilai untuk input.new_user = 1
+     */
+    isNewUser(value) {
+      switch (value) {
+        case "Yes":
+          this.input.new_user = "1";
+          this.isUniquePromo = "No";
+          this.isOneTimePromo = "No";
+          this.insertPromoCode = "No";
+          break;
+
+        case "No":
+          this.input.new_user = "0";
+          break;
+      }
+    },
+
+    /**
+     * Menentukan nilai input.unique yang nilainya tergantung pada
+     * nilai isUniquePromo. Jika nilai isUniquePromo == "Yes" berarti
+     * nilai untuk input.unique = 1
+     */
+    isUniquePromo(value) {
+      switch (value) {
+        case "Yes":
+          this.input.unique = "1";
+          this.isNewUser = "No";
+          this.isOneTimePromo = "No";
+          this.insertPromoCode = "No";
+          break;
+
+        case "No":
+          this.input.unique = "0";
+          break;
+      }
     }
   },
 
   methods: {
+    /**
+     * Menentukan nilai pada promoReferralCodesOption,
+     * sebelum halaman di render.
+     * @return {Array}
+     */
+    async setPromoReferralCodesOption() {
+      let res = await this.$authHttp.get("/promo-referral-code");
+      let referralCodes = res.data.data.map(el => ({
+        value: el.id,
+        label: el.referral_code
+      }));
+      this.promoReferralCodesOption = referralCodes;
+    },
+
+    /**
+     * Validate promo referral codes input,
+     * Jika nilai insertPromoCode sama dengan "Yes",
+     * tapi user tidak menginputakan nilai pada input.referral_codes
+     * maka proses update/save jangan diteruskan
+     */
+    validatePromoReferralCodeInput() {
+      let referralCodes = this.input.referral_codes;
+      let insertPromoCode = this.insertPromoCode;
+
+      return new Promise((resolve, reject) => {
+        if (insertPromoCode == "Yes" && referralCodes.length == 0) {
+          reject();
+        } else {
+          resolve();
+        }
+      });
+    },
+
     setOptions() {
       // masters
       this.master.statuses = [
@@ -263,37 +494,78 @@ export default {
         this.input.unlimited = "";
       }
     },
-    async getPromoCode() {
+    async getPromoCode(id) {
       this.__startLoading();
 
       this.error = false;
       this.errorMessage = "";
 
       try {
-        let res = await this.$service.promoCode.find(this.$route.params.id);
+        let res = await this.$service.promoCode.find(id);
 
         this.input = res.data;
+
+        /**
+         * Jika res.data.referral_codes tidak kosong,
+         * maka ubah nilai showPromoCodeInput jadi true,
+         * begitu juga nilai insertPromoCode menjadi "Yes"
+         */
+        let rc = this.input.referral_codes;
+        let referralCodeIsNull = rc.length == 0 || rc == undefined;
+
+        if (!referralCodeIsNull) {
+          this.showPromoCodeInput = true;
+          this.insertPromoCode = "Yes";
+        } else {
+          this.showPromoCodeInput = false;
+          this.insertPromoCode = "No";
+        }
+
+        if (this.input.one_time == "1") this.isOneTimePromo = "Yes";
+        if (this.input.new_user == "1") this.isNewUser = "Yes";
+        if (this.input.unique == "1") this.isUniquePromo = "Yes";
       } catch (err) {
         this.__handleError(this, err, true);
       }
 
       this.__stopLoading();
     },
-    save() {
-      if (this.edit) {
-        this.update();
-      } else {
-        this.store();
+
+    /**
+     * Membuat atau Updating Promo Code.
+     * @return {Void}
+     */
+    async save() {
+      if (!(await this.$validator.validate())) {
+        return this.$notify({
+          title: "Warning",
+          type: "warning",
+          message: "Please input value " + this.input.promo_type
+        });
       }
+
+      this.$validator.errors.clear();
+
+      // check inputan promo referral code sebelum di store/edit
+      this.validatePromoReferralCodeInput()
+        .then(res => {
+          if (this.edit) return this.update();
+          return this.store();
+        })
+        .catch(err => {
+          this.$notify({
+            title: "Warning",
+            type: "warning",
+            message: "Please input promo referral code"
+          });
+          return;
+        });
     },
     async store() {
       this.__startLoading();
 
       this.error = false;
       this.errorMessage = "";
-
-      // console.log(this.input);
-      // return this.__stopLoading();
 
       try {
         let res = await this.$service.promoCode.create(this.input);
@@ -306,7 +578,7 @@ export default {
 
         this.$router.push({ name: "admin-promo-codes" });
       } catch (err) {
-        this.__handleError(this, err, true);
+        this.__handleError(this, err, false);
       }
 
       this.__stopLoading();
@@ -316,9 +588,6 @@ export default {
 
       this.error = false;
       this.errorMessage = "";
-
-      // console.log(this.input);
-      // return this.__stopLoading();
 
       try {
         if (this.input.promo_type == "fixed") {
@@ -345,11 +614,23 @@ export default {
 
         this.$router.push({ name: "admin-promo-codes" });
       } catch (err) {
-        this.__handleError(this, err, true);
+        this.__handleError(this, err, false);
       }
 
       this.__stopLoading();
     }
+  },
+
+  created() {
+    this.setOptions();
+
+    if (this.$route.params.id) {
+      this.edit = true;
+      this.title = "Edit Promo Code";
+      this.getPromoCode(this.$route.params.id);
+    }
+
+    this.setPromoReferralCodesOption();
   }
 };
 </script>
