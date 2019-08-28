@@ -28,6 +28,7 @@
             <tr>
               <th>Code</th>
               <th>Status</th>
+              <th>Category</th>
               <th>Start Date</th>
               <th>End Date</th>
               <th>Unlimited</th>
@@ -41,8 +42,14 @@
             <tr v-for="promo in promoCode" :key="promo.id">
               <td>{{ promo.code }}</td>
               <td>{{ promo.status }}</td>
-              <td>{{ promo.start_date }}</td>
-              <td>{{ promo.end_date }}</td>
+              <td>
+                <el-tag
+                  size="small"
+                  :type="category(promo.categories).color"
+                >{{ category(promo.categories).label || '-' }}</el-tag>
+              </td>
+              <td>{{ formatDate(promo.start_date) }}</td>
+              <td>{{ formatDate(promo.end_date) }}</td>
               <td v-if="promo.unlimited == 1">Yes</td>
               <td v-else>No</td>
               <td>{{ promo.capacity }}</td>
@@ -96,6 +103,8 @@
 </template>
 
 <script>
+import moment from "moment";
+
 export default {
   data() {
     return {
@@ -116,6 +125,37 @@ export default {
     this.fetchPromoCode(this.pagination.page);
   },
   methods: {
+    /**
+     * Mengubah format tanggal
+     * @return {Date}
+     */
+    formatDate(date) {
+      return moment(date).format("ll");
+    },
+
+    /**
+     * Menentukan  promo code category
+     * @return {String}
+     */
+    category(categories) {
+      return categories.filter(el => el.value == "1")[0];
+    },
+
+    /**
+     * Buat custom categories
+     */
+    customCategories(el) {
+      return {
+        ...el,
+        categories: [
+          { id: "1", label: "New User", color: "success", value: el.new_user },
+          { id: "2", label: "One Time", color: "info", value: el.one_time },
+          { id: "3", label: "Promo Code", color: "warning", value: el.promo_referral },
+          { id: "4", label: "Unique", color: "danger", value: el.unique }
+        ]
+      };
+    },
+
     onChangePagination(i) {
       this.fetchExchangeRates(i + 1);
     },
@@ -137,7 +177,7 @@ export default {
         this.totalPages = res.data.pages;
         this.current_page = page;
 
-        this.promoCode = res.data.data.reverse();
+        this.promoCode = res.data.data.map(this.customCategories).reverse();
       } catch (err) {
         this.__handleError(this, err, true);
       }
