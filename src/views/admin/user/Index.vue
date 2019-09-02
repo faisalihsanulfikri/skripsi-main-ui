@@ -240,8 +240,6 @@ export default {
             break;
         }
 
-        console.log(this.users);
-
         delete this.pagination.data;
         delete this.pagination.filter;
       } catch (err) {

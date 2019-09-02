@@ -33,7 +33,7 @@
               class="uk-input"
               type="text"
               placeholder="Code User"
-            >
+            />
             <small
               v-if="errors.first('name')"
               class="uk-margin-small uk-text-danger"
@@ -49,7 +49,7 @@
               type="text"
               placeholder="Code User"
               disabled
-            >
+            />
             <small
               v-if="errors.first('name')"
               class="uk-margin-small uk-text-danger"
@@ -64,7 +64,7 @@
               class="uk-input"
               type="text"
               placeholder="Name"
-            >
+            />
             <small
               v-if="errors.first('name')"
               class="uk-margin-small uk-text-danger"
@@ -79,7 +79,7 @@
               class="uk-input"
               type="text"
               placeholder="Email"
-            >
+            />
             <small
               v-if="errors.first('email')"
               class="uk-margin-small uk-text-danger"
@@ -94,7 +94,7 @@
               class="uk-input"
               type="text"
               placeholder="Mobile"
-            >
+            />
             <small
               v-if="errors.first('phone')"
               class="uk-margin-small uk-text-danger"
@@ -122,7 +122,7 @@
             >{{ errors.first('level') }}</small>
           </div>
 
-                    <div class="uk-margin">
+          <div class="uk-margin">
             <label class="uk-form-label">Base Factor (vip special treatment)</label>
             <input
               v-model="input.base_factor"
@@ -130,11 +130,43 @@
               class="uk-input"
               type="text"
               placeholder="Berat per gram"
-            >
+            />
             <small
               v-if="errors.first('base_factor')"
               class="uk-margin-small uk-text-danger"
             >{{ errors.first('base_factor') }}</small>
+          </div>
+
+          <div class="uk-margin" v-if="edit_downline">
+            <label class="uk-form-label">Activate Downlines</label>
+            <div class="req-doc">
+              <label class="btn-r">
+                <input
+                  v-model="input.downline_active"
+                  class="uk-radio"
+                  type="radio"
+                  value="1"
+                  @click="onDownlineActiveChanged"
+                />
+                <span class="uk-margin-small-left">Yes</span>
+              </label>
+
+              <label class="btn-r">
+                <input
+                  v-model="input.downline_active"
+                  class="uk-radio"
+                  type="radio"
+                  value="0"
+                  @click="onDownlineActiveChanged"
+                />
+                <span class="uk-margin-small-left">No</span>
+              </label>
+            </div>
+
+            <small
+              v-if="errors.first('downline_active')"
+              class="uk-margin-small uk-text-danger"
+            >{{ errors.first('downline_active') }}</small>
           </div>
 
           <div class="uk-margin">
@@ -147,7 +179,7 @@
                   type="radio"
                   value="1"
                   @click="onActiveChanged"
-                >
+                />
                 <span class="uk-margin-small-left">Yes</span>
               </label>
 
@@ -158,7 +190,7 @@
                   type="radio"
                   value="0"
                   @click="onActiveChanged"
-                >
+                />
                 <span class="uk-margin-small-left">No</span>
               </label>
             </div>
@@ -187,6 +219,7 @@ export default {
       index: "",
       route_name: "",
       edit: false,
+      edit_downline: false,
       title: "New User",
       input: {
         code: "",
@@ -195,7 +228,7 @@ export default {
         password: "",
         passwordConfirmation: "",
         phone: "",
-        base_factor:"",
+        base_factor: "",
         gender: "",
         birthdate: "",
         birthdateSplited: {
@@ -204,6 +237,7 @@ export default {
           day: ""
         },
         active: "1",
+        downline_active: "0",
         level: "",
         level_name: ""
       },
@@ -215,7 +249,7 @@ export default {
         passwordConfirmation: "required|confirmed:password",
         phone: "required|min:10"
       },
-      user_level:{},
+      user_level: {},
       error: false,
       errorMessage: "",
 
@@ -230,13 +264,6 @@ export default {
   },
 
   created() {
-    //add from type of user
-    // if (this.$route.params.level) {
-    //   this.index = this.$route.params.level;
-    // } else {
-    //   this.index = "2";
-    // }
-
     //if edit user
     if (this.$route.params.id) {
       this.edit = true;
@@ -245,11 +272,6 @@ export default {
       this.fetchUsers();
     }
 
-    this.user_level = this.$root.user.level;
-    console.log(this.user_level);
-    // console.log("input", this.input);
-
-    // this.onUserCreate();
     this.fetchLevels();
   },
 
@@ -257,6 +279,11 @@ export default {
     onActiveChanged() {
       if (this.input.length > 0) {
         this.input.active = "";
+      }
+    },
+    onDownlineActiveChanged() {
+      if (this.input.length > 0) {
+        this.input.downline_active = "0";
       }
     },
     onUserCreate() {
@@ -324,6 +351,7 @@ export default {
         let res = await this.$service.user.getUserData(this.$route.params.id);
 
         this.input = res.data;
+        this.edit_downline = this.input.level == 3 ? true : false;
       } catch (err) {
         this.__handleError(this, err, true);
       }
