@@ -148,6 +148,13 @@
               <el-radio-button label="Yes"></el-radio-button>
               <el-radio-button label="No"></el-radio-button>
             </el-radio-group>
+            <el-input
+              v-if="isOneTimePromo == 'Yes'"
+              v-model="input.one_time_capacity"
+              name="code"
+              type="number"
+              style="margin-top:.5rem; width:100px; display:block;"
+            ></el-input>
           </div>
 
           <!-- Is One Time Promo -->
@@ -169,6 +176,13 @@
               <el-radio-button label="Yes"></el-radio-button>
               <el-radio-button label="No"></el-radio-button>
             </el-radio-group>
+            <el-input
+              v-if="isUniquePromo == 'Yes'"
+              v-model="input.unique_capacity"
+              name="code"
+              type="number"
+              style="margin-top:.5rem; width:100px; display:block;"
+            ></el-input>
           </div>
         </div>
       </div>
@@ -282,7 +296,9 @@ export default {
         referral_codes: [],
         one_time: "0",
         new_user: "0",
-        unique: "0"
+        unique: "0",
+        one_time_capacity: "0",
+        unique_capacity: "0"
       },
       master: {
         statuses: [],
@@ -357,6 +373,7 @@ export default {
 
         case "No":
           this.input.one_time = "0";
+          this.input.one_time_capacity = "0";
           break;
       }
     },
@@ -397,6 +414,7 @@ export default {
 
         case "No":
           this.input.unique = "0";
+          this.input.unique_capacity = "0";
           break;
       }
     }
