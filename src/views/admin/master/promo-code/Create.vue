@@ -148,6 +148,9 @@
               <el-radio-button label="Yes"></el-radio-button>
               <el-radio-button label="No"></el-radio-button>
             </el-radio-group>
+            <div>
+            <label class="uk-form-label" v-if="isOneTimePromo == 'Yes'">One Time Capacity:</label>
+            </div>
             <el-input
               v-if="isOneTimePromo == 'Yes'"
               v-model="input.one_time_capacity"
@@ -159,7 +162,7 @@
 
           <!-- Is One Time Promo -->
           <div style="margin-right:2rem;">
-            <label class="uk-form-label" style="display:block;margin-bottom:.3rem">Is New User?</label>
+            <label class="uk-form-label" style="display:block;margin-bottom:.3rem">Is New User Promo?</label>
             <el-radio-group v-model="isNewUser" size="small">
               <el-radio-button label="Yes"></el-radio-button>
               <el-radio-button label="No"></el-radio-button>
@@ -176,9 +179,96 @@
               <el-radio-button label="Yes"></el-radio-button>
               <el-radio-button label="No"></el-radio-button>
             </el-radio-group>
+            <div>
+            <label class="uk-form-label" v-if="isUniquePromo == 'Yes'">Unique Capacity:</label>
+            </div>
             <el-input
               v-if="isUniquePromo == 'Yes'"
               v-model="input.unique_capacity"
+              name="code"
+              type="number"
+              style="margin-top:.5rem; width:100px; display:block;"
+            ></el-input>
+          </div>
+
+          <!-- Is Buy X Get X Promo -->
+          <div style="margin-right:2rem;">
+            <label
+            class="uk-form-label"
+            style="display:block;margin-bottom:.3rem"
+            >Is Buy X Get X Promo Code?</label>
+            <el-radio-group v-model="isBuyxGetxPromo" size="small">
+              <el-radio-button label="Yes"></el-radio-button>
+              <el-radio-button label="No"></el-radio-button>
+            </el-radio-group>
+            <div>
+              <label class="uk-form-label" v-if="isBuyxGetxPromo == 'Yes'">Minimal Bill:</label>
+            </div>
+            <el-input
+              v-if="isBuyxGetxPromo == 'Yes'"
+              v-model="input.minimal_bill"
+              name="code"
+              type="number"
+              style="margin-top:.5rem; width:100px; display:block;"
+            ></el-input>
+            <div>
+              <label class="uk-form-label" v-if="isBuyxGetxPromo == 'Yes'">Minimal Item Price:</label>
+            </div>
+            <el-input
+              v-if="isBuyxGetxPromo == 'Yes'"
+              v-model="input.minimal_item_price"
+              name="code"
+              type="number"
+              style="margin-top:.5rem; width:100px; display:block;"
+            ></el-input>
+            <div>
+              <label class="uk-form-label" v-if="isBuyxGetxPromo == 'Yes'">Minimal Shipping Cost:</label>
+            </div>
+            <el-input
+              v-if="isBuyxGetxPromo == 'Yes'"
+              v-model="input.minimal_shipping_cost"
+              name="code"
+              type="number"
+              style="margin-top:.5rem; width:100px; display:block;"
+            ></el-input>
+          </div>
+
+          <!-- Is Buy X Get X Unique-->
+          <div style="margin-right:2rem;">
+            <label
+            class="uk-form-label"
+            style="display:block;margin-bottom:.3rem"
+            >Is Buy X Get X Unique Promo Code?</label>
+            <el-radio-group v-model="isBuyxGetxUniquePromo" size="small">
+              <el-radio-button label="Yes"></el-radio-button>
+              <el-radio-button label="No"></el-radio-button>
+            </el-radio-group>
+            <div>
+              <label class="uk-form-label" v-if="isBuyxGetxUniquePromo == 'Yes'">Minimal Bill:</label>
+            </div>
+            <el-input
+              v-if="isBuyxGetxUniquePromo == 'Yes'"
+              v-model="input.minimal_bill"
+              name="code"
+              type="number"
+              style="margin-top:.5rem; width:100px; display:block;"
+            ></el-input>
+            <div>
+              <label class="uk-form-label" v-if="isBuyxGetxUniquePromo == 'Yes'">Minimal Item Price:</label>
+            </div>
+            <el-input
+              v-if="isBuyxGetxUniquePromo == 'Yes'"
+              v-model="input.minimal_item_price"
+              name="code"
+              type="number"
+              style="margin-top:.5rem; width:100px; display:block;"
+            ></el-input>
+            <div>
+              <label class="uk-form-label" v-if="isBuyxGetxUniquePromo == 'Yes'">Minimal Shipping Cost:</label>
+            </div>
+            <el-input
+              v-if="isBuyxGetxUniquePromo == 'Yes'"
+              v-model="input.minimal_shipping_cost"
               name="code"
               type="number"
               style="margin-top:.5rem; width:100px; display:block;"
@@ -298,7 +388,11 @@ export default {
         new_user: "0",
         unique: "0",
         one_time_capacity: "0",
-        unique_capacity: "0"
+        unique_capacity: "0",
+        buy_x_get_x: "0",
+        minimal_bill: "0",
+        minimal_item_price: "0",
+        minimal_shipping_cost: "0"
       },
       master: {
         statuses: [],
@@ -326,7 +420,9 @@ export default {
       promoReferralCodesOption: [],
       isOneTimePromo: "No",
       isNewUser: "No",
-      isUniquePromo: "No"
+      isUniquePromo: "No",
+      isBuyxGetxPromo: "No",
+      isBuyxGetxUniquePromo: "No" 
     };
   },
 
@@ -417,7 +513,43 @@ export default {
           this.input.unique_capacity = "0";
           break;
       }
-    }
+    },
+
+    isBuyxGetxPromo(value){
+      switch (value){
+        case "Yes":
+          this.input.buy_x_get_x = "1";
+          this.isNewUser = "No";
+          this.isUniquePromo = "No";
+          this.isOneTimePromo = "No";
+          this.insertPromoCode = "No";
+          break;
+
+        case "No":
+          this.input.buy_x_get_x = "0";
+          this.input.minimal_bill = "0";
+          this.input.minimal_item_price = "0";
+          this.input.minimal_shipping_cost = "0";
+      }
+    },
+
+    isBuyxGetxUniquePromo(value){
+      switch (value){
+        case "Yes":
+          this.input.buy_x_get_x = "1";
+          this.input.unique = "1";
+          this.isNewUser = "No";
+          this.isOneTimePromo = "No";
+          this.insertPromoCode = "No";
+          break;
+
+        case "No":
+          this.input.buy_x_get_x = "0";
+          this.input.minimal_bill = "0";
+          this.input.minimal_item_price = "0";
+          this.input.minimal_shipping_cost = "0";
+      }
+    },
   },
 
   methods: {
