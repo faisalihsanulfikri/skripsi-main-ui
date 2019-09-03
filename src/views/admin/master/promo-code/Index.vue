@@ -45,6 +45,7 @@
               <td>
                 <el-tag
                   size="small"
+                  :effect="category(promo.categories).id == '6' ? 'plain' : ''"
                   :type="category(promo.categories).color"
                 >{{ category(promo.categories).label || '-' }}</el-tag>
               </td>
@@ -151,7 +152,9 @@ export default {
           { id: "1", label: "New User", color: "success", value: el.new_user },
           { id: "2", label: "One Time", color: "info", value: el.one_time },
           { id: "3", label: "Promo Code", color: "warning", value: el.promo_referral },
-          { id: "4", label: "Unique", color: "danger", value: el.unique }
+          { id: "4", label: "Unique", color: "danger", value: el.unique == '1' && el.buy_x_get_x == '0' },
+          { id: "5", label: "Buy X Get X", color: "mint", value: el.buy_x_get_x == '1' && el.unique == '0'},
+          { id: "6", label: "Buy X Get X Unique", color:"info" , value: el.unique == '1' && el.buy_x_get_x == '1'}
         ]
       };
     },
