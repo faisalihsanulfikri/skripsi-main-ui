@@ -122,6 +122,29 @@
             >{{ errors.first('level') }}</small>
           </div>
 
+          <div class="uk-margin" v-if="input.level == '3' && current_level">
+            <label class="uk-form-label">Duration (Month)</label>
+            <input
+              v-model="duration"
+              name="duration"
+              class="uk-input"
+              type="number"
+              placeholder="3"
+            />
+          </div>
+
+          <div class="uk-margin" v-if="input.level == '3' && current_level">
+            <label class="uk-form-label">Referral Code</label>
+            <input
+              v-model="input.referral_code"
+              name="ref_code"
+              class="uk-input"
+              type="text"
+              placeholder="3"
+              @blur="onGetReferralCode(input.referral_code)"
+            />
+          </div>
+
           <div class="uk-margin">
             <label class="uk-form-label">Base Factor (vip special treatment)</label>
             <input
@@ -220,6 +243,7 @@ export default {
       route_name: "",
       edit: false,
       edit_downline: false,
+      duration: "0",
       title: "New User",
       input: {
         code: "",
@@ -231,15 +255,18 @@ export default {
         base_factor: "",
         gender: "",
         birthdate: "",
+        referral_code: null,
         birthdateSplited: {
           year: "",
           month: "",
           day: ""
         },
+        duration: "0",
         active: "1",
         downline_active: "0",
         level: "",
-        level_name: ""
+        level_name: "",
+        current_level: ""
       },
       rules: {
         level: "required",
@@ -247,7 +274,8 @@ export default {
         email: "required|email",
         password: "required|min:6",
         passwordConfirmation: "required|confirmed:password",
-        phone: "required|min:10"
+        phone: "required|min:10",
+        duration: "required|number"
       },
       user_level: {},
       error: false,
@@ -276,6 +304,25 @@ export default {
   },
 
   methods: {
+    async onGetReferralCode(code) {
+      if (code) {
+        let res = await this.$service.user.getReferralCode(code);
+
+        if (res.data.data) {
+          this.$notify({
+            title: "SUCCESS",
+            message: "Referral Code Valid.",
+            type: "success"
+          });
+        } else {
+          this.$notify({
+            title: "WARNING",
+            message: "Referral Code Unvalid.",
+            type: "warning"
+          });
+        }
+      }
+    },
     onActiveChanged() {
       if (this.input.length > 0) {
         this.input.active = "";
@@ -351,6 +398,7 @@ export default {
         let res = await this.$service.user.getUserData(this.$route.params.id);
 
         this.input = res.data;
+        this.current_level = this.input.level == 2 ? true : false;
         this.edit_downline = this.input.level == 3 ? true : false;
       } catch (err) {
         this.__handleError(this, err, true);
@@ -374,17 +422,24 @@ export default {
       if (this.edit) {
         this.update();
       } else {
-        // this.error = false;
-        // this.errorMessage = "";
-        // console.log(this.input);
-
         this.store();
       }
     },
     async update() {
       this.__startLoading();
 
-      console.log(this.input.level_name);
+      if (this.input.level == 3 && this.current_level) {
+        if (this.duration < 1) {
+          this.$notify({
+            title: "WARNING",
+            message: "The Duration field is required.",
+            type: "warning"
+          });
+          return this.__stopLoading();
+        }
+      }
+
+      this.input.duration = parseInt(this.duration);
 
       this.error = false;
       this.errorMessage = "";
