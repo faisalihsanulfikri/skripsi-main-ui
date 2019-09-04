@@ -523,6 +523,7 @@ export default {
           this.isUniquePromo = "No";
           this.isOneTimePromo = "No";
           this.insertPromoCode = "No";
+          this.isBuyxGetxUniquePromo ="No";
           break;
 
         case "No":
@@ -541,6 +542,7 @@ export default {
           this.isNewUser = "No";
           this.isOneTimePromo = "No";
           this.insertPromoCode = "No";
+          this.isUniquePromo ="No";
           break;
 
         case "No":
