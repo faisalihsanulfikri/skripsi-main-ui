@@ -523,6 +523,7 @@ export default {
           this.isUniquePromo = "No";
           this.isOneTimePromo = "No";
           this.insertPromoCode = "No";
+          this.isBuyxGetxUniquePromo ="No";
           break;
 
         case "No":
@@ -541,6 +542,7 @@ export default {
           this.isNewUser = "No";
           this.isOneTimePromo = "No";
           this.insertPromoCode = "No";
+          this.isUniquePromo ="No";
           break;
 
         case "No":
@@ -673,7 +675,9 @@ export default {
 
         if (this.input.one_time == "1") this.isOneTimePromo = "Yes";
         if (this.input.new_user == "1") this.isNewUser = "Yes";
-        if (this.input.unique == "1") this.isUniquePromo = "Yes";
+        if (this.input.unique == "1" && this.input.buy_x_get_x != "1") this.isUniquePromo = "Yes";
+        if (this.input.buy_x_get_x == "1" && this.input.unique != "1") this.isBuyxGetxPromo = "Yes";
+        if (this.input.buy_x_get_x == "1" && this.input.unique == "1") this.isBuyxGetxUniquePromo = "Yes";
       } catch (err) {
         this.__handleError(this, err, true);
       }
