@@ -255,7 +255,7 @@ export default {
         base_factor: "",
         gender: "",
         birthdate: "",
-        referral_code: null,
+        referral_code: "",
         birthdateSplited: {
           year: "",
           month: "",
@@ -400,6 +400,7 @@ export default {
         this.input = res.data;
         this.current_level = this.input.level == 2 ? true : false;
         this.edit_downline = this.input.level == 3 ? true : false;
+        this.input.referral_code = null;
       } catch (err) {
         this.__handleError(this, err, true);
       }
@@ -410,6 +411,8 @@ export default {
       let level = this.master.levels.filter(
         level => level.code == this.input.level
       );
+
+      console.log(level[0].code);
 
       if (level.length > 0) {
         this.input.level = level[0].code;
