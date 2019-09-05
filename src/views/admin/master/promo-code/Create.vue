@@ -523,7 +523,7 @@ export default {
           this.isUniquePromo = "No";
           this.isOneTimePromo = "No";
           this.insertPromoCode = "No";
-          this.isBuyxGetxUniquePromo ="No";
+          this.isBuyxGetxUniquePromo =  "No";
           break;
 
         case "No":
@@ -543,6 +543,7 @@ export default {
           this.isOneTimePromo = "No";
           this.insertPromoCode = "No";
           this.isUniquePromo ="No";
+          this.isBuyxGetxPromo = "No";
           break;
 
         case "No":
