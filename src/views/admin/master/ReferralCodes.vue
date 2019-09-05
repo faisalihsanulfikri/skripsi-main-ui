@@ -16,74 +16,12 @@
           </div>
           <div class="uk-width-auto">
             <div class="app--card-header__link">
-              <a @click="showAddReferralDialog">
+              <a @click="$router.push({ name: 'admin-create-referral-code'})">
                 <font-awesome-icon icon="plus"></font-awesome-icon>
               </a>
             </div>
           </div>
         </div>
-      </div>
-
-      <div>
-        <el-dialog title="Add Referral Code" :visible.sync="dialogAddReferral" width="25%">
-          <div class="form-group">
-            <label for="user_id">USER</label>
-            <el-select
-              v-model="searchUser"
-              filterable
-              remote
-              reserve-keyword
-              placeholder="Cari kode atau nama user"
-              :remote-method="remoteMethod"
-              :loading="searchLoading"
-              class="autocomplete"
-              @change="changeUser(searchUser)"
-            >
-              <el-option
-                v-for="(item, i) in searchOptions"
-                :key="i"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </div>
-          <div class="form-group">
-            <label for="referral_code">REFERRAL CODE</label>
-            <el-input v-model="input.referral_code" placeholder="Please input"></el-input>
-          </div>
-          <div class="form-group" style="display:flex;justify-content:space-between;">
-            <!-- Active Input -->
-            <div>
-              <label for="referral_code">ACTIVE STATUS</label>
-              <div style="text-align:right">
-                <el-switch v-model="input.active" active-text="YES" inactive-text="NO"></el-switch>
-              </div>
-            </div>
-
-            <div>
-              <!-- Set As Promo Code Radio -->
-              <div class="form-group">
-                <label>SET AS PROMO REFERRAL?</label>
-                <el-radio-group
-                  style="display:block;text-align:right;"
-                  v-model="setAsPromoCode"
-                  size="small"
-                >
-                  <el-radio-button label="Yes"></el-radio-button>
-                  <el-radio-button label="No"></el-radio-button>
-                </el-radio-group>
-              </div>
-            </div>
-          </div>
-
-          <!-- Addition Input: Promo Code Form -->
-          <PromoCodeForm v-if="showAdditionalInput" :input="input"></PromoCodeForm>
-
-          <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogAddReferral = false">Cancel</el-button>
-            <el-button type="primary" @click="addNewReferral">Confirm</el-button>
-          </span>
-        </el-dialog>
       </div>
 
       <!-- Body -->
@@ -113,60 +51,11 @@
               <td>{{ item.user_name }}</td>
               <td style="text-align:left;">
                 <!-- Button Edit -->
-                <el-button type="primary" size="small" @click="showEditReferralDialog(i)">EDIT</el-button>
-
-                <!-- Dialog Edit Referral Code -->
-                <el-dialog
-                  title="Edit Referral Code"
-                  :visible.sync="dialogEditReferral"
-                  width="25%"
-                >
-                  <!-- User Id Input -->
-                  <div class="form-group" style="margin-bottom:0">
-                    <label for="user_id">USER</label>
-                    <el-input v-model="input.user_name" disabled></el-input>
-                    <el-input v-model="input.id_user" placeholder="Please input" disabled hidden></el-input>
-                  </div>
-
-                  <!-- Referral Code Input -->
-                  <div class="form-group">
-                    <label for="referral_code">REFERRAL CODE</label>
-                    <el-input v-model="input.referral_code" placeholder="Please input"></el-input>
-                  </div>
-
-                  <div class="form-group" style="display:flex;justify-content:space-between;">
-                    <!-- Active Input -->
-                    <div>
-                      <label for="referral_code">ACTIVE STATUS</label>
-                      <div style="text-align:right">
-                        <el-switch v-model="input.active" active-text="YES" inactive-text="NO"></el-switch>
-                      </div>
-                    </div>
-
-                    <div>
-                      <!-- Set As Promo Code Radio -->
-                      <div class="form-group">
-                        <label>SET AS PROMO REFERRAL?</label>
-                        <el-radio-group
-                          style="display:block;text-align:right;"
-                          v-model="setAsPromoCode"
-                          size="small"
-                        >
-                          <el-radio-button label="Yes"></el-radio-button>
-                          <el-radio-button label="No"></el-radio-button>
-                        </el-radio-group>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Addition Input: Promo Code Form -->
-                  <PromoCodeForm v-if="showAdditionalInput" :input="input"></PromoCodeForm>
-
-                  <span slot="footer" class="dialog-footer">
-                    <el-button @click="dialogEditReferral = false">Cancel</el-button>
-                    <el-button type="primary" @click="editReferralCode(input.referral_id)">Confirm</el-button>
-                  </span>
-                </el-dialog>
+                <el-button
+                  type="primary"
+                  size="small"
+                  @click="$router.push({ path: `/master/referral-codes/edit/${item.referral_id}`})"
+                >EDIT</el-button>
 
                 <!-- Button Delete -->
                 <el-button
@@ -266,6 +155,7 @@ export default {
   },
   methods: {
     editReferralCode(id) {
+      console.log("editReferralCode", id);
       if (this.input.promo_referral == "1") {
         let validates = ["capacity", "start_date", "end_date"];
         for (let i = 0; i < validates.length; i++) {

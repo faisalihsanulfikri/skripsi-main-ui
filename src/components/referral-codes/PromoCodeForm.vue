@@ -16,7 +16,7 @@
         format="yyyy-MM-dd"
         value-format="yyyy-MM-dd"
         placeholder="Start Date"
-        align="center"
+        align="left"
       ></el-date-picker>
     </div>
 
@@ -30,7 +30,7 @@
         format="yyyy-MM-dd"
         value-format="yyyy-MM-dd"
         placeholder="End Date"
-        align="center"
+        align="left"
       ></el-date-picker>
     </div>
   </section>
