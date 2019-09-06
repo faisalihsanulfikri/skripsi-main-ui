@@ -140,7 +140,7 @@
               name="ref_code"
               class="uk-input"
               type="text"
-              placeholder="3"
+              placeholder="Referral Code"
               @blur="onGetReferralCode(input.referral_code)"
             />
           </div>
