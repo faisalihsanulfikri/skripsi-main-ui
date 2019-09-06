@@ -311,7 +311,7 @@ const user = {
     return Vue.authHttp().put(`/userdata/${id}`, data)
   },
   getReferralCode (code = '') {
-    return Vue.authHttp().get(`/user-referral/${code}`)
+    return Vue.authHttp().get(`/validate/user-referral/${code}`)
   }
 }
 
