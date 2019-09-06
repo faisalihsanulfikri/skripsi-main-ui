@@ -154,7 +154,13 @@ export default {
           { id: "3", label: "Promo Code", color: "warning", value: el.promo_referral },
           { id: "4", label: "Unique", color: "danger", value: el.unique == '1' && el.buy_x_get_x == '0' },
           { id: "5", label: "Buy X Get X", color: "mint", value: el.buy_x_get_x == '1' && el.unique == '0'},
-          { id: "6", label: "Buy X Get X Unique", color:"info" , value: el.unique == '1' && el.buy_x_get_x == '1'}
+          { id: "6", label: "Buy X Get X Unique", color:"info" , value: el.unique == '1' && el.buy_x_get_x == '1'},
+          {
+            id: "7",
+            label: "Regular",
+            color: "info",
+            value: el.new_user == '0' && el.one_time == '0' && el.promo_referral == '0' && el.unique == '0' && el.buy_x_get_x == '0'
+          }
         ]
       };
     },
