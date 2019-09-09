@@ -443,6 +443,8 @@ export default {
           this.isOneTimePromo = "No";
           this.isNewUser = "No";
           this.isUniquePromo = "No";
+          this.isBuyxGetxPromo = "No";
+          this.isBuyxGetxUniquePromo =  "No";
           break;
 
         case "No":
@@ -465,6 +467,8 @@ export default {
           this.isUniquePromo = "No";
           this.isNewUser = "No";
           this.insertPromoCode = "No";
+          this.isBuyxGetxPromo = "No";
+          this.isBuyxGetxUniquePromo =  "No";
           break;
 
         case "No":
@@ -486,6 +490,8 @@ export default {
           this.isUniquePromo = "No";
           this.isOneTimePromo = "No";
           this.insertPromoCode = "No";
+          this.isBuyxGetxPromo = "No";
+          this.isBuyxGetxUniquePromo =  "No";
           break;
 
         case "No":
@@ -506,6 +512,8 @@ export default {
           this.isNewUser = "No";
           this.isOneTimePromo = "No";
           this.insertPromoCode = "No";
+          this.isBuyxGetxPromo = "No";
+          this.isBuyxGetxUniquePromo =  "No";
           break;
 
         case "No":
