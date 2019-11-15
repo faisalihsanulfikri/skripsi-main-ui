@@ -5,11 +5,16 @@
         <div class="grid-content">
           <div class="content-wrapper">
             <div class="kirimin-logo">
-              <img style="width:150px" src="../assets/logo-kirimin.jpg">
+              <!-- <img style="width:150px" src="../assets/logo-kirimin.jpg"> -->
+              <span>Client Area Login</span>
             </div>
 
             <!-- Error message on Request to server -->
-            <el-alert v-if="showAlert" :title="alertMsg" :type="alertType"></el-alert>
+            <el-alert
+              v-if="showAlert"
+              :title="alertMsg"
+              :type="alertType"
+            ></el-alert>
 
             <!-- Input Email -->
             <div class="form-group">
@@ -23,7 +28,9 @@
                 v-validate="rules.email"
                 @keypress.enter="login"
               ></el-input>
-              <small class="color-danger" v-if="errors.first('email')">{{ errors.first('email') }}</small>
+              <small class="color-danger" v-if="errors.first('email')">{{
+                errors.first("email")
+              }}</small>
             </div>
 
             <!-- Input Password -->
@@ -38,20 +45,22 @@
                 v-validate="rules.password"
                 @keypress.enter="login"
               ></el-input>
-              <small
-                class="color-danger"
-                v-if="errors.first('password')"
-              >{{ errors.first('password') }}</small>
+              <small class="color-danger" v-if="errors.first('password')">{{
+                errors.first("password")
+              }}</small>
             </div>
 
             <!-- Button Group -->
             <div class="form-group">
-              <el-button type="primary" :loading="loadingBtn" @click="login">Login</el-button>
+              <el-button type="primary" :loading="loadingBtn" @click="login"
+                >Login</el-button
+              >
               <el-button
                 style="margin-left:1rem;"
                 type="text"
                 @click="$router.push({ name: 'forgot-password' })"
-              >Forgot password</el-button>
+                >Forgot password</el-button
+              >
             </div>
           </div>
         </div>
@@ -98,14 +107,14 @@ export default {
         let res = await this.$service.auth.login(input);
         this.$auth.setAuth(res.data);
 
-        let user = await this.$auth.getUser();
-        this.$root.user = user;
+        // let user = await this.$auth.getUser();
+        // this.$root.user = user;
 
         window.localStorage.setItem("user_name", user.name);
 
-        this.$router.push({
-          name: Level.ROUTE_LEVEL[user.level]
-        });
+        // this.$router.push({
+        //   name: Level.ROUTE_LEVEL[user.level]
+        // });
       } catch (err) {
         const errData = err.response.data;
         const errMsg = errData.message;
