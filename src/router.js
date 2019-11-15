@@ -1,33 +1,21 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from "vue";
+import Router from "vue-router";
 
-import WebRoutes from './routes/web'
-import AdminRoutes from './routes/admin'
-import AgentRoutes from './routes/agent'
-import UserRoutes from './routes/user'
+import WebRoutes from "./routes/web";
+import AdminRoutes from "./routes/admin";
 
-import { PrintAwb } from './routes/print'
-import { PrintManifest } from './routes/print'
+import navigationGuard from "./lib/navigation-guard";
 
-import navigationGuard from './lib/navigation-guard'
-
-Vue.use(Router)
+Vue.use(Router);
 
 const router = new Router({
-  scrollBehavior () {
-    return { x: 0, y: 0 }
+  scrollBehavior() {
+    return { x: 0, y: 0 };
   },
-  mode: 'history',
-  routes: [
-    WebRoutes,
-    AdminRoutes,
-    AgentRoutes,
-    UserRoutes,
-    PrintManifest,
-    PrintAwb
-  ]
-})
+  mode: "history",
+  routes: [WebRoutes, AdminRoutes]
+});
 
-router.beforeEach(navigationGuard)
+router.beforeEach(navigationGuard);
 
-export default router
+export default router;
