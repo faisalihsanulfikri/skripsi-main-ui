@@ -1,7 +1,6 @@
 <template>
   <el-container>
-    <MainSidebarMobile/>
-    <MainSidebarAdmin :level="level"/>
+    <MainSidebarAdmin :level="level" />
 
     <el-main>
       <router-view></router-view>
@@ -11,7 +10,6 @@
 
 <script>
 import MainSidebarAdmin from "@/components/main/MainSidebarAdmin";
-import MainSidebarMobile from "@/components/main/MainSidebarMobile";
 
 export default {
   data() {
@@ -20,8 +18,7 @@ export default {
     };
   },
   components: {
-    MainSidebarAdmin,
-    MainSidebarMobile
+    MainSidebarAdmin
   },
 
   computed: {

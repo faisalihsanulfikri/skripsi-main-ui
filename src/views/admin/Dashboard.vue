@@ -1,19 +1,29 @@
 <template>
   <div class="uk-card uk-card-default">
     <!-- Header -->
-    <PageTitle title="Dashboard"/>
+    <PageTitle title="Dashboard" />
 
     <!-- Content -->
     <el-card>
       <el-row :gutter="20" type="flex" justify="left" class="base-chart-row">
         <el-col :xs="24" :sm="24" :md="10">
           <el-card>
-            <ChartBar :styles="chartBarStyle" label="ORDERS" :labels="dates" :data="total"/>
+            <ChartBar
+              :styles="chartBarStyle"
+              label="ORDERS"
+              :labels="dates"
+              :data="total"
+            />
           </el-card>
         </el-col>
         <el-col :xs="24" :sm="24" :md="10">
           <el-card>
-            <ChartBar :styles="chartBarStyle" label="PAYMENT" :labels="dates" :data="amount"/>
+            <ChartBar
+              :styles="chartBarStyle"
+              label="PAYMENT"
+              :labels="dates"
+              :data="amount"
+            />
           </el-card>
         </el-col>
       </el-row>
@@ -68,7 +78,7 @@ export default {
     }
   },
   async created() {
-    let chart = await this.chart();
+    // let chart = await this.chart();
   }
 };
 </script>

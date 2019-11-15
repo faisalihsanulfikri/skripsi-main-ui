@@ -55,12 +55,6 @@
               <el-button type="primary" :loading="loadingBtn" @click="login"
                 >Login</el-button
               >
-              <el-button
-                style="margin-left:1rem;"
-                type="text"
-                @click="$router.push({ name: 'forgot-password' })"
-                >Forgot password</el-button
-              >
             </div>
           </div>
         </div>
@@ -76,8 +70,8 @@ export default {
   data() {
     return {
       input: {
-        email: "",
-        password: "",
+        email: "faisalihsanulfikri@gmail.com",
+        password: "qwerty",
         origin: "cms"
       },
       rules: {
@@ -107,14 +101,14 @@ export default {
         let res = await this.$service.auth.login(input);
         this.$auth.setAuth(res.data);
 
-        // let user = await this.$auth.getUser();
-        // this.$root.user = user;
+        let user = await this.$auth.getUser();
+        this.$root.user = user;
 
         window.localStorage.setItem("user_name", user.name);
 
-        // this.$router.push({
-        //   name: Level.ROUTE_LEVEL[user.level]
-        // });
+        this.$router.push({
+          name: Level.ROUTE_LEVEL[0]
+        });
       } catch (err) {
         const errData = err.response.data;
         const errMsg = errData.message;
