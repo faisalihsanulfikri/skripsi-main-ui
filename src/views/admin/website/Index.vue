@@ -9,12 +9,12 @@
         </div>
         <div class="uk-width-expand">
           <div class="app--card-header_title">
-            <h3>Categories</h3>
+            <h3>Produk</h3>
           </div>
         </div>
         <div class="uk-width-auto">
           <div class="app--card-header__link">
-            <router-link :to="{ name: 'admin-category-create' }">
+            <router-link :to="{ name: 'websites-create' }">
               <font-awesome-icon icon="plus"></font-awesome-icon>
             </router-link>
           </div>
@@ -26,72 +26,51 @@
         <table class="uk-table uk-table-divider uk-table-small">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th class="uk-text-center" width="100">Actions</th>
-              <th class="uk-text-center" width="100">Default Selected</th>
+              <th>Kode</th>
+              <th>Nama</th>
+              <th>Harga Jual</th>
+              <th>Stok</th>
+              <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
-            <!-- <tr v-for="category in categories" :key="category.id">
-              <td>{{ category.name }}</td>
-              <td>{{ category.description }}</td>
-              <td class="uk-text-center">
-                <router-link :to="{ name: 'admin-category-edit', params: { id: category.id } }">
-                  <font-awesome-icon icon="edit"></font-awesome-icon>
-                </router-link>
-                <a
-                  class="uk-margin-small-left uk-text-danger"
-                  href="#"
-                  @click.prevent="deleteConfirmation(category.id)"
-                >
-                  <font-awesome-icon icon="trash-alt"></font-awesome-icon>
-                </a>
+            <tr>
+              <td>P001</td>
+              <td>Macbook Pro MF841</td>
+              <td>Rp. 17.000.000</td>
+              <td>10</td>
+              <td>
+                <button>Edit</button>
+                <span>&nbsp;</span>
+                <button>Delete</button>
               </td>
-              <td class="uk-text-center">
-                <el-switch
-                  v-model="category.isTrue"
-                  active-color="#13ce66"
-                  inactive-color="#ff4949"
-                  @change="updateDefaultSelected(category)"
-                ></el-switch>
+            </tr>
+            <tr>
+              <td>P002</td>
+              <td>Asus ROG GL503VD</td>
+              <td>Rp. 15.000.000</td>
+              <td>15</td>
+              <td>
+                <button>Edit</button>
+                <span>&nbsp;</span>
+                <button>Delete</button>
               </td>
-            </tr> -->
+            </tr>
+            <tr>
+              <td>P003</td>
+              <td>Macbook Pro MF839</td>
+              <td>Rp. 10.000.000</td>
+              <td>10</td>
+              <td>
+                <button>Edit</button>
+                <span>&nbsp;</span>
+                <button>Delete</button>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
-
-    <div v-if="this.totalPages.length < 2"></div>
-
-    <div v-else class="uk-card-footer uk-text-center">
-      <ul class="uk-pagination" uk-margin>
-        <li>
-          <a href="#">
-            <span uk-pagination-previous></span>
-          </a>
-        </li>
-        <li v-for="(page, i) in totalPages" :key="i">
-          <div v-if="current_page - 1 == i">
-            <a
-              href="#"
-              style="color:red"
-              @click.prevent="onChangePagination(i)"
-              >{{ i + 1 }}</a
-            >
-          </div>
-          <div v-else>
-            <a href="#" @click.prevent="onChangePagination(i)">{{ i + 1 }}</a>
-          </div>
-        </li>
-        <li>
-          <a href="#">
-            <span uk-pagination-next></span>
-          </a>
-        </li>
-      </ul>
-    </div>
-    <!-- end pagination -->
   </div>
 </template>
 

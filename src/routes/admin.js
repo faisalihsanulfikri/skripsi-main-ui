@@ -5,7 +5,7 @@ import Website from "../views/admin/website/Index";
 import WebsiteCreate from "../views/admin/website/Create";
 import WebsiteEdit from "../views/admin/website/Create";
 
-import { ADMIN, SUPER_ADMIN } from "../config/level";
+import { ADMIN } from "../config/level";
 
 export default {
   path: "/admin",
@@ -17,7 +17,7 @@ export default {
       component: Dashboard,
       meta: {
         auth: true,
-        level: [ADMIN, SUPER_ADMIN]
+        level: [ADMIN]
       }
     },
     {
@@ -26,7 +26,7 @@ export default {
       component: Website,
       meta: {
         auth: true,
-        level: [ADMIN, SUPER_ADMIN]
+        level: [ADMIN]
       }
     },
     {
@@ -35,7 +35,7 @@ export default {
       component: WebsiteCreate,
       meta: {
         auth: true,
-        level: [ADMIN, SUPER_ADMIN]
+        level: [ADMIN]
       }
     },
     {
@@ -44,7 +44,7 @@ export default {
       component: WebsiteEdit,
       meta: {
         auth: true,
-        level: [ADMIN, SUPER_ADMIN]
+        level: [ADMIN]
       }
     }
   ]

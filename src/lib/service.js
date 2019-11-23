@@ -59,7 +59,7 @@ const promoCode = {
   }
 };
 
-const category = {
+const product = {
   get(params = {}, page) {
     return Vue.http().get("/categories?page=" + page, {
       params
