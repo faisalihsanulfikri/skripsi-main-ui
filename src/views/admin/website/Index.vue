@@ -33,7 +33,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="category in categories" :key="category.id">
+            <!-- <tr v-for="category in categories" :key="category.id">
               <td>{{ category.name }}</td>
               <td>{{ category.description }}</td>
               <td class="uk-text-center">
@@ -56,7 +56,7 @@
                   @change="updateDefaultSelected(category)"
                 ></el-switch>
               </td>
-            </tr>
+            </tr> -->
           </tbody>
         </table>
       </div>
@@ -72,11 +72,16 @@
           </a>
         </li>
         <li v-for="(page, i) in totalPages" :key="i">
-          <div v-if="current_page-1 == i">
-            <a href="#" style="color:red" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+          <div v-if="current_page - 1 == i">
+            <a
+              href="#"
+              style="color:red"
+              @click.prevent="onChangePagination(i)"
+              >{{ i + 1 }}</a
+            >
           </div>
           <div v-else>
-            <a href="#" @click.prevent="onChangePagination(i)">{{i+1}}</a>
+            <a href="#" @click.prevent="onChangePagination(i)">{{ i + 1 }}</a>
           </div>
         </li>
         <li>
@@ -108,7 +113,7 @@ export default {
   },
 
   created() {
-    this.fetchCategories(this.pagination.page);
+    // this.fetchCategories(this.pagination.page);
   },
 
   methods: {
