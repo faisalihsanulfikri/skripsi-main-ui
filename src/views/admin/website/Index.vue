@@ -34,37 +34,15 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>P001</td>
-              <td>Macbook Pro MF841</td>
-              <td>Rp. 17.000.000</td>
-              <td>10</td>
+            <tr v-for="(el, i) in products" :key="i">
+              <td>{{ el.code }}</td>
+              <td>{{ el.name }}</td>
+              <td>{{ el.price }}</td>
+              <td>{{ el.stock }}</td>
               <td>
-                <button>Edit</button>
+                <button @click="update(el.id)">Edit</button>
                 <span>&nbsp;</span>
-                <button>Delete</button>
-              </td>
-            </tr>
-            <tr>
-              <td>P002</td>
-              <td>Asus ROG GL503VD</td>
-              <td>Rp. 15.000.000</td>
-              <td>15</td>
-              <td>
-                <button>Edit</button>
-                <span>&nbsp;</span>
-                <button>Delete</button>
-              </td>
-            </tr>
-            <tr>
-              <td>P003</td>
-              <td>Macbook Pro MF839</td>
-              <td>Rp. 10.000.000</td>
-              <td>10</td>
-              <td>
-                <button>Edit</button>
-                <span>&nbsp;</span>
-                <button>Delete</button>
+                <button @click="deleteConfirmation(el.id)">Delete</button>
               </td>
             </tr>
           </tbody>
@@ -78,29 +56,19 @@
 export default {
   data() {
     return {
-      categories: [],
-      totalPages: ["1"],
-      pagination: {
-        total: 0,
-        current_page: 1,
-        last_page: 0,
-        page: 1
-      },
+      products: [],
       error: false,
       errorMesssage: ""
     };
   },
 
   created() {
-    // this.fetchCategories(this.pagination.page);
+    this.fetchProduct();
   },
 
   methods: {
-    onChangePagination(i) {
-      this.fetchCategories(i + 1);
-    },
     deleteConfirmation(id) {
-      this.$confirm("Are you sure to delete this?", "Waning", {
+      this.$confirm("Anda yakin akan menghapus produk ini ?", "Waning", {
         type: "warning",
         confirmButtonText: "Yes",
         cancelButtonText: "No"
@@ -110,44 +78,38 @@ export default {
         })
         .catch(() => {});
     },
-    async fetchCategories(page = 1) {
+    async fetchProduct() {
       this.__startLoading();
 
-      this.pagination.page = page;
-      console.log("page", page);
+      let authTenant = JSON.parse(window.localStorage.getItem("authTenant"));
 
       try {
-        let res = await this.$service.category.get({}, page);
+        let res = await this.$service.product.get({ authTenant });
 
-        this.pagination.last_page = res.data.last_page;
+        this.products = res.data.data;
 
-        this.categories = res.data.data.map(category => {
-          category["isTrue"] =
-            category.default_selected == "true" ? true : false;
-
-          return category;
-        });
-
-        this.totalPages = res.data.pages;
-        this.current_page = page;
-
-        this.categories = res.data.data;
-        this.pagination = res.data;
-
-        delete this.pagination.data;
-        delete this.pagination.filter;
+        return this.__stopLoading();
       } catch (err) {
         this.__handleError(this, err, true);
       }
 
       this.__stopLoading();
     },
+
+    async update(id) {
+      return this.$router.push({
+        name: "websites-edit",
+        params: {
+          id: id
+        }
+      });
+    },
     async delete(id) {
       this.error = false;
       this.errorMessage = "";
 
       try {
-        let res = await this.$service.category.delete(id);
+        let res = await this.$service.product.delete(id);
 
         this.$notify({
           title: "SUCCESS",
@@ -155,34 +117,10 @@ export default {
           type: "success"
         });
 
-        this.fetchCategories();
+        this.fetchProduct();
       } catch (err) {
         this.__handleError(this, err, true);
       }
-    },
-    async updateDefaultSelected(category) {
-      const Cdata = category;
-      const Cid = Cdata.id;
-      const default_selected = Cdata.isTrue ? "true" : "false";
-
-      let res = this.$service.category
-        .updateDefault(Cid, { default_selected: default_selected })
-        .then(res => {
-          this.$notify({
-            type: "success",
-            title: "Success",
-            message: res.data.message
-          });
-          this.fetchCategories(this.pagination.page);
-        })
-        .catch(err => {
-          this.$notify({
-            type: "warning",
-            title: "Peringatan",
-            message: err.response.data.message
-          });
-          this.fetchCategories(this.pagination.page);
-        });
     }
   }
 };

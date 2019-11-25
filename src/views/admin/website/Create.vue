@@ -17,6 +17,10 @@
       </div>
     </div>
     <div class="uk-card-body">
+      <div class="uk-margin" v-if="edit">
+        <label class="uk-form-label">Kode</label>
+        <el-input v-model="input.code" :disabled="formCode"></el-input>
+      </div>
       <div class="uk-margin">
         <label class="uk-form-label">Nama</label>
         <el-input v-model="input.name"></el-input>
@@ -46,6 +50,7 @@ export default {
     return {
       edit: false,
       title: "Produk Baru",
+      formCode: true,
       input: {
         name: "",
         price: "",
@@ -65,24 +70,21 @@ export default {
       this.edit = true;
       this.title = "Edit Produk";
 
-      // this.getCategory();
+      this.getProduct();
     }
-
-    // console.log(this.$route.params.id);
   },
 
   methods: {
-    async getCategory() {
+    async getProduct() {
       this.__startLoading();
 
       this.error = false;
       this.errorMessage = "";
 
       try {
-        let res = await this.$service.category.find(this.$route.params.id);
+        let res = await this.$service.product.find(this.$route.params.id);
 
-        this.input.name = res.data.name;
-        this.input.description = res.data.description;
+        this.input = res.data.data;
       } catch (err) {
         this.__handleError(this, err, true);
       }
@@ -97,16 +99,12 @@ export default {
       }
     },
     async store() {
-      this.__startLoading();
-
       let payload = {
-        input: this.input,
-        auth: this.auth
+        ...this.input,
+        authTenant: JSON.parse(window.localStorage.getItem("authTenant"))
       };
 
-      console.log("payload", payload);
-
-      return this.__stopLoading();
+      this.__startLoading();
 
       this.error = false;
       this.errorMessage = "";
@@ -128,15 +126,20 @@ export default {
       this.__stopLoading();
     },
     async update() {
+      let payload = {
+        ...this.input,
+        authTenant: JSON.parse(window.localStorage.getItem("authTenant"))
+      };
+
       this.__startLoading();
 
       this.error = false;
       this.errorMessage = "";
 
       try {
-        let res = await this.$service.category.update(
+        let res = await this.$service.product.update(
           this.$route.params.id,
-          this.input
+          payload
         );
 
         this.$notify({

@@ -10,11 +10,7 @@
             </div>
 
             <!-- Error message on Request to server -->
-            <el-alert
-              v-if="showAlert"
-              :title="alertMsg"
-              :type="alertType"
-            ></el-alert>
+            <el-alert v-if="showAlert" :title="alertMsg" :type="alertType"></el-alert>
 
             <!-- Input Email -->
             <div class="form-group">
@@ -28,9 +24,11 @@
                 v-validate="rules.email"
                 @keypress.enter="login"
               ></el-input>
-              <small class="color-danger" v-if="errors.first('email')">{{
+              <small class="color-danger" v-if="errors.first('email')">
+                {{
                 errors.first("email")
-              }}</small>
+                }}
+              </small>
             </div>
 
             <!-- Input Password -->
@@ -45,16 +43,16 @@
                 v-validate="rules.password"
                 @keypress.enter="login"
               ></el-input>
-              <small class="color-danger" v-if="errors.first('password')">{{
+              <small class="color-danger" v-if="errors.first('password')">
+                {{
                 errors.first("password")
-              }}</small>
+                }}
+              </small>
             </div>
 
             <!-- Button Group -->
             <div class="form-group">
-              <el-button type="primary" :loading="loadingBtn" @click="login"
-                >Login</el-button
-              >
+              <el-button type="primary" :loading="loadingBtn" @click="login">Login</el-button>
             </div>
           </div>
         </div>
@@ -105,6 +103,10 @@ export default {
         this.$root.user = user;
 
         window.localStorage.setItem("user_name", user.name);
+
+        let authTenant = await this.$service.auth.tenant(user.id);
+
+        this.$auth.setAuthTenant(authTenant.data.data);
 
         this.$router.push({
           name: Level.ROUTE_LEVEL[0]

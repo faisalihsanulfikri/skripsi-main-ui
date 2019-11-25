@@ -1,29 +1,29 @@
-import Vue from 'vue'
-
-import * as Level from '../config/level'
+import Vue from "vue";
 
 export default async (to, from, next) => {
-  if (to.name === 'login' || to.name === 'register') {
+  if (to.name === "login" || to.name === "register") {
     if (Vue.auth.hasAuth()) {
-      let user = await Vue.auth.getUser()
+      let user = await Vue.auth.getUser();
 
       next({
-        name: Level.ROUTE_LEVEL[user.level]
-      })
+        name: "admin-main"
+      });
     } else {
-      next()
+      next();
     }
   } else if (to.matched.some(record => record.meta.auth)) {
-    let user = await Vue.auth.getUser()
-
-    if (to.meta.level.includes(user.level)) {
-      next()
+    if (to.meta.level.includes(0)) {
+      next();
     } else {
       next({
-        name: Level.ROUTE_LEVEL[user.level]
-      })
+        name: "admin-main"
+      });
     }
   } else {
-    next()
+    if (Vue.auth.hasAuth()) {
+      next({
+        name: "admin-main"
+      });
+    }
   }
-}
+};
