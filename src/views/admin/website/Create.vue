@@ -4,7 +4,7 @@
       <div uk-grid>
         <div class="uk-width-auto">
           <div class="app--card-header__back">
-            <router-link :to="{ name: 'admin-category' }">
+            <router-link :to="{ name: 'websites' }">
               <font-awesome-icon icon="chevron-left"></font-awesome-icon>
             </router-link>
           </div>
@@ -17,42 +17,26 @@
       </div>
     </div>
     <div class="uk-card-body">
+      <div class="uk-margin" v-if="edit">
+        <label class="uk-form-label">Kode</label>
+        <el-input v-model="input.code" :disabled="formCode"></el-input>
+      </div>
       <div class="uk-margin">
-        <label class="uk-form-label">Name</label>
+        <label class="uk-form-label">Nama</label>
         <el-input v-model="input.name"></el-input>
       </div>
       <div class="uk-margin">
-        <label class="uk-form-label">Description</label>
-        <el-input v-model="input.description" type="textarea" rows="10"></el-input>
+        <label class="uk-form-label">Harga Jual</label>
+        <el-input v-model="input.price"></el-input>
       </div>
       <div class="uk-margin">
-        <label class="uk-form-label">Required Document</label>
-
-        <div class="req-doc">
-          <label class="btn-r">
-            <input
-              v-model="input.document"
-              class="uk-radio"
-              type="radio"
-              value="yes"
-              @click="onDocumentChanged"
-            >
-            <span class="uk-margin-small-left">Yes</span>
-          </label>
-
-          <label class="btn-r">
-            <input
-              v-model="input.document"
-              class="uk-radio"
-              type="radio"
-              value="No"
-              @click="onDocumentChanged"
-            >
-            <span class="uk-margin-small-left">No</span>
-          </label>
-        </div>
+        <label class="uk-form-label">Harga Beli</label>
+        <el-input v-model="input.price_buy"></el-input>
       </div>
-      <el-alert v-if="error" title="ERROR" type="error" :description="errorMessage" show-icon></el-alert>
+      <div class="uk-margin">
+        <label class="uk-form-label">Stok</label>
+        <el-input v-model="input.stock"></el-input>
+      </div>
     </div>
     <div class="uk-card-footer uk-text-right">
       <el-button type="primary" @click="save">SAVE</el-button>
@@ -65,45 +49,42 @@ export default {
   data() {
     return {
       edit: false,
-      title: "New Category",
+      title: "Produk Baru",
+      formCode: true,
       input: {
         name: "",
-        description: "",
-        document: ""
+        price: "",
+        price_buy: "",
+        stock: ""
       },
-      error: false,
-      errorMessage: ""
+      auth: {
+        db_name: "skripsi_webhade_tenant",
+        db_user: "root_admin_panel",
+        db_pass: "qazwsxedc1234567"
+      }
     };
   },
 
   created() {
     if (this.$route.params.id) {
       this.edit = true;
-      this.title = "Edit Category";
+      this.title = "Edit Produk";
 
-      this.getCategory();
+      this.getProduct();
     }
-
-    console.log(this.$route.params.id);
   },
 
   methods: {
-    onDocumentChanged() {
-      if (this.input.length > 0) {
-        this.input.document = "";
-      }
-    },
-    async getCategory() {
+    async getProduct() {
       this.__startLoading();
 
       this.error = false;
       this.errorMessage = "";
 
       try {
-        let res = await this.$service.category.find(this.$route.params.id);
+        let res = await this.$service.product.find(this.$route.params.id);
 
-        this.input.name = res.data.name;
-        this.input.description = res.data.description;
+        this.input = res.data.data;
       } catch (err) {
         this.__handleError(this, err, true);
       }
@@ -118,13 +99,18 @@ export default {
       }
     },
     async store() {
+      let payload = {
+        ...this.input,
+        authTenant: JSON.parse(window.localStorage.getItem("authTenant"))
+      };
+
       this.__startLoading();
 
       this.error = false;
       this.errorMessage = "";
 
       try {
-        let res = await this.$service.category.create(this.input);
+        let res = await this.$service.product.create(payload);
 
         this.$notify({
           title: "SUCCESS",
@@ -132,7 +118,7 @@ export default {
           type: "success"
         });
 
-        this.$router.push({ name: "admin-category" });
+        this.$router.push({ name: "websites" });
       } catch (err) {
         this.__handleError(this, err, true);
       }
@@ -140,15 +126,20 @@ export default {
       this.__stopLoading();
     },
     async update() {
+      let payload = {
+        ...this.input,
+        authTenant: JSON.parse(window.localStorage.getItem("authTenant"))
+      };
+
       this.__startLoading();
 
       this.error = false;
       this.errorMessage = "";
 
       try {
-        let res = await this.$service.category.update(
+        let res = await this.$service.product.update(
           this.$route.params.id,
-          this.input
+          payload
         );
 
         this.$notify({
@@ -157,7 +148,7 @@ export default {
           type: "success"
         });
 
-        this.$router.push({ name: "admin-category" });
+        this.$router.push({ name: "websites" });
       } catch (err) {
         this.__handleError(this, err, true);
       }
@@ -177,4 +168,3 @@ export default {
   }
 }
 </style>
-

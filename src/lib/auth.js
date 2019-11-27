@@ -1,56 +1,59 @@
-import Vue from 'vue'
+import Vue from "vue";
 
-import router from '../router'
+import router from "../router";
 
 Vue.auth = {
-  setAuth (auth) {
-    localStorage.setItem('auth', JSON.stringify(auth))
+  setAuth(auth) {
+    localStorage.setItem("auth", JSON.stringify(auth));
   },
-  hasAuth () {
-    let auth = localStorage.getItem('auth')
+  setAuthTenant(authTenant) {
+    localStorage.setItem("authTenant", JSON.stringify(authTenant));
+  },
+  hasAuth() {
+    let auth = localStorage.getItem("auth");
 
-    if (auth === null) return false
+    if (auth === null) return false;
 
-    return true
+    return true;
   },
-  setUser (user) {
-    localStorage.setItem('user', JSON.stringify(user))
+  setUser(user) {
+    localStorage.setItem("user", JSON.stringify(user));
   },
-  async getUser () {
-    let user = JSON.parse(localStorage.getItem('user'))
+  async getUser() {
+    let user = JSON.parse(localStorage.getItem("user"));
 
     if (user === null) {
-      let res = await Vue.authHttp().get('/user')
+      let res = await Vue.authHttp().get("/user");
 
-      Vue.auth.setUser(res.data)
+      Vue.auth.setUser(res.data);
 
-      user = res.data
+      user = res.data;
     }
 
-    return user
+    return user;
   },
-  getToken () {
-    let auth = JSON.parse(localStorage.getItem('auth'))
+  getToken() {
+    let auth = JSON.parse(localStorage.getItem("auth"));
 
     if (auth === null) {
-      localStorage.clear()
+      localStorage.clear();
     }
-    if(window.location.pathname == '/'){
+    if (window.location.pathname == "/") {
       router.push({
-        name: 'login'
-      })
+        name: "login"
+      });
     }
-    return auth.access_token
+    return auth.access_token;
   },
-  destroy () {
-    localStorage.clear()
+  destroy() {
+    localStorage.clear();
   }
-}
+};
 
 Object.defineProperties(Vue.prototype, {
   $auth: {
-    get () {
-      return Vue.auth
+    get() {
+      return Vue.auth;
     }
   }
-})
+});

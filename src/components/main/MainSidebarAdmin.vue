@@ -6,15 +6,18 @@
       active-text-color="#FFF"
       :router="true"
     >
-      <el-menu-item>
+      <el-menu-item index="/admin">
         <ios-contact-icon w="24px" h="24px" class="ionicon" />
-        <span>{{ username() }}</span>
+        <span>CLIENT AREA</span>
       </el-menu-item>
 
-      <el-menu-item index="/admin">
-        <ios-analytics-icon w="24px" h="24px" class="ionicon" />
-        <span>Website</span>
-      </el-menu-item>
+      <el-submenu index="/admin/website">
+        <template slot="title">
+          <ios-paper-icon w="24px" h="24px" class="ionicon" />
+          <span>WEBSITE</span>
+        </template>
+        <el-menu-item index="/websites">Produk</el-menu-item>
+      </el-submenu>
 
       <el-menu-item @click="__logout">
         <ios-undo-icon w="24px" h="24px" class="ionicon" />
